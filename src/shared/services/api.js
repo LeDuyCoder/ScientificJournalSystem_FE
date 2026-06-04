@@ -8,4 +8,18 @@ const api = axios.create({
   },
 });
 
+// Request interceptor to dynamically inject the bearer auth token
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('researchpulse_token');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
 export default api;

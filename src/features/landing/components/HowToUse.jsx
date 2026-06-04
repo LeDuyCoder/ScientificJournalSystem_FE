@@ -1,4 +1,4 @@
-import { useTranslation } from '../../../shared/hooks/useTranslation';
+import { useTranslation } from 'react-i18next';
 
 /**
  * Reusable StepItem component

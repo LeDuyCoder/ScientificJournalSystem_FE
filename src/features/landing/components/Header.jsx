@@ -1,9 +1,10 @@
 import { useState, useEffect, useRef } from 'react';
-import { useTranslation } from '../../../shared/hooks/useTranslation';
+import { useTranslation } from 'react-i18next';
 import Icon from '../../../shared/components/Icon';
 
 export default function Header() {
-  const { language, setLanguage, t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const language = i18n.language || 'vi';
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isLangDropdownOpen, setIsLangDropdownOpen] = useState(false);
@@ -83,7 +84,7 @@ export default function Header() {
                 className="flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 text-gray-300 hover:text-white text-xs font-semibold tracking-wide transition-all duration-200"
               >
                 <Icon icon="lucide:globe" className="text-sm text-cyan-400" />
-                <span>{language === 'vi' ? 'Tiếng Việt' : 'English'}</span>
+                <span>{language.startsWith('vi') ? 'Tiếng Việt' : 'English'}</span>
                 <Icon
                   icon="lucide:chevron-down"
                   className={`text-[10px] transition-transform duration-200 ${
@@ -97,31 +98,33 @@ export default function Header() {
                 <div className="absolute right-0 mt-2 w-36 rounded-xl bg-dark-card border border-white/10 shadow-2xl py-1 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
                   <button
                     onClick={() => {
-                      setLanguage('vi');
+                      i18n.changeLanguage('vi');
+                      localStorage.setItem('researchpulse_lang', 'vi');
                       setIsLangDropdownOpen(false);
                     }}
                     className={`flex items-center justify-between w-full px-4 py-2 text-xs font-medium text-left ${
-                      language === 'vi'
+                      language.startsWith('vi')
                         ? 'text-cyan-400 bg-white/5'
                         : 'text-gray-300 hover:bg-white/5 hover:text-white'
                     }`}
                   >
                     <span>Tiếng Việt</span>
-                    {language === 'vi' && <Icon icon="lucide:check" className="text-cyan-400 text-xs" />}
+                    {language.startsWith('vi') && <Icon icon="lucide:check" className="text-cyan-400 text-xs" />}
                   </button>
                   <button
                     onClick={() => {
-                      setLanguage('en');
+                      i18n.changeLanguage('en');
+                      localStorage.setItem('researchpulse_lang', 'en');
                       setIsLangDropdownOpen(false);
                     }}
                     className={`flex items-center justify-between w-full px-4 py-2 text-xs font-medium text-left ${
-                      language === 'en'
+                      language.startsWith('en')
                         ? 'text-cyan-400 bg-white/5'
                         : 'text-gray-300 hover:bg-white/5 hover:text-white'
                     }`}
                   >
                     <span>English</span>
-                    {language === 'en' && <Icon icon="lucide:check" className="text-cyan-400 text-xs" />}
+                    {language.startsWith('en') && <Icon icon="lucide:check" className="text-cyan-400 text-xs" />}
                   </button>
                 </div>
               )}
@@ -142,7 +145,11 @@ export default function Header() {
           <div className="flex md:hidden items-center space-x-3">
             {/* Mobile Language Selector Shortcut */}
             <button
-              onClick={() => setLanguage(language === 'vi' ? 'en' : 'vi')}
+              onClick={() => {
+                const nextLang = language.startsWith('vi') ? 'en' : 'vi';
+                i18n.changeLanguage(nextLang);
+                localStorage.setItem('researchpulse_lang', nextLang);
+              }}
               className="p-2 rounded-lg bg-white/5 border border-white/10 text-gray-300"
               aria-label="Toggle language"
             >
@@ -206,9 +213,12 @@ export default function Header() {
           <p className="text-xs text-gray-400 font-semibold mb-3 tracking-wider uppercase">Language</p>
           <div className="grid grid-cols-2 gap-2">
             <button
-              onClick={() => setLanguage('vi')}
+              onClick={() => {
+                i18n.changeLanguage('vi');
+                localStorage.setItem('researchpulse_lang', 'vi');
+              }}
               className={`py-2 rounded-lg text-xs font-semibold border ${
-                language === 'vi'
+                language.startsWith('vi')
                   ? 'border-cyan-400 text-cyan-400 bg-cyan-400/5'
                   : 'border-white/10 text-gray-400 hover:text-white'
               }`}
@@ -216,9 +226,12 @@ export default function Header() {
               Tiếng Việt
             </button>
             <button
-              onClick={() => setLanguage('en')}
+              onClick={() => {
+                i18n.changeLanguage('en');
+                localStorage.setItem('researchpulse_lang', 'en');
+              }}
               className={`py-2 rounded-lg text-xs font-semibold border ${
-                language === 'en'
+                language.startsWith('en')
                   ? 'border-cyan-400 text-cyan-400 bg-cyan-400/5'
                   : 'border-white/10 text-gray-400 hover:text-white'
               }`}
