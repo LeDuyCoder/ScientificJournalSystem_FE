@@ -6,12 +6,17 @@ import { Icon } from "@iconify/react";
 import authService from "../services/authService";
 import SocialAuthButton from "./SocialAuthButton";
 import { loginSchema } from "../validations/loginSchema";
+import { useTheme } from "../../../app/providers/ThemeContext";
+import { useLanguage } from "../../../app/providers/LanguageContext";
 
 const LoginForm = () => {
+  const { isDark, toggleTheme } = useTheme();
+  const { language, changeLanguage, t } = useLanguage();
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [successMsg, setSuccessMsg] = useState("");
   const [errorMsg, setErrorMsg] = useState("");
+  const [rememberMeEmail, setRememberMeEmail] = useState("");
 
   const handleGoogleCredentialResponse = async (response) => {
     setIsLoading(true);
@@ -20,24 +25,45 @@ const LoginForm = () => {
     try {
       const idToken = response.credential;
       const result = await authService.googleLogin(idToken);
-      if (result && result.success) {
+      
+      if (result?.success && result?.data?.token) {
         setSuccessMsg(result.message || "Đăng nhập bằng Google thành công!");
         
         // Save token and user details to localStorage
-        if (result.data) {
-          localStorage.setItem("token", result.data.token);
-          localStorage.setItem("user", JSON.stringify(result.data.user));
-        }
+        localStorage.setItem("token", result.data.token);
+        localStorage.setItem("user", JSON.stringify(result.data.user || {}));
+        // Auto save email from Google account for remember me
+        localStorage.setItem("rememberMeEmail", result.data.user?.email || "");
+        
+        // Redirect after successful login
+        setTimeout(() => {
+          window.location.href = "/dashboard";
+        }, 2500);
       } else {
-        setErrorMsg(result.message || "Đăng nhập bằng Google thất bại.");
+        setErrorMsg(result?.message || "Đăng nhập bằng Google thất bại.");
+        setIsLoading(false);
       }
     } catch (err) {
       console.error("Google Login error:", err);
       setErrorMsg(err.message || "Đăng nhập bằng Google thất bại.");
-    } finally {
       setIsLoading(false);
     }
   };
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    reset,
+    setValue,
+  } = useForm({
+    resolver: zodResolver(loginSchema),
+    defaultValues: {
+      email: rememberMeEmail,
+      password: "",
+      rememberMe: !!rememberMeEmail,
+    },
+  });
 
   useEffect(() => {
     const handleInitGoogle = () => {
@@ -74,20 +100,15 @@ const LoginForm = () => {
     }
   }, []);
 
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    reset,
-  } = useForm({
-    resolver: zodResolver(loginSchema),
-    defaultValues: {
-      email: "",
-      password: "",
-      rememberMe: false,
-    },
-  });
+  // Load remember me email from localStorage on component mount
+  useEffect(() => {
+    const savedEmail = localStorage.getItem("rememberMeEmail");
+    if (savedEmail) {
+      setRememberMeEmail(savedEmail);
+      setValue("email", savedEmail);
+      setValue("rememberMe", true);
+    }
+  }, [setValue]);
 
   const onSubmit = async (data) => {
     setIsLoading(true);
@@ -95,33 +116,81 @@ const LoginForm = () => {
     setErrorMsg("");
     try {
       const response = await authService.login(data.email, data.password);
-      if (response && response.success) {
+      
+      if (response?.success && response?.data?.token) {
         setSuccessMsg(response.message || "Đăng nhập thành công!");
         
         // Save token and user details to localStorage
-        if (response.data) {
-          localStorage.setItem("token", response.data.token);
-          localStorage.setItem("user", JSON.stringify(response.data.user));
+        localStorage.setItem("token", response.data.token);
+        localStorage.setItem("user", JSON.stringify(response.data.user || {}));
+        
+        // Handle remember me checkbox
+        if (data.rememberMe) {
+          localStorage.setItem("rememberMeEmail", data.email);
+        } else {
+          localStorage.removeItem("rememberMeEmail");
         }
         
+        // Clear form
         reset({ email: "", password: "", rememberMe: false });
+        setRememberMeEmail("");
+        
+        // Redirect after successful login - increased delay to allow user to see success message
+        setTimeout(() => {
+          window.location.href = "/dashboard";
+        }, 2500);
       } else {
-        setErrorMsg(response.message || "Đăng nhập không thành công.");
+        // Handle API error messages
+        const errorMessage = response?.message || "Đăng nhập không thành công.";
+        setErrorMsg(errorMessage);
+        setIsLoading(false);
       }
     } catch (err) {
       console.error("Login error:", err);
       setErrorMsg(err.message || "Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin.");
-    } finally {
       setIsLoading(false);
     }
   };
 
   return (
     <div className="text-white">
+      {/* TOP CONTROLS - THEME & LANGUAGE */}
+      <div className="d-flex justify-content-end gap-3 mb-4">
+        <button
+          type="button"
+          className="theme-toggle-btn"
+          onClick={toggleTheme}
+          title={isDark ? "Light mode" : "Dark mode"}
+        >
+          <Icon
+            icon={isDark ? "lucide:sun" : "lucide:moon"}
+            width="20"
+            height="20"
+          />
+        </button>
+        <div className="language-selector">
+          <button
+            type="button"
+            className={`lang-btn ${language === "en" ? "active" : ""}`}
+            onClick={() => changeLanguage("en")}
+          >
+            EN
+          </button>
+          <span className="lang-separator">|</span>
+          <button
+            type="button"
+            className={`lang-btn ${language === "vi" ? "active" : ""}`}
+            onClick={() => changeLanguage("vi")}
+          >
+            VN
+          </button>
+        </div>
+      </div>
+
       {/* HEADER */}
       <div className="mb-4">
-        <h2 className="auth-form-title mb-1">Đăng nhập</h2>
-        <p className="auth-form-subtitle mb-4">Chào mừng trở lại! Vui lòng nhập thông tin.</p>
+        <h2 className="auth-form-title mb-1">{t("login_title")}</h2>
+        <p className="auth-form-subtitle mb-4">{t("login_subtitle")}</p>
       </div>
 
       {/* SUCCESS ALERTS */}
@@ -157,7 +226,7 @@ const LoginForm = () => {
       {/* DIVIDER */}
       <div className="divider-container">
         <div className="divider-line"></div>
-        <span className="divider-text">HOẶC</span>
+        <span className="divider-text">{language === "en" ? "OR" : "HOẶC"}</span>
         <div className="divider-line"></div>
       </div>
 
@@ -166,7 +235,7 @@ const LoginForm = () => {
         {/* EMAIL */}
         <div className="form-group">
           <label htmlFor="email" className="form-label-custom">
-            Email <span className="text-danger">*</span>
+            {t("email_label")} <span className="text-danger">*</span>
           </label>
           <div className="input-wrapper">
             <span className="input-icon-left">
@@ -175,7 +244,7 @@ const LoginForm = () => {
             <input
               id="email"
               type="email"
-              placeholder="name@email.com"
+              placeholder={t("email_placeholder")}
               disabled={isLoading}
               className={`input-custom input-custom-has-icon ${errors.email ? "is-invalid-custom" : ""}`}
               {...register("email")}
@@ -193,10 +262,10 @@ const LoginForm = () => {
         <div className="form-group">
           <div className="d-flex justify-content-between align-items-center mb-2">
             <label htmlFor="password" className="form-label-custom m-0">
-              Mật khẩu <span className="text-danger">*</span>
+              {t("password_label")} <span className="text-danger">*</span>
             </label>
             <a href="#" className="action-link" style={{ fontSize: "0.825rem" }}>
-              Quên mật khẩu?
+              {t("forgot_password")}
             </a>
           </div>
           <div className="input-wrapper">
@@ -206,7 +275,7 @@ const LoginForm = () => {
             <input
               id="password"
               type={showPassword ? "text" : "password"}
-              placeholder="Nhập mật khẩu"
+              placeholder={t("password_placeholder")}
               disabled={isLoading}
               className={`input-custom input-custom-has-icon input-custom-password ${
                 errors.password ? "is-invalid-custom" : ""
@@ -243,7 +312,7 @@ const LoginForm = () => {
               disabled={isLoading}
               {...register("rememberMe")}
             />
-            <span>Ghi nhớ đăng nhập</span>
+            <span>{t("remember_me")}</span>
           </label>
         </div>
 
@@ -252,11 +321,11 @@ const LoginForm = () => {
           {isLoading ? (
             <>
               <div className="spinner-custom"></div>
-              <span>Đang xử lý...</span>
+              <span>{t("processing")}</span>
             </>
           ) : (
             <>
-              <span>Đăng nhập</span>
+              <span>{t("sign_in_button")}</span>
             </>
           )}
         </button>
@@ -265,9 +334,9 @@ const LoginForm = () => {
       {/* BOTTOM SECTION */}
       <div className="text-center mt-4">
         <p className="auth-footer-text m-0">
-          Chưa có tài khoản?{" "}
+          {t("no_account")}{" "}
           <a href="#" className="action-link fw-semibold ms-1">
-            Đăng ký miễn phí
+            {t("sign_up_free")}
           </a>
         </p>
       </div>

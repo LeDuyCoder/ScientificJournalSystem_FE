@@ -3,9 +3,15 @@ import { createRoot } from 'react-dom/client'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import './index.css'
 import AppRoutes from './app/routes/AppRoutes.jsx'
+import { ThemeProvider } from './app/providers/ThemeContext.jsx'
+import { LanguageProvider } from './app/providers/LanguageContext.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <AppRoutes />
+    <ThemeProvider>
+      <LanguageProvider>
+        <AppRoutes />
+      </LanguageProvider>
+    </ThemeProvider>
   </StrictMode>,
 )
