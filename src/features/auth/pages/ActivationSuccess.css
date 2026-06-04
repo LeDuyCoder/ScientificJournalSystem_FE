@@ -1,0 +1,146 @@
+.success-page {
+  min-height: 100vh;
+  background: #020817;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+}
+
+.logo {
+  margin-bottom: 24px;
+}
+
+.success-card {
+  width: 100%;
+  max-width: 560px;
+
+  background: #111827;
+  border: 1px solid #1f2937;
+
+  border-radius: 20px;
+  padding: 48px;
+  text-align: center;
+}
+
+.success-icon {
+  width: 90px;
+  height: 90px;
+
+  border-radius: 50%;
+  border: 2px solid #10b981;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin: 0 auto 24px;
+
+  color: #10b981;
+  font-size: 42px;
+}
+
+.description {
+  color: #94a3b8;
+}
+
+.countdown {
+  margin-top: 20px;
+  color: #94a3b8;
+}
+
+.countdown span {
+  color: #22d3ee;
+  margin: 0 4px;
+}
+
+.custom-progress {
+  height: 4px;
+  margin-top: 16px;
+
+  background: #1e293b;
+  border-radius: 999px;
+}
+
+.dashboard-btn {
+  width: 100%;
+  margin-top: 24px;
+
+  background: linear-gradient(
+    90deg,
+    #22d3ee,
+    #6366f1
+  );
+
+  border: none;
+  color: white;
+
+  box-shadow:
+  0 0 20px rgba(34, 211, 238, 0.3);
+}
+
+.home-btn {
+  color: #cbd5e1 !important;
+  margin-top: 12px;
+  background: transparent;
+  border: none;
+}
+
+.home-btn:hover {
+  color: white !important;
+}
+
+.support {
+  margin-top: 24px;
+  color: #64748b;
+}
+
+.support a {
+  color: #22d3ee;
+  text-decoration: none;
+}
+.logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.logo-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+
+  background: linear-gradient(
+    135deg,
+    #22d3ee,
+    #6366f1
+  );
+}
+.custom-progress-bar {
+  background: #22d3ee !important;
+}
+@media (max-width: 576px) {
+  .success-card {
+    margin: 0 16px;
+    padding: 32px 24px;
+  }
+
+  .success-card h2 {
+    font-size: 2rem;
+    line-height: 1.2;
+  }
+
+  .description {
+    font-size: 0.95rem;
+    line-height: 1.7;
+  }
+}
+.dashboard-btn {
+  color: white !important;
+}
+.support a:hover {
+  opacity: 0.8;
+}
