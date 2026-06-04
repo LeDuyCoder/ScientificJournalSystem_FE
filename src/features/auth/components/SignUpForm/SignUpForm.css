@@ -1,0 +1,111 @@
+/* Container form: giới hạn chiều rộng tối đa, căn giữa */
+.signup-form {
+  width: 100%;
+  max-width: 480px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px; /* Khoảng cách đều giữa các phần tử */
+}
+
+/* Phần header: tiêu đề + mô tả */
+.signup-form__header {
+  margin-bottom: 4px;
+}
+
+/* Tiêu đề "Tạo tài khoản" */
+.signup-form__title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #e2e8f0;
+  margin-bottom: 6px;
+}
+
+/* Mô tả nhỏ dưới tiêu đề */
+.signup-form__description {
+  font-size: 14px;
+  color: #94a3b8;
+  margin: 0;
+}
+
+/* Hàng chứa input Họ và Tên: nằm cạnh nhau */
+.signup-form__name-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Hai cột bằng nhau */
+  gap: 12px;
+}
+
+/* Phần checkbox điều khoản: icon + text nằm ngang */
+.signup-form__terms {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+/* Checkbox tùy chỉnh: căn với dòng text đầu tiên */
+.signup-form__checkbox {
+  width: 16px;
+  height: 16px;
+  margin-top: 2px;
+  accent-color: #3b82f6; /* Màu xanh khi checked */
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+/* Text điều khoản */
+.signup-form__terms-label {
+  font-size: 13px;
+  color: #94a3b8;
+  cursor: pointer;
+  line-height: 1.5;
+}
+
+/* Link màu xanh trong text điều khoản */
+.signup-form__terms-link {
+  color: #3b82f6;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+/* Hover link thì sáng lên */
+.signup-form__terms-link:hover {
+  color: #60a5fa;
+  text-decoration: underline;
+}
+
+/* Text "Đã có tài khoản?" căn giữa */
+.signup-form__login-link {
+  text-align: center;
+  font-size: 13px;
+  color: #94a3b8;
+  margin: 0;
+}
+
+/* Thông báo lỗi checkbox điều khoản */
+.signup-form__terms-error {
+  font-size: 12px;
+  color: #ef4444;
+  margin-top: -8px; /* Kéo sát lên checkbox */
+}
+
+/* Thông báo lỗi API chung: box đỏ nổi bật */
+.signup-form__api-error {
+  padding: 10px 14px;
+  background-color: rgba(239, 68, 68, 0.1); /* Nền đỏ mờ */
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: 8px;
+  color: #ef4444;
+  font-size: 13px;
+}
+
+/* Trạng thái thành công: căn giữa nội dung */
+.signup-form--success {
+  align-items: center;
+  text-align: center;
+  gap: 12px;
+}
+
+/* Icon check to */
+.signup-form__success-icon {
+  font-size: 48px;
+  margin-bottom: 8px;
+}

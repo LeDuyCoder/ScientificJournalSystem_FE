@@ -1,0 +1,54 @@
+{
+  "banner": {
+    "logoText": "ResearchPulse",
+    "heading": "Tham gia cộng đồng",
+    "headingHighlight": "nghiên cứu",
+    "description": "Cùng hàng nghìn nhà nghiên cứu sử dụng ResearchPulse để theo dõi xu hướng khoa học.",
+    "features": [
+      "Miễn phí hoàn toàn, không cần thẻ",
+      "Truy cập 200M+ bài báo khoa học",
+      "Theo dõi keyword và nhận thông báo",
+      "Tạo project và quản lý journal"
+    ]
+  },
+  "signUp": {
+    "title": "Tạo tài khoản",
+    "description": "Đăng ký miễn phí, không cần thẻ tín dụng.",
+    "googleButton": "Tiếp tục với Google",
+    "divider": "HOẶC",
+    "firstName": "Họ",
+    "firstNamePlaceholder": "Nguyễn",
+    "lastName": "Tên",
+    "lastNamePlaceholder": "Văn A",
+    "email": "Email",
+    "emailPlaceholder": "name@email.com",
+    "password": "Mật khẩu",
+    "passwordPlaceholder": "Tối thiểu 8 ký tự",
+    "confirmPassword": "Xác nhận mật khẩu",
+    "confirmPasswordPlaceholder": "Nhập lại mật khẩu",
+    "terms": "Tôi đồng ý với",
+    "termsLink": "Điều khoản dịch vụ",
+    "and": "và",
+    "privacyLink": "Chính sách bảo mật",
+    "submitButton": "Tạo tài khoản",
+    "loginText": "Đã có tài khoản?",
+    "loginLink": "Đăng nhập",
+    "successTitle": "Đăng ký thành công!",
+    "successDescription": "Vui lòng kiểm tra email của bạn và click vào link kích hoạt để hoàn tất đăng ký."
+  },
+  "validation": {
+    "firstNameRequired": "Họ không được để trống",
+    "lastNameRequired": "Tên không được để trống",
+    "emailRequired": "Email không được để trống",
+    "emailInvalid": "Email không đúng định dạng",
+    "passwordRequired": "Mật khẩu không được để trống",
+    "passwordMinLength": "Mật khẩu phải có ít nhất 8 ký tự",
+    "confirmPasswordRequired": "Vui lòng xác nhận mật khẩu",
+    "confirmPasswordMismatch": "Mật khẩu xác nhận không khớp",
+    "termsRequired": "Bạn phải đồng ý với điều khoản dịch vụ",
+    "emailExists": "Email này đã được đăng ký"
+  },
+  "error": {
+    "general": "Đã có lỗi xảy ra, vui lòng thử lại"
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "banner": {
+    "logoText": "ResearchPulse",
+    "heading": "Join the",
+    "headingHighlight": "research community",
+    "description": "Join thousands of researchers using ResearchPulse to track scientific trends.",
+    "features": [
+      "Completely free, no card required",
+      "Access 200M+ scientific papers",
+      "Track keywords and receive notifications",
+      "Create projects and manage journals"
+    ]
+  },
+  "signUp": {
+    "title": "Create account",
+    "description": "Sign up for free, no credit card required.",
+    "googleButton": "Continue with Google",
+    "divider": "OR",
+    "firstName": "First name",
+    "firstNamePlaceholder": "John",
+    "lastName": "Last name",
+    "lastNamePlaceholder": "Doe",
+    "email": "Email",
+    "emailPlaceholder": "name@email.com",
+    "password": "Password",
+    "passwordPlaceholder": "Minimum 8 characters",
+    "confirmPassword": "Confirm password",
+    "confirmPasswordPlaceholder": "Re-enter password",
+    "terms": "I agree to the",
+    "termsLink": "Terms of Service",
+    "and": "and",
+    "privacyLink": "Privacy Policy",
+    "submitButton": "Create account",
+    "loginText": "Already have an account?",
+    "loginLink": "Sign in",
+    "successTitle": "Registration successful!",
+    "successDescription": "Please check your email and click the activation link to complete registration."
+  },
+  "validation": {
+    "firstNameRequired": "First name is required",
+    "lastNameRequired": "Last name is required",
+    "emailRequired": "Email is required",
+    "emailInvalid": "Invalid email format",
+    "passwordRequired": "Password is required",
+    "passwordMinLength": "Password must be at least 8 characters",
+    "confirmPasswordRequired": "Please confirm your password",
+    "confirmPasswordMismatch": "Passwords do not match",
+    "termsRequired": "You must agree to the terms of service",
+    "emailExists": "This email is already registered"
+  },
+  "error": {
+    "general": "An error occurred, please try again"
+  }
+}

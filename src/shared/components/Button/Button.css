@@ -1,0 +1,76 @@
+/* Style base cho tất cả button, reset các style mặc định của browser */
+.btn-custom {
+  border: none;
+  border-radius: 8px;
+  padding: 12px 20px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.1s;
+  outline: none;
+}
+
+/* Nhấn xuống thì thu nhỏ nhẹ để có cảm giác click */
+.btn-custom:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+/* Variant primary: gradient xanh theo đúng thiết kế */
+.btn-primary {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: #ffffff;
+}
+
+/* Hover trên primary thì sáng lên nhẹ */
+.btn-primary:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+/* Variant secondary: nền trong suốt, có border */
+.btn-secondary {
+  background: transparent;
+  color: #e2e8f0;
+  border: 1px solid #2d3748;
+}
+
+/* Hover trên secondary thì border sáng lên */
+.btn-secondary:hover:not(:disabled) {
+  border-color: #3b82f6;
+  color: #3b82f6;
+}
+
+/* Full width: chiếm toàn bộ chiều ngang container */
+.btn-full-width {
+  width: 100%;
+}
+
+/* Trạng thái disabled: mờ đi và không cho click */
+.btn-disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Wrapper căn giữa spinner và text "Đang xử lý..." */
+.btn-spinner-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+/* Spinner: hình tròn xoay, dùng border trick */
+.btn-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #ffffff; /* Chỉ phần trên có màu để tạo hiệu ứng xoay */
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+/* Animation xoay 360 độ liên tục */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

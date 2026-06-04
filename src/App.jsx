@@ -1,9 +1,9 @@
+import SignUpPage from './features/auth/pages/SignUpPage'
 import './App.css'
 
-function App() {
-  return (
-    <></>
-  )
+// App root: tạm thời trỏ thẳng vào SignUpPage để test
+const App = () => {
+  return <SignUpPage />
 }
 
 export default App

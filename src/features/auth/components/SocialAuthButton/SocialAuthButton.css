@@ -1,0 +1,29 @@
+/* Nút Google: full width, border mỏng, background tối */
+.social-auth-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 11px 20px;
+  background-color: #1e2433;
+  border: 1px solid #2d3748;
+  border-radius: 8px;
+  color: #e2e8f0;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color 0.2s, background-color 0.2s;
+}
+
+/* Hover: border sáng lên nhẹ */
+.social-auth-btn:hover:not(:disabled) {
+  border-color: #4a5568;
+  background-color: #252d3d;
+}
+
+/* Disabled: mờ đi */
+.social-auth-btn--disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

@@ -1,0 +1,44 @@
+/* Container fullscreen: chia đôi màn hình theo chiều ngang */
+.auth-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Hai cột bằng nhau 50/50 */
+  min-height: 100vh;              /* Chiếm toàn bộ chiều cao màn hình */
+  background-color: #0f1117;      /* Background đen tối */
+}
+
+/* Cột trái chứa banner */
+.auth-layout__banner {
+  position: relative; /* Để banner có thể dùng position absolute bên trong */
+  overflow: hidden;   /* Ẩn phần grid overlay tràn ra ngoài */
+}
+
+/* Cột phải chứa form: căn giữa nội dung */
+.auth-layout__form {
+  display: flex;
+  align-items: center;     /* Căn giữa theo chiều dọc */
+  justify-content: center; /* Căn giữa theo chiều ngang */
+  padding: 40px;           /* Khoảng cách với các cạnh */
+  overflow-y: auto;        /* Cho phép scroll nếu form dài hơn màn hình */
+}
+
+/* Tablet: thu nhỏ padding */
+@media (max-width: 1024px) {
+  .auth-layout__form {
+    padding: 24px;
+  }
+}
+
+/* Mobile: ẩn banner trái, form chiếm toàn bộ màn hình */
+@media (max-width: 768px) {
+  .auth-layout {
+    grid-template-columns: 1fr; /* Chỉ còn 1 cột */
+  }
+
+  .auth-layout__banner {
+    display: none; /* Ẩn hoàn toàn banner */
+  }
+
+  .auth-layout__form {
+    padding: 24px 16px;
+  }
+}
