@@ -17,3 +17,13 @@ export const getArticlesListApi = (params) => {
 export const getArticleDetailApi = (id) => {
   return api.get(`/articles/${id}`);
 };
+
+/**
+ * Bookmark an article
+ * @param {number|string} id - ID bài báo
+ * @returns {Promise} Axios promise
+ */
+export const bookmarkArticleApi = (id) => {
+  return api.post(`/articles/${id}/bookmark`);
+};
+

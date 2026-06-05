@@ -1,9 +1,10 @@
 import { useState, useEffect, useCallback } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import { getArticlesListApi } from '../api/articleApi';
 
 export default function useArticleList() {
   const [searchParams, setSearchParams] = useSearchParams();
+  const navigate = useNavigate();
 
   // Đọc các giá trị lọc từ URL query params
   const search = searchParams.get('search') || '';
@@ -22,6 +23,9 @@ export default function useArticleList() {
   const [total, setTotal] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  
+  // Auth required modal state
+  const [showAuthModal, setShowAuthModal] = useState(false);
 
   // Stats Thống kê
   const [stats, setStats] = useState({
@@ -144,9 +148,32 @@ export default function useArticleList() {
     setSearchParams(new URLSearchParams());
   }, [setSearchParams]);
 
+  // Điều hướng phân trang
+  const handlePageChange = useCallback((newPage) => {
+    updateFilters({ page: newPage });
+  }, [updateFilters]);
+
+  // Xử lý khi click vào chi tiết bài báo (yêu cầu kiểm tra đăng nhập)
+  const handleDetailClick = useCallback((id) => {
+    const token = localStorage.getItem('researchpulse_token');
+    if (!token) {
+      setShowAuthModal(true);
+    } else {
+      navigate(`/articles/${id}`);
+    }
+  }, [navigate]);
+
+  // Quay lại trang chủ / trang đăng nhập
+  const handleAuthRedirect = useCallback(() => {
+    setShowAuthModal(false);
+    navigate('/');
+  }, [navigate]);
+
   return {
     articles,
     total,
+    totalPages: Math.ceil(total / limit) || 1,
+    currentPage: page,
     isLoading,
     error,
     isUsingMock: false,
@@ -164,6 +191,11 @@ export default function useArticleList() {
     },
     updateFilters,
     clearFilters,
-    refetch: fetchArticles
+    refetch: fetchArticles,
+    handlePageChange,
+    handleDetailClick,
+    showAuthModal,
+    setShowAuthModal,
+    handleAuthRedirect
   };
 }
