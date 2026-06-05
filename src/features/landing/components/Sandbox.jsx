@@ -6,37 +6,37 @@ const typeConfig = {
   JOURNAL: {
     labelKey: 'typeJournal',
     icon: 'lucide:book-open',
-    badgeClass: 'bg-blue-500/10 text-blue-400 border border-blue-500/20',
+    badgeClass: 'badge-journal',
     iconClass: 'text-blue-400',
   },
   AUTHOR: {
     labelKey: 'typeAuthor',
     icon: 'lucide:user',
-    badgeClass: 'bg-purple-500/10 text-purple-400 border border-purple-500/20',
+    badgeClass: 'badge-author',
     iconClass: 'text-purple-400',
   },
   ARTICLE: {
     labelKey: 'typeArticle',
     icon: 'lucide:file-text',
-    badgeClass: 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20',
+    badgeClass: 'badge-article',
     iconClass: 'text-emerald-400',
   },
   KEYWORD: {
     labelKey: 'typeKeyword',
     icon: 'lucide:hash',
-    badgeClass: 'bg-amber-500/10 text-amber-400 border border-amber-500/20',
+    badgeClass: 'badge-keyword',
     iconClass: 'text-amber-400',
   },
   AREA: {
     labelKey: 'typeArea',
     icon: 'lucide:layers',
-    badgeClass: 'bg-pink-500/10 text-pink-400 border border-pink-500/20',
+    badgeClass: 'badge-area',
     iconClass: 'text-pink-400',
   },
   CATEGORY: {
     labelKey: 'typeCategory',
     icon: 'lucide:tag',
-    badgeClass: 'bg-indigo-500/10 text-indigo-400 border border-indigo-500/20',
+    badgeClass: 'badge-category',
     iconClass: 'text-indigo-400',
   },
 };
@@ -44,8 +44,8 @@ const typeConfig = {
 const defaultType = {
   labelKey: 'search',
   icon: 'lucide:help-circle',
-  badgeClass: 'bg-gray-500/10 text-gray-400 border border-gray-500/20',
-  iconClass: 'text-gray-400',
+  badgeClass: 'badge-default',
+  iconClass: 'text-secondary',
 };
 
 export default function Sandbox() {
@@ -69,27 +69,29 @@ export default function Sandbox() {
   ];
 
   return (
-    <section id="search-sandbox" className="py-24 relative bg-dark-bg">
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+    <section id="search-sandbox" className="position-relative bg-dark-bg" style={{ paddingTop: '6rem', paddingBottom: '6rem' }}>
+      <div className="mx-auto px-3 px-sm-4 px-lg-5" style={{ maxWidth: '64rem' }}>
 
         {/* Glowing border container */}
-        <div className="relative group p-[1px] rounded-3xl bg-gradient-to-r from-cyan-500/20 via-indigo-500/10 to-cyan-500/20 hover:from-cyan-400/40 hover:via-indigo-500/30 hover:to-cyan-400/40 transition-all duration-500 shadow-2xl">
+        <div className="position-relative group rounded-3xl glass-border-container" style={{ padding: '1px' }}>
 
           {/* Card Body */}
-          <div className="bg-[#0c101d] rounded-[23px] px-6 py-12 sm:p-16 text-center relative z-10 overflow-hidden">
+          <div
+            className="px-4 py-5 px-sm-5 py-sm-5 text-center position-relative overflow-hidden"
+            style={{ backgroundColor: '#0c101d', borderRadius: '23px', zIndex: 10 }}
+          >
 
             {/* Header label */}
-            <div className="inline-flex items-center space-x-2 text-cyan-400 text-xs font-bold tracking-widest uppercase mb-6">
-              <Icon icon="lucide:sparkle" className="text-cyan-400 animate-spin-slow" />
-              <span>{t('sandboxTitle')}</span>
+            <div className="d-inline-flex align-items-center gap-2 text-cyan-400 text-xs fw-bold text-uppercase mb-4" style={{ letterSpacing: '0.15em' }}>
+              <span>✦ {t('sandboxTitle')}</span>
             </div>
 
             {/* Form */}
-            <form onSubmit={handleSearchSubmit} className="max-w-3xl mx-auto relative mb-6">
-              <div className="relative flex items-center">
+            <form onSubmit={handleSearchSubmit} className="mx-auto position-relative mb-4" style={{ maxWidth: '48rem' }}>
+              <div className="position-relative d-flex align-items-center">
                 {/* Search Icon */}
-                <div className="absolute left-5 text-gray-500 flex items-center pointer-events-none">
-                  <Icon icon="lucide:search" className="text-xl" />
+                <div className="position-absolute start-0 ps-4 text-secondary d-flex align-items-center pe-none">
+                  <Icon icon="lucide:search" className="fs-5" />
                 </div>
 
                 {/* Input Text Box */}
@@ -98,14 +100,16 @@ export default function Sandbox() {
                   value={searchValue}
                   onChange={(e) => setSearchValue(e.target.value)}
                   placeholder={t('sandboxPlaceholder')}
-                  className="w-full pl-14 pr-32 py-4.5 rounded-full bg-white/5 border border-white/8 text-white placeholder-gray-500 focus:outline-none focus:border-cyan-500/80 focus:bg-white/8 text-sm sm:text-base transition-all duration-300 shadow-inner"
+                  className="w-100 search-input rounded-pill bg-white/5 border-0 text-white placeholder-gray-500 fs-6 shadow-inner"
+                  style={{ paddingLeft: '3.5rem', paddingRight: '8.5rem', paddingTop: '1rem', paddingBottom: '1rem', transition: 'all 0.3s ease' }}
                 />
 
                 {/* Search Button inside input */}
                 <button
                   type="submit"
                   disabled={isLoading}
-                  className="absolute right-2 px-6 py-2.5 rounded-full bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white font-bold text-xs sm:text-sm tracking-wide shadow-[0_0_15px_rgba(6,182,212,0.2)] flex items-center space-x-2 transition-all duration-300 disabled:opacity-50 cursor-pointer"
+                  className="position-absolute end-0 me-2 btn rounded-pill bg-brand-gradient text-white fw-bold d-flex align-items-center gap-2 btn-hover-transform btn-primary-glow border-0"
+                  style={{ padding: '0.625rem 1.5rem', fontSize: '0.875rem', letterSpacing: '0.05em' }}
                 >
                   {isLoading ? (
                     <>
@@ -114,8 +118,7 @@ export default function Sandbox() {
                     </>
                   ) : (
                     <>
-                      <span>{t('searchBtn')}</span>
-                      <Icon icon="lucide:arrow-right" className="text-xs" />
+                      <span>{t('searchBtn')} →</span>
                     </>
                   )}
                 </button>
@@ -123,18 +126,18 @@ export default function Sandbox() {
             </form>
 
             {/* Tag suggestions */}
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 max-w-4xl mx-auto">
-              <span className="text-xs text-gray-500 font-bold tracking-wider uppercase flex items-center space-x-1">
-                <Icon icon="lucide:sliders" className="text-[10px]" />
-                <span>{t('tryNowLabel')}</span>
+            <div className="d-flex flex-column flex-sm-row align-items-center justify-content-center gap-3 mx-auto" style={{ maxWidth: '56rem' }}>
+              <span className="text-cyan-400 fw-bold text-uppercase d-flex align-items-center gap-1" style={{ fontSize: '0.75rem', letterSpacing: '0.05em' }}>
+                — {t('tryNowLabel')}
               </span>
-              <div className="flex flex-wrap items-center justify-center gap-2">
+              <div className="d-flex flex-wrap align-items-center justify-content-center gap-2">
                 {tags.map((tag) => (
                   <button
                     key={tag}
                     type="button"
                     onClick={() => handleTagClick(tag)}
-                    className="px-3.5 py-1.5 rounded-full bg-white/3 hover:bg-cyan-500/10 border border-white/5 hover:border-cyan-500/30 text-gray-400 hover:text-cyan-400 text-xs font-medium tracking-wide transition-all duration-200 cursor-pointer"
+                    className="btn btn-sm rounded-pill bg-white/3 border-0 text-secondary text-xs fw-medium cursor-pointer btn-hover-transform hover-bg-white-10"
+                    style={{ transition: 'all 0.2s ease', padding: '0.375rem 1rem' }}
                   >
                     {tag}
                   </button>
@@ -144,59 +147,65 @@ export default function Sandbox() {
 
             {/* Interactive Mock Results */}
             {isLoading && (
-              <div className="mt-10 max-w-2xl mx-auto p-6 rounded-2xl bg-white/2 border border-white/5 flex items-center justify-center space-x-3 text-sm text-gray-400 animate-pulse">
+              <div className="mt-5 mx-auto p-4 rounded-3 bg-white/3 border-0 d-flex align-items-center justify-content-center gap-3 text-sm text-secondary animate-pulse" style={{ maxWidth: '42rem' }}>
                 <Icon icon="lucide:database" className="text-cyan-400 animate-bounce" />
                 <span>Analyzing publications databases...</span>
               </div>
             )}
 
             {error && (
-              <div className="mt-10 max-w-2xl mx-auto p-6 rounded-2xl bg-red-950/20 border border-red-800/20 text-left animate-in fade-in slide-in-from-bottom-4 duration-300">
-                <div className="flex items-center space-x-3 text-red-400">
-                  <Icon icon="lucide:alert-circle" className="text-xl shrink-0" />
+              <div className="mt-5 mx-auto p-4 rounded-3 bg-danger bg-opacity-10 border border-danger border-opacity-25 text-start animate-fade-in" style={{ maxWidth: '42rem' }}>
+                <div className="d-flex align-items-start gap-3 text-danger">
+                  <Icon icon="lucide:alert-circle" className="fs-4 shrink-0" />
                   <div>
-                    <h5 className="font-bold text-white text-sm">API Error</h5>
-                    <p className="text-xs text-gray-400 mt-1">{error}</p>
+                    <h5 className="fw-bold text-white fs-6 mb-1">API Error</h5>
+                    <p className="text-xs text-secondary mb-0">{error}</p>
                   </div>
                 </div>
               </div>
             )}
 
             {searchResult && (
-              <div className="mt-10 max-w-2xl mx-auto p-6 rounded-2xl bg-[#0e1424]/80 backdrop-blur-md border border-white/10 text-left animate-in fade-in slide-in-from-bottom-4 duration-300 shadow-[0_8px_32px_rgba(0,0,0,0.4)]">
-                <div className="flex items-center justify-between mb-4 border-b border-white/5 pb-3">
-                  <div className="flex items-center space-x-2">
-                    <div className="w-2.5 h-2.5 rounded-full animate-pulse bg-green-400" />
+              <div
+                className="mt-5 mx-auto p-4 rounded-3 bg-dark-card text-start animate-fade-in shadow-lg"
+                style={{ maxWidth: '42rem', backdropFilter: 'blur(12px)' }}
+              >
+                <div className="d-flex align-items-center justify-content-between mb-3 pb-2">
+                  <div className="d-flex align-items-center gap-2">
+                    <div className="rounded-circle animate-pulse bg-green-400" style={{ width: '8px', height: '8px' }} />
                     <span className="text-xs font-bold tracking-wider uppercase text-green-400">
                       {t('realData')}
                     </span>
                   </div>
-                  <span className="text-xs text-gray-500">
+                  <span className="text-xs text-secondary">
                     {t('sourceLiveApi')}
                   </span>
                 </div>
-                <h4 className="font-display font-bold text-white text-base sm:text-lg mb-4">
+                <h4 className="fw-bold text-white fs-5 mb-3" style={{ fontFamily: 'var(--font-display)' }}>
                   {t('resultsFor')} "<span className="text-cyan-400">{searchResult.keyword}</span>"
                 </h4>
 
                 {searchResult.items && searchResult.items.length > 0 ? (
-                  <div className="space-y-2 max-h-96 overflow-y-auto pr-1 custom-scrollbar">
+                  <div className="d-flex flex-column gap-2 overflow-y-auto pe-1 custom-scrollbar" style={{ maxHeight: '24rem' }}>
                     {searchResult.items.map((item, index) => {
                       const cfg = typeConfig[item.type] || defaultType;
                       return (
                         <div
                           key={item.id || index}
-                          className="flex items-center justify-between p-3.5 rounded-xl bg-white/3 hover:bg-white/8 border border-white/5 hover:border-cyan-500/30 transition-all duration-200 group"
+                          className="d-flex align-items-center justify-content-between p-3 rounded-3 search-result-item transition-all duration-200 group w-100 overflow-hidden"
                         >
-                          <div className="flex items-center space-x-3.5 min-w-0">
-                            <div className={`p-2 rounded-lg bg-white/5 border border-white/5 group-hover:border-cyan-500/20 transition-all duration-200 ${cfg.iconClass}`}>
-                              <Icon icon={cfg.icon} className="text-lg" />
+                          <div className="d-flex align-items-center gap-3 min-w-0 flex-grow-1">
+                            <div className={`p-2 rounded-3 bg-white/5  transition-all duration-200 shrink-0 ${cfg.iconClass}`}>
+                              <Icon icon={cfg.icon} className="fs-5" />
                             </div>
-                            <span className="font-medium text-white text-sm sm:text-base truncate group-hover:text-cyan-300 transition-colors duration-200">
-                              {item.name}
+                            <span className="fw-medium text-white fs-6 text-truncate group-hover-cyan transition-colors min-w-0">
+                              {item.name && item.name.length > 200 ? `${item.name.substring(0, 200)}...` : item.name}
                             </span>
                           </div>
-                          <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold tracking-wide uppercase shrink-0 ${cfg.badgeClass}`}>
+                          <span
+                            className={`px-2.5 py-1 rounded-pill fw-bold text-uppercase shrink-0 ms-3 ${cfg.badgeClass}`}
+                            style={{ fontSize: '10px', letterSpacing: '0.05em' }}
+                          >
                             {t(cfg.labelKey)}
                           </span>
                         </div>
@@ -204,9 +213,9 @@ export default function Sandbox() {
                     })}
                   </div>
                 ) : (
-                  <div className="flex flex-col items-center justify-center py-12 text-center">
-                    <Icon icon="lucide:search-x" className="text-4xl text-gray-500 mb-3" />
-                    <p className="text-sm text-gray-400">{t('noResults')}</p>
+                  <div className="d-flex flex-column items-center justify-content-center py-5 text-center">
+                    <Icon icon="lucide:search-x" className="fs-1 text-secondary mb-3" />
+                    <p className="text-sm text-secondary">{t('noResults')}</p>
                   </div>
                 )}
               </div>

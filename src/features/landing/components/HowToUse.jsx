@@ -5,17 +5,23 @@ import { useTranslation } from 'react-i18next';
  */
 function StepItem({ number, title, description }) {
   return (
-    <div className="flex flex-col items-center text-center px-4 relative z-10 group">
+    <div className="col d-flex flex-column align-items-center text-center px-3 position-relative z-1 group">
       {/* Circle Number Badge */}
-      <div className="w-14 h-14 rounded-full bg-gradient-to-br from-cyan-400 to-indigo-600 flex items-center justify-center text-white font-display font-extrabold text-lg shadow-[0_0_20px_rgba(6,182,212,0.3)] group-hover:shadow-[0_0_25px_rgba(6,182,212,0.5)] group-hover:scale-110 transition-all duration-300 mb-6">
+      <div
+        className="rounded-circle bg-brand-gradient d-flex align-items-center justify-content-center text-white fw-bold btn-primary-glow group-hover-scale mb-4"
+        style={{ width: '3.5rem', height: '3.5rem', fontFamily: 'var(--font-display)', fontSize: '1.25rem', transition: 'all 0.3s ease' }}
+      >
         {number}
       </div>
 
       {/* Step Content */}
-      <h3 className="font-display font-bold text-white text-base sm:text-lg mb-3 tracking-wide group-hover:text-cyan-300 transition-colors duration-300">
+      <h3
+        className="fw-bold text-white fs-6 mb-2 group-hover-cyan transition-colors"
+        style={{ fontFamily: 'var(--font-display)', letterSpacing: '0.02em' }}
+      >
         {title}
       </h3>
-      <p className="font-sans text-gray-400 text-sm leading-relaxed max-w-xs">
+      <p className="text-secondary fs-6 mb-0" style={{ color: '#adb5bd', lineHeight: 1.5, maxWidth: '18rem' }}>
         {description}
       </p>
     </div>
@@ -33,30 +39,33 @@ export default function HowToUse() {
   ];
 
   return (
-    <section id="how-to-use" className="py-24 relative bg-dark-bg border-t border-white/5">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-        
+    <section id="how-to-use" className="position-relative bg-dark-bg border-top border-white/5" style={{ paddingTop: '6rem', paddingBottom: '6rem' }}>
+      <div className="position-relative mx-auto px-3 px-sm-4 px-lg-5" style={{ maxWidth: '72rem' }}>
+
         {/* Section Header */}
-        <div className="text-center mb-20">
-          <div className="inline-flex items-center space-x-2 text-cyan-400 text-xs font-bold tracking-widest uppercase mb-4">
-            <span className="w-6 h-px bg-cyan-400/50" />
+        <div className="text-center mb-5">
+          <div className="d-inline-flex align-items-center gap-2 text-cyan-400 text-xs fw-bold text-uppercase mb-3" style={{ letterSpacing: '0.15em' }}>
+            <span style={{ width: '1.5rem', height: '1px', backgroundColor: 'rgba(0, 210, 255, 0.3)' }} />
             <span>{t('howToUseSubtitle')}</span>
           </div>
-          <h2 className="font-display font-extrabold text-3xl sm:text-4xl text-white tracking-tight mb-4">
+          <h2 className="text-white fw-bold mb-3" style={{ fontFamily: 'var(--font-display)', fontSize: 'calc(1.5rem + 1.5vw)', letterSpacing: '-0.01em' }}>
             {t('howToUseTitle')}
           </h2>
-          <p className="font-sans text-gray-400 text-sm sm:text-base max-w-md mx-auto">
+          <p className="text-secondary fs-6 mx-auto mb-0" style={{ color: '#adb5bd', maxWidth: '28rem' }}>
             {t('howToUseDesc')}
           </p>
         </div>
 
         {/* Steps container (Desktop: horizontal connecting line, Mobile: vertical stack) */}
-        <div className="relative">
+        <div className="position-relative">
           {/* Horizontal dotted connector line (hidden on mobile, visible on lg screens) */}
-          <div className="absolute top-7 left-[10%] right-[10%] h-0.5 border-t border-dashed border-white/10 hidden lg:block z-0" />
-          
+          <div
+            className="position-absolute start-0 end-0 border-top border-dashed border-white/10 d-none d-lg-block"
+            style={{ top: '1.75rem', zIndex: 0, left: '10%', right: '10%' }}
+          />
+
           {/* Steps layout grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-6 relative">
+          <div className="row row-cols-1 row-cols-sm-2 row-cols-lg-4 g-5 g-lg-4 position-relative z-1">
             {steps.map((step) => (
               <StepItem
                 key={step.number}
