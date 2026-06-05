@@ -1,14 +1,24 @@
 import { useState, useEffect, useRef } from 'react';
 import { useTranslation } from 'react-i18next';
 import Icon from '../../../shared/components/Icon';
+import useAuth from '../../auth/hooks/useAuth';
 
 export default function Header() {
   const { t, i18n } = useTranslation();
+  const { user, fetchProfile, logout } = useAuth();
   const language = i18n.language || 'vi';
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isLangDropdownOpen, setIsLangDropdownOpen] = useState(false);
   const langDropdownRef = useRef(null);
+
+  // Load user profile on mount if token exists
+  useEffect(() => {
+    const token = localStorage.getItem('researchpulse_token');
+    if (token) {
+      fetchProfile();
+    }
+  }, [fetchProfile]);
 
   // Monitor scroll for sticky styles
   useEffect(() => {
@@ -130,15 +140,36 @@ export default function Header() {
               )}
             </div>
 
-            {/* Sign In Button */}
-            <button className="text-sm font-semibold text-gray-300 hover:text-white transition-colors duration-200 px-3 py-2 cursor-pointer">
-              {t('signIn')}
-            </button>
+            {user ? (
+              <div className="flex items-center space-x-4">
+                <div className="flex items-center space-x-2">
+                  <div className="w-8.5 h-8.5 rounded-full bg-gradient-to-br from-cyan-400 to-indigo-600 flex items-center justify-center text-white text-xs font-bold shadow-[0_0_10px_rgba(6,182,212,0.2)]">
+                    {user.username ? user.username.charAt(0).toUpperCase() : 'U'}
+                  </div>
+                  <span className="text-xs text-gray-300 font-semibold hidden lg:inline-block">
+                    {user.username || 'User'}
+                  </span>
+                </div>
+                <button
+                  onClick={logout}
+                  className="text-xs font-semibold text-gray-400 hover:text-red-400 transition-colors duration-200 px-3 py-2 cursor-pointer"
+                >
+                  {language.startsWith('vi') ? 'Đăng xuất' : 'Sign Out'}
+                </button>
+              </div>
+            ) : (
+              <>
+                {/* Sign In Button */}
+                <button className="text-sm font-semibold text-gray-300 hover:text-white transition-colors duration-200 px-3 py-2 cursor-pointer">
+                  {t('signIn')}
+                </button>
 
-            {/* Sign Up Button */}
-            <button className="px-5 py-2.5 rounded-full bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white text-xs font-bold tracking-wide shadow-[0_0_15px_rgba(6,182,212,0.25)] hover:shadow-[0_0_20px_rgba(6,182,212,0.45)] hover:scale-102 transition-all duration-200 cursor-pointer">
-              {t('signUp')}
-            </button>
+                {/* Sign Up Button */}
+                <button className="px-5 py-2.5 rounded-full bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white text-xs font-bold tracking-wide shadow-[0_0_15px_rgba(6,182,212,0.25)] hover:shadow-[0_0_20px_rgba(6,182,212,0.45)] hover:scale-102 transition-all duration-200 cursor-pointer">
+                  {t('signUp')}
+                </button>
+              </>
+            )}
           </div>
 
           {/* Mobile Menu Hamburger Button */}
@@ -243,12 +274,36 @@ export default function Header() {
 
         {/* Actions in Drawer */}
         <div className="flex flex-col space-y-3 pt-4 border-t border-white/8">
-          <button className="w-full py-3 rounded-xl bg-white/5 hover:bg-white/10 text-gray-200 hover:text-white text-sm font-semibold transition-all duration-200">
-            {t('signIn')}
-          </button>
-          <button className="w-full py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white text-sm font-bold shadow-[0_0_15px_rgba(6,182,212,0.25)] transition-all duration-200">
-            {t('signUp')}
-          </button>
+          {user ? (
+            <div className="space-y-3">
+              <div className="flex items-center space-x-3 p-3 rounded-xl bg-white/3">
+                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-cyan-400 to-indigo-600 flex items-center justify-center text-white text-xs font-bold">
+                  {user.username ? user.username.charAt(0).toUpperCase() : 'U'}
+                </div>
+                <span className="text-sm text-white font-medium">
+                  {user.username || 'User'}
+                </span>
+              </div>
+              <button
+                onClick={() => {
+                  logout();
+                  setIsMobileMenuOpen(false);
+                }}
+                className="w-full py-3 rounded-xl bg-red-950/20 hover:bg-red-900/30 border border-red-900/30 text-red-400 text-sm font-semibold transition-all duration-200"
+              >
+                {language.startsWith('vi') ? 'Đăng xuất' : 'Sign Out'}
+              </button>
+            </div>
+          ) : (
+            <>
+              <button className="w-full py-3 rounded-xl bg-white/5 hover:bg-white/10 text-gray-200 hover:text-white text-sm font-semibold transition-all duration-200">
+                {t('signIn')}
+              </button>
+              <button className="w-full py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white text-sm font-bold shadow-[0_0_15px_rgba(6,182,212,0.25)] transition-all duration-200">
+                {t('signUp')}
+              </button>
+            </>
+          )}
         </div>
       </div>
     </header>

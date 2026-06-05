@@ -17,3 +17,50 @@ export const searchArticlesApi = (keywords, page = 1, limit = 10) => {
     },
   });
 };
+
+/**
+ * Create a new article entry
+ * @param {Object} data - Article fields
+ * @returns {Promise} Axios promise
+ */
+export const createArticleApi = (data) => {
+  return api.post('/articles', data);
+};
+
+/**
+ * Get detailed article by ID
+ * @param {number|string} id - Article ID
+ * @returns {Promise} Axios promise
+ */
+export const getArticleByIdApi = (id) => {
+  return api.get(`/articles/${id}`);
+};
+
+/**
+ * Update article details by ID
+ * @param {number|string} id - Article ID
+ * @param {Object} data - Updated article fields
+ * @returns {Promise} Axios promise
+ */
+export const updateArticleApi = (id, data) => {
+  return api.put(`/articles/${id}`, data);
+};
+
+/**
+ * Soft delete an article by ID
+ * @param {number|string} id - Article ID
+ * @returns {Promise} Axios promise
+ */
+export const deleteArticleApi = (id) => {
+  return api.delete(`/articles/${id}`);
+};
+
+/**
+ * Restore a soft-deleted article by ID
+ * @param {number|string} id - Article ID
+ * @returns {Promise} Axios promise
+ */
+export const restoreArticleApi = (id) => {
+  return api.patch(`/articles/${id}/restore`);
+};
+

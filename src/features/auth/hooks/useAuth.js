@@ -4,7 +4,10 @@ import {
   registerApi,
   getProfileApi,
   loginGoogleApi,
+  updateProfileApi,
+  deleteAccountApi,
 } from '../api/auth.api';
+
 
 export default function useAuth() {
   const [user, setUser] = useState(null);
@@ -96,6 +99,44 @@ export default function useAuth() {
     setUser(null);
   }, []);
 
+  const updateProfile = useCallback(async (data) => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const response = await updateProfileApi(data);
+      if (response.data && response.data.success !== false) {
+        setUser(response.data.data);
+        return response.data;
+      } else {
+        throw new Error(response.data?.message || 'Update profile failed');
+      }
+    } catch (err) {
+      setError(err.response?.data?.message || err.message);
+      throw err;
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
+  const deleteAccount = useCallback(async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const response = await deleteAccountApi();
+      if (response.data && response.data.success !== false) {
+        logout();
+        return response.data;
+      } else {
+        throw new Error(response.data?.message || 'Delete account failed');
+      }
+    } catch (err) {
+      setError(err.response?.data?.message || err.message);
+      throw err;
+    } finally {
+      setIsLoading(false);
+    }
+  }, [logout]);
+
   return {
     user,
     setUser,
@@ -106,5 +147,7 @@ export default function useAuth() {
     register,
     logout,
     fetchProfile,
+    updateProfile,
+    deleteAccount,
   };
 }

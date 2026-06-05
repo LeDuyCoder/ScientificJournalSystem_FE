@@ -63,3 +63,21 @@ export const resetPasswordApi = (data) => {
 export const getProfileApi = () => {
   return api.get('/users/profile');
 };
+
+/**
+ * Update current user profile details
+ * @param {Object} data - Profile fields to update (first_name, last_name, date_of_birth, gender, url_image)
+ * @returns {Promise} Axios promise
+ */
+export const updateProfileApi = (data) => {
+  return api.put('/users/me', data);
+};
+
+/**
+ * Delete current user account
+ * @returns {Promise} Axios promise
+ */
+export const deleteAccountApi = () => {
+  return api.delete('/users/me');
+};
+
