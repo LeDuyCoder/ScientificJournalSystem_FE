@@ -1,4 +1,5 @@
 import { StrictMode } from 'react'
+import './shared/i18n/i18n'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import App from './App.jsx'
