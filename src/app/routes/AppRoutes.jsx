@@ -6,6 +6,8 @@ import CatalogSearchPage from '../../features/catalog/pages/CatalogSearchPage';
 import ArticleListPage from '../../features/article/pages/ArticleListPage';
 import ArticleDetailPage from '../../features/article/pages/ArticleDetailPage';
 import DashboardPage from '../../features/dashboard/pages/DashboardPage';
+import RegisterPage from '../../features/auth/pages/RegisterPage';
+import LoginPage from '../../features/auth/pages/LoginPage';
 
 export default function AppRoutes() {
   return (
@@ -17,9 +19,12 @@ export default function AppRoutes() {
       <Route path="/search"     element={<CatalogSearchPage />} />
       <Route path="/articles"   element={<ArticleListPage />} />
       <Route path="/articles/:id" element={<ArticleDetailPage />} />
+      <Route path="/register"   element={<RegisterPage />} />
+      <Route path="/login"      element={<LoginPage />} />
       {/* Fallback */}
       <Route path="*"           element={<LandingPage />} />
     </Routes>
   );
 }
+
 

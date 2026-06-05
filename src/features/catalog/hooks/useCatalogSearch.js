@@ -32,8 +32,8 @@ export function useCatalogSearch(currentUser) {
   const limit = parseInt(searchParams.get('limit') || '10', 10);
   const sort = searchParams.get('sort') || 'relevance';
   
-  const selectedAreas = searchParams.getAll('area_id').map(id => parseInt(id, 10));
-  const selectedCategories = searchParams.getAll('cat_id').map(id => parseInt(id, 10));
+  const selectedAreas = searchParams.getAll('area_id').map(id => String(id));
+  const selectedCategories = searchParams.getAll('cat_id').map(id => String(id));
   
   // Access: open_access or subscription
   const selectedAccess = searchParams.getAll('access');
@@ -184,26 +184,27 @@ export function useCatalogSearch(currentUser) {
   const handleAreaToggle = (areaId) => {
     // If area is toggled off, also clear any selected categories belonging to it
     const nextParams = new URLSearchParams(searchParams);
-    const currentAreas = nextParams.getAll('area_id').map(id => parseInt(id, 10));
+    const currentAreas = nextParams.getAll('area_id').map(id => String(id));
+    const areaIdStr = String(areaId);
 
-    if (currentAreas.includes(areaId)) {
+    if (currentAreas.includes(areaIdStr)) {
       // Toggling off area
-      const remainingAreas = currentAreas.filter(id => id !== areaId);
+      const remainingAreas = currentAreas.filter(id => id !== areaIdStr);
       nextParams.delete('area_id');
-      remainingAreas.forEach(id => nextParams.append('area_id', String(id)));
+      remainingAreas.forEach(id => nextParams.append('area_id', id));
 
       // Remove dependent categories
-      const currentCats = nextParams.getAll('cat_id').map(id => parseInt(id, 10));
+      const currentCats = nextParams.getAll('cat_id').map(id => String(id));
       const dependentCats = subjectCategories
-        .filter(c => c.subject_area_id === areaId)
-        .map(c => c.subject_category_id);
+        .filter(c => String(c.subject_area_id) === areaIdStr)
+        .map(c => String(c.subject_category_id));
       
       const remainingCats = currentCats.filter(id => !dependentCats.includes(id));
       nextParams.delete('cat_id');
-      remainingCats.forEach(id => nextParams.append('cat_id', String(id)));
+      remainingCats.forEach(id => nextParams.append('cat_id', id));
     } else {
       // Toggling on area
-      nextParams.append('area_id', String(areaId));
+      nextParams.append('area_id', areaIdStr);
     }
 
     nextParams.set('page', '1');

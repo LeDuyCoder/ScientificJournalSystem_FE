@@ -7,6 +7,7 @@ import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import Button from 'react-bootstrap/Button';
 import Offcanvas from 'react-bootstrap/Offcanvas';
+import Dropdown from 'react-bootstrap/Dropdown';
 import Icon from '../../../shared/components/Icon';
 import useAuth from '../../auth/hooks/useAuth';
 
@@ -227,29 +228,56 @@ export default function Header() {
 
               {/* User Authentication Display/Buttons */}
               {user ? (
-                <div className="d-flex align-items-center gap-3">
-                  <div className="d-flex align-items-center gap-2">
-                    <div 
-                      className="d-flex align-items-center justify-content-center text-white text-xs font-bold font-display"
-                      style={{
-                        width: '32px',
-                        height: '32px',
-                        borderRadius: '50%',
-                        background: 'var(--btn-dark)',
-                        boxShadow: '0 0 8px rgba(7, 26, 28, 0.15)'
-                      }}
-                    >
-                      {user.username ? user.username.charAt(0).toUpperCase() : 'U'}
-                    </div>
-                  </div>
-                  <Button
-                    variant="link"
-                    className="text-muted-custom hover:text-danger text-xs font-semibold p-0 text-decoration-none"
-                    onClick={logout}
+                <Dropdown align="end">
+                  <Dropdown.Toggle 
+                    as="div" 
+                    className="d-flex align-items-center justify-content-center text-white"
+                    style={{
+                      width: '32px',
+                      height: '32px',
+                      borderRadius: '50%',
+                      background: 'var(--primary)',
+                      boxShadow: '0 0 8px rgba(255, 122, 51, 0.2)',
+                      cursor: 'pointer',
+                      transition: 'transform 0.15s ease'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = 'scale(1.05)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = 'scale(1)';
+                    }}
                   >
-                    {language.startsWith('vi') ? 'Đăng xuất' : 'Sign Out'}
-                  </Button>
-                </div>
+                    <Icon icon="lucide:user" width="16" />
+                  </Dropdown.Toggle>
+
+                  <Dropdown.Menu className="border-0 shadow-sm mt-2" style={{ minWidth: '180px' }}>
+                    <div className="px-3 py-2 text-xs font-bold text-main border-bottom pb-2 mb-1">
+                      {user.first_name && user.last_name 
+                        ? `${user.last_name} ${user.first_name}` 
+                        : (user.username || 'Nhà nghiên cứu')}
+                      {user.email && (
+                        <div className="text-muted-custom font-normal mt-0.5 text-truncate" style={{ fontSize: '10px', color: 'var(--text-muted)' }}>
+                          {user.email}
+                        </div>
+                      )}
+                    </div>
+                    <Dropdown.Item 
+                      onClick={() => navigate('/dashboard')}
+                      className="d-flex align-items-center gap-2 text-xs py-2 text-main"
+                    >
+                      <Icon icon="lucide:layout-dashboard" width="14" className="text-muted-custom" />
+                      <span>Bảng điều khiển</span>
+                    </Dropdown.Item>
+                    <Dropdown.Item 
+                      onClick={logout}
+                      className="d-flex align-items-center gap-2 text-xs py-2 text-danger"
+                    >
+                      <Icon icon="lucide:log-out" width="14" />
+                      <span>Đăng xuất</span>
+                    </Dropdown.Item>
+                  </Dropdown.Menu>
+                </Dropdown>
               ) : (
                 <>
                   <Button 
@@ -386,21 +414,31 @@ export default function Header() {
                   <Icon icon="lucide:layout-dashboard" className="me-1" />
                   {language.startsWith('vi') ? 'Bảng điều khiển' : 'Go to Dashboard'}
                 </Button>
-                <div className="d-flex align-items-center justify-content-center gap-2 p-2 rounded-3 bg-light">
+                 <div className="d-flex align-items-center justify-content-center gap-2 p-2.5 rounded-3 border" style={{ background: '#f8fafc' }}>
                   <div 
-                    className="d-flex align-items-center justify-content-center text-white text-xs font-bold"
+                    className="d-flex align-items-center justify-content-center text-white"
                     style={{
                       width: '28px',
                       height: '28px',
                       borderRadius: '50%',
-                      background: 'var(--btn-dark)'
+                      background: 'var(--primary)',
+                      boxShadow: '0 0 6px rgba(255, 122, 51, 0.15)'
                     }}
                   >
-                    {user.username ? user.username.charAt(0).toUpperCase() : 'U'}
+                    <Icon icon="lucide:user" width="14" />
                   </div>
-                  <span className="text-xs text-main font-weight-bold">
-                    {user.username || 'User'}
-                  </span>
+                  <div className="text-start">
+                    <div className="text-xs text-main font-bold" style={{ lineHeight: '1.2' }}>
+                      {user.first_name && user.last_name 
+                        ? `${user.last_name} ${user.first_name}` 
+                        : (user.username || 'Nhà nghiên cứu')}
+                    </div>
+                    {user.email && (
+                      <div className="text-xxs text-muted" style={{ fontSize: '9px', marginTop: '1px' }}>
+                        {user.email}
+                      </div>
+                    )}
+                  </div>
                 </div>
                 <Button
                   variant="outline-danger"
