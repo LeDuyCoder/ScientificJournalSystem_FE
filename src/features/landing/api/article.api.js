@@ -19,6 +19,17 @@ export const searchArticlesApi = (keywords, page = 1, limit = 10) => {
 };
 
 /**
+ * Calls backend GET /search/:keyword endpoint to query global catalog.
+ *
+ * @param {string} keyword - The search term
+ * @returns {Promise<Object>} Axios response promise
+ */
+export const searchGlobalApi = (keyword) => {
+  return api.get(`/search/${encodeURIComponent(keyword)}`);
+};
+
+
+/**
  * Create a new article entry
  * @param {Object} data - Article fields
  * @returns {Promise} Axios promise

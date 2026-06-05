@@ -55,7 +55,7 @@ export default function Header() {
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled
-          ? 'bg-dark-bg/85 backdrop-blur-md border-b border-white/6 shadow-xl py-3'
+          ? 'bg-dark-bg/85 backdrop-blur-md shadow-xl py-3'
           : 'bg-transparent py-5'
       }`}
     >

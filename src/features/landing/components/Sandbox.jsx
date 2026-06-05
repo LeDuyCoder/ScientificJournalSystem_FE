@@ -2,6 +2,52 @@ import { useTranslation } from 'react-i18next';
 import Icon from '../../../shared/components/Icon';
 import useSandboxSearch from '../hooks/useSandboxSearch';
 
+const typeConfig = {
+  JOURNAL: {
+    labelKey: 'typeJournal',
+    icon: 'lucide:book-open',
+    badgeClass: 'bg-blue-500/10 text-blue-400 border border-blue-500/20',
+    iconClass: 'text-blue-400',
+  },
+  AUTHOR: {
+    labelKey: 'typeAuthor',
+    icon: 'lucide:user',
+    badgeClass: 'bg-purple-500/10 text-purple-400 border border-purple-500/20',
+    iconClass: 'text-purple-400',
+  },
+  ARTICLE: {
+    labelKey: 'typeArticle',
+    icon: 'lucide:file-text',
+    badgeClass: 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20',
+    iconClass: 'text-emerald-400',
+  },
+  KEYWORD: {
+    labelKey: 'typeKeyword',
+    icon: 'lucide:hash',
+    badgeClass: 'bg-amber-500/10 text-amber-400 border border-amber-500/20',
+    iconClass: 'text-amber-400',
+  },
+  AREA: {
+    labelKey: 'typeArea',
+    icon: 'lucide:layers',
+    badgeClass: 'bg-pink-500/10 text-pink-400 border border-pink-500/20',
+    iconClass: 'text-pink-400',
+  },
+  CATEGORY: {
+    labelKey: 'typeCategory',
+    icon: 'lucide:tag',
+    badgeClass: 'bg-indigo-500/10 text-indigo-400 border border-indigo-500/20',
+    iconClass: 'text-indigo-400',
+  },
+};
+
+const defaultType = {
+  labelKey: 'search',
+  icon: 'lucide:help-circle',
+  badgeClass: 'bg-gray-500/10 text-gray-400 border border-gray-500/20',
+  iconClass: 'text-gray-400',
+};
+
 export default function Sandbox() {
   const { t } = useTranslation();
   const {
@@ -117,49 +163,52 @@ export default function Sandbox() {
             )}
 
             {searchResult && (
-              <div className="mt-10 max-w-2xl mx-auto p-6 rounded-2xl bg-cyan-950/20 border border-cyan-800/20 text-left animate-in fade-in slide-in-from-bottom-4 duration-300">
+              <div className="mt-10 max-w-2xl mx-auto p-6 rounded-2xl bg-[#0e1424]/80 backdrop-blur-md border border-white/10 text-left animate-in fade-in slide-in-from-bottom-4 duration-300 shadow-[0_8px_32px_rgba(0,0,0,0.4)]">
                 <div className="flex items-center justify-between mb-4 border-b border-white/5 pb-3">
                   <div className="flex items-center space-x-2">
-                    <div className={`w-2.5 h-2.5 rounded-full animate-pulse ${searchResult.isRealData ? 'bg-green-400' : 'bg-cyan-400'
-                      }`} />
-                    <span className={`text-xs font-bold tracking-wider uppercase ${searchResult.isRealData ? 'text-green-400' : 'text-cyan-400'
-                      }`}>
-                      {searchResult.isRealData ? t('realData') : t('mockData')}
+                    <div className="w-2.5 h-2.5 rounded-full animate-pulse bg-green-400" />
+                    <span className="text-xs font-bold tracking-wider uppercase text-green-400">
+                      {t('realData')}
                     </span>
                   </div>
                   <span className="text-xs text-gray-500">
-                    {searchResult.isRealData ? 'Source: Live API' : 'Source: OpenAlex API'}
+                    {t('sourceLiveApi')}
                   </span>
                 </div>
-                <h4 className="font-display font-bold text-white text-lg mb-4">
-                  Results for "<span className="text-cyan-400">{searchResult.keyword}</span>"
+                <h4 className="font-display font-bold text-white text-base sm:text-lg mb-4">
+                  {t('resultsFor')} "<span className="text-cyan-400">{searchResult.keyword}</span>"
                 </h4>
-                <div className="grid grid-cols-3 gap-4">
-                  <div className="bg-white/3 p-3.5 rounded-xl border border-white/5">
-                    <span className="text-[10px] text-gray-500 block font-bold tracking-wide uppercase mb-1">
-                      {t('publications')}
-                    </span>
-                    <span className="font-display font-extrabold text-white text-lg sm:text-xl">
-                      {searchResult.papersCount.toLocaleString()}+
-                    </span>
+
+                {searchResult.items && searchResult.items.length > 0 ? (
+                  <div className="space-y-2 max-h-96 overflow-y-auto pr-1 custom-scrollbar">
+                    {searchResult.items.map((item, index) => {
+                      const cfg = typeConfig[item.type] || defaultType;
+                      return (
+                        <div
+                          key={item.id || index}
+                          className="flex items-center justify-between p-3.5 rounded-xl bg-white/3 hover:bg-white/8 border border-white/5 hover:border-cyan-500/30 transition-all duration-200 group"
+                        >
+                          <div className="flex items-center space-x-3.5 min-w-0">
+                            <div className={`p-2 rounded-lg bg-white/5 border border-white/5 group-hover:border-cyan-500/20 transition-all duration-200 ${cfg.iconClass}`}>
+                              <Icon icon={cfg.icon} className="text-lg" />
+                            </div>
+                            <span className="font-medium text-white text-sm sm:text-base truncate group-hover:text-cyan-300 transition-colors duration-200">
+                              {item.name}
+                            </span>
+                          </div>
+                          <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold tracking-wide uppercase shrink-0 ${cfg.badgeClass}`}>
+                            {t(cfg.labelKey)}
+                          </span>
+                        </div>
+                      );
+                    })}
                   </div>
-                  <div className="bg-white/3 p-3.5 rounded-xl border border-white/5">
-                    <span className="text-[10px] text-gray-500 block font-bold tracking-wide uppercase mb-1">
-                      {t('growth')}
-                    </span>
-                    <span className="font-display font-extrabold text-cyan-400 text-lg sm:text-xl">
-                      +{searchResult.growthRate}%
-                    </span>
+                ) : (
+                  <div className="flex flex-col items-center justify-center py-12 text-center">
+                    <Icon icon="lucide:search-x" className="text-4xl text-gray-500 mb-3" />
+                    <p className="text-sm text-gray-400">{t('noResults')}</p>
                   </div>
-                  <div className="bg-white/3 p-3.5 rounded-xl border border-white/5">
-                    <span className="text-[10px] text-gray-500 block font-bold tracking-wide uppercase mb-1">
-                      {t('topCenter')}
-                    </span>
-                    <span className="font-display font-bold text-gray-300 text-xs sm:text-sm truncate block mt-1">
-                      {searchResult.topInstitution}
-                    </span>
-                  </div>
-                </div>
+                )}
               </div>
             )}
 
@@ -170,3 +219,4 @@ export default function Sandbox() {
     </section>
   );
 }
+

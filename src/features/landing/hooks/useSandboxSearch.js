@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { searchArticlesApi } from '../api/article.api';
+import { searchGlobalApi } from '../api/article.api';
 
 /**
  * Custom hook to coordinate states and logic for the Sandbox search.
@@ -28,20 +28,15 @@ export default function useSandboxSearch() {
 
     try {
       // Execute the API request through the decoupled API wrapper
-      const response = await searchArticlesApi(searchValue, 1, 10);
+      const response = await searchGlobalApi(searchValue);
 
       if (response.data && response.data.success !== false) {
-        const dataObj = response.data.data || {};
-        const items = dataObj.articles || [];
-        const totalCount = dataObj.pagination?.total || items.length || 0;
+        const items = response.data.data || [];
         
         setSearchResult({
           keyword: searchValue,
-          papersCount: totalCount,
-          growthRate: totalCount > 0 ? (Math.random() * 20 + 5).toFixed(1) : '0.0',
-          topInstitution: items.length > 0 ? (items[0].doi || 'DOI Indexed') : 'N/A',
+          items: items,
           isRealData: true,
-          articles: items,
         });
       } else {
         throw new Error(response.data?.message || 'Invalid backend format');
