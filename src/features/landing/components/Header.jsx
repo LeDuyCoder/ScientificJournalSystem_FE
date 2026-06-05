@@ -52,70 +52,74 @@ export default function Header() {
   ];
 
   return (
-    <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled
-          ? 'bg-dark-bg/85 backdrop-blur-md shadow-xl py-3'
-          : 'bg-transparent py-5'
-      }`}
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-12">
+    <>
+      <header
+        className={`fixed-top z-50 ${
+          isScrolled
+            ? 'sticky-scrolled shadow py-2'
+            : 'bg-transparent py-4'
+        }`}
+        style={{ transition: 'all 0.3s ease' }}
+      >
+        <div className="container-xl px-3">
+        <div className="d-flex align-items-center justify-content-between" style={{ height: '3rem' }}>
           {/* Logo Brand */}
-          <div className="flex items-center space-x-3 cursor-pointer group">
-            <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-cyan-400 to-indigo-600 flex items-center justify-center shadow-[0_0_15px_rgba(6,182,212,0.3)] group-hover:scale-105 transition-transform duration-300">
-              <Icon icon="lucide:activity" className="text-white text-xl" />
+          <div className="d-flex align-items-center gap-2 cursor-pointer group">
+            <div className="d-flex align-items-center justify-content-center bg-brand-gradient rounded-3" style={{ width: '2.25rem', height: '2.25rem', boxShadow: '0 0 15px rgba(6,182,212,0.3)' }}>
+              <Icon icon="lucide:activity" className="text-white fs-5" />
             </div>
-            <span className="font-display font-bold text-xl tracking-tight text-white group-hover:text-cyan-400 transition-colors duration-300">
+            <span className="fw-bold fs-5 text-white group-hover-cyan">
               ResearchPulse
             </span>
           </div>
 
           {/* Desktop Navigation Links */}
-          <nav className="hidden md:flex items-center space-x-8">
+          <nav className="d-none d-md-flex align-items-center gap-4">
             {navLinks.map((link) => (
               <a
                 key={link.key}
                 href={link.href}
-                className="font-sans font-medium text-sm text-gray-300 hover:text-white transition-colors duration-200 relative group py-2"
+                className="nav-link-custom text-sm"
               >
                 {t(link.key)}
-                <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-cyan-400 to-indigo-500 transition-all duration-300 group-hover:w-full" />
               </a>
             ))}
           </nav>
 
           {/* Right Action buttons */}
-          <div className="hidden md:flex items-center space-x-4">
+          <div className="d-none d-md-flex align-items-center gap-3">
             {/* Language Selector Dropdown */}
-            <div className="relative" ref={langDropdownRef}>
+            <div className="position-relative" ref={langDropdownRef}>
               <button
                 onClick={() => setIsLangDropdownOpen(!isLangDropdownOpen)}
-                className="flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 text-gray-300 hover:text-white text-xs font-semibold tracking-wide transition-all duration-200"
+                className="d-flex align-items-center gap-2 px-3 py-1.5 rounded-pill bg-white/5 border border-white/10 hover-bg-white-10 text-gray-300 text-xs font-semibold"
+                style={{ transition: 'all 0.2s ease', color: '#adb5bd' }}
               >
-                <Icon icon="lucide:globe" className="text-sm text-cyan-400" />
+                <Icon icon="lucide:globe" className="text-cyan-400 text-sm" />
                 <span>{language.startsWith('vi') ? 'Tiếng Việt' : 'English'}</span>
                 <Icon
                   icon="lucide:chevron-down"
-                  className={`text-[10px] transition-transform duration-200 ${
+                  className={`text-xs transition-transform ${
                     isLangDropdownOpen ? 'rotate-180' : ''
                   }`}
+                  style={{ fontSize: '10px' }}
                 />
               </button>
 
               {/* Dropdown Menu */}
               {isLangDropdownOpen && (
-                <div className="absolute right-0 mt-2 w-36 rounded-xl bg-dark-card border border-white/10 shadow-2xl py-1 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+                <div 
+                  className="position-absolute end-0 mt-2 rounded-3 bg-dark-card border border-white/10 shadow py-1 z-50"
+                  style={{ width: '9rem' }}
+                >
                   <button
                     onClick={() => {
                       i18n.changeLanguage('vi');
                       localStorage.setItem('researchpulse_lang', 'vi');
                       setIsLangDropdownOpen(false);
                     }}
-                    className={`flex items-center justify-between w-full px-4 py-2 text-xs font-medium text-left ${
-                      language.startsWith('vi')
-                        ? 'text-cyan-400 bg-white/5'
-                        : 'text-gray-300 hover:bg-white/5 hover:text-white'
+                    className={`d-flex align-items-center justify-content-between w-100 border-0 px-3 py-2 text-xs fw-medium text-start bg-transparent ${
+                      language.startsWith('vi') ? 'text-cyan-400 bg-white/5' : 'text-gray-300'
                     }`}
                   >
                     <span>Tiếng Việt</span>
@@ -127,10 +131,8 @@ export default function Header() {
                       localStorage.setItem('researchpulse_lang', 'en');
                       setIsLangDropdownOpen(false);
                     }}
-                    className={`flex items-center justify-between w-full px-4 py-2 text-xs font-medium text-left ${
-                      language.startsWith('en')
-                        ? 'text-cyan-400 bg-white/5'
-                        : 'text-gray-300 hover:bg-white/5 hover:text-white'
+                    className={`d-flex align-items-center justify-content-between w-100 border-0 px-3 py-2 text-xs fw-medium text-start bg-transparent ${
+                      language.startsWith('en') ? 'text-cyan-400 bg-white/5' : 'text-gray-300'
                     }`}
                   >
                     <span>English</span>
@@ -141,18 +143,19 @@ export default function Header() {
             </div>
 
             {user ? (
-              <div className="flex items-center space-x-4">
-                <div className="flex items-center space-x-2">
-                  <div className="w-8.5 h-8.5 rounded-full bg-gradient-to-br from-cyan-400 to-indigo-600 flex items-center justify-center text-white text-xs font-bold shadow-[0_0_10px_rgba(6,182,212,0.2)]">
+              <div className="d-flex align-items-center gap-3">
+                <div className="d-flex align-items-center gap-2">
+                  <div className="d-flex align-items-center justify-content-center rounded-circle bg-brand-gradient text-white text-xs font-bold" style={{ width: '2.1rem', height: '2.1rem' }}>
                     {user.username ? user.username.charAt(0).toUpperCase() : 'U'}
                   </div>
-                  <span className="text-xs text-gray-300 font-semibold hidden lg:inline-block">
+                  <span className="text-xs text-gray-300 font-semibold d-none d-lg-inline-block">
                     {user.username || 'User'}
                   </span>
                 </div>
                 <button
                   onClick={logout}
-                  className="text-xs font-semibold text-gray-400 hover:text-red-400 transition-colors duration-200 px-3 py-2 cursor-pointer"
+                  className="btn btn-link text-decoration-none text-xs font-semibold text-gray-400 hover-text-red px-3 py-2 border-0"
+                  style={{ color: '#adb5bd' }}
                 >
                   {language.startsWith('vi') ? 'Đăng xuất' : 'Sign Out'}
                 </button>
@@ -160,12 +163,12 @@ export default function Header() {
             ) : (
               <>
                 {/* Sign In Button */}
-                <button className="text-sm font-semibold text-gray-300 hover:text-white transition-colors duration-200 px-3 py-2 cursor-pointer">
+                <button className="btn btn-link text-decoration-none text-sm font-semibold text-gray-300 hover:text-white px-3 py-2 border-0">
                   {t('signIn')}
                 </button>
 
                 {/* Sign Up Button */}
-                <button className="px-5 py-2.5 rounded-full bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white text-xs font-bold tracking-wide shadow-[0_0_15px_rgba(6,182,212,0.25)] hover:shadow-[0_0_20px_rgba(6,182,212,0.45)] hover:scale-102 transition-all duration-200 cursor-pointer">
+                <button className="btn rounded-pill bg-brand-gradient text-white text-xs font-bold px-4 py-2 border-0 shadow btn-primary-glow">
                   {t('signUp')}
                 </button>
               </>
@@ -173,7 +176,7 @@ export default function Header() {
           </div>
 
           {/* Mobile Menu Hamburger Button */}
-          <div className="flex md:hidden items-center space-x-3">
+          <div className="d-flex d-md-none align-items-center gap-2">
             {/* Mobile Language Selector Shortcut */}
             <button
               onClick={() => {
@@ -181,106 +184,113 @@ export default function Header() {
                 i18n.changeLanguage(nextLang);
                 localStorage.setItem('researchpulse_lang', nextLang);
               }}
-              className="p-2 rounded-lg bg-white/5 border border-white/10 text-gray-300"
+              className="btn border border-white/10 bg-white/5 p-2 text-light"
               aria-label="Toggle language"
             >
-              <Icon icon="lucide:globe" className="text-sm text-cyan-400" />
+              <Icon icon="lucide:globe" className="text-cyan-400" />
             </button>
 
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="p-2.5 rounded-lg bg-white/5 hover:bg-white/10 text-gray-300 hover:text-white transition-colors duration-200"
+              className="btn border border-white/10 bg-white/5 p-2 text-light"
               aria-label="Toggle menu"
             >
-              <Icon icon={isMobileMenuOpen ? 'lucide:x' : 'lucide:menu'} className="text-xl" />
+              <Icon icon={isMobileMenuOpen ? 'lucide:x' : 'lucide:menu'} />
             </button>
           </div>
         </div>
       </div>
+    </header>
 
-      {/* Mobile Drawer Backdrop */}
+    {/* Mobile Drawer Backdrop */}
       {isMobileMenuOpen && (
         <div
-          className="fixed inset-0 bg-dark-bg/60 backdrop-blur-sm z-40 md:hidden"
+          className="fixed-top bottom-0 backdrop-blur-sm z-40 d-md-none"
           onClick={() => setIsMobileMenuOpen(false)}
+          style={{ right: 0, left: 0, backgroundColor: 'rgba(9, 13, 22, 0.6)' }}
         />
       )}
 
       {/* Mobile Drawer Menu */}
       <div
-        className={`fixed top-0 right-0 bottom-0 w-72 bg-dark-card border-l border-white/8 z-50 md:hidden p-6 shadow-2xl transition-transform duration-300 ease-in-out transform ${
-          isMobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
-        }`}
+        className="fixed-top bottom-0 ms-auto bg-dark-card border-start border-white/8 z-50 p-4 shadow-lg transition-transform d-md-none"
+        style={{
+          width: '18rem',
+          transform: isMobileMenuOpen ? 'translateX(0)' : 'translateX(100%)',
+          transition: 'transform 0.3s ease-in-out',
+        }}
       >
-        <div className="flex items-center justify-between mb-8">
-          <span className="font-display font-bold text-lg tracking-tight text-white">
-            Menu
-          </span>
+        <div className="d-flex align-items-center justify-content-between mb-4">
+          <span className="fw-bold text-white fs-5">Menu</span>
           <button
             onClick={() => setIsMobileMenuOpen(false)}
-            className="p-2 rounded-lg bg-white/5 text-gray-400 hover:text-white"
+            className="btn p-2 rounded-3 bg-white/5 text-gray-400 border-0"
           >
             <Icon icon="lucide:x" className="text-lg" />
           </button>
         </div>
 
         {/* Navigation Links in Drawer */}
-        <nav className="flex flex-col space-y-4 mb-8">
+        <nav className="d-flex flex-column gap-2 mb-4">
           {navLinks.map((link) => (
             <a
               key={link.key}
               href={link.href}
               onClick={() => setIsMobileMenuOpen(false)}
-              className="flex items-center space-x-3 p-3 rounded-xl bg-white/3 hover:bg-white/6 text-gray-300 hover:text-white font-medium text-sm transition-all duration-200"
+              className="drawer-link"
             >
-              <Icon icon={link.icon} className="text-cyan-400 text-lg" />
+              <Icon icon={link.icon} className="drawer-link-icon" />
               <span>{t(link.key)}</span>
             </a>
           ))}
         </nav>
 
         {/* Language selector toggle in Drawer */}
-        <div className="border-t border-white/8 pt-6 mb-6">
-          <p className="text-xs text-gray-400 font-semibold mb-3 tracking-wider uppercase">Language</p>
-          <div className="grid grid-cols-2 gap-2">
-            <button
-              onClick={() => {
-                i18n.changeLanguage('vi');
-                localStorage.setItem('researchpulse_lang', 'vi');
-              }}
-              className={`py-2 rounded-lg text-xs font-semibold border ${
-                language.startsWith('vi')
-                  ? 'border-cyan-400 text-cyan-400 bg-cyan-400/5'
-                  : 'border-white/10 text-gray-400 hover:text-white'
-              }`}
-            >
-              Tiếng Việt
-            </button>
-            <button
-              onClick={() => {
-                i18n.changeLanguage('en');
-                localStorage.setItem('researchpulse_lang', 'en');
-              }}
-              className={`py-2 rounded-lg text-xs font-semibold border ${
-                language.startsWith('en')
-                  ? 'border-cyan-400 text-cyan-400 bg-cyan-400/5'
-                  : 'border-white/10 text-gray-400 hover:text-white'
-              }`}
-            >
-              English
-            </button>
+        <div className="border-top border-white/8 pt-3 mb-4">
+          <p className="text-xs text-gray-400 fw-semibold mb-2 tracking-wider text-uppercase">Language</p>
+          <div className="row g-2">
+            <div className="col-6">
+              <button
+                onClick={() => {
+                  i18n.changeLanguage('vi');
+                  localStorage.setItem('researchpulse_lang', 'vi');
+                }}
+                className={`btn btn-sm w-100 fw-semibold ${
+                  language.startsWith('vi')
+                    ? 'border-cyan-400 text-cyan-400 bg-cyan-400/5'
+                    : 'border-white/10 text-gray-400'
+                }`}
+              >
+                Tiếng Việt
+              </button>
+            </div>
+            <div className="col-6">
+              <button
+                onClick={() => {
+                  i18n.changeLanguage('en');
+                  localStorage.setItem('researchpulse_lang', 'en');
+                }}
+                className={`btn btn-sm w-100 fw-semibold ${
+                  language.startsWith('en')
+                    ? 'border-cyan-400 text-cyan-400 bg-cyan-400/5'
+                    : 'border-white/10 text-gray-400'
+                }`}
+              >
+                English
+              </button>
+            </div>
           </div>
         </div>
 
         {/* Actions in Drawer */}
-        <div className="flex flex-col space-y-3 pt-4 border-t border-white/8">
+        <div className="d-flex flex-column gap-2 pt-3 border-top border-white/8">
           {user ? (
-            <div className="space-y-3">
-              <div className="flex items-center space-x-3 p-3 rounded-xl bg-white/3">
-                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-cyan-400 to-indigo-600 flex items-center justify-center text-white text-xs font-bold">
+            <div className="d-flex flex-column gap-2">
+              <div className="d-flex align-items-center gap-2 p-2.5 rounded-3 bg-white/3">
+                <div className="d-flex align-items-center justify-content-center bg-brand-gradient rounded-circle text-white fw-bold" style={{ width: '2rem', height: '2rem' }}>
                   {user.username ? user.username.charAt(0).toUpperCase() : 'U'}
                 </div>
-                <span className="text-sm text-white font-medium">
+                <span className="text-sm text-white fw-medium">
                   {user.username || 'User'}
                 </span>
               </div>
@@ -289,23 +299,23 @@ export default function Header() {
                   logout();
                   setIsMobileMenuOpen(false);
                 }}
-                className="w-full py-3 rounded-xl bg-red-950/20 hover:bg-red-900/30 border border-red-900/30 text-red-400 text-sm font-semibold transition-all duration-200"
+                className="btn btn-outline-danger w-100 py-2.5 rounded-3 text-sm fw-semibold"
               >
                 {language.startsWith('vi') ? 'Đăng xuất' : 'Sign Out'}
               </button>
             </div>
           ) : (
             <>
-              <button className="w-full py-3 rounded-xl bg-white/5 hover:bg-white/10 text-gray-200 hover:text-white text-sm font-semibold transition-all duration-200">
+              <button className="btn btn-outline-light w-100 py-2.5 rounded-3 text-sm fw-semibold">
                 {t('signIn')}
               </button>
-              <button className="w-full py-3 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white text-sm font-bold shadow-[0_0_15px_rgba(6,182,212,0.25)] transition-all duration-200">
+              <button className="btn bg-brand-gradient text-white w-100 py-2.5 rounded-3 text-sm fw-bold border-0">
                 {t('signUp')}
               </button>
             </>
           )}
         </div>
       </div>
-    </header>
+    </>
   );
 }

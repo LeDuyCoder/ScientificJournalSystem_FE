@@ -12,70 +12,91 @@ export default function Hero() {
   ];
 
   return (
-    <section className="relative min-h-screen flex flex-col justify-between pt-32 pb-16 overflow-hidden grid-bg">
+    <section 
+      className="position-relative min-vh-100 d-flex flex-column justify-between overflow-hidden grid-bg"
+      style={{ paddingTop: '8rem', paddingBottom: '4rem' }}
+    >
       {/* Radial overlay to fade out the grid pattern */}
-      <div className="absolute inset-0 radial-fade pointer-events-none" />
+      <div className="position-absolute w-100 h-100 radial-fade pe-none" style={{ top: 0, left: 0 }} />
 
       {/* Hero content container */}
-      <div className="relative max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center flex-grow flex flex-col justify-center items-center z-10">
+      <div 
+        className="position-relative mx-auto px-3 px-sm-4 px-lg-5 text-center flex-grow-1 d-flex flex-column align-items-center justify-content-center"
+        style={{ maxWidth: '64rem', zIndex: 10 }}
+      >
         
         {/* Animated OpenAlex Badge */}
-        <div className="inline-flex items-center space-x-2 px-3 py-1.5 rounded-full bg-cyan-950/40 border border-cyan-800/30 text-cyan-400 text-xs font-semibold tracking-wide mb-8 animate-fade-in">
-          <Icon icon="lucide:sparkles" className="text-yellow-400 animate-pulse" />
+        <div 
+          className="d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill bg-white/5 border border-white/10 text-cyan-400 text-xs fw-semibold mb-4 animate-fade-in"
+          style={{ letterSpacing: '0.05em' }}
+        >
+          <Icon icon="lucide:sparkles" className="text-warning animate-pulse" />
           <span>{t('badgeText')}</span>
         </div>
 
         {/* Main Heading */}
-        <h1 className="font-display font-extrabold text-4xl sm:text-6xl md:text-7xl text-white tracking-tight leading-tight max-w-4xl mb-6">
-          {t('headingPrefix')}
-          <span className="inline-block whitespace-nowrap bg-gradient-to-r from-cyan-400 via-blue-500 to-indigo-400 bg-clip-text text-transparent glow-text-cyan">
+        <h1 
+          className="text-white hero-title mx-auto mb-4"
+          style={{ maxWidth: '56rem' }}
+        >
+          {t('headingPrefix')}{' '}
+          <span className="d-inline-block text-nowrap text-gradient-cyan-indigo glow-text-cyan">
             {t('headingHighlight')}
           </span>
         </h1>
 
         {/* Sub Heading */}
-        <p className="font-sans text-gray-400 text-base sm:text-lg md:text-xl max-w-2xl mb-10 leading-relaxed">
+        <p 
+          className="text-secondary fs-5 mx-auto mb-5 lh-lg"
+          style={{ maxWidth: '42rem', color: '#adb5bd' }}
+        >
           {t('subheading')}
         </p>
 
         {/* Action CTA Buttons */}
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-20 w-full sm:w-auto">
+        <div className="d-flex flex-column flex-sm-row align-items-center justify-content-center gap-3 mb-5 w-100 w-sm-auto">
           {/* Start Searching Button */}
           <a
             href="#search-sandbox"
-            className="w-full sm:w-auto inline-flex items-center justify-center space-x-2.5 px-8 py-4 rounded-full bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white font-bold text-sm tracking-wide transition-all duration-300 btn-primary-glow transform hover:-translate-y-0.5 cursor-pointer"
+            className="w-100 w-sm-auto btn rounded-pill bg-brand-gradient text-white fw-bold px-4 py-3 border-0 btn-primary-glow d-inline-flex align-items-center justify-content-center gap-2 cursor-pointer btn-hover-transform text-decoration-none"
           >
-            <Icon icon="lucide:rocket" className="text-lg" />
+            <span>🚀</span>
             <span>{t('ctaSearch')}</span>
           </a>
 
           {/* View Trends Button */}
           <a
             href="#features"
-            className="w-full sm:w-auto inline-flex items-center justify-center space-x-2.5 px-8 py-4 rounded-full bg-white/5 border border-white/10 hover:bg-white/10 text-white font-semibold text-sm tracking-wide transition-all duration-300 transform hover:-translate-y-0.5 cursor-pointer"
+            className="w-100 w-sm-auto btn rounded-pill bg-white/5 border border-white/10 text-white fw-semibold px-4 py-3 d-inline-flex align-items-center justify-content-center gap-2 cursor-pointer btn-hover-transform text-decoration-none hover-bg-white-10"
           >
-            <Icon icon="lucide:bar-chart-2" className="text-lg text-cyan-400" />
+            <span>📊</span>
             <span>{t('ctaTrends')}</span>
           </a>
         </div>
       </div>
 
       {/* Stats Counter Row Container */}
-      <div className="relative w-full max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 z-10">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-0 border-t border-white/6 pt-10 pb-6 text-center">
+      <div className="position-relative w-100 mx-auto px-3 px-sm-4 px-lg-5" style={{ maxWidth: '72rem', zIndex: 10 }}>
+        <div className="row row-cols-2 row-cols-md-4 g-4 g-md-0 border-top border-white/8 pt-5 pb-3 text-center">
           {stats.map((stat, idx) => (
             <div 
               key={idx} 
-              className={`flex flex-col items-center justify-center px-4 ${
-                idx > 0 ? 'md:border-l md:border-white/8' : ''
+              className={`col d-flex flex-column align-items-center justify-content-center px-3 ${
+                idx > 0 ? 'border-start-md' : ''
               }`}
             >
               {/* Stat Value */}
-              <span className={`font-display font-extrabold text-2xl sm:text-3xl lg:text-4xl tracking-tight mb-2 ${stat.color}`}>
+              <span 
+                className={`fs-3 fs-md-2 mb-2 ${stat.color}`}
+                style={{ fontFamily: 'var(--font-display)', fontWeight: 800 }}
+              >
                 {t(stat.valueKey)}
               </span>
               {/* Stat Label */}
-              <span className="font-sans text-[10px] sm:text-xs text-gray-500 font-bold tracking-widest uppercase">
+              <span 
+                className="text-secondary fw-bold text-uppercase"
+                style={{ fontSize: '10px', letterSpacing: '0.15em' }}
+              >
                 {t(stat.labelKey)}
               </span>
             </div>
