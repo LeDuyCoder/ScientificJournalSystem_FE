@@ -1,15 +1,14 @@
-import Header from './components/Header';
-import Hero from './components/Hero';
-import Sandbox from './components/Sandbox';
-import Features from './components/Features';
-import HowToUse from './components/HowToUse';
-import FooterCTA from './components/FooterCTA';
-import Footer from './components/Footer';
+import Header from '../components/Header';
+import Hero from '../components/Hero';
+import Sandbox from '../components/Sandbox';
+import Features from '../components/Features';
+import HowToUse from '../components/HowToUse';
+import FooterCTA from '../components/FooterCTA';
+import Footer from '../components/Footer';
 
 export default function LandingPage() {
   return (
-    <div className="bg-dark-bg min-h-screen text-white font-sans antialiased overflow-x-hidden selection:bg-cyan-500/30 selection:text-white">
-
+    <div className="bg-dark-bg min-vh-100 text-white overflow-x-hidden">
       {/* Sticky Header */}
       <Header />
 
@@ -33,7 +32,6 @@ export default function LandingPage() {
 
       {/* Footer */}
       <Footer />
-
     </div>
   );
 }

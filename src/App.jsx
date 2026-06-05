@@ -1,8 +1,11 @@
-import LandingPage from './features/landing/LandingPage'
+import { BrowserRouter } from 'react-router-dom'
+import AppRoutes from './app/routes/AppRoutes'
 
 function App() {
   return (
-    <LandingPage />
+    <BrowserRouter>
+      <AppRoutes />
+    </BrowserRouter>
   )
 }
 

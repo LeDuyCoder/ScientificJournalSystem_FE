@@ -30,7 +30,7 @@ pnpm-debug.log*
 *.njsproj
 *.sln
 *.sw?
-
+.gitignore
 # coverage
 coverage
 

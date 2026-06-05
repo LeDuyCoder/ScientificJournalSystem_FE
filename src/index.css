@@ -1,29 +1,29 @@
 /* Import Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap');
 
-@import "tailwindcss";
-
-html, body {
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
-  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
-}
-
-@theme {
+:root {
   --font-sans: 'Inter', sans-serif;
   --font-display: 'Outfit', 'Inter', sans-serif;
 
   /* Custom palette */
-  --color-dark-bg: #090d16;
-  --color-dark-card: #0e1322;
-  --color-dark-border: rgba(255, 255, 255, 0.08);
-  --color-brand-blue: #00d2ff;
-  --color-brand-purple: #7a00ff;
+  --dark-bg: #090d16;
+  --dark-card: #0e1322;
+  --dark-border: rgba(255, 255, 255, 0.08);
+  --brand-blue: #00d2ff;
+  --brand-purple: #7a00ff;
   
   /* Accent colors */
-  --color-glow-blue: rgba(0, 210, 255, 0.15);
-  --color-glow-purple: rgba(122, 0, 255, 0.15);
+  --glow-blue: rgba(0, 210, 255, 0.15);
+  --glow-purple: rgba(122, 0, 255, 0.15);
+}
+
+html, body {
+  background-color: var(--dark-bg);
+  color: #ffffff;
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
 /* Custom background grid pattern */
@@ -95,8 +95,106 @@ header.sticky-scrolled {
 
 /* Custom animated gradient border button shadow */
 .btn-primary-glow {
+  background: linear-gradient(135deg, #00d2ff 0%, #7a00ff 100%);
+  border: none;
+  color: #ffffff;
+  font-weight: 700;
   box-shadow: 0 0 20px rgba(6, 182, 212, 0.35);
+  transition: all 0.3s ease;
 }
 .btn-primary-glow:hover {
+  background: linear-gradient(135deg, #33dcff 0%, #9024ff 100%);
   box-shadow: 0 0 30px rgba(6, 182, 212, 0.6);
+  transform: translateY(-1px);
+  color: #ffffff;
 }
+
+.glow-gradient-text {
+  background: linear-gradient(135deg, #00d2ff 0%, #3b82f6 50%, #7a00ff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+}
+
+/* Custom utility style helpers to compensate for tailwind removal */
+.bg-dark-bg {
+  background-color: var(--dark-bg);
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+.animate-spin-slow {
+  animation: spin 8s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* Skeleton Shimmer */
+.skeleton-shimmer {
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.03) 25%,
+    rgba(255, 255, 255, 0.08) 37%,
+    rgba(255, 255, 255, 0.03) 63%
+  );
+  background-size: 400% 100%;
+  animation: skeleton-loading 1.4s ease infinite;
+  border-radius: 4px;
+}
+@keyframes skeleton-loading {
+  0% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Custom Tab Styling */
+.tab-nav-custom {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+.tab-nav-custom .nav-link {
+  color: rgba(255, 255, 255, 0.6);
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 0.75rem 1.25rem;
+  font-weight: 500;
+  transition: all 0.2s ease;
+  background: transparent;
+}
+.tab-nav-custom .nav-link:hover {
+  color: #ffffff;
+}
+.tab-nav-custom .nav-link.active {
+  color: #00d2ff;
+  border-bottom: 2px solid #00d2ff;
+  background: transparent;
+}
+
+/* Dark mode list groups & accordion styles */
+.journal-dark-card {
+  background: #0e1322;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+}
+

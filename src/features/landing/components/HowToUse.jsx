@@ -1,21 +1,41 @@
 import { useTranslation } from 'react-i18next';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 
 /**
  * Reusable StepItem component
  */
 function StepItem({ number, title, description }) {
   return (
-    <div className="flex flex-col items-center text-center px-4 relative z-10 group">
+    <div className="d-flex flex-column align-items-center text-center px-3 position-relative z-3 group">
       {/* Circle Number Badge */}
-      <div className="w-14 h-14 rounded-full bg-gradient-to-br from-cyan-400 to-indigo-600 flex items-center justify-center text-white font-display font-extrabold text-lg shadow-[0_0_20px_rgba(6,182,212,0.3)] group-hover:shadow-[0_0_25px_rgba(6,182,212,0.5)] group-hover:scale-110 transition-all duration-300 mb-6">
+      <div 
+        className="d-flex align-items-center justify-content-center text-white font-display mb-4"
+        style={{
+          width: '56px',
+          height: '56px',
+          borderRadius: '50%',
+          background: 'linear-gradient(135deg, #00d2ff 0%, #7a00ff 100%)',
+          fontWeight: 800,
+          fontSize: '1.25rem',
+          boxShadow: '0 0 20px rgba(0, 210, 255, 0.4)'
+        }}
+      >
         {number}
       </div>
 
       {/* Step Content */}
-      <h3 className="font-display font-bold text-white text-base sm:text-lg mb-3 tracking-wide group-hover:text-cyan-300 transition-colors duration-300">
+      <h3 
+        className="font-display text-white mb-2" 
+        style={{ fontWeight: 700, fontSize: '1.05rem', letterSpacing: '0.02em' }}
+      >
         {title}
       </h3>
-      <p className="font-sans text-gray-400 text-sm leading-relaxed max-w-xs">
+      <p 
+        className="text-white-50 leading-relaxed mx-auto" 
+        style={{ fontSize: '0.85rem', maxWidth: '240px', lineHeight: 1.6 }}
+      >
         {description}
       </p>
     </div>
@@ -33,42 +53,58 @@ export default function HowToUse() {
   ];
 
   return (
-    <section id="how-to-use" className="py-24 relative bg-dark-bg border-t border-white/5">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+    <section id="how-to-use" className="py-5 bg-dark-bg border-top border-white-5">
+      <Container className="py-5 position-relative">
         
         {/* Section Header */}
-        <div className="text-center mb-20">
-          <div className="inline-flex items-center space-x-2 text-cyan-400 text-xs font-bold tracking-widest uppercase mb-4">
-            <span className="w-6 h-px bg-cyan-400/50" />
+        <div className="text-center mb-5">
+          <div className="d-inline-flex align-items-center gap-2 mb-2 text-info text-xs font-bold tracking-wider text-uppercase" style={{ fontSize: '0.75rem' }}>
+            <span style={{ width: '24px', height: '1px', backgroundColor: 'rgba(0, 210, 255, 0.4)' }} />
             <span>{t('howToUseSubtitle')}</span>
           </div>
-          <h2 className="font-display font-extrabold text-3xl sm:text-4xl text-white tracking-tight mb-4">
+          <h2 
+            className="font-display text-white mb-3" 
+            style={{ fontWeight: 800, fontSize: 'calc(1.5rem + 1.2vw)', letterSpacing: '-0.01em' }}
+          >
             {t('howToUseTitle')}
           </h2>
-          <p className="font-sans text-gray-400 text-sm sm:text-base max-w-md mx-auto">
+          <p 
+            className="text-white-50 mx-auto" 
+            style={{ fontSize: '0.9rem', maxWidth: '420px', lineHeight: 1.5 }}
+          >
             {t('howToUseDesc')}
           </p>
         </div>
 
-        {/* Steps container (Desktop: horizontal connecting line, Mobile: vertical stack) */}
-        <div className="relative">
-          {/* Horizontal dotted connector line (hidden on mobile, visible on lg screens) */}
-          <div className="absolute top-7 left-[10%] right-[10%] h-0.5 border-t border-dashed border-white/10 hidden lg:block z-0" />
+        {/* Steps container */}
+        <div className="position-relative">
+          {/* Horizontal dotted connector line (hidden on mobile, visible on desktop) */}
+          <div 
+            className="position-absolute d-none d-lg-block w-75 pointer-events-none"
+            style={{
+              top: '28px',
+              left: '12.5%',
+              height: '1px',
+              borderTop: '2px dashed rgba(255, 255, 255, 0.08)',
+              zIndex: 1
+            }}
+          />
           
           {/* Steps layout grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-6 relative">
+          <Row className="gy-5 gy-lg-0 justify-content-center">
             {steps.map((step) => (
-              <StepItem
-                key={step.number}
-                number={step.number}
-                title={t(step.titleKey)}
-                description={t(step.descKey)}
-              />
+              <Col xs={12} sm={6} lg={3} key={step.number}>
+                <StepItem
+                  number={step.number}
+                  title={t(step.titleKey)}
+                  description={t(step.descKey)}
+                />
+              </Col>
             ))}
-          </div>
+          </Row>
         </div>
 
-      </div>
+      </Container>
     </section>
   );
 }

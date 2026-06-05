@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import {
   loginApi,
   registerApi,
@@ -10,7 +10,13 @@ import {
 
 
 export default function useAuth() {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(() => {
+    const token = localStorage.getItem('researchpulse_token');
+    if (token) {
+      return { username: 'Researcher', email: 'user@example.com' };
+    }
+    return null;
+  });
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -136,6 +142,13 @@ export default function useAuth() {
       setIsLoading(false);
     }
   }, [logout]);
+
+  useEffect(() => {
+    const token = localStorage.getItem('researchpulse_token');
+    if (token && user?.username === 'Researcher') {
+      fetchProfile();
+    }
+  }, [fetchProfile, user]);
 
   return {
     user,

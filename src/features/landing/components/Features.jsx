@@ -1,4 +1,8 @@
 import { useTranslation } from 'react-i18next';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Card from 'react-bootstrap/Card';
 import Icon from '../../../shared/components/Icon';
 
 /**
@@ -6,23 +10,44 @@ import Icon from '../../../shared/components/Icon';
  */
 function FeatureCard({ icon, title, description }) {
   return (
-    <div className="glass-card rounded-3xl p-8 flex flex-col items-start text-left relative group overflow-hidden">
-      {/* Decorative gradient light reflection */}
-      <div className="absolute -inset-px bg-gradient-to-br from-cyan-500/10 to-indigo-500/0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
-      
+    <Card 
+      className="glass-card rounded-4 p-4 h-100 text-start border border-white-5 position-relative overflow-hidden"
+      style={{
+        backgroundColor: 'rgba(14, 19, 34, 0.65)',
+        backdropFilter: 'blur(8px)',
+        transition: 'all 0.3s ease'
+      }}
+    >
       {/* Icon Wrapper */}
-      <div className="w-12 h-12 rounded-2xl bg-cyan-950/50 border border-cyan-800/30 flex items-center justify-center mb-6 group-hover:scale-110 group-hover:border-cyan-400/50 group-hover:bg-cyan-950/70 transition-all duration-300">
-        <Icon icon={icon} className="text-cyan-400 text-xl" />
+      <div 
+        className="d-flex align-items-center justify-content-center mb-4"
+        style={{
+          width: '48px',
+          height: '48px',
+          borderRadius: '12px',
+          backgroundColor: 'rgba(0, 210, 255, 0.08)',
+          border: '1px solid rgba(0, 210, 255, 0.2)',
+          color: '#00d2ff',
+          transition: 'all 0.3s ease'
+        }}
+      >
+        <Icon icon={icon} className="fs-4 text-info" />
       </div>
 
       {/* Card Content */}
-      <h3 className="font-display font-bold text-white text-lg sm:text-xl mb-3 tracking-wide group-hover:text-cyan-300 transition-colors duration-300">
+      <Card.Title 
+        className="font-display text-white mb-2" 
+        style={{ fontWeight: 700, fontSize: '1.1rem', letterSpacing: '0.01em' }}
+      >
         {title}
-      </h3>
-      <p className="font-sans text-gray-400 text-sm leading-relaxed">
+      </Card.Title>
+      <Card.Text 
+        className="text-white-50 leading-relaxed mb-0" 
+        style={{ fontSize: '0.85rem', lineHeight: 1.6 }}
+      >
         {description}
-      </p>
-    </div>
+      </Card.Text>
+    </Card>
   );
 }
 
@@ -63,37 +88,63 @@ export default function Features() {
   ];
 
   return (
-    <section id="features" className="py-24 relative bg-[#090d16] overflow-hidden">
+    <section id="features" className="py-5 relative" style={{ backgroundColor: '#090d16', overflow: 'hidden' }}>
       {/* Subtle glowing lights behind features */}
-      <div className="absolute top-1/4 left-1/4 w-[400px] h-[400px] bg-cyan-950/20 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-1/4 right-1/4 w-[400px] h-[400px] bg-indigo-950/25 rounded-full blur-[120px] pointer-events-none" />
+      <div 
+        className="position-absolute pointer-events-none"
+        style={{
+          top: '20%',
+          left: '10%',
+          width: '300px',
+          height: '300px',
+          backgroundColor: 'rgba(0, 210, 255, 0.05)',
+          borderRadius: '50%',
+          filter: 'blur(100px)'
+        }}
+      />
+      <div 
+        className="position-absolute pointer-events-none"
+        style={{
+          bottom: '20%',
+          right: '10%',
+          width: '300px',
+          height: '300px',
+          backgroundColor: 'rgba(122, 0, 255, 0.05)',
+          borderRadius: '50%',
+          filter: 'blur(100px)'
+        }}
+      />
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <Container className="position-relative z-3 py-5">
         
         {/* Section Header */}
-        <div className="text-center mb-16">
-          <div className="inline-flex items-center space-x-2 text-cyan-400 text-xs font-bold tracking-widest uppercase mb-4">
-            <span className="w-6 h-px bg-cyan-400/50" />
+        <div className="text-center mb-5">
+          <div className="d-inline-flex align-items-center gap-2 mb-2 text-info text-xs font-bold tracking-wider text-uppercase" style={{ fontSize: '0.75rem' }}>
+            <span style={{ width: '24px', height: '1px', backgroundColor: 'rgba(0, 210, 255, 0.4)' }} />
             <span>{t('featuresSubtitle')}</span>
           </div>
-          <h2 className="font-display font-extrabold text-3xl sm:text-4xl text-white tracking-tight leading-tight">
+          <h2 
+            className="font-display text-white" 
+            style={{ fontWeight: 800, fontSize: 'calc(1.5rem + 1.2vw)', letterSpacing: '-0.01em' }}
+          >
             {t('featuresTitle')}
           </h2>
         </div>
 
-        {/* 2x3 Grid of Feature Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
+        {/* Grid of Feature Cards */}
+        <Row className="g-4">
           {featureList.map((feature, index) => (
-            <FeatureCard
-              key={index}
-              icon={feature.icon}
-              title={t(feature.titleKey)}
-              description={t(feature.descKey)}
-            />
+            <Col xs={12} md={6} lg={4} key={index}>
+              <FeatureCard
+                icon={feature.icon}
+                title={t(feature.titleKey)}
+                description={t(feature.descKey)}
+              />
+            </Col>
           ))}
-        </div>
+        </Row>
 
-      </div>
+      </Container>
     </section>
   );
 }
