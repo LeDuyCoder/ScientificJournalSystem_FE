@@ -1,16 +1,18 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { BsCheckLg } from "react-icons/bs";
 import ProgressBar from "../components/ProgressBar";
 import "./ActivationSuccess.css";
 
 function ActivationSuccess() {
+  const navigate = useNavigate();
+
   const INITIAL_TIME = 5;
   const [countdown, setCountdown] = useState(INITIAL_TIME);
 
   useEffect(() => {
     if (countdown === 0) {
-      // TODO: navigate("/dashboard");
-      console.log("Redirect dashboard");
+      navigate("/dashboard");
       return;
     }
 
@@ -19,7 +21,7 @@ function ActivationSuccess() {
     }, 1000);
 
     return () => clearTimeout(timer);
-  }, [countdown]);
+  }, [countdown, navigate]);
 
   const progress =
     ((INITIAL_TIME - countdown) / INITIAL_TIME) * 100;
@@ -52,11 +54,17 @@ function ActivationSuccess() {
 
         <ProgressBar progress={progress} />
 
-        <button className="btn dashboard-btn">
+        <button
+          className="btn dashboard-btn"
+          onClick={() => navigate("/dashboard")}
+        >
           Đi đến Dashboard
         </button>
 
-        <button className="btn home-btn">
+        <button
+          className="btn home-btn"
+          onClick={() => navigate("/")}
+        >
           Về trang chủ
         </button>
       </div>
