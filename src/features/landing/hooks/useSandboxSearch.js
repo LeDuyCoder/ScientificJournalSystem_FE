@@ -1,10 +1,9 @@
 import { useState } from 'react';
-import { searchGlobalApi } from '../api/article.api';
+import { searchGlobalApi } from '../api/landingApi';
 
 /**
  * Custom hook to coordinate states and logic for the Sandbox search.
- * It manages search inputs, loading states, and handles fallback simulation
- * when the backend API request fails.
+ * It manages search inputs, loading states, and calls the backend search API.
  */
 export default function useSandboxSearch() {
   const [searchValue, setSearchValue] = useState('');
@@ -20,7 +19,8 @@ export default function useSandboxSearch() {
 
   const handleSearchSubmit = async (e) => {
     if (e && e.preventDefault) e.preventDefault();
-    if (!searchValue.trim()) return;
+    const query = searchValue.trim();
+    if (!query) return;
 
     setIsLoading(true);
     setSearchResult(null);
@@ -28,23 +28,26 @@ export default function useSandboxSearch() {
 
     try {
       // Execute the API request through the decoupled API wrapper
-      const response = await searchGlobalApi(searchValue);
+      const response = await searchGlobalApi(query);
 
       if (response.data && response.data.success !== false) {
         const items = response.data.data || [];
-        
         setSearchResult({
-          keyword: searchValue,
+          keyword: query,
           items: items,
           isRealData: true,
         });
       } else {
-        throw new Error(response.data?.message || 'Invalid backend format');
+        throw new Error(response.data?.message || 'Không tìm thấy kết quả phù hợp');
       }
     } catch (err) {
       console.error('Backend API search failed:', err);
-      const errMsg = err.response?.data?.message || err.message || 'API request failed';
-      setError(errMsg);
+      setError(err.response?.data?.message || err.message);
+      setSearchResult({
+        keyword: query,
+        items: [],
+        isRealData: true,
+      });
     } finally {
       setIsLoading(false);
     }

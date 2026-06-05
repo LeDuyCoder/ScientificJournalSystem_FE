@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { getSubjectAreasApi, getSubjectCategoriesApi } from '../api/catalog.api';
+import { getSubjectAreasApi, getSubjectCategoriesApi } from '../api/catalogApi';
 
 export default function useCatalog() {
   const [subjectAreas, setSubjectAreas] = useState([]);
