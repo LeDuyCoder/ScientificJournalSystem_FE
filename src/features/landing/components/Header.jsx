@@ -126,15 +126,15 @@ export default function Header() {
               </Nav.Link>
               {/* Tạp chí */}
               <Nav.Link
-                onClick={() => navigate('/catalog')}
+                onClick={() => navigate('/journals')}
                 className="px-3 py-1 text-sm font-semibold d-flex align-items-center gap-1"
                 style={{
                   borderRadius: '6px',
-                  backgroundColor: pathname.includes('/journals') && !pathname.startsWith('/catalog') ? 'var(--primary-light)' : 'transparent',
-                  color: pathname.includes('/journals') && !pathname.startsWith('/catalog') ? 'var(--primary)' : 'var(--text-muted)',
-                  border: pathname.includes('/journals') && !pathname.startsWith('/catalog') ? '1px solid var(--border)' : '1px solid transparent',
+                  backgroundColor: pathname === '/journals' ? 'var(--primary-light)' : 'transparent',
+                  color: pathname === '/journals' ? 'var(--primary)' : 'var(--text-muted)',
+                  border: pathname === '/journals' ? '1px solid var(--border)' : '1px solid transparent',
                   transition: 'all 0.2s',
-                  fontWeight: 500,
+                  fontWeight: pathname === '/journals' ? 700 : 500,
                 }}
               >
                 <Icon icon="lucide:book-open" width="14" />
@@ -342,9 +342,12 @@ export default function Header() {
             <Nav.Link 
               onClick={() => {
                 setShowMobileMenu(false);
-                navigate('/');
+                navigate('/journals');
               }}
               className="text-muted-custom hover:text-main py-2 text-sm font-semibold border-bottom border-light"
+              style={{
+                color: pathname === '/journals' ? 'var(--primary)' : 'var(--text-muted)'
+              }}
             >
               {t('journals')}
             </Nav.Link>

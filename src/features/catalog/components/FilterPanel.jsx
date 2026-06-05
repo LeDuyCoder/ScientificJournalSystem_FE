@@ -9,192 +9,128 @@ export default function FilterPanel({
   selectedCategories = [],
   selectedAccess = [],
   selectedQuartiles = [],
-  onAreaToggle,
-  onCategoryToggle,
-  onAccessToggle,
-  onQuartileToggle,
+  onAreaSelect,
+  onCategorySelect,
+  onAccessSelect,
+  onQuartileSelect,
   onClearAll,
   loading = false
 }) {
-  // If subject areas are selected, filter categories to only those belonging to selected areas.
-  // Otherwise, show all categories.
+  // Filter categories to only those belonging to the selected area.
+  // If no area is selected, show all categories.
   const visibleCategories = selectedAreas.length > 0
-    ? subjectCategories.filter(cat => selectedAreas.includes(cat.subject_area_id))
+    ? subjectCategories.filter(cat => selectedAreas.includes(String(cat.subject_area_id)))
     : subjectCategories;
 
   return (
-    <div className="journal-dark-card p-4 text-start" style={{ borderRadius: '16px', backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)' }}>
-      
-      {/* Filter Header */}
-      <div className="d-flex align-items-center justify-content-between mb-4 border-bottom border-light pb-3">
-        <div className="d-flex align-items-center gap-2 text-main fw-bold">
-          <Icon icon="lucide:sliders" className="text-primary fs-5" />
-          <span className="font-display">Bộ lọc</span>
-        </div>
-        <Button 
-          variant="link" 
-          onClick={onClearAll}
-          className="text-primary hover:text-dark p-0 text-decoration-none fw-semibold"
-          style={{ fontSize: '0.8rem' }}
-        >
-          Xóa tất cả
-        </Button>
-      </div>
+    <div className="journal-dark-card p-3 mb-4 text-start" style={{ borderRadius: '16px', backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)' }}>
+      <Row className="align-items-end g-3">
+        {/* 1. Subject Area Select */}
+        <Col xs={12} md={6} lg={3}>
+          <Form.Group>
+            <Form.Label className="text-muted-custom fw-semibold mb-2" style={{ fontSize: '0.75rem' }}>
+              Lĩnh vực (Subject Area)
+            </Form.Label>
+            {loading ? (
+              <div className="text-muted-custom py-1" style={{ fontSize: '0.85rem' }}>Đang tải...</div>
+            ) : (
+              <Form.Select
+                value={selectedAreas[0] || 'all'}
+                onChange={(e) => onAreaSelect(e.target.value)}
+                className="bg-white text-main border-light py-2"
+                style={{ borderRadius: '8px', fontSize: '0.875rem' }}
+              >
+                <option value="all">Tất cả lĩnh vực</option>
+                {subjectAreas.map((area) => (
+                  <option key={area.subject_area_id} value={area.subject_area_id}>
+                    {area.display_name}
+                  </option>
+                ))}
+              </Form.Select>
+            )}
+          </Form.Group>
+        </Col>
 
-      {/* 1. Subject Area Filter */}
-      <div className="mb-4">
-        <h6 className="text-muted-custom fw-bold text-uppercase tracking-wider mb-3" style={{ fontSize: '0.75rem', letterSpacing: '0.05em' }}>
-          Lĩnh vực (Subject Area)
-        </h6>
-        {loading ? (
-          <div className="text-muted-custom py-2" style={{ fontSize: '0.85rem' }}>Đang tải...</div>
-        ) : (
-          <div className="d-flex flex-column gap-2.5 max-h-50 overflow-y-auto pr-1" style={{ maxHeight: '200px' }}>
-            {subjectAreas.map((area) => {
-              const isChecked = selectedAreas.includes(area.subject_area_id);
-              return (
-                <div key={area.subject_area_id} className="d-flex align-items-center justify-content-between py-0.5">
-                  <Form.Check 
-                    type="checkbox"
-                    id={`area-${area.subject_area_id}`}
-                    label={
-                      <span className={`ms-2 text-sm transition-all ${isChecked ? 'text-primary fw-semibold' : 'text-main'}`} style={{ fontSize: '0.875rem' }}>
-                        {area.display_name}
-                      </span>
-                    }
-                    checked={isChecked}
-                    onChange={() => onAreaToggle(area.subject_area_id)}
-                    className="custom-checkbox m-0 d-flex align-items-center"
-                    style={{ cursor: 'pointer' }}
-                  />
-                  <span className="text-muted-custom font-monospace" style={{ fontSize: '0.75rem' }}>
-                    {area.count?.toLocaleString() || area.journal_count?.toLocaleString() || 0}
-                  </span>
-                </div>
-              );
-            })}
-          </div>
-        )}
-      </div>
+        {/* 2. Subject Category Select */}
+        <Col xs={12} md={6} lg={3}>
+          <Form.Group>
+            <Form.Label className="text-muted-custom fw-semibold mb-2" style={{ fontSize: '0.75rem' }}>
+              Chuyên ngành (Subject Category)
+            </Form.Label>
+            {loading ? (
+              <div className="text-muted-custom py-1" style={{ fontSize: '0.85rem' }}>Đang tải...</div>
+            ) : (
+              <Form.Select
+                value={selectedCategories[0] || 'all'}
+                onChange={(e) => onCategorySelect(e.target.value)}
+                disabled={selectedAreas.length === 0}
+                className="bg-white text-main border-light py-2"
+                style={{ borderRadius: '8px', fontSize: '0.875rem' }}
+              >
+                <option value="all">Tất cả chuyên ngành</option>
+                {visibleCategories.map((cat) => (
+                  <option key={cat.subject_category_id} value={cat.subject_category_id}>
+                    {cat.display_name}
+                  </option>
+                ))}
+              </Form.Select>
+            )}
+          </Form.Group>
+        </Col>
 
-      <hr className="border-light my-4" />
+        {/* 3. Access Type Select */}
+        <Col xs={12} md={6} lg={2.5}>
+          <Form.Group>
+            <Form.Label className="text-muted-custom fw-semibold mb-2" style={{ fontSize: '0.75rem' }}>
+              Loại truy cập
+            </Form.Label>
+            <Form.Select
+              value={selectedAccess[0] || 'all'}
+              onChange={(e) => onAccessSelect(e.target.value)}
+              className="bg-white text-main border-light py-2"
+              style={{ borderRadius: '8px', fontSize: '0.875rem' }}
+            >
+              <option value="all">Tất cả loại truy cập</option>
+              <option value="open_access">Open Access</option>
+              <option value="subscription">Subscription</option>
+            </Form.Select>
+          </Form.Group>
+        </Col>
 
-      {/* 2. Subject Category Filter */}
-      <div className="mb-4">
-        <h6 className="text-muted-custom fw-bold text-uppercase tracking-wider mb-3" style={{ fontSize: '0.75rem', letterSpacing: '0.05em' }}>
-          Chuyên ngành (Subject Category)
-        </h6>
-        {loading ? (
-          <div className="text-muted-custom py-2" style={{ fontSize: '0.85rem' }}>Đang tải...</div>
-        ) : visibleCategories.length === 0 ? (
-          <div className="text-muted-custom py-2 italic text-center" style={{ fontSize: '0.8rem', fontStyle: 'italic' }}>
-            Chọn lĩnh vực để xem chuyên ngành
-          </div>
-        ) : (
-          <div className="d-flex flex-column gap-2.5 max-h-50 overflow-y-auto pr-1" style={{ maxHeight: '220px' }}>
-            {visibleCategories.map((cat) => {
-              const isChecked = selectedCategories.includes(cat.subject_category_id);
-              return (
-                <div key={cat.subject_category_id} className="d-flex align-items-center justify-content-between py-0.5">
-                  <Form.Check 
-                    type="checkbox"
-                    id={`cat-${cat.subject_category_id}`}
-                    label={
-                      <span className={`ms-2 text-sm transition-all ${isChecked ? 'text-primary fw-semibold' : 'text-main'}`} style={{ fontSize: '0.875rem' }}>
-                        {cat.display_name}
-                      </span>
-                    }
-                    checked={isChecked}
-                    onChange={() => onCategoryToggle(cat.subject_category_id)}
-                    className="custom-checkbox m-0 d-flex align-items-center"
-                    style={{ cursor: 'pointer' }}
-                  />
-                  <span className="text-muted-custom font-monospace" style={{ fontSize: '0.75rem' }}>
-                    {cat.count?.toLocaleString() || cat.journal_count?.toLocaleString() || 0}
-                  </span>
-                </div>
-              );
-            })}
-          </div>
-        )}
-      </div>
+        {/* 4. Quartile Select */}
+        <Col xs={12} md={6} lg={2.5}>
+          <Form.Group>
+            <Form.Label className="text-muted-custom fw-semibold mb-2" style={{ fontSize: '0.75rem' }}>
+              Xếp hạng (Quartile)
+            </Form.Label>
+            <Form.Select
+              value={selectedQuartiles[0] || 'all'}
+              onChange={(e) => onQuartileSelect(e.target.value)}
+              className="bg-white text-main border-light py-2"
+              style={{ borderRadius: '8px', fontSize: '0.875rem' }}
+            >
+              <option value="all">Tất cả hạng (Quartile)</option>
+              <option value="Q1">Q1</option>
+              <option value="Q2">Q2</option>
+              <option value="Q3">Q3</option>
+              <option value="Q4">Q4</option>
+            </Form.Select>
+          </Form.Group>
+        </Col>
 
-      <hr className="border-light my-4" />
-
-      {/* 3. Access Type Filter */}
-      <div className="mb-4">
-        <h6 className="text-muted-custom fw-bold text-uppercase tracking-wider mb-3" style={{ fontSize: '0.75rem', letterSpacing: '0.05em' }}>
-          Loại truy cập
-        </h6>
-        <div className="d-flex flex-column gap-2.5">
-          <div className="d-flex align-items-center justify-content-between">
-            <Form.Check 
-              type="checkbox"
-              id="access-oa"
-              label={
-                <span className={`ms-2 transition-all ${selectedAccess.includes('open_access') ? 'text-primary fw-semibold' : 'text-main'}`} style={{ fontSize: '0.875rem' }}>
-                  Open Access
-                </span>
-              }
-              checked={selectedAccess.includes('open_access')}
-              onChange={() => onAccessToggle('open_access')}
-              className="custom-checkbox m-0 d-flex align-items-center"
-              style={{ cursor: 'pointer' }}
-            />
-            <Icon icon="lucide:unlock" className="text-success" width="14" />
-          </div>
-          <div className="d-flex align-items-center justify-content-between">
-            <Form.Check 
-              type="checkbox"
-              id="access-sub"
-              label={
-                <span className={`ms-2 transition-all ${selectedAccess.includes('subscription') ? 'text-primary fw-semibold' : 'text-main'}`} style={{ fontSize: '0.875rem' }}>
-                  Subscription
-                </span>
-              }
-              checked={selectedAccess.includes('subscription')}
-              onChange={() => onAccessToggle('subscription')}
-              className="custom-checkbox m-0 d-flex align-items-center"
-              style={{ cursor: 'pointer' }}
-            />
-            <Icon icon="lucide:lock" className="text-warning" width="14" />
-          </div>
-        </div>
-      </div>
-
-      <hr className="border-light my-4" />
-
-      {/* 4. Quartile Filter */}
-      <div>
-        <h6 className="text-muted-custom fw-bold text-uppercase tracking-wider mb-3" style={{ fontSize: '0.75rem', letterSpacing: '0.05em' }}>
-          Xếp hạng (Quartile)
-        </h6>
-        <Row className="g-2">
-          {['Q1', 'Q2', 'Q3', 'Q4'].map((q) => {
-            const isActive = selectedQuartiles.includes(q);
-            return (
-              <Col xs={6} key={q}>
-                <Button
-                  className={`w-100 py-2 border font-display fw-bold text-xs`}
-                  onClick={() => onQuartileToggle(q)}
-                  style={{
-                    borderRadius: '8px',
-                    fontSize: '0.75rem',
-                    backgroundColor: isActive ? 'var(--primary)' : 'var(--bg-main)',
-                    color: isActive ? '#ffffff' : 'var(--text-muted)',
-                    borderColor: isActive ? 'var(--primary)' : 'var(--border)',
-                    boxShadow: isActive ? '0 4px 10px rgba(255, 122, 51, 0.25)' : 'none',
-                    transition: 'all 0.2s ease'
-                  }}
-                >
-                  {q}
-                </Button>
-              </Col>
-            );
-          })}
-        </Row>
-      </div>
-
+        {/* 5. Clear All Button */}
+        <Col xs={12} lg={1} className="d-flex justify-content-lg-center">
+          <Button 
+            variant="link" 
+            onClick={onClearAll}
+            className="text-primary hover:text-dark p-0 text-decoration-none fw-semibold d-flex align-items-center gap-1 py-2"
+            style={{ fontSize: '0.875rem' }}
+          >
+            <Icon icon="lucide:rotate-ccw" width="14" />
+            <span>Xóa lọc</span>
+          </Button>
+        </Col>
+      </Row>
     </div>
   );
 }

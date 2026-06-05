@@ -32,6 +32,7 @@ pnpm-debug.log*
 *.sw?
 FRONTEND_STRUCTURE_REVIEW_GUIDE.md
 DESIGN_SYSTEM.md
+scratch
 # coverage
 coverage
 

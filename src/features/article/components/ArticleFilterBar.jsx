@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Row, Col, Form, Button } from 'react-bootstrap';
 import { Icon } from '@iconify/react';
 import ArticleSearchBar from './ArticleSearchBar';
+import { searchJournalsApi } from '../../journal/api/journalApi';
 
 const YEAR_OPTIONS = [
   { value: 'all', label: 'Tất cả năm' },
@@ -21,19 +22,6 @@ const TOPIC_OPTIONS = [
   { value: 'Bioinformatics', label: 'Bioinformatics' }
 ];
 
-const JOURNAL_OPTIONS = [
-  { value: 'all', label: 'Tất cả tạp chí' },
-  { value: '1', label: 'Nature Machine Intelligence' },
-  { value: '2', label: 'Journal of ML Research' },
-  { value: '3', label: 'IEEE Trans. on Computers' },
-  { value: '4', label: 'Lancet Oncology' },
-  { value: '5', label: 'Nature Climate Change' },
-  { value: '6', label: 'Physical Review Letters' },
-  { value: '7', label: 'Bioinformatics' },
-  { value: '8', label: 'Int. Journal of Robotics Research' },
-  { value: '9', label: 'European Heart Journal' }
-];
-
 const ACCESS_OPTIONS = [
   { value: 'all', label: 'Tất cả trạng thái' },
   { value: 'oa', label: 'Open Access (OA)' }
@@ -50,6 +38,33 @@ const SORT_OPTIONS = [
 ];
 
 export default function ArticleFilterBar({ filters, updateFilters, clearFilters }) {
+  const [journalOptions, setJournalOptions] = useState([
+    { value: 'all', label: 'Tất cả tạp chí' }
+  ]);
+
+  useEffect(() => {
+    const fetchJournals = async () => {
+      try {
+        const response = await searchJournalsApi({ limit: 100 });
+        if (response?.data?.success && response?.data?.data?.items) {
+          const fetchedOptions = response.data.data.items.map(item => ({
+            value: String(item.journal_id),
+            label: item.display_name
+          }));
+          // Sắp xếp Alphabet theo tên tạp chí
+          fetchedOptions.sort((a, b) => a.label.localeCompare(b.label));
+          setJournalOptions([
+            { value: 'all', label: 'Tất cả tạp chí' },
+            ...fetchedOptions
+          ]);
+        }
+      } catch (error) {
+        console.error('Failed to fetch journals for filter bar:', error);
+      }
+    };
+    fetchJournals();
+  }, []);
+
   const handleSearchChange = (val) => {
     updateFilters({ search: val });
   };
@@ -118,13 +133,13 @@ export default function ArticleFilterBar({ filters, updateFilters, clearFilters 
               onChange={handleSelectChange('journal')}
               className="bg-white text-main border-light py-2 text-xs rounded-2 shadow-none"
               style={{
-                width: '160px',
+                width: '200px',
                 borderColor: 'var(--border)',
                 fontSize: '0.8rem',
                 cursor: 'pointer'
               }}
             >
-              {JOURNAL_OPTIONS.map(opt => (
+              {journalOptions.map(opt => (
                 <option key={opt.value} value={opt.value}>{opt.label}</option>
               ))}
             </Form.Select>

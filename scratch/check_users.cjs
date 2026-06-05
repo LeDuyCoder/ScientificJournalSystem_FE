@@ -1,18 +1,28 @@
-const { Pool } = require('pg');
+const { Client } = require('pg');
 
-const pool = new Pool({
-  connectionString: "postgres://postgres:1234@localhost:5433/scientific_journal_db?sslmode=disable"
+const client = new Client({
+  connectionString: "postgresql://postgres.egyrzaqtmxmcezxchfrl:TeamSWP3912006@aws-1-ap-northeast-1.pooler.supabase.com:6543/postgres"
 });
 
-async function main() {
+async function run() {
   try {
-    const result = await pool.query('SELECT user_id, email, status FROM "user"');
-    console.log("Users in DB:", result.rows);
+    await client.connect();
+    const res = await client.query(`
+      SELECT * 
+      FROM "user"
+      LIMIT 1;
+    `);
+    console.log('--- SAMPLE USER ROW KEYS AND VALUES ---');
+    if (res.rows.length > 0) {
+      console.log(JSON.stringify(res.rows[0], null, 2));
+    } else {
+      console.log('No rows in user table');
+    }
   } catch (err) {
-    console.error("Error:", err);
+    console.error('Error querying DB:', err.message);
   } finally {
-    await pool.end();
+    await client.end();
   }
 }
 
-main();
+run();

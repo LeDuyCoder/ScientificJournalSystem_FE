@@ -9,8 +9,8 @@ export default function JournalResultCard({
   onFollow,
   onTagClick
 }) {
+  const id = journal.id || journal.journal_id;
   const {
-    id,
     display_name,
     publisher,
     country,

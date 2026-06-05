@@ -62,7 +62,21 @@ export function useJournalDetail(journalId, currentUser) {
     try {
       const response = await getJournalRankingsApi(journalId);
       if (response.data && response.data.data) {
-        setRankingHistory(response.data.data);
+        const grouped = response.data.data;
+        const flatList = Object.keys(grouped).map(yr => {
+          const metrics = grouped[yr];
+          const sjrMetric = metrics.find(m => m.metric_code === 'SJR');
+          const hindexMetric = metrics.find(m => m.metric_code === 'H_INDEX');
+          const quartileMetric = metrics.find(m => m.metric_code === 'SJR_BEST_QUARTILE' || m.metric_code === 'SJR_QUARTILE_BY_CAT');
+          
+          return {
+            year: parseInt(yr, 10),
+            value: sjrMetric ? parseFloat(sjrMetric.value) : (metrics[0] ? parseFloat(metrics[0].value) : null),
+            h_index: hindexMetric ? parseInt(hindexMetric.value, 10) : null,
+            quartile: quartileMetric ? quartileMetric.value : 'Q1',
+          };
+        }).sort((a, b) => b.year - a.year);
+        setRankingHistory(flatList);
       } else {
         setRankingHistory([]);
       }
@@ -134,6 +148,20 @@ export function useJournalDetail(journalId, currentUser) {
     fetchRankingHistory();
   }, [fetchJournalInfo, fetchRankingHistory]);
 
+  // Enrich journal with latest ranking details when rankingHistory updates
+  useEffect(() => {
+    if (rankingHistory.length > 0 && journal && !journal.metric_value) {
+      const latest = rankingHistory[0]; // Already sorted descending by year
+      setJournal(prev => ({
+        ...prev,
+        quartile: latest.quartile || prev.quartile || 'Q1',
+        metric_value: latest.value || prev.metric_value,
+        metric_name: 'SJR Score',
+        metric_year: String(latest.year)
+      }));
+    }
+  }, [rankingHistory, journal]);
+
   // Lazy load tabs
   useEffect(() => {
     if (activeTab === 'volumes') {
@@ -171,22 +199,12 @@ export function useJournalDetail(journalId, currentUser) {
       return;
     }
 
-    setIsAddingToProject(true);
-    try {
-      if (projectId) {
-        await addJournalToProjectApi(projectId, journalId);
-        setShowProjectModal(false);
-        alert('Tạp chí đã được thêm vào dự án thành công!');
-      } else {
-        setShowProjectModal(true);
-      }
-    } catch (err) {
-      console.error('Add to project API failed:', err);
-      alert('Thêm vào dự án thất bại. Vui lòng thử lại!');
-    } finally {
-      setIsAddingToProject(false);
+    if (projectId) {
+      setShowProjectModal(false);
+    } else {
+      setShowProjectModal(true);
     }
-  }, [journalId, currentUser]);
+  }, [currentUser]);
 
   return {
     journal,
