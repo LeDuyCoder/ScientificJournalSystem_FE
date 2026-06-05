@@ -12,32 +12,36 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="bg-dark-bg border-t border-white/5 py-12 relative z-10">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex flex-col md:flex-row items-center justify-between gap-8">
+    <footer className="bg-dark-bg border-top border-white/5 py-5 position-relative z-10">
+      <div className="mx-auto px-3 px-sm-4 px-lg-5" style={{ maxWidth: '80rem' }}>
+        <div className="d-flex flex-column flex-md-row align-items-center justify-content-between gap-4">
 
           {/* Left Column: Logo & project info */}
-          <div className="flex flex-col items-center md:items-start text-center md:text-left space-y-3">
-            <div className="flex items-center space-x-2">
-              <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-cyan-400 to-indigo-600 flex items-center justify-center shadow-[0_0_10px_rgba(6,182,212,0.2)]">
-                <Icon icon="lucide:activity" className="text-white text-sm" />
+          <div className="d-flex flex-column align-items-center align-items-md-start text-center text-md-start gap-2">
+            <div className="d-flex align-items-center gap-2">
+              <div 
+                className="rounded-3 bg-brand-gradient d-flex align-items-center justify-content-center btn-primary-glow"
+                style={{ width: '1.75rem', height: '1.75rem' }}
+              >
+                <Icon icon="lucide:activity" className="text-white fs-6" />
               </div>
-              <span className="font-display font-bold text-white text-base tracking-tight">
+              <span className="fw-bold text-white fs-6" style={{ fontFamily: 'var(--font-display)', letterSpacing: '-0.01em' }}>
                 ResearchPulse
               </span>
             </div>
-            <span className="font-sans text-xs text-gray-500 max-w-sm">
+            <span className="text-secondary" style={{ fontSize: '0.75rem', color: '#6c757d', maxWidth: '24rem' }}>
               {t('footerCredit')}
             </span>
           </div>
 
           {/* Center Column: Links */}
-          <nav className="flex flex-wrap justify-center gap-x-8 gap-y-3">
+          <nav className="d-flex flex-wrap justify-content-center gap-4">
             {links.map((link) => (
               <a
                 key={link.key}
                 href={link.href}
-                className="font-sans text-xs font-semibold text-gray-400 hover:text-white transition-colors duration-200"
+                className="text-decoration-none text-secondary hover-text-white transition-colors"
+                style={{ fontSize: '0.75rem', fontWeight: 600 }}
               >
                 {t(link.key)}
               </a>
@@ -45,7 +49,7 @@ export default function Footer() {
           </nav>
 
           {/* Right Column: Copyright */}
-          <div className="font-sans text-xs text-gray-500 text-center md:text-right">
+          <div className="text-secondary text-center text-md-end" style={{ fontSize: '0.75rem' }}>
             <span>&copy; {new Date().getFullYear()} ResearchPulse Team</span>
           </div>
 
