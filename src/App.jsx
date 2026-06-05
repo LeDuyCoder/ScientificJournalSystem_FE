@@ -1,9 +1,10 @@
-import SignUpPage from './features/auth/pages/SignUpPage'
+import AppRoutes from './app/routes/AppRoutes'
 import './App.css'
 
-// App root: tạm thời trỏ thẳng vào SignUpPage để test
+// App.jsx chỉ làm một việc duy nhất: gọi AppRoutes
+// Không chứa logic hay component nào khác
 const App = () => {
-  return <SignUpPage />
+  return <AppRoutes />
 }
 
 export default App

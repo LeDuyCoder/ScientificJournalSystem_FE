@@ -1,26 +1,16 @@
-import axios from 'axios'
+import httpClient from '../../../shared/services/httpClient'
 
-// Base URL lấy từ biến môi trường, tránh hardcode URL
-const BASE_URL = import.meta.env.VITE_API_URL
-
-// Hàm gọi API đăng ký tài khoản mới
-// Nhận vào object: { email, password, first_name, last_name }
-// Trả về data nếu thành công, throw error nếu thất bại
+// API layer: chỉ xử lý gọi HTTP, không chứa logic nghiệp vụ
+// Dùng httpClient thay vì axios trực tiếp để dùng chung base URL và interceptor
 export const registerApi = async (userData) => {
   try {
-    const response = await axios.post(
-      `${BASE_URL}/api/v1/auth/register`,
-      userData
-    )
-    // Trả về data từ response (201 thành công)
+    const response = await httpClient.post('/api/v1/auth/register', userData)
     return response.data
-
   } catch (error) {
-    // Lấy thông tin lỗi từ response của BE
-    const err = error.response?.data
+    // Chuẩn hóa error format để hook xử lý nhất quán
     throw {
-      status: error.response?.status,          // HTTP status code (400, 409, 500...)
-      message: err?.message || 'Lỗi server',   // Message lỗi từ BE
+      status: error.response?.status,
+      message: error.response?.data?.message || 'Lỗi server',
     }
   }
 }

@@ -1,4 +1,5 @@
-import AuthLayout from '../components/AuthLayout/AuthLayout'
+// Import từ app/layouts thay vì features/auth/components
+import AuthLayout from '../../../app/layouts/AuthLayout'
 import AuthBanner from '../components/AuthBanner/AuthBanner'
 import SignUpForm from '../components/SignUpForm/SignUpForm'
 

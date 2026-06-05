@@ -1,10 +1,9 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { validateSignUpForm, isFormValid } from '../validations/signUpValidation'
-import { registerApi } from '../api/authApi'
+import authService from '../services/authService' // ✅ Gọi qua service thay vì api trực tiếp
 
 const useSignUp = () => {
-  // Lấy hàm t để truyền vào validation
   const { t } = useTranslation('auth')
 
   const [formData, setFormData] = useState({
@@ -30,33 +29,20 @@ const useSignUp = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-
-    // Truyền t vào validate để message lỗi đúng ngôn ngữ
     const validationErrors = validateSignUpForm(formData, t)
-
     if (!isFormValid(validationErrors)) {
       setErrors(validationErrors)
       return
     }
-
     setLoading(true)
     setApiError(null)
-
     try {
-      await registerApi({
-        email: formData.email,
-        password: formData.password,
-        first_name: formData.firstName,
-        last_name: formData.lastName,
-      })
+      // ✅ Gọi qua authService thay vì registerApi trực tiếp
+      await authService.register(formData)
       setIsSuccess(true)
     } catch (error) {
       if (error.status === 409) {
-        // Lỗi email đã tồn tại cũng dịch theo ngôn ngữ
-        setErrors((prev) => ({
-          ...prev,
-          email: t('validation.emailExists')
-        }))
+        setErrors((prev) => ({ ...prev, email: t('validation.emailExists') }))
       } else {
         setApiError(t('error.general'))
       }

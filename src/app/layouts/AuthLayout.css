@@ -1,0 +1,40 @@
+
+.auth-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 100vh;
+  background-color: #0f1117;
+}
+
+.auth-layout__banner {
+  position: relative;
+  overflow: hidden;
+}
+
+.auth-layout__form {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  overflow-y: auto;
+}
+
+@media (max-width: 1024px) {
+  .auth-layout__form {
+    padding: 24px;
+  }
+}
+
+@media (max-width: 768px) {
+  .auth-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .auth-layout__banner {
+    display: none;
+  }
+
+  .auth-layout__form {
+    padding: 24px 16px;
+  }
+}
