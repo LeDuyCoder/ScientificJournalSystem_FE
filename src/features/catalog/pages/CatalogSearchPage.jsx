@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Container, Row, Col, Form, Button, InputGroup, Pagination, Dropdown } from 'react-bootstrap';
 import { Icon } from '@iconify/react';
 import { useCatalogSearch } from '../hooks/useCatalogSearch';
@@ -76,7 +76,7 @@ export default function CatalogSearchPage() {
   };
 
   return (
-    <div className="min-vh-100 text-white" style={{ backgroundColor: '#090d16', paddingTop: '100px', paddingBottom: '80px' }}>
+    <div className="min-vh-100 text-main" style={{ backgroundColor: 'var(--bg-main)', paddingTop: '100px', paddingBottom: '80px' }}>
       {/* Navbar Header */}
       <Header />
 
@@ -85,36 +85,36 @@ export default function CatalogSearchPage() {
         <nav aria-label="breadcrumb" className="mb-4">
           <ol className="breadcrumb mb-0" style={{ fontSize: '0.8rem' }}>
             <li className="breadcrumb-item">
-              <span className="text-secondary" style={{ cursor: 'pointer' }} onClick={() => window.location.href = '/'}>Home</span>
+              <span className="text-muted-custom" style={{ cursor: 'pointer' }} onClick={() => window.location.href = '/'}>Home</span>
             </li>
-            <li className="breadcrumb-item active text-info" aria-current="page">Tìm kiếm</li>
+            <li className="breadcrumb-item active text-primary" aria-current="page">Tìm kiếm</li>
           </ol>
         </nav>
 
         {/* Page Title & Subtitle */}
         <div className="text-start mb-4">
-          <h1 className="font-display fw-bold mb-2 text-white" style={{ fontSize: '2.2rem', letterSpacing: '-0.02em' }}>
+          <h1 className="font-display fw-bold mb-2 text-main" style={{ fontSize: '2.2rem', letterSpacing: '-0.02em' }}>
             Danh mục & Tìm kiếm
           </h1>
-          <p className="text-white-50 fs-6 mb-0">
+          <p className="text-muted-custom fs-6 mb-0">
             Tìm kiếm journal, lọc theo lĩnh vực, xem volumes và issues
           </p>
         </div>
 
         {/* Search Input Panel */}
-        <div className="journal-dark-card p-4 mb-4 text-start" style={{ borderRadius: '16px', backgroundColor: 'rgba(255, 255, 255, 0.02)' }}>
+        <div className="journal-dark-card p-4 mb-4 text-start" style={{ borderRadius: '16px', backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)' }}>
           <Form onSubmit={handleSearchSubmit}>
             <Row className="g-3">
               <Col xs={12}>
-                <InputGroup className="border border-white-10 rounded-3 overflow-hidden bg-black-20">
-                  <InputGroup.Text className="bg-transparent border-0 text-white-40 pe-0">
+                <InputGroup className="border border-light rounded-3 overflow-hidden bg-white">
+                  <InputGroup.Text className="bg-transparent border-0 text-muted-custom pe-0">
                     <Icon icon="lucide:search" width="20" />
                   </InputGroup.Text>
                   <Form.Control
                     placeholder="Tìm journal, tác giả, ISSN..."
                     value={searchInput}
                     onChange={(e) => setSearchInput(e.target.value)}
-                    className="bg-transparent border-0 text-white py-3 px-3 fs-6 custom-input-placeholder"
+                    className="bg-transparent border-0 text-main py-3 px-3 fs-6 custom-input-placeholder"
                     style={{ outline: 'none', boxShadow: 'none' }}
                   />
                   <Button 
@@ -156,12 +156,12 @@ export default function CatalogSearchPage() {
             <div className="d-flex flex-column flex-sm-row align-items-sm-center justify-content-between gap-3 mb-4 text-start">
               
               {/* Summary Counter text */}
-              <div className="text-white-60 text-sm">
+              <div className="text-muted-custom text-sm">
                 {loadingJournals ? (
                   <span>Đang tìm kiếm tạp chí...</span>
                 ) : (
                   <span>
-                    Tìm thấy <strong className="text-info font-monospace">{total}</strong> journals · Trang <span className="font-monospace">{page}/{totalPages}</span>
+                    Tìm thấy <strong className="text-primary font-monospace">{total}</strong> journals · Trang <span className="font-monospace">{page}/{totalPages}</span>
                   </span>
                 )}
               </div>
@@ -170,10 +170,10 @@ export default function CatalogSearchPage() {
               <div className="d-flex align-items-center gap-3">
                 <Dropdown align="end">
                   <Dropdown.Toggle 
-                    variant="dark" 
+                    variant="light" 
                     id="sort-dropdown"
-                    className="border-white-10 text-white-80 text-xs py-2 px-3 fw-semibold d-flex align-items-center gap-2"
-                    style={{ backgroundColor: 'rgba(255, 255, 255, 0.03)', borderRadius: '8px' }}
+                    className="border border-light text-main text-xs py-2 px-3 fw-semibold d-flex align-items-center gap-2"
+                    style={{ backgroundColor: 'var(--bg-card)', borderRadius: '8px' }}
                   >
                     <Icon icon="lucide:arrow-up-down" width="14" />
                     <span>
@@ -182,18 +182,18 @@ export default function CatalogSearchPage() {
                       {sort === 'name' && 'Tên A-Z'}
                     </span>
                   </Dropdown.Toggle>
-                  <Dropdown.Menu className="bg-[#0e1322] border-white-10">
-                    <Dropdown.Item onClick={() => handleSortChange('relevance')} className="text-white-80 hover:bg-white-5 text-xs py-2">Mặc định</Dropdown.Item>
-                    <Dropdown.Item onClick={() => handleSortChange('metric')} className="text-white-80 hover:bg-white-5 text-xs py-2">Metric cao nhất</Dropdown.Item>
-                    <Dropdown.Item onClick={() => handleSortChange('name')} className="text-white-80 hover:bg-white-5 text-xs py-2">Tên A-Z</Dropdown.Item>
+                  <Dropdown.Menu className="bg-white border-light">
+                    <Dropdown.Item onClick={() => handleSortChange('relevance')} className="text-main hover:bg-light text-xs py-2">Mặc định</Dropdown.Item>
+                    <Dropdown.Item onClick={() => handleSortChange('metric')} className="text-main hover:bg-light text-xs py-2">Metric cao nhất</Dropdown.Item>
+                    <Dropdown.Item onClick={() => handleSortChange('name')} className="text-main hover:bg-light text-xs py-2">Tên A-Z</Dropdown.Item>
                   </Dropdown.Menu>
                 </Dropdown>
 
-                <div className="d-flex border border-white-10 rounded-3 overflow-hidden bg-black-20">
-                  <Button variant="dark" className="border-0 bg-transparent text-info p-2 d-flex align-items-center">
+                <div className="d-flex border border-light rounded-3 overflow-hidden bg-white">
+                  <Button variant="light" className="border-0 bg-transparent text-primary p-2 d-flex align-items-center">
                     <Icon icon="lucide:list" width="18" />
                   </Button>
-                  <Button variant="dark" disabled className="border-0 bg-transparent text-white-30 p-2 d-flex align-items-center">
+                  <Button variant="light" disabled className="border-0 bg-transparent text-muted-custom p-2 d-flex align-items-center">
                     <Icon icon="lucide:grid" width="18" />
                   </Button>
                 </div>
@@ -206,7 +206,7 @@ export default function CatalogSearchPage() {
               // 3 Skeleton list cards loading placeholder
               <div>
                 {[1, 2, 3].map((s) => (
-                  <div key={s} className="journal-dark-card p-4 mb-3 text-start" style={{ borderRadius: '16px', backgroundColor: 'rgba(255, 255, 255, 0.015)' }}>
+                  <div key={s} className="journal-dark-card p-4 mb-3 text-start" style={{ borderRadius: '16px', backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)' }}>
                     <LoadingSkeleton width="60%" height="1.4rem" className="mb-3" />
                     <LoadingSkeleton width="45%" height="0.8rem" className="mb-3" />
                     <div className="d-flex align-items-center gap-2 mb-3">
@@ -219,21 +219,32 @@ export default function CatalogSearchPage() {
               </div>
             ) : error && journals.length === 0 ? (
               // Error State Card
-              <div className="journal-dark-card p-5 text-center my-4" style={{ borderRadius: '16px', backgroundColor: 'rgba(255, 255, 255, 0.02)' }}>
-                <Icon icon="lucide:alert-triangle" className="text-danger mb-3" width="48" />
-                <h4 className="font-display fw-bold mb-2">Không thể tải dữ liệu tìm kiếm</h4>
-                <p className="text-white-50 text-sm mb-4">Vui lòng kiểm tra lại kết nối hoặc thử lại sau.</p>
-                <Button variant="outline-info" onClick={() => fetchJournals()} className="btn-outline-glow px-4">
-                  Thử lại
-                </Button>
+              <div className="journal-dark-card p-5 text-center my-4" style={{ borderRadius: '16px', backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)' }}>
+                <Icon icon={error?.includes('đăng nhập') ? 'lucide:lock' : 'lucide:alert-triangle'} 
+                  className={error?.includes('đăng nhập') ? 'text-warning mb-3' : 'text-danger mb-3'} 
+                  width="48" 
+                />
+                <h4 className="font-display fw-bold mb-2 text-main">
+                  {error?.includes('đăng nhập') ? 'Cần đăng nhập để tìm kiếm' : 'Không thể tải dữ liệu tìm kiếm'}
+                </h4>
+                <p className="text-muted-custom text-sm mb-4">{error}</p>
+                {error?.includes('đăng nhập') ? (
+                  <Button variant="outline-primary" onClick={() => window.location.href = '/login'} className="px-4">
+                    Đăng nhập
+                  </Button>
+                ) : (
+                  <Button variant="outline-primary" onClick={() => fetchJournals()} className="px-4">
+                    Thử lại
+                  </Button>
+                )}
               </div>
             ) : journals.length === 0 ? (
               // Empty State Card
-              <div className="journal-dark-card p-5 text-center my-4" style={{ borderRadius: '16px', backgroundColor: 'rgba(255, 255, 255, 0.02)' }}>
+              <div className="journal-dark-card p-5 text-center my-4" style={{ borderRadius: '16px', backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)' }}>
                 <Icon icon="lucide:folder-search" className="text-warning mb-3" width="48" />
-                <h4 className="font-display fw-bold mb-2">Không tìm thấy journal phù hợp</h4>
-                <p className="text-white-50 text-sm mb-4">Hãy thử thay đổi từ khóa tìm kiếm hoặc đặt lại bộ lọc.</p>
-                <Button variant="outline-info" onClick={handleClearAll} className="btn-outline-glow px-4">
+                <h4 className="font-display fw-bold mb-2 text-main">Không tìm thấy journal phù hợp</h4>
+                <p className="text-muted-custom text-sm mb-4">Hãy thử thay đổi từ khóa tìm kiếm hoặc đặt lại bộ lọc.</p>
+                <Button variant="outline-primary" onClick={handleClearAll} className="px-4">
                   Xóa bộ lọc
                 </Button>
               </div>
@@ -255,7 +266,7 @@ export default function CatalogSearchPage() {
             {/* Pagination Controls */}
             {totalPages > 1 && !loadingJournals && (
               <div className="d-flex justify-content-center mt-5">
-                <Pagination className="custom-pagination border border-white-05 p-1 rounded-3 bg-black-20">
+                <Pagination className="custom-pagination border border-light p-1 rounded-3 bg-white">
                   <Pagination.Prev 
                     disabled={page === 1}
                     onClick={() => handlePageChange(page - 1)}

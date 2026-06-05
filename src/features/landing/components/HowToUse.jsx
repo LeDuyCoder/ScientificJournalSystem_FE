@@ -16,10 +16,10 @@ function StepItem({ number, title, description }) {
           width: '56px',
           height: '56px',
           borderRadius: '50%',
-          background: 'linear-gradient(135deg, #00d2ff 0%, #7a00ff 100%)',
+          background: 'var(--btn-dark)',
           fontWeight: 800,
           fontSize: '1.25rem',
-          boxShadow: '0 0 20px rgba(0, 210, 255, 0.4)'
+          boxShadow: '0 4px 16px rgba(7, 26, 28, 0.2)'
         }}
       >
         {number}
@@ -27,13 +27,13 @@ function StepItem({ number, title, description }) {
 
       {/* Step Content */}
       <h3 
-        className="font-display text-white mb-2" 
+        className="font-display text-main mb-2" 
         style={{ fontWeight: 700, fontSize: '1.05rem', letterSpacing: '0.02em' }}
       >
         {title}
       </h3>
       <p 
-        className="text-white-50 leading-relaxed mx-auto" 
+        className="text-muted-custom leading-relaxed mx-auto" 
         style={{ fontSize: '0.85rem', maxWidth: '240px', lineHeight: 1.6 }}
       >
         {description}
@@ -53,23 +53,30 @@ export default function HowToUse() {
   ];
 
   return (
-    <section id="how-to-use" className="py-5 bg-dark-bg border-top border-white-5">
+    <section 
+      id="how-to-use" 
+      className="py-5"
+      style={{ backgroundColor: 'var(--bg-section)', borderTop: '1px solid var(--border)' }}
+    >
       <Container className="py-5 position-relative">
         
         {/* Section Header */}
         <div className="text-center mb-5">
-          <div className="d-inline-flex align-items-center gap-2 mb-2 text-info text-xs font-bold tracking-wider text-uppercase" style={{ fontSize: '0.75rem' }}>
-            <span style={{ width: '24px', height: '1px', backgroundColor: 'rgba(0, 210, 255, 0.4)' }} />
+          <div 
+            className="d-inline-flex align-items-center gap-2 mb-2 text-uppercase font-bold tracking-wider" 
+            style={{ fontSize: '0.75rem', color: 'var(--primary)', fontWeight: 700, letterSpacing: '0.1em' }}
+          >
+            <span style={{ width: '24px', height: '1px', backgroundColor: 'var(--primary)' }} />
             <span>{t('howToUseSubtitle')}</span>
           </div>
           <h2 
-            className="font-display text-white mb-3" 
+            className="font-display text-main mb-3" 
             style={{ fontWeight: 800, fontSize: 'calc(1.5rem + 1.2vw)', letterSpacing: '-0.01em' }}
           >
             {t('howToUseTitle')}
           </h2>
           <p 
-            className="text-white-50 mx-auto" 
+            className="text-muted-custom mx-auto" 
             style={{ fontSize: '0.9rem', maxWidth: '420px', lineHeight: 1.5 }}
           >
             {t('howToUseDesc')}
@@ -85,7 +92,7 @@ export default function HowToUse() {
               top: '28px',
               left: '12.5%',
               height: '1px',
-              borderTop: '2px dashed rgba(255, 255, 255, 0.08)',
+              borderTop: '2px dashed var(--border)',
               zIndex: 1
             }}
           />

@@ -22,9 +22,12 @@ export default function VolumesTabContent({
 
   if (loading) {
     return (
-      <div className="journal-dark-card p-4">
+      <div 
+        className="journal-dark-card p-4"
+        style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '12px' }}
+      >
         {[1, 2, 3].map(i => (
-          <div key={i} className="mb-3 p-3" style={{ borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
+          <div key={i} className="mb-3 p-3" style={{ borderBottom: '1px solid var(--border)' }}>
             <LoadingSkeleton width="200px" height="24px" className="mb-2" />
             <LoadingSkeleton width="120px" height="16px" />
           </div>
@@ -35,7 +38,10 @@ export default function VolumesTabContent({
 
   if (!volumes || volumes.length === 0) {
     return (
-      <div className="journal-dark-card p-5 text-center text-secondary">
+      <div 
+        className="journal-dark-card p-5 text-center text-muted-custom"
+        style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '12px' }}
+      >
         Journal này chưa có dữ liệu volume.
       </div>
     );
@@ -52,9 +58,10 @@ export default function VolumesTabContent({
             key={vol.id} 
             className="journal-dark-card overflow-hidden" 
             style={{ 
-              backgroundColor: 'rgba(14, 19, 34, 0.5)',
+              borderRadius: '12px',
+              backgroundColor: 'var(--bg-card)',
               transition: 'all 0.2s ease',
-              border: isExpanded ? '1px solid rgba(0, 210, 255, 0.2)' : '1px solid rgba(255,255,255,0.06)'
+              border: isExpanded ? '1px solid var(--primary)' : '1px solid var(--border)'
             }}
           >
             {/* Volume Title Header */}
@@ -66,16 +73,16 @@ export default function VolumesTabContent({
               <div className="d-flex align-items-center gap-3">
                 <Icon 
                   icon={isExpanded ? 'lucide:folder-open' : 'lucide:folder'} 
-                  className={isExpanded ? 'text-info' : 'text-secondary'}
+                  className={isExpanded ? 'text-primary' : 'text-muted-custom'}
                   width="20" 
                 />
-                <span className="text-white fw-bold font-display" style={{ fontSize: '1.05rem' }}>
-                  Volume {vol.volume_number} <span className="text-secondary fw-normal">· {vol.year}</span>
+                <span className="text-main fw-bold font-display" style={{ fontSize: '1.05rem' }}>
+                  Volume {vol.volume_number} <span className="text-muted-custom fw-normal">· {vol.year}</span>
                 </span>
               </div>
               <Button 
                 variant="link" 
-                className="text-secondary p-0 d-flex align-items-center"
+                className="text-muted-custom p-0 d-flex align-items-center"
                 style={{ textDecoration: 'none' }}
               >
                 <Icon 
@@ -87,14 +94,20 @@ export default function VolumesTabContent({
 
             {/* Volume Body (Nested Issues) */}
             {isExpanded && (
-              <div className="px-4 pb-3 pt-1 border-top" style={{ borderColor: 'rgba(255, 255, 255, 0.04) !important', backgroundColor: 'rgba(9, 13, 22, 0.3)' }}>
+              <div 
+                className="px-4 pb-3 pt-1 border-top" 
+                style={{ 
+                  borderColor: 'var(--border) !important', 
+                  backgroundColor: 'var(--bg-main)' 
+                }}
+              >
                 {issues === undefined ? (
-                  <div className="d-flex align-items-center gap-2 py-3 text-secondary" style={{ fontSize: '0.9rem' }}>
-                    <Spinner animation="border" size="sm" variant="info" />
+                  <div className="d-flex align-items-center gap-2 py-3 text-muted-custom" style={{ fontSize: '0.9rem' }}>
+                    <Spinner animation="border" size="sm" variant="primary" />
                     Đang tải danh sách issue...
                   </div>
                 ) : !issues || issues.length === 0 ? (
-                  <div className="text-secondary py-3 text-start" style={{ fontSize: '0.9rem' }}>
+                  <div className="text-muted-custom py-3 text-start" style={{ fontSize: '0.9rem' }}>
                     Volume này chưa có issue.
                   </div>
                 ) : (
@@ -102,17 +115,30 @@ export default function VolumesTabContent({
                     {issues.map((issue) => (
                       <div 
                         key={issue.id} 
-                        className="d-flex align-items-center justify-content-between p-2 rounded hover-dark-row"
-                        style={{ borderLeft: '2px solid rgba(0, 210, 255, 0.25)', backgroundColor: 'rgba(255,255,255,0.01)', paddingLeft: '12px' }}
+                        className="d-flex align-items-center justify-content-between p-2 rounded"
+                        style={{ 
+                          borderLeft: '2px solid var(--primary)', 
+                          backgroundColor: 'var(--bg-card)', 
+                          paddingLeft: '12px' 
+                        }}
                       >
                         <div className="d-flex align-items-center gap-2">
-                          <Icon icon="lucide:file-stack" className="text-info" width="16" />
-                          <span className="text-white-50 font-display" style={{ fontSize: '0.95rem' }}>
-                            Issue {issue.issue_number} <span className="text-muted" style={{ fontSize: '0.85rem' }}>({issue.year})</span>
+                          <Icon icon="lucide:file-stack" className="text-primary" width="16" />
+                          <span className="text-main font-display" style={{ fontSize: '0.95rem' }}>
+                            Issue {issue.issue_number} <span className="text-muted-custom" style={{ fontSize: '0.85rem' }}>({issue.year})</span>
                           </span>
                         </div>
                         {issue.article_count !== undefined && (
-                          <Badge bg="dark" className="text-secondary-50 px-2 py-1" style={{ fontSize: '0.75rem', fontWeight: 600, border: '1px solid rgba(255, 255, 255, 0.04)' }}>
+                          <Badge 
+                            className="px-2 py-1" 
+                            style={{ 
+                              fontSize: '0.75rem', 
+                              fontWeight: 600, 
+                              border: '1px solid var(--border)',
+                              backgroundColor: 'var(--bg-main)',
+                              color: 'var(--text-muted)'
+                            }}
+                          >
                             {issue.article_count} bài báo
                           </Badge>
                         )}

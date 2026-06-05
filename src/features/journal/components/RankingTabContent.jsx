@@ -7,13 +7,19 @@ export default function RankingTabContent({ rankingHistory = [], metricName = 'I
     return (
       <Row className="gy-4">
         <Col lg={7}>
-          <div className="journal-dark-card p-4">
+          <div 
+            className="journal-dark-card p-4"
+            style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '12px' }}
+          >
             <LoadingSkeleton width="180px" height="24px" className="mb-4" />
             <LoadingSkeleton width="100%" height="280px" />
           </div>
         </Col>
         <Col lg={5}>
-          <div className="journal-dark-card p-4">
+          <div 
+            className="journal-dark-card p-4"
+            style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '12px' }}
+          >
             <LoadingSkeleton width="150px" height="24px" className="mb-4" />
             <LoadingSkeleton width="100%" height="280px" />
           </div>
@@ -24,7 +30,10 @@ export default function RankingTabContent({ rankingHistory = [], metricName = 'I
 
   if (!rankingHistory || rankingHistory.length === 0) {
     return (
-      <div className="journal-dark-card p-5 text-center text-secondary">
+      <div 
+        className="journal-dark-card p-5 text-center text-muted-custom"
+        style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '12px' }}
+      >
         Chưa có dữ liệu lịch sử xếp hạng cho tạp chí này.
       </div>
     );
@@ -72,8 +81,11 @@ export default function RankingTabContent({ rankingHistory = [], metricName = 'I
     <Row className="gy-4 align-items-stretch">
       {/* Chart Column */}
       <Col lg={7}>
-        <div className="journal-dark-card p-4 h-100 d-flex flex-column" style={{ backgroundColor: 'rgba(14, 19, 34, 0.65)' }}>
-          <h4 className="font-display fw-bold text-white mb-4" style={{ fontSize: '1.2rem' }}>
+        <div 
+          className="journal-dark-card p-4 h-100 d-flex flex-column" 
+          style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '12px' }}
+        >
+          <h4 className="font-display fw-bold text-main mb-4" style={{ fontSize: '1.2rem' }}>
             {metricName} theo năm
           </h4>
           
@@ -91,8 +103,8 @@ export default function RankingTabContent({ rankingHistory = [], metricName = 'I
                 </filter>
                 {/* Shimmer gradient for columns */}
                 <linearGradient id="bar-fill" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="#00d2ff" stopOpacity="0.12" />
-                  <stop offset="100%" stopColor="#7a00ff" stopOpacity="0.02" />
+                  <stop offset="0%" stopColor="var(--primary)" stopOpacity="0.2" />
+                  <stop offset="100%" stopColor="var(--primary-light)" stopOpacity="0.02" />
                 </linearGradient>
               </defs>
 
@@ -106,13 +118,13 @@ export default function RankingTabContent({ rankingHistory = [], metricName = 'I
                       y1={y} 
                       x2={chartWidth - paddingRight} 
                       y2={y} 
-                      stroke="rgba(255, 255, 255, 0.05)" 
+                      stroke="var(--border)" 
                       strokeWidth="1" 
                     />
                     <text 
                       x={paddingLeft - 8} 
                       y={y + 4} 
-                      fill="#64748b" 
+                      fill="var(--text-muted)" 
                       fontSize="10" 
                       textAnchor="end"
                       fontWeight="500"
@@ -140,11 +152,11 @@ export default function RankingTabContent({ rankingHistory = [], metricName = 'I
                       width={barWidth} 
                       height={barHeight} 
                       fill="transparent" 
-                      stroke="#00d2ff" 
+                      stroke="var(--primary)" 
                       strokeWidth="1.5"
                       rx="6"
                       filter="url(#cyan-glow)"
-                      opacity="0.4"
+                      opacity="0.15"
                     />
                     {/* Visual Bar */}
                     <rect 
@@ -153,7 +165,7 @@ export default function RankingTabContent({ rankingHistory = [], metricName = 'I
                       width={barWidth} 
                       height={barHeight} 
                       fill="url(#bar-fill)" 
-                      stroke="#00d2ff" 
+                      stroke="var(--primary)" 
                       strokeWidth="2"
                       rx="6"
                       style={{ transition: 'all 0.3s' }}
@@ -162,7 +174,7 @@ export default function RankingTabContent({ rankingHistory = [], metricName = 'I
                     <text 
                       x={x} 
                       y={y - 8} 
-                      fill="#00d2ff" 
+                      fill="var(--primary)" 
                       fontSize="10" 
                       fontWeight="bold" 
                       textAnchor="middle"
@@ -179,7 +191,7 @@ export default function RankingTabContent({ rankingHistory = [], metricName = 'I
                 y1={chartHeight - paddingBottom} 
                 x2={chartWidth - paddingRight} 
                 y2={chartHeight - paddingBottom} 
-                stroke="rgba(255, 255, 255, 0.15)" 
+                stroke="var(--border)" 
                 strokeWidth="1.5" 
               />
 
@@ -191,7 +203,7 @@ export default function RankingTabContent({ rankingHistory = [], metricName = 'I
                     key={idx} 
                     x={x} 
                     y={chartHeight - paddingBottom + 18} 
-                    fill="#94a3b8" 
+                    fill="var(--text-muted)" 
                     fontSize="11" 
                     textAnchor="middle"
                     fontWeight="500"
@@ -207,8 +219,11 @@ export default function RankingTabContent({ rankingHistory = [], metricName = 'I
 
       {/* Table Column */}
       <Col lg={5}>
-        <div className="journal-dark-card p-4 h-100" style={{ backgroundColor: 'rgba(14, 19, 34, 0.65)' }}>
-          <h4 className="font-display fw-bold text-white mb-4" style={{ fontSize: '1.2rem' }}>
+        <div 
+          className="journal-dark-card p-4 h-100" 
+          style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '12px' }}
+        >
+          <h4 className="font-display fw-bold text-main mb-4" style={{ fontSize: '1.2rem' }}>
             Bảng xếp hạng lịch sử
           </h4>
           
@@ -216,15 +231,14 @@ export default function RankingTabContent({ rankingHistory = [], metricName = 'I
             <Table 
               borderless 
               hover 
-              className="align-middle mb-0 text-start"
-              style={{ color: '#cbd5e1' }}
+              className="align-middle mb-0 text-start text-main"
             >
               <thead>
-                <tr className="border-bottom border-secondary-subtle" style={{ borderColor: 'rgba(255,255,255,0.08) !important' }}>
-                  <th className="text-secondary text-uppercase fw-semibold py-3" style={{ fontSize: '0.75rem', letterSpacing: '0.5px' }}>Năm</th>
-                  <th className="text-secondary text-uppercase fw-semibold py-3" style={{ fontSize: '0.75rem', letterSpacing: '0.5px' }}>Quartile</th>
-                  <th className="text-secondary text-uppercase fw-semibold py-3" style={{ fontSize: '0.75rem', letterSpacing: '0.5px' }}>{metricName}</th>
-                  <th className="text-secondary text-uppercase fw-semibold py-3" style={{ fontSize: '0.75rem', letterSpacing: '0.5px' }}>H-Index</th>
+                <tr className="border-bottom border-secondary-subtle" style={{ borderColor: 'var(--border) !important' }}>
+                  <th className="text-muted-custom text-uppercase fw-semibold py-3" style={{ fontSize: '0.75rem', letterSpacing: '0.5px' }}>Năm</th>
+                  <th className="text-muted-custom text-uppercase fw-semibold py-3" style={{ fontSize: '0.75rem', letterSpacing: '0.5px' }}>Quartile</th>
+                  <th className="text-muted-custom text-uppercase fw-semibold py-3" style={{ fontSize: '0.75rem', letterSpacing: '0.5px' }}>{metricName}</th>
+                  <th className="text-muted-custom text-uppercase fw-semibold py-3" style={{ fontSize: '0.75rem', letterSpacing: '0.5px' }}>H-Index</th>
                 </tr>
               </thead>
               <tbody>
@@ -232,15 +246,25 @@ export default function RankingTabContent({ rankingHistory = [], metricName = 'I
                   <tr 
                     key={idx} 
                     className="border-bottom border-secondary-subtle" 
-                    style={{ borderColor: 'rgba(255,255,255,0.04) !important', cursor: 'pointer' }}
+                    style={{ borderColor: 'var(--border) !important', cursor: 'pointer' }}
                   >
-                    <td className="py-3 fw-medium text-white">{row.year}</td>
+                    <td className="py-3 fw-medium text-main">{row.year}</td>
                     <td className="py-3">
                       {row.quartile ? (
                         <Badge 
-                          bg={row.quartile === 'Q1' ? 'info' : row.quartile === 'Q2' ? 'primary' : 'secondary'} 
-                          className="text-dark font-display"
-                          style={{ fontWeight: 700, borderRadius: '4px', fontSize: '0.75rem' }}
+                          className="font-display"
+                          style={{ 
+                            fontWeight: 700, 
+                            borderRadius: '4px', 
+                            fontSize: '0.75rem',
+                            backgroundColor: row.quartile === 'Q1' ? 'rgba(47, 198, 70, 0.12)'
+                                           : row.quartile === 'Q2' ? 'var(--primary-light)' 
+                                           : 'var(--bg-section)',
+                            color: row.quartile === 'Q1' ? 'var(--q1-color)' 
+                                 : row.quartile === 'Q2' ? 'var(--primary)' 
+                                 : 'var(--text-muted)',
+                            border: row.quartile === 'Q1' ? '1px solid rgba(47, 198, 70, 0.3)' : '1px solid var(--border)'
+                          }}
                         >
                           {row.quartile}
                         </Badge>
@@ -248,10 +272,10 @@ export default function RankingTabContent({ rankingHistory = [], metricName = 'I
                         <span className="text-muted">—</span>
                       )}
                     </td>
-                    <td className="py-3 fw-bold text-info font-display">
+                    <td className="py-3 fw-bold text-primary font-display">
                       {row.value !== null && row.value !== undefined ? row.value : <span className="text-muted">—</span>}
                     </td>
-                    <td className="py-3 text-secondary-50 font-display">
+                    <td className="py-3 text-muted-custom font-display">
                       {row.h_index || <span className="text-muted">—</span>}
                     </td>
                   </tr>

@@ -25,10 +25,11 @@ export default function JournalResultCard({
 
   return (
     <Card 
-      className="journal-dark-card border-0 mb-3 text-start position-relative transition-all duration-300 card-hover-lift"
+      className="journal-dark-card mb-3 text-start position-relative transition-all duration-300 card-hover-lift"
       style={{ 
         borderRadius: '16px',
-        backgroundColor: 'rgba(255, 255, 255, 0.03)',
+        backgroundColor: 'var(--bg-card)',
+        border: '1px solid var(--border)',
         transition: 'transform 0.2s ease, box-shadow 0.2s ease',
         cursor: 'pointer'
       }}
@@ -40,7 +41,7 @@ export default function JournalResultCard({
           <div className="flex-grow-1">
             <Link 
               to={`/journals/${id}`} 
-              className="text-decoration-none text-white text-info-hover d-block mb-2"
+              className="text-decoration-none text-main hover:text-primary d-block mb-2"
             >
               <h5 className="font-display fw-bold mb-1 fs-5" style={{ letterSpacing: '-0.02em', lineHeight: '1.3' }}>
                 {display_name}
@@ -48,11 +49,11 @@ export default function JournalResultCard({
             </Link>
             
             {/* Publisher & Meta info line */}
-            <div className="d-flex flex-wrap align-items-center gap-2 text-white-50 text-xs mb-3" style={{ fontSize: '0.8rem' }}>
+            <div className="d-flex flex-wrap align-items-center gap-2 text-muted-custom text-xs mb-3" style={{ fontSize: '0.8rem' }}>
               <span>{publisher}</span>
-              <span className="text-white-20">•</span>
+              <span className="text-muted-custom">•</span>
               <span>{country}</span>
-              <span className="text-white-20">•</span>
+              <span className="text-muted-custom">•</span>
               <span className="font-monospace">ISSN: {issn}</span>
             </div>
 
@@ -61,12 +62,13 @@ export default function JournalResultCard({
               
               {/* Quartile Badge */}
               <Badge 
-                bg={quartile === 'Q1' ? 'info' : 'secondary'} 
-                className="font-display fw-bold text-dark px-2.5 py-1.5"
+                className="font-display fw-bold px-2.5 py-1.5"
                 style={{ 
                   borderRadius: '6px', 
                   fontSize: '0.75rem',
-                  backgroundColor: quartile === 'Q1' ? '#0dcaf0' : '#6c757d'
+                  backgroundColor: quartile === 'Q1' ? 'var(--primary-light)' : 'var(--bg-main)',
+                  color: quartile === 'Q1' ? 'var(--primary)' : 'var(--text-muted)',
+                  border: '1px solid var(--border)'
                 }}
               >
                 {quartile}
@@ -77,7 +79,7 @@ export default function JournalResultCard({
                 <Badge 
                   bg="success" 
                   className="d-flex align-items-center gap-1 px-2.5 py-1.5 border border-success-20"
-                  style={{ borderRadius: '6px', fontSize: '0.75rem', backgroundColor: 'rgba(40, 167, 69, 0.15)', color: '#28a745' }}
+                  style={{ borderRadius: '6px', fontSize: '0.75rem', backgroundColor: 'rgba(40, 167, 69, 0.08)', color: '#28a745' }}
                 >
                   <Icon icon="lucide:unlock" width="12" />
                   <span>Open Access</span>
@@ -86,7 +88,7 @@ export default function JournalResultCard({
                 <Badge 
                   bg="warning" 
                   className="d-flex align-items-center gap-1 px-2.5 py-1.5 border border-warning-20"
-                  style={{ borderRadius: '6px', fontSize: '0.75rem', backgroundColor: 'rgba(255, 193, 7, 0.12)', color: '#ffc107' }}
+                  style={{ borderRadius: '6px', fontSize: '0.75rem', backgroundColor: 'rgba(255, 193, 7, 0.08)', color: '#b28000' }}
                 >
                   <Icon icon="lucide:lock" width="12" />
                   <span>Subscription</span>
@@ -96,16 +98,15 @@ export default function JournalResultCard({
               {/* Subject Category tag */}
               {subject_category_name && (
                 <Badge 
-                  bg="dark"
                   onClick={(e) => {
                     e.stopPropagation();
                     if (onTagClick) onTagClick(subject_category_name);
                   }}
-                  className="px-2.5 py-1.5 text-white-70 text-info-hover border border-white-10"
+                  className="px-2.5 py-1.5 text-muted-custom hover:text-primary border border-light"
                   style={{ 
                     borderRadius: '6px', 
                     fontSize: '0.72rem', 
-                    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                    backgroundColor: 'var(--bg-main)',
                     cursor: 'pointer',
                     transition: 'all 0.15s ease'
                   }}
@@ -117,16 +118,15 @@ export default function JournalResultCard({
               {/* Subject Area tag */}
               {subject_area_name && subject_area_name !== subject_category_name && (
                 <Badge 
-                  bg="dark"
                   onClick={(e) => {
                     e.stopPropagation();
                     if (onTagClick) onTagClick(subject_area_name);
                   }}
-                  className="px-2.5 py-1.5 text-white-50 text-info-hover border border-white-05"
+                  className="px-2.5 py-1.5 text-muted-custom hover:text-primary border border-light"
                   style={{ 
                     borderRadius: '6px', 
                     fontSize: '0.72rem', 
-                    backgroundColor: 'rgba(255, 255, 255, 0.02)',
+                    backgroundColor: 'var(--bg-main)',
                     cursor: 'pointer',
                     transition: 'all 0.15s ease'
                   }}
@@ -139,28 +139,28 @@ export default function JournalResultCard({
           </div>
 
           {/* Metric & Action button block (Right) */}
-          <div className="d-flex flex-row flex-md-column align-items-center align-items-md-end justify-content-between justify-content-md-center gap-3 w-100 w-md-auto border-top border-md-top-0 border-white-10 pt-3 pt-md-0" style={{ minWidth: '130px' }}>
+          <div className="d-flex flex-row flex-md-column align-items-center align-items-md-end justify-content-between justify-content-md-center gap-3 w-100 w-md-auto border-top border-md-top-0 border-light pt-3 pt-md-0" style={{ minWidth: '130px' }}>
             
             {/* Metric Score */}
             <div className="text-start text-md-end">
               {metric_value ? (
                 <>
-                  <div className="font-monospace text-info fw-bold lh-1 fs-3">
+                  <div className="font-monospace text-primary fw-bold lh-1 fs-3">
                     {metric_value}
                   </div>
-                  <div className="text-white-40 text-uppercase tracking-wide mt-1" style={{ fontSize: '0.68rem', letterSpacing: '0.05em' }}>
+                  <div className="text-muted-custom text-uppercase tracking-wide mt-1" style={{ fontSize: '0.68rem', letterSpacing: '0.05em' }}>
                     {metric_name || 'Impact Factor'}
                   </div>
                 </>
               ) : (
-                <span className="text-white-30 text-xs italic" style={{ fontSize: '0.75rem' }}>Chưa có dữ liệu</span>
+                <span className="text-muted-custom text-xs italic" style={{ fontSize: '0.75rem' }}>Chưa có dữ liệu</span>
               )}
             </div>
 
             {/* Follow Action */}
             <Button
               size="sm"
-              variant={isFollowed ? 'outline-success' : 'outline-info'}
+              variant={isFollowed ? 'outline-success' : 'outline-primary'}
               onClick={(e) => {
                 e.preventDefault();
                 e.stopPropagation();

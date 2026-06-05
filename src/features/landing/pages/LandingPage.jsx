@@ -8,7 +8,7 @@ import Footer from '../components/Footer';
 
 export default function LandingPage() {
   return (
-    <div className="bg-dark-bg min-vh-100 text-white overflow-x-hidden">
+    <div className="min-vh-100 overflow-x-hidden" style={{ backgroundColor: 'var(--bg-main)', color: 'var(--text-main)' }}>
       {/* Sticky Header */}
       <Header />
 

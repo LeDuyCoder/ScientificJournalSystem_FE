@@ -4,7 +4,14 @@ import { Row, Col } from 'react-bootstrap';
 export default function JournalMetadataGrid({ journal, loading }) {
   if (loading || !journal) {
     return (
-      <div className="journal-dark-card p-4 mb-4">
+      <div 
+        className="journal-dark-card p-4 mb-4"
+        style={{
+          backgroundColor: 'var(--bg-card)',
+          border: '1px solid var(--border)',
+          borderRadius: '12px'
+        }}
+      >
         <Row className="gy-4">
           {[1, 2, 3, 4, 5, 6].map(i => (
             <Col lg={2} md={4} sm={6} key={i}>
@@ -36,14 +43,21 @@ export default function JournalMetadataGrid({ journal, loading }) {
   ];
 
   return (
-    <div className="journal-dark-card p-4 mb-4" style={{ backgroundColor: 'rgba(14, 19, 34, 0.4)' }}>
+    <div 
+      className="journal-dark-card p-4 mb-4" 
+      style={{ 
+        backgroundColor: 'var(--bg-card)',
+        border: '1px solid var(--border)',
+        borderRadius: '12px'
+      }}
+    >
       <Row className="gy-4 text-start">
         {metadataItems.map((item, idx) => (
           <Col lg={2} md={4} xs={6} key={idx}>
-            <div className="text-secondary text-uppercase fw-semibold mb-1" style={{ fontSize: '0.75rem', letterSpacing: '0.5px' }}>
+            <div className="text-muted-custom text-uppercase fw-semibold mb-1" style={{ fontSize: '0.75rem', letterSpacing: '0.5px' }}>
               {item.label}
             </div>
-            <div className="text-white fw-bold font-display" style={{ fontSize: '1.1rem' }}>
+            <div className="text-main fw-bold font-display" style={{ fontSize: '1.1rem' }}>
               {item.value !== undefined && item.value !== null ? item.value : 'Chưa cập nhật'}
             </div>
           </Col>

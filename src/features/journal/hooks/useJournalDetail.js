@@ -9,98 +9,6 @@ import {
   addJournalToProjectApi,
 } from '../api/journalApi';
 
-// High-fidelity fallback mockup data matching the reference image and requirements
-const MOCK_JOURNAL_DETAIL = {
-  journal_id: 'nature-machine-intelligence',
-  display_name: 'Nature Machine Intelligence',
-  description: 'Tạp chí hàng đầu về Trí tuệ nhân tạo và Học máy, thuộc nhóm Nature Portfolio. Xuất bản nghiên cứu nổi bật về AI, ML, Computer Vision và NLP.',
-  issn: '2522-5839',
-  e_issn: '2522-5839',
-  publisher_name: 'Springer Nature',
-  country_name: 'United Kingdom',
-  established_year: '2019',
-  h_index: 86,
-  cite_score: 42.6,
-  is_open_access: true,
-  is_oa_diamond: false,
-  quartile: 'Q1',
-  metric_value: 23.8,
-  metric_name: 'Impact Factor',
-  metric_year: '2024',
-  subject_categories: [
-    { id: '1', display_name: 'Artificial Intelligence' },
-    { id: '2', display_name: 'Machine Learning' },
-    { id: '3', display_name: 'Computer Vision' },
-    { id: '4', display_name: 'Natural Language Processing' },
-    { id: '5', display_name: 'Robotics' }
-  ]
-};
-
-const MOCK_RANKINGS = [
-  { year: 2024, quartile: 'Q1', value: 23.8, h_index: 86 },
-  { year: 2023, quartile: 'Q1', value: 20.1, h_index: 74 },
-  { year: 2022, quartile: 'Q1', value: 18.6, h_index: 65 },
-  { year: 2021, quartile: 'Q1', value: 15.5, h_index: 52 },
-  { year: 2020, quartile: 'Q1', value: 12.0, h_index: 38 },
-  { year: 2019, quartile: 'Q1', value: null, h_index: 20 }
-];
-
-const MOCK_VOLUMES = [
-  { id: 'vol-12', volume_number: 12, year: 2024 },
-  { id: 'vol-11', volume_number: 11, year: 2023 },
-  { id: 'vol-10', volume_number: 10, year: 2022 },
-  { id: 'vol-9', volume_number: 9, year: 2021 }
-];
-
-const MOCK_ISSUES = {
-  'vol-12': [
-    { id: 'iss-12-1', issue_number: 1, year: 2024, article_count: 12 },
-    { id: 'iss-12-2', issue_number: 2, year: 2024, article_count: 15 },
-    { id: 'iss-12-3', issue_number: 3, year: 2024, article_count: 8 }
-  ],
-  'vol-11': [
-    { id: 'iss-11-1', issue_number: 1, year: 2023, article_count: 14 },
-    { id: 'iss-11-2', issue_number: 2, year: 2023, article_count: 11 },
-    { id: 'iss-11-3', issue_number: 3, year: 2023, article_count: 16 },
-    { id: 'iss-11-4', issue_number: 4, year: 2023, article_count: 10 }
-  ],
-  'vol-10': [
-    { id: 'iss-10-1', issue_number: 1, year: 2022, article_count: 9 },
-    { id: 'iss-10-2', issue_number: 2, year: 2022, article_count: 12 }
-  ],
-  'vol-9': [
-    { id: 'iss-9-1', issue_number: 1, year: 2021, article_count: 8 },
-    { id: 'iss-9-2', issue_number: 2, year: 2021, article_count: 7 }
-  ]
-};
-
-const MOCK_ARTICLES = [
-  {
-    id: 'art-1',
-    title: 'A survey of large language models in healthcare: opportunities and challenges',
-    publication_year: 2024,
-    doi: '10.1038/s42256-024-001',
-    authors: 'John Doe, Jane Smith',
-    abstract: 'This paper reviews the applications of Large Language Models (LLMs) in clinical settings, medical diagnostics, and clinical text mining. We discuss validation strategies, potential biases, and safety frameworks.'
-  },
-  {
-    id: 'art-2',
-    title: 'Real-time robot navigation using deep reinforcement learning in dynamic environments',
-    publication_year: 2024,
-    doi: '10.1038/s42256-024-002',
-    authors: 'Alice Johnson, Bob Lee',
-    abstract: 'We present a novel navigation framework that achieves collision-free trajectory generation in crowded dynamic environments. The model leverages sensory inputs directly to output velocity commands.'
-  },
-  {
-    id: 'art-3',
-    title: 'Contrastive learning for multi-modal medical image segmentation',
-    publication_year: 2023,
-    doi: '10.1038/s42256-023-009',
-    authors: 'Charlie Davis, David Wilson',
-    abstract: 'In this study, we propose a multi-modal segmentation model that leverages self-supervised contrastive representations to align image features across MRI and CT modalities, reducing the need for dense annotations.'
-  }
-];
-
 export function useJournalDetail(journalId, currentUser) {
   // Page core states
   const [journal, setJournal] = useState(null);
@@ -136,17 +44,12 @@ export function useJournalDetail(journalId, currentUser) {
       if (response.data && response.data.data) {
         setJournal(response.data.data);
       } else {
-        // Safe fallback to mock if API returns empty
-        setJournal(MOCK_JOURNAL_DETAIL);
-      }
-    } catch (err) {
-      console.warn('API error fetching journal info, falling back to mock:', err);
-      // For demonstration and testing purposes, fall back to high-fidelity mock
-      if (journalId === 'nature-machine-intelligence' || journalId === '1' || journalId === 'nature') {
-        setJournal(MOCK_JOURNAL_DETAIL);
-      } else {
         setNotFound(true);
       }
+    } catch (err) {
+      console.error('API error fetching journal info:', err);
+      setError(err.response?.data?.message || err.message);
+      setNotFound(true);
     } finally {
       setLoadingJournal(false);
     }
@@ -158,14 +61,14 @@ export function useJournalDetail(journalId, currentUser) {
     setLoadingRanking(true);
     try {
       const response = await getJournalRankingsApi(journalId);
-      if (response.data && response.data.data && response.data.data.length > 0) {
+      if (response.data && response.data.data) {
         setRankingHistory(response.data.data);
       } else {
-        setRankingHistory(MOCK_RANKINGS);
+        setRankingHistory([]);
       }
     } catch (err) {
-      console.warn('API error fetching rankings, falling back to mock:', err);
-      setRankingHistory(MOCK_RANKINGS);
+      console.error('API error fetching rankings:', err);
+      setRankingHistory([]);
     } finally {
       setLoadingRanking(false);
     }
@@ -177,14 +80,14 @@ export function useJournalDetail(journalId, currentUser) {
     setLoadingVolumes(true);
     try {
       const response = await getCatalogVolumesApi({ journal_id: journalId });
-      if (response.data && response.data.data && response.data.data.length > 0) {
+      if (response.data && response.data.data) {
         setVolumes(response.data.data);
       } else {
-        setVolumes(MOCK_VOLUMES);
+        setVolumes([]);
       }
     } catch (err) {
-      console.warn('API error fetching volumes, falling back to mock:', err);
-      setVolumes(MOCK_VOLUMES);
+      console.error('API error fetching volumes:', err);
+      setVolumes([]);
     } finally {
       setLoadingVolumes(false);
     }
@@ -195,14 +98,14 @@ export function useJournalDetail(journalId, currentUser) {
     if (issuesByVolume[volumeId]) return; // already loaded
     try {
       const response = await getCatalogIssuesApi({ volume_id: volumeId });
-      if (response.data && response.data.data && response.data.data.length > 0) {
+      if (response.data && response.data.data) {
         setIssuesByVolume(prev => ({ ...prev, [volumeId]: response.data.data }));
       } else {
-        setIssuesByVolume(prev => ({ ...prev, [volumeId]: MOCK_ISSUES[volumeId] || [] }));
+        setIssuesByVolume(prev => ({ ...prev, [volumeId]: [] }));
       }
     } catch (err) {
-      console.warn(`API error fetching issues for volume ${volumeId}, using mock:`, err);
-      setIssuesByVolume(prev => ({ ...prev, [volumeId]: MOCK_ISSUES[volumeId] || [] }));
+      console.error(`API error fetching issues for volume ${volumeId}:`, err);
+      setIssuesByVolume(prev => ({ ...prev, [volumeId]: [] }));
     }
   }, [issuesByVolume]);
 
@@ -212,14 +115,14 @@ export function useJournalDetail(journalId, currentUser) {
     setLoadingArticles(true);
     try {
       const response = await getJournalArticlesApi({ journal_id: journalId });
-      if (response.data && response.data.data && response.data.data.length > 0) {
+      if (response.data && response.data.data) {
         setRecentArticles(response.data.data);
       } else {
-        setRecentArticles(MOCK_ARTICLES);
+        setRecentArticles([]);
       }
     } catch (err) {
-      console.warn('API error fetching articles, falling back to mock:', err);
-      setRecentArticles(MOCK_ARTICLES);
+      console.error('API error fetching articles:', err);
+      setRecentArticles([]);
     } finally {
       setLoadingArticles(false);
     }
@@ -250,17 +153,15 @@ export function useJournalDetail(journalId, currentUser) {
     setIsFollowing(true);
     try {
       await followJournalApi(journalId);
-      // toggle local state
-    } catch (err) {
-      console.warn('Follow API failed or offline, simulating success:', err);
-    } finally {
-      setIsFollowing(false);
-      // In either case, toggle followed status to simulate responsiveness
       setJournal(prev => {
         if (!prev) return prev;
         const wasFollowing = prev.is_following;
         return { ...prev, is_following: !wasFollowing };
       });
+    } catch (err) {
+      console.error('Follow API failed:', err);
+    } finally {
+      setIsFollowing(false);
     }
   }, [journalId, currentUser]);
 
@@ -280,9 +181,8 @@ export function useJournalDetail(journalId, currentUser) {
         setShowProjectModal(true);
       }
     } catch (err) {
-      console.warn('Add to project API failed, simulated:', err);
-      setShowProjectModal(false);
-      alert('Tạp chí đã được thêm vào dự án (Mô phỏng)!');
+      console.error('Add to project API failed:', err);
+      alert('Thêm vào dự án thất bại. Vui lòng thử lại!');
     } finally {
       setIsAddingToProject(false);
     }

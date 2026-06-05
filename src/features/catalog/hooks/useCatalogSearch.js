@@ -1,118 +1,7 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { searchJournalsApi } from '../../journal/api/journalApi';
 import { getSubjectAreasApi, getSubjectCategoriesApi } from '../api/catalogApi';
-
-// High-fidelity Mock Journals database for Sandbox & API failures
-const MOCK_JOURNALS = [
-  {
-    id: 'nature-machine-intelligence',
-    display_name: 'Nature Machine Intelligence',
-    publisher: 'Springer Nature',
-    country: 'United Kingdom',
-    issn: '2522-5839',
-    is_open_access: false,
-    quartile: 'Q1',
-    subject_area_id: 1, // Computer Science
-    subject_area_name: 'Computer Science',
-    subject_category_id: 101, // Artificial Intelligence
-    subject_category_name: 'Artificial Intelligence',
-    metric_value: 23.8,
-    metric_name: 'Impact Factor'
-  },
-  {
-    id: 'ieee-tpami',
-    display_name: 'IEEE Transactions on Pattern Analysis and Machine Intelligence',
-    publisher: 'IEEE Computer Society',
-    country: 'United States',
-    issn: '0162-8828',
-    is_open_access: false,
-    quartile: 'Q1',
-    subject_area_id: 1, // Computer Science
-    subject_area_name: 'Computer Science',
-    subject_category_id: 103, // Computer Vision
-    subject_category_name: 'Computer Vision',
-    metric_value: 24.3,
-    metric_name: 'Impact Factor'
-  },
-  {
-    id: 'jmlr',
-    display_name: 'Journal of Machine Learning Research',
-    publisher: 'Microtome Publishing',
-    country: 'United States',
-    issn: '1532-4435',
-    is_open_access: true,
-    quartile: 'Q1',
-    subject_area_id: 1, // Computer Science
-    subject_area_name: 'Computer Science',
-    subject_category_id: 102, // Machine Learning
-    subject_category_name: 'Machine Learning',
-    metric_value: 8.5,
-    metric_name: 'SJR'
-  },
-  {
-    id: 'neural-networks',
-    display_name: 'Neural Networks',
-    publisher: 'Elsevier',
-    country: 'Netherlands',
-    issn: '0893-6080',
-    is_open_access: true,
-    quartile: 'Q2',
-    subject_area_id: 1, // Computer Science
-    subject_area_name: 'Computer Science',
-    subject_category_id: 101, // Artificial Intelligence
-    subject_category_name: 'Artificial Intelligence',
-    metric_value: 7.8,
-    metric_name: 'Impact Factor'
-  },
-  {
-    id: 'lancet-digital-health',
-    display_name: 'The Lancet Digital Health',
-    publisher: 'Elsevier',
-    country: 'United Kingdom',
-    issn: '2589-7500',
-    is_open_access: true,
-    quartile: 'Q1',
-    subject_area_id: 2, // Medicine
-    subject_area_name: 'Medicine',
-    subject_category_id: 201, // Clinical Medicine
-    subject_category_name: 'Clinical Medicine',
-    metric_value: 36.6,
-    metric_name: 'Impact Factor'
-  },
-  {
-    id: 'computer-aided-engineering',
-    display_name: 'Computer-Aided Civil and Infrastructure Engineering',
-    publisher: 'Wiley-Blackwell',
-    country: 'United States',
-    issn: '1093-9687',
-    is_open_access: false,
-    quartile: 'Q1',
-    subject_area_id: 3, // Engineering
-    subject_area_name: 'Engineering',
-    subject_category_id: 301, // Civil Engineering
-    subject_category_name: 'Civil Engineering',
-    metric_value: 11.7,
-    metric_name: 'Impact Factor'
-  }
-];
-
-const MOCK_SUBJECT_AREAS = [
-  { subject_area_id: 1, display_name: 'Computer Science', count: 4280 },
-  { subject_area_id: 2, display_name: 'Medicine', count: 6120 },
-  { subject_area_id: 3, display_name: 'Engineering', count: 3450 },
-  { subject_area_id: 4, display_name: 'Physics', count: 2810 },
-  { subject_area_id: 5, display_name: 'Biology', count: 3920 }
-];
-
-const MOCK_SUBJECT_CATEGORIES = [
-  { subject_category_id: 101, subject_area_id: 1, display_name: 'Artificial Intelligence', count: 892 },
-  { subject_category_id: 102, subject_area_id: 1, display_name: 'Machine Learning', count: 734 },
-  { subject_category_id: 103, subject_area_id: 1, display_name: 'Computer Vision', count: 518 },
-  { subject_category_id: 104, subject_area_id: 1, display_name: 'NLP', count: 421 },
-  { subject_category_id: 201, subject_area_id: 2, display_name: 'Clinical Medicine', count: 915 },
-  { subject_category_id: 301, subject_area_id: 3, display_name: 'Civil Engineering', count: 420 }
-];
 
 export function useCatalogSearch(currentUser) {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -151,9 +40,15 @@ export function useCatalogSearch(currentUser) {
   // Quartiles: Q1, Q2, Q3, Q4
   const selectedQuartiles = searchParams.getAll('quartile');
 
-  // Load subject filters from API
+  // Load subject filters from API (only when logged in — BE requires auth)
   useEffect(() => {
     async function loadFilters() {
+      if (!currentUser) {
+        // Subject areas/categories require auth — skip silently for guests
+        setSubjectAreas([]);
+        setSubjectCategories([]);
+        return;
+      }
       setLoadingFilters(true);
       try {
         const [areasRes, catsRes] = await Promise.all([
@@ -162,27 +57,27 @@ export function useCatalogSearch(currentUser) {
         ]);
         
         if (areasRes.data?.success !== false) {
-          setSubjectAreas(areasRes.data?.data || MOCK_SUBJECT_AREAS);
+          setSubjectAreas(areasRes.data?.data || []);
         } else {
-          setSubjectAreas(MOCK_SUBJECT_AREAS);
+          setSubjectAreas([]);
         }
 
         if (catsRes.data?.success !== false) {
-          setSubjectCategories(catsRes.data?.data || MOCK_SUBJECT_CATEGORIES);
+          setSubjectCategories(catsRes.data?.data || []);
         } else {
-          setSubjectCategories(MOCK_SUBJECT_CATEGORIES);
+          setSubjectCategories([]);
         }
       } catch (err) {
-        console.warn('Failed to load catalog filters from backend API, using mock fallbacks:', err);
-        setSubjectAreas(MOCK_SUBJECT_AREAS);
-        setSubjectCategories(MOCK_SUBJECT_CATEGORIES);
+        console.error('Failed to load catalog filters from backend API:', err);
+        setSubjectAreas([]);
+        setSubjectCategories([]);
       } finally {
         setLoadingFilters(false);
       }
     }
 
     loadFilters();
-  }, []);
+  }, [currentUser]);
 
   const selectedAreasStr = selectedAreas.join(',');
   const selectedCategoriesStr = selectedCategories.join(',');
@@ -217,63 +112,16 @@ export function useCatalogSearch(currentUser) {
         throw new Error(response.data?.message || 'Invalid search format');
       }
     } catch (err) {
-      console.warn('Backend search API failed, running high-fidelity offline filter logic:', err);
-      
-      // Artificial delay to mimic network latency
-      await new Promise(resolve => setTimeout(resolve, 600));
-
-      // Offline filter simulation
-      let filtered = [...MOCK_JOURNALS];
-
-      // Search keyword filter
-      if (search) {
-        const query = search.toLowerCase();
-        filtered = filtered.filter(j => 
-          j.display_name.toLowerCase().includes(query) ||
-          j.publisher.toLowerCase().includes(query) ||
-          j.issn.toLowerCase().includes(query)
-        );
+      const status = err.response?.status;
+      if (status === 401) {
+        setError('Bạn cần đăng nhập để tìm kiếm journal.');
+      } else if (status === 404) {
+        setError('Không tìm thấy dữ liệu.');
+      } else {
+        setError(err.response?.data?.message || err.message || 'Lỗi kết nối đến server.');
       }
-
-      // Subject Area Filter
-      if (selectedAreas.length > 0) {
-        filtered = filtered.filter(j => selectedAreas.includes(j.subject_area_id));
-      }
-
-      // Subject Category Filter
-      if (selectedCategories.length > 0) {
-        filtered = filtered.filter(j => selectedCategories.includes(j.subject_category_id));
-      }
-
-      // Access Filter
-      if (selectedAccess.length > 0) {
-        const showOA = selectedAccess.includes('open_access');
-        const showSub = selectedAccess.includes('subscription');
-        if (showOA && !showSub) {
-          filtered = filtered.filter(j => j.is_open_access);
-        } else if (!showOA && showSub) {
-          filtered = filtered.filter(j => !j.is_open_access);
-        }
-      }
-
-      // Quartile Filter
-      if (selectedQuartiles.length > 0) {
-        filtered = filtered.filter(j => selectedQuartiles.includes(j.quartile));
-      }
-
-      // Sorting simulation
-      if (sort === 'metric') {
-        filtered.sort((a, b) => b.metric_value - a.metric_value);
-      } else if (sort === 'name') {
-        filtered.sort((a, b) => a.display_name.localeCompare(b.display_name));
-      }
-
-      // Pagination slice
-      const start = (page - 1) * limit;
-      const paginated = filtered.slice(start, start + limit);
-
-      setJournals(paginated);
-      setTotal(filtered.length);
+      setJournals([]);
+      setTotal(0);
     } finally {
       setLoadingJournals(false);
     }

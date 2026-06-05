@@ -70,5 +70,5 @@ export const addJournalToProjectApi = (projectId, journalId) => {
  * @returns {Promise} Axios promise
  */
 export const searchJournalsApi = (params) => {
-  return api.get('/catalog/journals', { params });
+  return api.get('/journal/', { params });
 };

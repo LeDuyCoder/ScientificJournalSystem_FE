@@ -23,18 +23,18 @@ export default function FilterPanel({
     : subjectCategories;
 
   return (
-    <div className="journal-dark-card p-4 text-start" style={{ borderRadius: '16px' }}>
+    <div className="journal-dark-card p-4 text-start" style={{ borderRadius: '16px', backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)' }}>
       
       {/* Filter Header */}
-      <div className="d-flex align-items-center justify-content-between mb-4 border-bottom border-white-10 pb-3">
-        <div className="d-flex align-items-center gap-2 text-white fw-bold">
-          <Icon icon="lucide:sliders" className="text-info fs-5" />
+      <div className="d-flex align-items-center justify-content-between mb-4 border-bottom border-light pb-3">
+        <div className="d-flex align-items-center gap-2 text-main fw-bold">
+          <Icon icon="lucide:sliders" className="text-primary fs-5" />
           <span className="font-display">Bộ lọc</span>
         </div>
         <Button 
           variant="link" 
           onClick={onClearAll}
-          className="text-info-hover text-secondary p-0 text-decoration-none fw-semibold"
+          className="text-primary hover:text-dark p-0 text-decoration-none fw-semibold"
           style={{ fontSize: '0.8rem' }}
         >
           Xóa tất cả
@@ -43,11 +43,11 @@ export default function FilterPanel({
 
       {/* 1. Subject Area Filter */}
       <div className="mb-4">
-        <h6 className="text-white-50 fw-bold text-uppercase tracking-wider mb-3" style={{ fontSize: '0.75rem', letterSpacing: '0.05em' }}>
+        <h6 className="text-muted-custom fw-bold text-uppercase tracking-wider mb-3" style={{ fontSize: '0.75rem', letterSpacing: '0.05em' }}>
           Lĩnh vực (Subject Area)
         </h6>
         {loading ? (
-          <div className="text-secondary py-2" style={{ fontSize: '0.85rem' }}>Đang tải...</div>
+          <div className="text-muted-custom py-2" style={{ fontSize: '0.85rem' }}>Đang tải...</div>
         ) : (
           <div className="d-flex flex-column gap-2.5 max-h-50 overflow-y-auto pr-1" style={{ maxHeight: '200px' }}>
             {subjectAreas.map((area) => {
@@ -58,7 +58,7 @@ export default function FilterPanel({
                     type="checkbox"
                     id={`area-${area.subject_area_id}`}
                     label={
-                      <span className={`ms-2 text-sm transition-all ${isChecked ? 'text-info fw-semibold' : 'text-white-80'}`} style={{ fontSize: '0.875rem' }}>
+                      <span className={`ms-2 text-sm transition-all ${isChecked ? 'text-primary fw-semibold' : 'text-main'}`} style={{ fontSize: '0.875rem' }}>
                         {area.display_name}
                       </span>
                     }
@@ -67,7 +67,7 @@ export default function FilterPanel({
                     className="custom-checkbox m-0 d-flex align-items-center"
                     style={{ cursor: 'pointer' }}
                   />
-                  <span className="text-secondary font-monospace" style={{ fontSize: '0.75rem' }}>
+                  <span className="text-muted-custom font-monospace" style={{ fontSize: '0.75rem' }}>
                     {area.count?.toLocaleString() || area.journal_count?.toLocaleString() || 0}
                   </span>
                 </div>
@@ -77,17 +77,17 @@ export default function FilterPanel({
         )}
       </div>
 
-      <hr className="border-white-10 my-4" />
+      <hr className="border-light my-4" />
 
       {/* 2. Subject Category Filter */}
       <div className="mb-4">
-        <h6 className="text-white-50 fw-bold text-uppercase tracking-wider mb-3" style={{ fontSize: '0.75rem', letterSpacing: '0.05em' }}>
+        <h6 className="text-muted-custom fw-bold text-uppercase tracking-wider mb-3" style={{ fontSize: '0.75rem', letterSpacing: '0.05em' }}>
           Chuyên ngành (Subject Category)
         </h6>
         {loading ? (
-          <div className="text-secondary py-2" style={{ fontSize: '0.85rem' }}>Đang tải...</div>
+          <div className="text-muted-custom py-2" style={{ fontSize: '0.85rem' }}>Đang tải...</div>
         ) : visibleCategories.length === 0 ? (
-          <div className="text-secondary py-2 italic text-center" style={{ fontSize: '0.8rem', fontStyle: 'italic' }}>
+          <div className="text-muted-custom py-2 italic text-center" style={{ fontSize: '0.8rem', fontStyle: 'italic' }}>
             Chọn lĩnh vực để xem chuyên ngành
           </div>
         ) : (
@@ -100,7 +100,7 @@ export default function FilterPanel({
                     type="checkbox"
                     id={`cat-${cat.subject_category_id}`}
                     label={
-                      <span className={`ms-2 text-sm transition-all ${isChecked ? 'text-info fw-semibold' : 'text-white-80'}`} style={{ fontSize: '0.875rem' }}>
+                      <span className={`ms-2 text-sm transition-all ${isChecked ? 'text-primary fw-semibold' : 'text-main'}`} style={{ fontSize: '0.875rem' }}>
                         {cat.display_name}
                       </span>
                     }
@@ -109,7 +109,7 @@ export default function FilterPanel({
                     className="custom-checkbox m-0 d-flex align-items-center"
                     style={{ cursor: 'pointer' }}
                   />
-                  <span className="text-secondary font-monospace" style={{ fontSize: '0.75rem' }}>
+                  <span className="text-muted-custom font-monospace" style={{ fontSize: '0.75rem' }}>
                     {cat.count?.toLocaleString() || cat.journal_count?.toLocaleString() || 0}
                   </span>
                 </div>
@@ -119,11 +119,11 @@ export default function FilterPanel({
         )}
       </div>
 
-      <hr className="border-white-10 my-4" />
+      <hr className="border-light my-4" />
 
       {/* 3. Access Type Filter */}
       <div className="mb-4">
-        <h6 className="text-white-50 fw-bold text-uppercase tracking-wider mb-3" style={{ fontSize: '0.75rem', letterSpacing: '0.05em' }}>
+        <h6 className="text-muted-custom fw-bold text-uppercase tracking-wider mb-3" style={{ fontSize: '0.75rem', letterSpacing: '0.05em' }}>
           Loại truy cập
         </h6>
         <div className="d-flex flex-column gap-2.5">
@@ -132,7 +132,7 @@ export default function FilterPanel({
               type="checkbox"
               id="access-oa"
               label={
-                <span className={`ms-2 transition-all ${selectedAccess.includes('open_access') ? 'text-info fw-semibold' : 'text-white-80'}`} style={{ fontSize: '0.875rem' }}>
+                <span className={`ms-2 transition-all ${selectedAccess.includes('open_access') ? 'text-primary fw-semibold' : 'text-main'}`} style={{ fontSize: '0.875rem' }}>
                   Open Access
                 </span>
               }
@@ -148,7 +148,7 @@ export default function FilterPanel({
               type="checkbox"
               id="access-sub"
               label={
-                <span className={`ms-2 transition-all ${selectedAccess.includes('subscription') ? 'text-info fw-semibold' : 'text-white-80'}`} style={{ fontSize: '0.875rem' }}>
+                <span className={`ms-2 transition-all ${selectedAccess.includes('subscription') ? 'text-primary fw-semibold' : 'text-main'}`} style={{ fontSize: '0.875rem' }}>
                   Subscription
                 </span>
               }
@@ -162,11 +162,11 @@ export default function FilterPanel({
         </div>
       </div>
 
-      <hr className="border-white-10 my-4" />
+      <hr className="border-light my-4" />
 
       {/* 4. Quartile Filter */}
       <div>
-        <h6 className="text-white-50 fw-bold text-uppercase tracking-wider mb-3" style={{ fontSize: '0.75rem', letterSpacing: '0.05em' }}>
+        <h6 className="text-muted-custom fw-bold text-uppercase tracking-wider mb-3" style={{ fontSize: '0.75rem', letterSpacing: '0.05em' }}>
           Xếp hạng (Quartile)
         </h6>
         <Row className="g-2">
@@ -175,14 +175,15 @@ export default function FilterPanel({
             return (
               <Col xs={6} key={q}>
                 <Button
-                  variant={isActive ? 'info' : 'dark'}
-                  className={`w-100 py-2 border-0 font-display fw-bold text-xs ${isActive ? 'btn-primary-glow text-white' : 'text-white-50'}`}
+                  className={`w-100 py-2 border font-display fw-bold text-xs`}
                   onClick={() => onQuartileToggle(q)}
                   style={{
                     borderRadius: '8px',
                     fontSize: '0.75rem',
-                    backgroundColor: isActive ? '#0dcaf0' : 'rgba(255, 255, 255, 0.04)',
-                    boxShadow: isActive ? '0 0 12px rgba(13, 202, 240, 0.4)' : 'none',
+                    backgroundColor: isActive ? 'var(--primary)' : 'var(--bg-main)',
+                    color: isActive ? '#ffffff' : 'var(--text-muted)',
+                    borderColor: isActive ? 'var(--primary)' : 'var(--border)',
+                    boxShadow: isActive ? '0 4px 10px rgba(255, 122, 51, 0.25)' : 'none',
                     transition: 'all 0.2s ease'
                   }}
                 >

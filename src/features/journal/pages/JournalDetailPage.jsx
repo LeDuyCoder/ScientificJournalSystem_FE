@@ -29,34 +29,34 @@ export default function JournalDetailPage() {
 
   if (!token) {
     return (
-      <div className="grid-bg min-vh-100 d-flex flex-column text-white">
+      <div className="grid-bg min-vh-100 d-flex flex-column text-main" style={{ backgroundColor: 'var(--bg-main)' }}>
         <Header />
         <Container className="flex-grow-1 d-flex flex-column justify-content-center align-items-center py-5" style={{ marginTop: '80px' }}>
-          <div className="journal-dark-card p-5 text-center" style={{ maxWidth: '560px', borderRadius: '16px', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
+          <div className="journal-dark-card p-5 text-center" style={{ maxWidth: '560px', borderRadius: '16px', border: '1px solid var(--border)', backgroundColor: 'var(--bg-card)' }}>
             <div className="d-inline-flex align-items-center justify-content-center mb-4" style={{
               width: '85px',
               height: '85px',
               borderRadius: '50%',
-              background: 'linear-gradient(135deg, rgba(239, 68, 68, 0.1) 0%, rgba(239, 68, 68, 0.2) 100%)',
-              border: '1px solid rgba(239, 68, 68, 0.3)'
+              background: 'linear-gradient(135deg, rgba(239, 68, 68, 0.08) 0%, rgba(239, 68, 68, 0.15) 100%)',
+              border: '1px solid rgba(239, 68, 68, 0.2)'
             }}>
               <Icon icon="lucide:lock" className="text-danger" width="40" />
             </div>
-            <h3 className="font-display fw-bold text-white mb-3">Nội dung dành cho Thành viên</h3>
-            <p className="text-white-70 mb-4" style={{ fontSize: '0.95rem', lineHeight: '1.6' }}>
+            <h3 className="font-display fw-bold text-main mb-3">Nội dung dành cho Thành viên</h3>
+            <p className="text-muted-custom mb-4" style={{ fontSize: '0.95rem', lineHeight: '1.6' }}>
               Vui lòng đăng nhập tài khoản ResearchPulse của bạn để xem chi tiết thông tin tạp chí, chỉ số xếp hạng, lịch sử ranking, volumes/issues và các bài báo gần đây.
             </p>
             <div className="d-flex align-items-center justify-content-center gap-3">
               <Button 
-                variant="dark"
-                className="px-4 py-2.5 text-white-70 border-white-10 fw-semibold"
+                variant="outline-secondary"
+                className="px-4 py-2.5 text-main border-secondary fw-semibold"
                 onClick={() => navigate('/')}
-                style={{ borderRadius: '8px', fontSize: '0.9rem', backgroundColor: '#161c2e', border: '1px solid rgba(255,255,255,0.08)' }}
+                style={{ borderRadius: '8px', fontSize: '0.9rem' }}
               >
                 Quay lại Trang chủ
               </Button>
               <Button 
-                className="btn-primary-glow border-0 px-4 py-2.5 fw-semibold"
+                className="btn-primary-glow border-0 px-4 py-2.5 fw-semibold text-white"
                 onClick={() => navigate('/login')}
                 style={{ borderRadius: '8px', fontSize: '0.9rem' }}
               >
@@ -94,17 +94,17 @@ export default function JournalDetailPage() {
   // Fallback for not found or empty ID
   if (notFound) {
     return (
-      <div className="grid-bg min-vh-100 d-flex flex-column text-white">
+      <div className="grid-bg min-vh-100 d-flex flex-column text-main" style={{ backgroundColor: 'var(--bg-main)' }}>
         <Header />
         <Container className="flex-grow-1 d-flex flex-column justify-content-center align-items-center py-5">
-          <div className="journal-dark-card p-5 text-center max-w-md" style={{ maxWidth: '500px' }}>
+          <div className="journal-dark-card p-5 text-center" style={{ maxWidth: '500px', borderRadius: '16px', border: '1px solid var(--border)', backgroundColor: 'var(--bg-card)' }}>
             <Icon icon="lucide:alert-circle" className="text-danger mb-4" width="64" />
-            <h2 className="font-display fw-bold text-white mb-3">Không tìm thấy Tạp chí</h2>
-            <p className="text-secondary mb-4">
+            <h2 className="font-display fw-bold text-main mb-3">Không tìm thấy Tạp chí</h2>
+            <p className="text-muted-custom mb-4">
               Tạp chí bạn đang tìm kiếm không tồn tại hoặc dữ liệu chưa được cập nhật trong hệ thống.
             </p>
             <Button 
-              className="btn-primary-glow border-0 px-4 py-2" 
+              className="btn-primary-glow border-0 px-4 py-2 text-white" 
               onClick={() => navigate('/')}
               style={{ borderRadius: '8px', fontWeight: 600 }}
             >
@@ -117,7 +117,7 @@ export default function JournalDetailPage() {
   }
 
   return (
-    <div className="grid-bg min-vh-100 text-white pb-5">
+    <div className="grid-bg min-vh-100 text-main pb-5" style={{ backgroundColor: 'var(--bg-main)' }}>
       {/* Top Navbar */}
       <Header />
 
@@ -129,21 +129,21 @@ export default function JournalDetailPage() {
           <Breadcrumb className="mb-0 custom-breadcrumb">
             <Breadcrumb.Item 
               onClick={() => navigate('/')}
-              className="text-white-50 hover-text-white text-decoration-none"
+              className="text-muted-custom hover-text-dark text-decoration-none"
               style={{ cursor: 'pointer', fontSize: '0.9rem' }}
             >
               Trang chủ
             </Breadcrumb.Item>
             <Breadcrumb.Item 
               onClick={() => navigate('/')}
-              className="text-white-50 hover-text-white text-decoration-none"
+              className="text-muted-custom hover-text-dark text-decoration-none"
               style={{ cursor: 'pointer', fontSize: '0.9rem' }}
             >
               Danh mục
             </Breadcrumb.Item>
             <Breadcrumb.Item 
               active 
-              className="text-info font-display fw-semibold"
+              className="text-primary font-display fw-semibold"
               style={{ fontSize: '0.9rem' }}
             >
               {loadingJournal ? 'Đang tải...' : journal?.display_name}

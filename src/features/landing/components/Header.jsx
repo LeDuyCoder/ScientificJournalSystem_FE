@@ -47,11 +47,11 @@ export default function Header() {
         expand="md"
         fixed="top"
         className={`transition-all duration-300 py-3 ${
-          isScrolled ? 'sticky-scrolled' : 'bg-transparent border-bottom border-white-50'
+          isScrolled ? 'sticky-scrolled' : 'bg-transparent'
         }`}
         style={{
-          borderBottom: isScrolled ? 'none' : '1px solid rgba(255, 255, 255, 0.05)',
-          background: isScrolled ? 'rgba(9, 13, 22, 0.95)' : 'transparent',
+          borderBottom: isScrolled ? 'none' : '1px solid var(--border)',
+          background: isScrolled ? 'var(--bg-card)' : 'transparent',
           backdropFilter: isScrolled ? 'blur(12px)' : 'none'
         }}
       >
@@ -59,7 +59,7 @@ export default function Header() {
           {/* Logo Brand */}
           <Navbar.Brand 
             onClick={() => navigate('/')}
-            className="d-flex align-items-center text-white font-weight-bold"
+            className="d-flex align-items-center text-main font-weight-bold"
             style={{ fontFamily: 'var(--font-display)', fontWeight: 800, cursor: 'pointer' }}
           >
             <div 
@@ -68,8 +68,8 @@ export default function Header() {
                 width: '32px',
                 height: '32px',
                 borderRadius: '8px',
-                background: 'linear-gradient(135deg, #00d2ff 0%, #7a00ff 100%)',
-                boxShadow: '0 0 10px rgba(0, 210, 255, 0.3)'
+                background: 'var(--btn-dark)',
+                boxShadow: '0 0 10px rgba(7, 26, 28, 0.15)'
               }}
             >
               <Icon icon="lucide:activity" className="text-white text-sm" />
@@ -81,9 +81,9 @@ export default function Header() {
           <Navbar.Toggle 
             aria-controls="basic-navbar-nav" 
             onClick={() => setShowMobileMenu(true)} 
-            className="border-0 bg-transparent text-white p-0"
+            className="border-0 bg-transparent text-main p-0"
           >
-            <Icon icon="lucide:menu" className="fs-3" />
+            <Icon icon="lucide:menu" className="fs-3 text-main" />
           </Navbar.Toggle>
 
           {/* Desktop Navigation Link Items */}
@@ -94,9 +94,9 @@ export default function Header() {
                 className="px-3 py-1.5 text-sm font-semibold d-flex align-items-center gap-1.5"
                 style={{
                   borderRadius: '6px',
-                  backgroundColor: window.location.pathname.startsWith('/catalog') || window.location.pathname.startsWith('/search') ? '#161c2e' : 'transparent',
-                  color: window.location.pathname.startsWith('/catalog') || window.location.pathname.startsWith('/search') ? '#00d2ff' : 'rgba(255, 255, 255, 0.6)',
-                  border: window.location.pathname.startsWith('/catalog') || window.location.pathname.startsWith('/search') ? '1px solid rgba(0, 210, 255, 0.15)' : '1px solid transparent',
+                  backgroundColor: window.location.pathname.startsWith('/catalog') || window.location.pathname.startsWith('/search') ? 'var(--primary-light)' : 'transparent',
+                  color: window.location.pathname.startsWith('/catalog') || window.location.pathname.startsWith('/search') ? 'var(--primary)' : 'var(--text-muted)',
+                  border: window.location.pathname.startsWith('/catalog') || window.location.pathname.startsWith('/search') ? '1px solid var(--border)' : '1px solid transparent',
                   transition: 'all 0.2s'
                 }}
               >
@@ -108,9 +108,9 @@ export default function Header() {
                 className="px-3 py-1.5 text-sm font-semibold d-flex align-items-center gap-1.5"
                 style={{
                   borderRadius: '6px',
-                  backgroundColor: (window.location.pathname.includes('/journals') && !window.location.pathname.startsWith('/catalog')) || window.location.pathname === '/' ? '#161c2e' : 'transparent',
-                  color: (window.location.pathname.includes('/journals') && !window.location.pathname.startsWith('/catalog')) || window.location.pathname === '/' ? '#00d2ff' : 'rgba(255, 255, 255, 0.6)',
-                  border: (window.location.pathname.includes('/journals') && !window.location.pathname.startsWith('/catalog')) || window.location.pathname === '/' ? '1px solid rgba(0, 210, 255, 0.15)' : '1px solid transparent',
+                  backgroundColor: (window.location.pathname.includes('/journals') && !window.location.pathname.startsWith('/catalog')) || window.location.pathname === '/' ? 'var(--primary-light)' : 'transparent',
+                  color: (window.location.pathname.includes('/journals') && !window.location.pathname.startsWith('/catalog')) || window.location.pathname === '/' ? 'var(--primary)' : 'var(--text-muted)',
+                  border: (window.location.pathname.includes('/journals') && !window.location.pathname.startsWith('/catalog')) || window.location.pathname === '/' ? '1px solid var(--border)' : '1px solid transparent',
                   transition: 'all 0.2s'
                 }}
               >
@@ -118,16 +118,22 @@ export default function Header() {
                 {t('journals')}
               </Nav.Link>
               <Nav.Link 
-                onClick={() => navigate('/')} 
-                className="px-3 py-1.5 text-sm font-semibold d-flex align-items-center gap-1.5 text-white-50"
-                style={{ borderRadius: '6px', transition: 'all 0.2s' }}
+                onClick={() => navigate('/articles')} 
+                className="px-3 py-1.5 text-sm font-semibold d-flex align-items-center gap-1.5"
+                style={{
+                  borderRadius: '6px',
+                  backgroundColor: window.location.pathname.startsWith('/articles') ? 'var(--primary-light)' : 'transparent',
+                  color: window.location.pathname.startsWith('/articles') ? 'var(--primary)' : 'var(--text-muted)',
+                  border: window.location.pathname.startsWith('/articles') ? '1px solid var(--border)' : '1px solid transparent',
+                  transition: 'all 0.2s'
+                }}
               >
                 <Icon icon="lucide:file-text" width="14" />
                 {t('articles')}
               </Nav.Link>
               <Nav.Link 
                 onClick={() => navigate('/')} 
-                className="px-3 py-1.5 text-sm font-semibold d-flex align-items-center gap-1.5 text-white-50"
+                className="px-3 py-1.5 text-sm font-semibold d-flex align-items-center gap-1.5 text-muted-custom"
                 style={{ borderRadius: '6px', transition: 'all 0.2s' }}
               >
                 <Icon icon="lucide:users" width="14" />
@@ -139,7 +145,7 @@ export default function Header() {
               {/* Language Dropdown Selector */}
               <NavDropdown
                 title={
-                  <span className="d-flex align-items-center text-gray-300 hover:text-white text-xs font-semibold uppercase">
+                  <span className="d-flex align-items-center text-muted-custom hover:text-main text-xs font-semibold uppercase">
                     <Icon icon="lucide:languages" className="me-1" />
                     {language.startsWith('vi') ? 'Tiếng Việt' : 'English'}
                   </span>
@@ -151,35 +157,35 @@ export default function Header() {
                 <NavDropdown.Item 
                   onClick={() => changeLanguage('vi')}
                   className={`d-flex align-items-center justify-content-between text-xs py-2 ${
-                    language.startsWith('vi') ? 'text-info' : 'text-dark'
+                    language.startsWith('vi') ? 'text-primary' : 'text-dark'
                   }`}
                 >
                   <span>Tiếng Việt</span>
-                  {language.startsWith('vi') && <Icon icon="lucide:check" className="text-info text-xs ms-2" />}
+                  {language.startsWith('vi') && <Icon icon="lucide:check" className="text-primary text-xs ms-2" />}
                 </NavDropdown.Item>
                 <NavDropdown.Item 
                   onClick={() => changeLanguage('en')}
                   className={`d-flex align-items-center justify-content-between text-xs py-2 ${
-                    language.startsWith('en') ? 'text-info' : 'text-dark'
+                    language.startsWith('en') ? 'text-primary' : 'text-dark'
                   }`}
                 >
                   <span>English</span>
-                  {language.startsWith('en') && <Icon icon="lucide:check" className="text-info text-xs ms-2" />}
+                  {language.startsWith('en') && <Icon icon="lucide:check" className="text-primary text-xs ms-2" />}
                 </NavDropdown.Item>
               </NavDropdown>
 
-              {/* Theme Toggle Moon Icon */}
+              {/* Theme Toggle Sun/Moon Icon */}
               <div 
-                className="text-secondary hover:text-white" 
+                className="text-muted-custom hover:text-main" 
                 style={{ cursor: 'pointer' }}
-                onClick={() => alert('Chế độ tối được tối ưu hóa mặc định cho nền tảng ResearchPulse')}
+                onClick={() => alert('Đang áp dụng giao diện sáng của ResearchPulse')}
               >
-                <Icon icon="lucide:moon" width="18" className="text-warning" />
+                <Icon icon="lucide:sun" width="18" className="text-warning" />
               </div>
 
               {/* Notification icon */}
               {user && (
-                <div className="text-secondary hover:text-white position-relative" style={{ cursor: 'pointer' }}>
+                <div className="text-muted-custom hover:text-main position-relative" style={{ cursor: 'pointer' }}>
                   <Icon icon="lucide:bell" width="18" />
                   <span className="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle">
                     <span className="visually-hidden">New alerts</span>
@@ -197,8 +203,8 @@ export default function Header() {
                         width: '32px',
                         height: '32px',
                         borderRadius: '50%',
-                        background: 'linear-gradient(135deg, #00d2ff 0%, #7a00ff 100%)',
-                        boxShadow: '0 0 8px rgba(0, 210, 255, 0.2)'
+                        background: 'var(--btn-dark)',
+                        boxShadow: '0 0 8px rgba(7, 26, 28, 0.15)'
                       }}
                     >
                       {user.username ? user.username.charAt(0).toUpperCase() : 'U'}
@@ -206,7 +212,7 @@ export default function Header() {
                   </div>
                   <Button
                     variant="link"
-                    className="text-white-50 hover:text-danger text-xs font-semibold p-0 text-decoration-none"
+                    className="text-muted-custom hover:text-danger text-xs font-semibold p-0 text-decoration-none"
                     onClick={logout}
                   >
                     {language.startsWith('vi') ? 'Đăng xuất' : 'Sign Out'}
@@ -216,7 +222,7 @@ export default function Header() {
                 <>
                   <Button 
                     variant="link" 
-                    className="text-white-50 hover:text-white text-xs font-semibold text-decoration-none"
+                    className="text-muted-custom hover:text-main text-xs font-semibold text-decoration-none"
                     onClick={handleAuthRedirect}
                   >
                     {t('signIn')}
@@ -239,12 +245,12 @@ export default function Header() {
         show={showMobileMenu}
         onHide={() => setShowMobileMenu(false)}
         placement="end"
-        className="bg-[#090d16] text-white border-start border-white-10"
-        style={{ width: '280px', backgroundColor: '#090d16' }}
+        className="bg-white text-dark border-start border-light"
+        style={{ width: '280px', backgroundColor: 'var(--bg-card)', color: 'var(--text-main)' }}
       >
-        <Offcanvas.Header closeButton closeVariant="white" className="border-bottom border-white-10 py-4">
+        <Offcanvas.Header closeButton closeVariant="dark" className="border-bottom border-light py-4">
           <Offcanvas.Title 
-            className="d-flex align-items-center text-white" 
+            className="d-flex align-items-center text-main" 
             style={{ fontFamily: 'var(--font-display)', fontWeight: 800 }}
           >
             <div 
@@ -253,7 +259,7 @@ export default function Header() {
                 width: '28px',
                 height: '28px',
                 borderRadius: '6px',
-                background: 'linear-gradient(135deg, #00d2ff 0%, #7a00ff 100%)'
+                background: 'var(--btn-dark)'
               }}
             >
               <Icon icon="lucide:activity" className="text-white text-xs" />
@@ -262,14 +268,14 @@ export default function Header() {
           </Offcanvas.Title>
         </Offcanvas.Header>
 
-        <Offcanvas.Body className="d-flex flex-col justify-content-between py-4">
+        <Offcanvas.Body className="d-flex flex-column justify-content-between py-4">
           <Nav className="flex-column gap-3 mb-4">
             <Nav.Link 
               onClick={() => {
                 setShowMobileMenu(false);
                 navigate('/catalog');
               }}
-              className="text-white-50 hover:text-white py-2 text-sm font-semibold border-bottom border-white-5"
+              className="text-muted-custom hover:text-main py-2 text-sm font-semibold border-bottom border-light"
             >
               {t('search')}
             </Nav.Link>
@@ -278,21 +284,33 @@ export default function Header() {
                 setShowMobileMenu(false);
                 navigate('/');
               }}
-              className="text-white-50 hover:text-white py-2 text-sm font-semibold border-bottom border-white-5"
+              className="text-muted-custom hover:text-main py-2 text-sm font-semibold border-bottom border-light"
             >
               {t('journals')}
             </Nav.Link>
             <Nav.Link 
+              onClick={() => {
+                setShowMobileMenu(false);
+                navigate('/articles');
+              }}
+              className="text-muted-custom hover:text-main py-2 text-sm font-semibold border-bottom border-light"
+              style={{
+                color: window.location.pathname.startsWith('/articles') ? 'var(--primary)' : 'var(--text-muted)'
+              }}
+            >
+              {t('articles')}
+            </Nav.Link>
+            <Nav.Link 
               href="#features" 
               onClick={() => setShowMobileMenu(false)}
-              className="text-white-50 hover:text-white py-2 text-sm font-semibold border-bottom border-white-5"
+              className="text-muted-custom hover:text-main py-2 text-sm font-semibold border-bottom border-light"
             >
               {t('features')}
             </Nav.Link>
             <Nav.Link 
               href="#how-to-use" 
               onClick={() => setShowMobileMenu(false)}
-              className="text-white-50 hover:text-white py-2 text-sm font-semibold border-bottom border-white-5"
+              className="text-muted-custom hover:text-main py-2 text-sm font-semibold border-bottom border-light"
             >
               {t('howToUse')}
             </Nav.Link>
@@ -300,22 +318,22 @@ export default function Header() {
 
           <div className="d-flex flex-column gap-3">
             {/* Mobile Language Switches */}
-            <div className="d-flex align-items-center justify-content-center gap-4 py-2 border-top border-bottom border-white-5 mb-2">
+            <div className="d-flex align-items-center justify-content-center gap-4 py-2 border-top border-bottom border-light mb-2">
               <Button
                 variant="link"
                 onClick={() => changeLanguage('vi')}
                 className={`text-decoration-none text-xs font-bold p-0 ${
-                  language.startsWith('vi') ? 'text-info' : 'text-white-50'
+                  language.startsWith('vi') ? 'text-primary' : 'text-muted-custom'
                 }`}
               >
                 Tiếng Việt
               </Button>
-              <span className="text-white-10">|</span>
+              <span className="text-muted-custom">|</span>
               <Button
                 variant="link"
                 onClick={() => changeLanguage('en')}
                 className={`text-decoration-none text-xs font-bold p-0 ${
-                  language.startsWith('en') ? 'text-info' : 'text-white-50'
+                  language.startsWith('en') ? 'text-primary' : 'text-muted-custom'
                 }`}
               >
                 English
@@ -326,7 +344,7 @@ export default function Header() {
             {user ? (
               <div className="d-flex flex-column gap-3">
                 <Button
-                  variant="outline-info"
+                  variant="outline-primary"
                   className="w-100 rounded-pill py-2.5 text-xs font-bold"
                   onClick={() => {
                     setShowMobileMenu(false);
@@ -336,19 +354,19 @@ export default function Header() {
                   <Icon icon="lucide:layout-dashboard" className="me-1" />
                   {language.startsWith('vi') ? 'Bảng điều khiển' : 'Go to Dashboard'}
                 </Button>
-                <div className="d-flex align-items-center justify-content-center gap-2 p-2 rounded-3 bg-white-5">
+                <div className="d-flex align-items-center justify-content-center gap-2 p-2 rounded-3 bg-light">
                   <div 
                     className="d-flex align-items-center justify-content-center text-white text-xs font-bold"
                     style={{
                       width: '28px',
                       height: '28px',
                       borderRadius: '50%',
-                      background: 'linear-gradient(135deg, #00d2ff 0%, #7a00ff 100%)'
+                      background: 'var(--btn-dark)'
                     }}
                   >
                     {user.username ? user.username.charAt(0).toUpperCase() : 'U'}
                   </div>
-                  <span className="text-xs text-white font-weight-bold">
+                  <span className="text-xs text-main font-weight-bold">
                     {user.username || 'User'}
                   </span>
                 </div>
@@ -367,7 +385,7 @@ export default function Header() {
               <div className="d-flex flex-column gap-2">
                 <Button 
                   variant="outline-secondary" 
-                  className="w-100 rounded-pill py-2.5 text-xs text-white border-white-20 hover:bg-white-5"
+                  className="w-100 rounded-pill py-2.5 text-xs text-main border-secondary hover:bg-light"
                   onClick={() => {
                     setShowMobileMenu(false);
                     handleAuthRedirect();

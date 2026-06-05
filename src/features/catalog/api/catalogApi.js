@@ -5,7 +5,7 @@ import api from '../../../shared/services/api';
  * @returns {Promise} Axios promise
  */
 export const getSubjectAreasApi = () => {
-  return api.get('/catalog/subject-areas');
+  return api.get('/subject-areas');
 };
 
 /**
@@ -13,7 +13,7 @@ export const getSubjectAreasApi = () => {
  * @returns {Promise} Axios promise
  */
 export const getSubjectCategoriesApi = () => {
-  return api.get('/catalog/subject-categories');
+  return api.get('/subject-categories');
 };
 
 /**

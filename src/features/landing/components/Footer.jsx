@@ -16,7 +16,13 @@ export default function Footer() {
   ];
 
   return (
-    <footer className="border-top border-white-5 py-5 position-relative z-3 bg-dark-bg">
+    <footer 
+      className="py-5 position-relative z-3"
+      style={{ 
+        backgroundColor: 'var(--bg-section)', 
+        borderTop: '1px solid var(--border)' 
+      }}
+    >
       <Container>
         <Row className="align-items-center justify-content-between gy-4 gy-md-0">
 
@@ -29,17 +35,16 @@ export default function Footer() {
                   width: '28px',
                   height: '28px',
                   borderRadius: '6px',
-                  background: 'linear-gradient(135deg, #00d2ff 0%, #7a00ff 100%)',
-                  boxShadow: '0 0 10px rgba(0, 210, 255, 0.2)'
+                  background: 'var(--btn-dark)',
                 }}
               >
                 <Icon icon="lucide:activity" className="fs-6" />
               </div>
-              <span className="font-display font-bold text-white mb-0" style={{ fontWeight: 700, fontSize: '1rem' }}>
+              <span className="font-display text-main mb-0" style={{ fontWeight: 700, fontSize: '1rem' }}>
                 ResearchPulse
               </span>
             </div>
-            <span className="text-white-50 max-w-xs" style={{ fontSize: '0.75rem', maxWidth: '300px', lineHeight: 1.4 }}>
+            <span className="text-muted-custom" style={{ fontSize: '0.75rem', maxWidth: '300px', lineHeight: 1.4 }}>
               {t('footerCredit')}
             </span>
           </Col>
@@ -51,8 +56,14 @@ export default function Footer() {
                 <Nav.Link
                   key={link.key}
                   href={link.href}
-                  className="text-white-50 hover:text-white p-0 text-decoration-none font-semibold text-xs"
-                  style={{ fontSize: '0.75rem', transition: 'color 0.2s ease' }}
+                  className="text-muted-custom p-0 text-decoration-none"
+                  style={{ 
+                    fontSize: '0.75rem', 
+                    fontWeight: 500,
+                    transition: 'color 0.2s ease' 
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.color = 'var(--primary)'}
+                  onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-muted)'}
                 >
                   {t(link.key)}
                 </Nav.Link>
@@ -61,7 +72,7 @@ export default function Footer() {
           </Col>
 
           {/* Right Column: Copyright */}
-          <Col xs={12} md={4} className="text-center text-md-end text-white-50" style={{ fontSize: '0.75rem' }}>
+          <Col xs={12} md={4} className="text-center text-md-end text-muted-custom" style={{ fontSize: '0.75rem' }}>
             <span>&copy; {new Date().getFullYear()} ResearchPulse Team</span>
           </Col>
 

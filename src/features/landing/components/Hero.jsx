@@ -9,10 +9,10 @@ export default function Hero() {
   const { t } = useTranslation();
 
   const stats = [
-    { valueKey: 'papersValue', labelKey: 'papersLabel', color: '#00d2ff' },
-    { valueKey: 'periodValue', labelKey: 'periodLabel', color: '#ffffff' },
-    { valueKey: 'keywordsValue', labelKey: 'keywordsLabel', color: '#00d2ff' },
-    { valueKey: 'freeValue', labelKey: 'freeLabel', color: '#198754' },
+    { valueKey: 'papersValue', labelKey: 'papersLabel', color: '#000000' },
+    { valueKey: 'periodValue', labelKey: 'periodLabel', color: '#000000' },
+    { valueKey: 'keywordsValue', labelKey: 'keywordsLabel', color: '#000000' },
+    { valueKey: 'freeValue', labelKey: 'freeLabel', color: '#000000' },
   ];
 
   return (
@@ -27,9 +27,9 @@ export default function Hero() {
         <div 
           className="d-inline-flex align-items-center gap-2 px-3 py-2 rounded-pill mb-4"
           style={{
-            backgroundColor: 'rgba(0, 210, 255, 0.08)',
-            border: '1px solid rgba(0, 210, 255, 0.2)',
-            color: '#00d2ff',
+            backgroundColor: 'rgba(255, 255, 255, 0.08)',
+            border: '1px solid rgba(0, 0, 0, 0.2)',
+            color: '#000000',
             fontSize: '0.75rem',
             fontWeight: 600,
             letterSpacing: '0.05em'
@@ -41,7 +41,7 @@ export default function Hero() {
 
         {/* Main Heading */}
         <h1 
-          className="font-display text-white mb-4"
+          className="font-display text-main mb-4"
           style={{
             fontWeight: 800,
             fontSize: 'calc(1.8rem + 2.5vw)',
@@ -51,14 +51,14 @@ export default function Hero() {
           }}
         >
           {t('headingPrefix')}{' '}
-          <span className="glow-gradient-text glow-text-cyan">
+          <span className="glow-gradient-text glow-text-cyan font-display">
             {t('headingHighlight')}
           </span>
         </h1>
 
         {/* Sub Heading */}
         <p 
-          className="text-white-50 mb-5 max-w-2xl"
+          className="text-main mb-5 max-w-2xl"
           style={{
             fontSize: 'calc(0.95rem + 0.15vw)',
             lineHeight: 1.6,
@@ -83,18 +83,18 @@ export default function Hero() {
           {/* View Trends Button */}
           <Button
             href="#features"
-            variant="outline-light"
-            className="rounded-pill px-5 py-3 d-flex align-items-center justify-content-center gap-2 border-white-10 hover:bg-white-5"
-            style={{ fontSize: '0.875rem', letterSpacing: '0.03em', background: 'rgba(255, 255, 255, 0.03)' }}
+            variant="outline-secondary"
+            className="rounded-pill px-5 py-3 d-flex align-items-center justify-content-center gap-2"
+            style={{ fontSize: '0.875rem', letterSpacing: '0.03em', background: 'var(--bg-chip)', border: '1px solid var(--border)', color: 'var(--text-main)' }}
           >
-            <Icon icon="lucide:bar-chart-2" className="fs-5 text-info" />
+            <Icon icon="lucide:bar-chart-2" className="fs-5" style={{ color: 'var(--primary)' }} />
             <span>{t('ctaTrends')}</span>
           </Button>
         </div>
       </Container>
 
       {/* Stats Counter Row Container */}
-      <div className="position-relative w-100 z-3" style={{ borderTop: '1px solid rgba(255, 255, 255, 0.05)' }}>
+      <div className="position-relative w-100 z-3" style={{ borderTop: '1px solid var(--border)' }}>
         <Container className="pt-4 pb-2">
           <Row className="gy-4 gy-md-0 text-center">
             {stats.map((stat, idx) => (
@@ -122,7 +122,7 @@ export default function Hero() {
                   </span>
                   {/* Stat Label */}
                   <span 
-                    className="text-white-50 font-weight-bold"
+                    className="text-muted-custom font-weight-bold"
                     style={{
                       fontSize: '0.65rem',
                       letterSpacing: '0.15em',
