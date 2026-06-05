@@ -350,3 +350,35 @@ body, p, span, li, div, input, textarea, select {
 .text-muted-custom  { color: var(--text-muted) !important; }
 .bg-card            { background-color: var(--bg-card) !important; }
 
+/* ─── Sandbox Suggestion Tags ────────────────────────────────────── */
+.sandbox-tag {
+  font-size: 0.75rem;
+  background: var(--bg-chip) !important;
+  border: none !important;
+  color: var(--text-muted) !important;
+  transition: all 0.2s ease !important;
+}
+.sandbox-tag:hover {
+  background: var(--primary-light) !important;
+  color: var(--primary) !important;
+}
+
+/* ─── Sandbox Result Items ────────────────────────────────────────── */
+.sandbox-result-item {
+  background-color: var(--bg-chip) !important;
+  border: 1px solid var(--border) !important;
+  transition: all 0.2s ease-in-out !important;
+}
+.sandbox-result-item:hover {
+  border-color: var(--primary-light) !important;
+  background-color: var(--bg-card) !important;
+}
+.sandbox-result-item.is-journal {
+  cursor: pointer !important;
+}
+.sandbox-result-item.is-journal:hover {
+  border-color: var(--primary) !important;
+  background-color: var(--primary-light) !important;
+}
+
+

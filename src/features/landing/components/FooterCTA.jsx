@@ -59,11 +59,11 @@ export default function FooterCTA() {
           {/* Try Searching Now Button */}
           <Button
             href="#search-sandbox"
-            variant="outline-primary"
-            className="w-100 w-sm-auto rounded-pill px-5 py-3 d-flex align-items-center justify-content-center gap-2"
+            variant="outline-secondary"
+            className="btn-view-trends w-100 w-sm-auto rounded-pill px-5 py-3 d-flex align-items-center justify-content-center gap-2"
             style={{ fontSize: '0.875rem', fontWeight: 600 }}
           >
-            <Icon icon="lucide:search" className="text-primary fs-5" />
+            <Icon icon="lucide:search" className="btn-view-trends-icon fs-5" />
             <span>{t('ctaTryNowBtn')}</span>
           </Button>
 
