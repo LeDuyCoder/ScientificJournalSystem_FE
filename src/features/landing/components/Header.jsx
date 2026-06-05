@@ -1,26 +1,28 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { useNavigate, useLocation } from 'react-router-dom';
+import Container from 'react-bootstrap/Container';
+import Nav from 'react-bootstrap/Nav';
+import Navbar from 'react-bootstrap/Navbar';
+import NavDropdown from 'react-bootstrap/NavDropdown';
+import Button from 'react-bootstrap/Button';
+import Offcanvas from 'react-bootstrap/Offcanvas';
+import Dropdown from 'react-bootstrap/Dropdown';
 import Icon from '../../../shared/components/Icon';
 import useAuth from '../../auth/hooks/useAuth';
 
 export default function Header() {
   const { t, i18n } = useTranslation();
-  const { user, fetchProfile, logout } = useAuth();
+  const navigate  = useNavigate();
+  const location   = useLocation();
+  const pathname   = location.pathname;
+  const auth    = useAuth?.() ?? { user: null, logout: () => {} };
+  const { user, logout } = auth;
   const language = i18n.language || 'vi';
+
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isLangDropdownOpen, setIsLangDropdownOpen] = useState(false);
-  const langDropdownRef = useRef(null);
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
 
-  // Load user profile on mount if token exists
-  useEffect(() => {
-    const token = localStorage.getItem('researchpulse_token');
-    if (token) {
-      fetchProfile();
-    }
-  }, [fetchProfile]);
-
-  // Monitor scroll for sticky styles
   useEffect(() => {
     const handleScroll = () => {
       if (window.scrollY > 20) {
@@ -33,289 +35,448 @@ export default function Header() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Close dropdown when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (langDropdownRef.current && !langDropdownRef.current.contains(event.target)) {
-        setIsLangDropdownOpen(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
+  const changeLanguage = (lang) => {
+    i18n.changeLanguage(lang);
+    localStorage.setItem('researchpulse_lang', lang);
+  };
 
-  const navLinks = [
-    { key: 'search', icon: 'lucide:search', href: '#search-sandbox' },
-    { key: 'trends', icon: 'lucide:trending-up', href: '#features' },
-    { key: 'geography', icon: 'lucide:map', href: '#how-to-use' },
-    { key: 'authors', icon: 'lucide:users', href: '#footer-cta' },
-  ];
+  const handleAuthRedirect = () => {
+    navigate('/login');
+  };
 
   return (
     <>
-      <header
-        className={`fixed-top z-50 ${
-          isScrolled
-            ? 'sticky-scrolled shadow py-2'
-            : 'bg-transparent py-4'
+      <Navbar
+        expand="md"
+        fixed="top"
+        className={`transition-all duration-300 py-3 ${
+          isScrolled ? 'sticky-scrolled' : 'bg-transparent'
         }`}
-        style={{ transition: 'all 0.3s ease' }}
-      >
-        <div className="container-xl px-3">
-        <div className="d-flex align-items-center justify-content-between" style={{ height: '3rem' }}>
-          {/* Logo Brand */}
-          <div className="d-flex align-items-center gap-2 cursor-pointer group">
-            <div className="d-flex align-items-center justify-content-center bg-brand-gradient rounded-3" style={{ width: '2.25rem', height: '2.25rem', boxShadow: '0 0 15px rgba(6,182,212,0.3)' }}>
-              <Icon icon="lucide:activity" className="text-white fs-5" />
-            </div>
-            <span className="fw-bold fs-5 text-white group-hover-cyan">
-              ResearchPulse
-            </span>
-          </div>
-
-          {/* Desktop Navigation Links */}
-          <nav className="d-none d-md-flex align-items-center gap-4">
-            {navLinks.map((link) => (
-              <a
-                key={link.key}
-                href={link.href}
-                className="nav-link-custom text-sm"
-              >
-                {t(link.key)}
-              </a>
-            ))}
-          </nav>
-
-          {/* Right Action buttons */}
-          <div className="d-none d-md-flex align-items-center gap-3">
-            {/* Language Selector Dropdown */}
-            <div className="position-relative" ref={langDropdownRef}>
-              <button
-                onClick={() => setIsLangDropdownOpen(!isLangDropdownOpen)}
-                className="d-flex align-items-center gap-2 px-3 py-1.5 rounded-pill bg-white/5 border border-white/10 hover-bg-white-10 text-gray-300 text-xs font-semibold"
-                style={{ transition: 'all 0.2s ease', color: '#adb5bd' }}
-              >
-                <Icon icon="lucide:globe" className="text-cyan-400 text-sm" />
-                <span>{language.startsWith('vi') ? 'Tiếng Việt' : 'English'}</span>
-                <Icon
-                  icon="lucide:chevron-down"
-                  className={`text-xs transition-transform ${
-                    isLangDropdownOpen ? 'rotate-180' : ''
-                  }`}
-                  style={{ fontSize: '10px' }}
-                />
-              </button>
-
-              {/* Dropdown Menu */}
-              {isLangDropdownOpen && (
-                <div 
-                  className="position-absolute end-0 mt-2 rounded-3 bg-dark-card border border-white/10 shadow py-1 z-50"
-                  style={{ width: '9rem' }}
-                >
-                  <button
-                    onClick={() => {
-                      i18n.changeLanguage('vi');
-                      localStorage.setItem('researchpulse_lang', 'vi');
-                      setIsLangDropdownOpen(false);
-                    }}
-                    className={`d-flex align-items-center justify-content-between w-100 border-0 px-3 py-2 text-xs fw-medium text-start bg-transparent ${
-                      language.startsWith('vi') ? 'text-cyan-400 bg-white/5' : 'text-gray-300'
-                    }`}
-                  >
-                    <span>Tiếng Việt</span>
-                    {language.startsWith('vi') && <Icon icon="lucide:check" className="text-cyan-400 text-xs" />}
-                  </button>
-                  <button
-                    onClick={() => {
-                      i18n.changeLanguage('en');
-                      localStorage.setItem('researchpulse_lang', 'en');
-                      setIsLangDropdownOpen(false);
-                    }}
-                    className={`d-flex align-items-center justify-content-between w-100 border-0 px-3 py-2 text-xs fw-medium text-start bg-transparent ${
-                      language.startsWith('en') ? 'text-cyan-400 bg-white/5' : 'text-gray-300'
-                    }`}
-                  >
-                    <span>English</span>
-                    {language.startsWith('en') && <Icon icon="lucide:check" className="text-cyan-400 text-xs" />}
-                  </button>
-                </div>
-              )}
-            </div>
-
-            {user ? (
-              <div className="d-flex align-items-center gap-3">
-                <div className="d-flex align-items-center gap-2">
-                  <div className="d-flex align-items-center justify-content-center rounded-circle bg-brand-gradient text-white text-xs font-bold" style={{ width: '2.1rem', height: '2.1rem' }}>
-                    {user.username ? user.username.charAt(0).toUpperCase() : 'U'}
-                  </div>
-                  <span className="text-xs text-gray-300 font-semibold d-none d-lg-inline-block">
-                    {user.username || 'User'}
-                  </span>
-                </div>
-                <button
-                  onClick={logout}
-                  className="btn btn-link text-decoration-none text-xs font-semibold text-gray-400 hover-text-red px-3 py-2 border-0"
-                  style={{ color: '#adb5bd' }}
-                >
-                  {language.startsWith('vi') ? 'Đăng xuất' : 'Sign Out'}
-                </button>
-              </div>
-            ) : (
-              <>
-                {/* Sign In Button */}
-                <button className="btn btn-link text-decoration-none text-sm font-semibold text-gray-300 hover:text-white px-3 py-2 border-0">
-                  {t('signIn')}
-                </button>
-
-                {/* Sign Up Button */}
-                <button className="btn rounded-pill bg-brand-gradient text-white text-xs font-bold px-4 py-2 border-0 shadow btn-primary-glow">
-                  {t('signUp')}
-                </button>
-              </>
-            )}
-          </div>
-
-          {/* Mobile Menu Hamburger Button */}
-          <div className="d-flex d-md-none align-items-center gap-2">
-            {/* Mobile Language Selector Shortcut */}
-            <button
-              onClick={() => {
-                const nextLang = language.startsWith('vi') ? 'en' : 'vi';
-                i18n.changeLanguage(nextLang);
-                localStorage.setItem('researchpulse_lang', nextLang);
-              }}
-              className="btn border border-white/10 bg-white/5 p-2 text-light"
-              aria-label="Toggle language"
-            >
-              <Icon icon="lucide:globe" className="text-cyan-400" />
-            </button>
-
-            <button
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="btn border border-white/10 bg-white/5 p-2 text-light"
-              aria-label="Toggle menu"
-            >
-              <Icon icon={isMobileMenuOpen ? 'lucide:x' : 'lucide:menu'} />
-            </button>
-          </div>
-        </div>
-      </div>
-    </header>
-
-    {/* Mobile Drawer Backdrop */}
-      {isMobileMenuOpen && (
-        <div
-          className="fixed-top bottom-0 backdrop-blur-sm z-40 d-md-none"
-          onClick={() => setIsMobileMenuOpen(false)}
-          style={{ right: 0, left: 0, backgroundColor: 'rgba(9, 13, 22, 0.6)' }}
-        />
-      )}
-
-      {/* Mobile Drawer Menu */}
-      <div
-        className="fixed-top bottom-0 ms-auto bg-dark-card border-start border-white/8 z-50 p-4 shadow-lg transition-transform d-md-none"
         style={{
-          width: '18rem',
-          transform: isMobileMenuOpen ? 'translateX(0)' : 'translateX(100%)',
-          transition: 'transform 0.3s ease-in-out',
+          borderBottom: isScrolled ? 'none' : '1px solid var(--border)',
+          background: isScrolled ? 'var(--bg-card)' : 'transparent',
+          backdropFilter: isScrolled ? 'blur(12px)' : 'none'
         }}
       >
-        <div className="d-flex align-items-center justify-content-between mb-4">
-          <span className="fw-bold text-white fs-5">Menu</span>
-          <button
-            onClick={() => setIsMobileMenuOpen(false)}
-            className="btn p-2 rounded-3 bg-white/5 text-gray-400 border-0"
+        <Container>
+          {/* Logo Brand */}
+          <Navbar.Brand 
+            onClick={() => navigate('/')}
+            className="d-flex align-items-center text-main font-weight-bold"
+            style={{ fontFamily: 'var(--font-display)', fontWeight: 800, cursor: 'pointer' }}
           >
-            <Icon icon="lucide:x" className="text-lg" />
-          </button>
-        </div>
-
-        {/* Navigation Links in Drawer */}
-        <nav className="d-flex flex-column gap-2 mb-4">
-          {navLinks.map((link) => (
-            <a
-              key={link.key}
-              href={link.href}
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="drawer-link"
+            <div 
+              className="d-flex align-items-center justify-content-center me-2"
+              style={{
+                width: '32px',
+                height: '32px',
+                borderRadius: '8px',
+                background: 'var(--btn-dark)',
+                boxShadow: '0 0 10px rgba(7, 26, 28, 0.15)'
+              }}
             >
-              <Icon icon={link.icon} className="drawer-link-icon" />
-              <span>{t(link.key)}</span>
-            </a>
-          ))}
-        </nav>
+              <Icon icon="lucide:activity" className="text-white text-sm" />
+            </div>
+            ResearchPulse
+          </Navbar.Brand>
 
-        {/* Language selector toggle in Drawer */}
-        <div className="border-top border-white/8 pt-3 mb-4">
-          <p className="text-xs text-gray-400 fw-semibold mb-2 tracking-wider text-uppercase">Language</p>
-          <div className="row g-2">
-            <div className="col-6">
-              <button
-                onClick={() => {
-                  i18n.changeLanguage('vi');
-                  localStorage.setItem('researchpulse_lang', 'vi');
+          {/* Hamburger toggle for mobile */}
+          <Navbar.Toggle 
+            aria-controls="basic-navbar-nav" 
+            onClick={() => setShowMobileMenu(true)} 
+            className="border-0 bg-transparent text-main p-0"
+          >
+            <Icon icon="lucide:menu" className="fs-3 text-main" />
+          </Navbar.Toggle>
+
+          {/* Desktop Navigation Link Items */}
+          <Navbar.Collapse id="basic-navbar-nav" className="d-none d-md-flex justify-content-between align-items-center w-full">
+            <Nav className="mx-auto align-items-center" style={{ gap: '4px' }}>
+              {/* Tổng quan */}
+              <Nav.Link
+                onClick={() => navigate('/dashboard')}
+                className="px-3 py-1 text-sm font-semibold d-flex align-items-center gap-1"
+                style={{
+                  borderRadius: '6px',
+                  backgroundColor: pathname === '/dashboard' ? 'var(--primary-light)' : 'transparent',
+                  color: pathname === '/dashboard' ? 'var(--primary)' : 'var(--text-muted)',
+                  border: pathname === '/dashboard' ? '1px solid var(--border)' : '1px solid transparent',
+                  transition: 'all 0.2s',
+                  fontWeight: pathname === '/dashboard' ? 700 : 500,
                 }}
-                className={`btn btn-sm w-100 fw-semibold ${
-                  language.startsWith('vi')
-                    ? 'border-cyan-400 text-cyan-400 bg-cyan-400/5'
-                    : 'border-white/10 text-gray-400'
+              >
+                <Icon icon="lucide:layout-dashboard" width="14" />
+                Tổng quan
+              </Nav.Link>
+              {/* Tìm kiếm */}
+              <Nav.Link
+                onClick={() => navigate('/catalog')}
+                className="px-3 py-1 text-sm font-semibold d-flex align-items-center gap-1"
+                style={{
+                  borderRadius: '6px',
+                  backgroundColor: pathname.startsWith('/catalog') || pathname.startsWith('/search') ? 'var(--primary-light)' : 'transparent',
+                  color: pathname.startsWith('/catalog') || pathname.startsWith('/search') ? 'var(--primary)' : 'var(--text-muted)',
+                  border: pathname.startsWith('/catalog') || pathname.startsWith('/search') ? '1px solid var(--border)' : '1px solid transparent',
+                  transition: 'all 0.2s',
+                  fontWeight: pathname.startsWith('/catalog') || pathname.startsWith('/search') ? 700 : 500,
+                }}
+              >
+                <Icon icon="lucide:search" width="14" />
+                {t('search')}
+              </Nav.Link>
+              {/* Tạp chí */}
+              <Nav.Link
+                onClick={() => navigate('/catalog')}
+                className="px-3 py-1 text-sm font-semibold d-flex align-items-center gap-1"
+                style={{
+                  borderRadius: '6px',
+                  backgroundColor: pathname.includes('/journals') && !pathname.startsWith('/catalog') ? 'var(--primary-light)' : 'transparent',
+                  color: pathname.includes('/journals') && !pathname.startsWith('/catalog') ? 'var(--primary)' : 'var(--text-muted)',
+                  border: pathname.includes('/journals') && !pathname.startsWith('/catalog') ? '1px solid var(--border)' : '1px solid transparent',
+                  transition: 'all 0.2s',
+                  fontWeight: 500,
+                }}
+              >
+                <Icon icon="lucide:book-open" width="14" />
+                {t('journals')}
+              </Nav.Link>
+              {/* Bài báo */}
+              <Nav.Link
+                onClick={() => navigate('/articles')}
+                className="px-3 py-1 text-sm font-semibold d-flex align-items-center gap-1"
+                style={{
+                  borderRadius: '6px',
+                  backgroundColor: pathname.startsWith('/articles') ? 'var(--primary-light)' : 'transparent',
+                  color: pathname.startsWith('/articles') ? 'var(--primary)' : 'var(--text-muted)',
+                  border: pathname.startsWith('/articles') ? '1px solid var(--border)' : '1px solid transparent',
+                  transition: 'all 0.2s',
+                  fontWeight: pathname.startsWith('/articles') ? 700 : 500,
+                }}
+              >
+                <Icon icon="lucide:file-text" width="14" />
+                {t('articles')}
+              </Nav.Link>
+              {/* Tác giả */}
+              <Nav.Link
+                onClick={() => navigate('/authors')}
+                className="px-3 py-1 text-sm font-semibold d-flex align-items-center gap-1"
+                style={{
+                  borderRadius: '6px',
+                  backgroundColor: pathname.startsWith('/authors') ? 'var(--primary-light)' : 'transparent',
+                  color: pathname.startsWith('/authors') ? 'var(--primary)' : 'var(--text-muted)',
+                  border: pathname.startsWith('/authors') ? '1px solid var(--border)' : '1px solid transparent',
+                  transition: 'all 0.2s',
+                  fontWeight: pathname.startsWith('/authors') ? 700 : 500,
+                }}
+              >
+                <Icon icon="lucide:users" width="14" />
+                {t('authors')}
+              </Nav.Link>
+            </Nav>
+
+            <div className="d-flex align-items-center gap-3">
+              {/* Language Dropdown Selector */}
+              <NavDropdown
+                title={
+                  <span className="d-flex align-items-center text-muted-custom hover:text-main text-xs font-semibold uppercase">
+                    <Icon icon="lucide:languages" className="me-1" />
+                    {language.startsWith('vi') ? 'Tiếng Việt' : 'English'}
+                  </span>
+                }
+                id="language-nav-dropdown"
+                align="end"
+                className="bg-transparent border-0"
+              >
+                <NavDropdown.Item 
+                  onClick={() => changeLanguage('vi')}
+                  className={`d-flex align-items-center justify-content-between text-xs py-2 ${
+                    language.startsWith('vi') ? 'text-primary' : 'text-dark'
+                  }`}
+                >
+                  <span>Tiếng Việt</span>
+                  {language.startsWith('vi') && <Icon icon="lucide:check" className="text-primary text-xs ms-2" />}
+                </NavDropdown.Item>
+                <NavDropdown.Item 
+                  onClick={() => changeLanguage('en')}
+                  className={`d-flex align-items-center justify-content-between text-xs py-2 ${
+                    language.startsWith('en') ? 'text-primary' : 'text-dark'
+                  }`}
+                >
+                  <span>English</span>
+                  {language.startsWith('en') && <Icon icon="lucide:check" className="text-primary text-xs ms-2" />}
+                </NavDropdown.Item>
+              </NavDropdown>
+
+              {/* Theme Toggle Sun/Moon Icon */}
+              <div 
+                className="text-muted-custom hover:text-main" 
+                style={{ cursor: 'pointer' }}
+                onClick={() => alert('Đang áp dụng giao diện sáng của ResearchPulse')}
+              >
+                <Icon icon="lucide:sun" width="18" className="text-warning" />
+              </div>
+
+              {/* Notification icon */}
+              {user && (
+                <div className="text-muted-custom hover:text-main position-relative" style={{ cursor: 'pointer' }}>
+                  <Icon icon="lucide:bell" width="18" />
+                  <span className="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle">
+                    <span className="visually-hidden">New alerts</span>
+                  </span>
+                </div>
+              )}
+
+              {/* User Authentication Display/Buttons */}
+              {user ? (
+                <Dropdown align="end">
+                  <Dropdown.Toggle 
+                    as="div" 
+                    className="d-flex align-items-center justify-content-center text-white"
+                    style={{
+                      width: '32px',
+                      height: '32px',
+                      borderRadius: '50%',
+                      background: 'var(--primary)',
+                      boxShadow: '0 0 8px rgba(255, 122, 51, 0.2)',
+                      cursor: 'pointer',
+                      transition: 'transform 0.15s ease'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = 'scale(1.05)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = 'scale(1)';
+                    }}
+                  >
+                    <Icon icon="lucide:user" width="16" />
+                  </Dropdown.Toggle>
+
+                  <Dropdown.Menu className="border-0 shadow-sm mt-2" style={{ minWidth: '180px' }}>
+                    <div className="px-3 py-2 text-xs font-bold text-main border-bottom pb-2 mb-1">
+                      {user.first_name && user.last_name 
+                        ? `${user.last_name} ${user.first_name}` 
+                        : (user.username || 'Nhà nghiên cứu')}
+                      {user.email && (
+                        <div className="text-muted-custom font-normal mt-0.5 text-truncate" style={{ fontSize: '10px', color: 'var(--text-muted)' }}>
+                          {user.email}
+                        </div>
+                      )}
+                    </div>
+                    <Dropdown.Item 
+                      onClick={() => navigate('/dashboard')}
+                      className="d-flex align-items-center gap-2 text-xs py-2 text-main"
+                    >
+                      <Icon icon="lucide:layout-dashboard" width="14" className="text-muted-custom" />
+                      <span>Bảng điều khiển</span>
+                    </Dropdown.Item>
+                    <Dropdown.Item 
+                      onClick={logout}
+                      className="d-flex align-items-center gap-2 text-xs py-2 text-danger"
+                    >
+                      <Icon icon="lucide:log-out" width="14" />
+                      <span>Đăng xuất</span>
+                    </Dropdown.Item>
+                  </Dropdown.Menu>
+                </Dropdown>
+              ) : (
+                <>
+                  <Button 
+                    variant="link" 
+                    className="text-muted-custom hover:text-main text-xs font-semibold text-decoration-none"
+                    onClick={handleAuthRedirect}
+                  >
+                    {t('signIn')}
+                  </Button>
+                  <Button 
+                    className="btn-primary-glow rounded-pill px-4 py-2 text-xs font-bold"
+                    onClick={handleAuthRedirect}
+                  >
+                    {t('signUp')}
+                  </Button>
+                </>
+              )}
+            </div>
+          </Navbar.Collapse>
+        </Container>
+      </Navbar>
+
+      {/* Mobile Menu Drawer (Offcanvas) */}
+      <Offcanvas
+        show={showMobileMenu}
+        onHide={() => setShowMobileMenu(false)}
+        placement="end"
+        className="bg-white text-dark border-start border-light"
+        style={{ width: '280px', backgroundColor: 'var(--bg-card)', color: 'var(--text-main)' }}
+      >
+        <Offcanvas.Header closeButton closeVariant="dark" className="border-bottom border-light py-4">
+          <Offcanvas.Title 
+            className="d-flex align-items-center text-main" 
+            style={{ fontFamily: 'var(--font-display)', fontWeight: 800 }}
+          >
+            <div 
+              className="d-flex align-items-center justify-content-center me-2"
+              style={{
+                width: '28px',
+                height: '28px',
+                borderRadius: '6px',
+                background: 'var(--btn-dark)'
+              }}
+            >
+              <Icon icon="lucide:activity" className="text-white text-xs" />
+            </div>
+            ResearchPulse
+          </Offcanvas.Title>
+        </Offcanvas.Header>
+
+        <Offcanvas.Body className="d-flex flex-column justify-content-between py-4">
+          <Nav className="flex-column gap-3 mb-4">
+            <Nav.Link 
+              onClick={() => {
+                setShowMobileMenu(false);
+                navigate('/catalog');
+              }}
+              className="text-muted-custom hover:text-main py-2 text-sm font-semibold border-bottom border-light"
+            >
+              {t('search')}
+            </Nav.Link>
+            <Nav.Link 
+              onClick={() => {
+                setShowMobileMenu(false);
+                navigate('/');
+              }}
+              className="text-muted-custom hover:text-main py-2 text-sm font-semibold border-bottom border-light"
+            >
+              {t('journals')}
+            </Nav.Link>
+            <Nav.Link 
+              onClick={() => {
+                setShowMobileMenu(false);
+                navigate('/articles');
+              }}
+              className="text-muted-custom hover:text-main py-2 text-sm font-semibold border-bottom border-light"
+              style={{
+                color: window.location.pathname.startsWith('/articles') ? 'var(--primary)' : 'var(--text-muted)'
+              }}
+            >
+              {t('articles')}
+            </Nav.Link>
+            <Nav.Link 
+              href="#features" 
+              onClick={() => setShowMobileMenu(false)}
+              className="text-muted-custom hover:text-main py-2 text-sm font-semibold border-bottom border-light"
+            >
+              {t('features')}
+            </Nav.Link>
+            <Nav.Link 
+              href="#how-to-use" 
+              onClick={() => setShowMobileMenu(false)}
+              className="text-muted-custom hover:text-main py-2 text-sm font-semibold border-bottom border-light"
+            >
+              {t('howToUse')}
+            </Nav.Link>
+          </Nav>
+
+          <div className="d-flex flex-column gap-3">
+            {/* Mobile Language Switches */}
+            <div className="d-flex align-items-center justify-content-center gap-4 py-2 border-top border-bottom border-light mb-2">
+              <Button
+                variant="link"
+                onClick={() => changeLanguage('vi')}
+                className={`text-decoration-none text-xs font-bold p-0 ${
+                  language.startsWith('vi') ? 'text-primary' : 'text-muted-custom'
                 }`}
               >
                 Tiếng Việt
-              </button>
-            </div>
-            <div className="col-6">
-              <button
-                onClick={() => {
-                  i18n.changeLanguage('en');
-                  localStorage.setItem('researchpulse_lang', 'en');
-                }}
-                className={`btn btn-sm w-100 fw-semibold ${
-                  language.startsWith('en')
-                    ? 'border-cyan-400 text-cyan-400 bg-cyan-400/5'
-                    : 'border-white/10 text-gray-400'
+              </Button>
+              <span className="text-muted-custom">|</span>
+              <Button
+                variant="link"
+                onClick={() => changeLanguage('en')}
+                className={`text-decoration-none text-xs font-bold p-0 ${
+                  language.startsWith('en') ? 'text-primary' : 'text-muted-custom'
                 }`}
               >
                 English
-              </button>
+              </Button>
             </div>
-          </div>
-        </div>
 
-        {/* Actions in Drawer */}
-        <div className="d-flex flex-column gap-2 pt-3 border-top border-white/8">
-          {user ? (
-            <div className="d-flex flex-column gap-2">
-              <div className="d-flex align-items-center gap-2 p-2.5 rounded-3 bg-white/3">
-                <div className="d-flex align-items-center justify-content-center bg-brand-gradient rounded-circle text-white fw-bold" style={{ width: '2rem', height: '2rem' }}>
-                  {user.username ? user.username.charAt(0).toUpperCase() : 'U'}
+            {/* Mobile Auth options */}
+            {user ? (
+              <div className="d-flex flex-column gap-3">
+                <Button
+                  variant="outline-primary"
+                  className="w-100 rounded-pill py-2.5 text-xs font-bold"
+                  onClick={() => {
+                    setShowMobileMenu(false);
+                    navigate('/dashboard');
+                  }}
+                >
+                  <Icon icon="lucide:layout-dashboard" className="me-1" />
+                  {language.startsWith('vi') ? 'Bảng điều khiển' : 'Go to Dashboard'}
+                </Button>
+                 <div className="d-flex align-items-center justify-content-center gap-2 p-2.5 rounded-3 border" style={{ background: '#f8fafc' }}>
+                  <div 
+                    className="d-flex align-items-center justify-content-center text-white"
+                    style={{
+                      width: '28px',
+                      height: '28px',
+                      borderRadius: '50%',
+                      background: 'var(--primary)',
+                      boxShadow: '0 0 6px rgba(255, 122, 51, 0.15)'
+                    }}
+                  >
+                    <Icon icon="lucide:user" width="14" />
+                  </div>
+                  <div className="text-start">
+                    <div className="text-xs text-main font-bold" style={{ lineHeight: '1.2' }}>
+                      {user.first_name && user.last_name 
+                        ? `${user.last_name} ${user.first_name}` 
+                        : (user.username || 'Nhà nghiên cứu')}
+                    </div>
+                    {user.email && (
+                      <div className="text-xxs text-muted" style={{ fontSize: '9px', marginTop: '1px' }}>
+                        {user.email}
+                      </div>
+                    )}
+                  </div>
                 </div>
-                <span className="text-sm text-white fw-medium">
-                  {user.username || 'User'}
-                </span>
+                <Button
+                  variant="outline-danger"
+                  className="w-100 rounded-pill py-2 text-xs font-bold"
+                  onClick={() => {
+                    logout();
+                    setShowMobileMenu(false);
+                  }}
+                >
+                  {language.startsWith('vi') ? 'Đăng xuất' : 'Sign Out'}
+                </Button>
               </div>
-              <button
-                onClick={() => {
-                  logout();
-                  setIsMobileMenuOpen(false);
-                }}
-                className="btn btn-outline-danger w-100 py-2.5 rounded-3 text-sm fw-semibold"
-              >
-                {language.startsWith('vi') ? 'Đăng xuất' : 'Sign Out'}
-              </button>
-            </div>
-          ) : (
-            <>
-              <button className="btn btn-outline-light w-100 py-2.5 rounded-3 text-sm fw-semibold">
-                {t('signIn')}
-              </button>
-              <button className="btn bg-brand-gradient text-white w-100 py-2.5 rounded-3 text-sm fw-bold border-0">
-                {t('signUp')}
-              </button>
-            </>
-          )}
-        </div>
-      </div>
+            ) : (
+              <div className="d-flex flex-column gap-2">
+                <Button 
+                  variant="outline-secondary" 
+                  className="w-100 rounded-pill py-2.5 text-xs text-main border-secondary hover:bg-light"
+                  onClick={() => {
+                    setShowMobileMenu(false);
+                    handleAuthRedirect();
+                  }}
+                >
+                  {t('signIn')}
+                </Button>
+                <Button 
+                  className="btn-primary-glow w-100 rounded-pill py-2.5 text-xs font-bold"
+                  onClick={() => {
+                    setShowMobileMenu(false);
+                    handleAuthRedirect();
+                  }}
+                >
+                  {t('signUp')}
+                </Button>
+              </div>
+            )}
+          </div>
+        </Offcanvas.Body>
+      </Offcanvas>
     </>
   );
 }

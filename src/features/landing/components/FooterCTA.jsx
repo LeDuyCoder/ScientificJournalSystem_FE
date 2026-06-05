@@ -1,49 +1,84 @@
 import { useTranslation } from 'react-i18next';
+import { useNavigate } from 'react-router-dom';
+import Container from 'react-bootstrap/Container';
+import Button from 'react-bootstrap/Button';
+import Icon from '../../../shared/components/Icon';
 
 export default function FooterCTA() {
   const { t } = useTranslation();
+  const navigate = useNavigate();
+
+  const handleCreateAccount = () => {
+    navigate('/login');
+  };
 
   return (
-    <section id="footer-cta" className="position-relative bg-dark-bg overflow-hidden text-center border-top border-white/5" style={{ paddingTop: '7rem', paddingBottom: '7rem' }}>
+    <section 
+      id="footer-cta" 
+      className="py-5 position-relative overflow-hidden text-center"
+      style={{
+        backgroundColor: 'var(--bg-main)',
+        borderTop: '1px solid var(--border)'
+      }}
+    >
       {/* Background Spotlight glow effect */}
       <div 
-        className="position-absolute rounded-circle pe-none" 
-        style={{ bottom: '-12rem', left: '50%', transform: 'translateX(-50%)', width: '600px', height: '350px', background: 'radial-gradient(ellipse at center, rgba(0, 210, 255, 0.15) 0%, rgba(122, 0, 255, 0) 70%)', filter: 'blur(100px)' }} 
+        className="position-absolute pointer-events-none"
+        style={{
+          bottom: '-200px',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          width: '500px',
+          height: '300px',
+          background: 'radial-gradient(circle, var(--primary-light) 0%, rgba(199, 238, 255, 0) 70%)',
+          borderRadius: '50%',
+          filter: 'blur(80px)'
+        }}
       />
       
-      <div className="position-relative mx-auto px-3 px-sm-4 px-lg-5" style={{ maxWidth: '56rem', zIndex: 10 }}>
+      <Container className="py-5 position-relative z-3">
         
         {/* Main Heading */}
-        <h2 className="text-white fw-bold mb-3" style={{ fontFamily: 'var(--font-display)', fontSize: 'calc(1.625rem + 2vw)', letterSpacing: '-0.01em' }}>
+        <h2 
+          className="font-display text-main mb-3" 
+          style={{ fontWeight: 800, fontSize: 'calc(1.5rem + 1.8vw)', letterSpacing: '-0.02em', lineHeight: 1.2 }}
+        >
           {t('ctaHeading')}
         </h2>
         
         {/* Sub Heading */}
-        <p className="text-secondary fs-5 mx-auto mb-5 lh-lg" style={{ color: '#adb5bd', maxWidth: '42rem' }}>
+        <p 
+          className="text-muted-custom mx-auto mb-5 leading-relaxed"
+          style={{ fontSize: 'calc(0.9rem + 0.1vw)', maxWidth: '600px', lineHeight: 1.6 }}
+        >
           {t('ctaSubheading')}
         </p>
 
         {/* Buttons */}
-        <div className="d-flex flex-column flex-sm-row align-items-center justify-content-center gap-3 w-100 w-sm-auto">
+        <div className="d-flex flex-column flex-sm-row justify-content-center align-items-center gap-3 w-100 w-sm-auto">
           {/* Try Searching Now Button */}
-          <a
+          <Button
             href="#search-sandbox"
-            className="w-100 w-sm-auto btn rounded-pill bg-white/5 border border-white/10 text-white fw-semibold px-4 py-3 d-inline-flex align-items-center justify-content-center gap-2 cursor-pointer btn-hover-transform text-decoration-none hover-bg-white-10"
+            variant="outline-primary"
+            className="w-100 w-sm-auto rounded-pill px-5 py-3 d-flex align-items-center justify-content-center gap-2"
+            style={{ fontSize: '0.875rem', fontWeight: 600 }}
           >
-            <span>🔍</span>
+            <Icon icon="lucide:search" className="text-primary fs-5" />
             <span>{t('ctaTryNowBtn')}</span>
-          </a>
+          </Button>
 
           {/* Create Free Account Button */}
-          <button
-            className="w-100 w-sm-auto btn rounded-pill bg-brand-gradient text-white fw-bold px-4 py-3 border-0 btn-primary-glow d-inline-flex align-items-center justify-content-center gap-2 cursor-pointer btn-hover-transform"
+          <Button
+            onClick={handleCreateAccount}
+            className="btn-primary-glow w-100 w-sm-auto rounded-pill px-5 py-3 d-flex align-items-center justify-content-center gap-2 border-0"
+            style={{ fontSize: '0.875rem', fontWeight: 700 }}
           >
-            <span>👤</span>
+            <Icon icon="lucide:user-plus" className="fs-5" />
             <span>{t('ctaCreateAccountBtn')}</span>
-          </button>
+          </Button>
         </div>
 
-      </div>
+      </Container>
     </section>
   );
 }
