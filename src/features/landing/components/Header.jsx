@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
@@ -12,8 +12,10 @@ import useAuth from '../../auth/hooks/useAuth';
 
 export default function Header() {
   const { t, i18n } = useTranslation();
-  const navigate = useNavigate();
-  const auth = useAuth ? useAuth() : { user: null, logout: () => {} };
+  const navigate  = useNavigate();
+  const location   = useLocation();
+  const pathname   = location.pathname;
+  const auth    = useAuth?.() ?? { user: null, logout: () => {} };
   const { user, logout } = auth;
   const language = i18n.language || 'vi';
 
@@ -88,53 +90,83 @@ export default function Header() {
 
           {/* Desktop Navigation Link Items */}
           <Navbar.Collapse id="basic-navbar-nav" className="d-none d-md-flex justify-content-between align-items-center w-full">
-            <Nav className="mx-auto align-items-center" style={{ gap: '10px' }}>
-              <Nav.Link 
-                onClick={() => navigate('/catalog')} 
-                className="px-3 py-1.5 text-sm font-semibold d-flex align-items-center gap-1.5"
+            <Nav className="mx-auto align-items-center" style={{ gap: '4px' }}>
+              {/* Tổng quan */}
+              <Nav.Link
+                onClick={() => navigate('/dashboard')}
+                className="px-3 py-1 text-sm font-semibold d-flex align-items-center gap-1"
                 style={{
                   borderRadius: '6px',
-                  backgroundColor: window.location.pathname.startsWith('/catalog') || window.location.pathname.startsWith('/search') ? 'var(--primary-light)' : 'transparent',
-                  color: window.location.pathname.startsWith('/catalog') || window.location.pathname.startsWith('/search') ? 'var(--primary)' : 'var(--text-muted)',
-                  border: window.location.pathname.startsWith('/catalog') || window.location.pathname.startsWith('/search') ? '1px solid var(--border)' : '1px solid transparent',
-                  transition: 'all 0.2s'
+                  backgroundColor: pathname === '/dashboard' ? 'var(--primary-light)' : 'transparent',
+                  color: pathname === '/dashboard' ? 'var(--primary)' : 'var(--text-muted)',
+                  border: pathname === '/dashboard' ? '1px solid var(--border)' : '1px solid transparent',
+                  transition: 'all 0.2s',
+                  fontWeight: pathname === '/dashboard' ? 700 : 500,
+                }}
+              >
+                <Icon icon="lucide:layout-dashboard" width="14" />
+                Tổng quan
+              </Nav.Link>
+              {/* Tìm kiếm */}
+              <Nav.Link
+                onClick={() => navigate('/catalog')}
+                className="px-3 py-1 text-sm font-semibold d-flex align-items-center gap-1"
+                style={{
+                  borderRadius: '6px',
+                  backgroundColor: pathname.startsWith('/catalog') || pathname.startsWith('/search') ? 'var(--primary-light)' : 'transparent',
+                  color: pathname.startsWith('/catalog') || pathname.startsWith('/search') ? 'var(--primary)' : 'var(--text-muted)',
+                  border: pathname.startsWith('/catalog') || pathname.startsWith('/search') ? '1px solid var(--border)' : '1px solid transparent',
+                  transition: 'all 0.2s',
+                  fontWeight: pathname.startsWith('/catalog') || pathname.startsWith('/search') ? 700 : 500,
                 }}
               >
                 <Icon icon="lucide:search" width="14" />
                 {t('search')}
               </Nav.Link>
-              <Nav.Link 
-                onClick={() => navigate('/')} 
-                className="px-3 py-1.5 text-sm font-semibold d-flex align-items-center gap-1.5"
+              {/* Tạp chí */}
+              <Nav.Link
+                onClick={() => navigate('/catalog')}
+                className="px-3 py-1 text-sm font-semibold d-flex align-items-center gap-1"
                 style={{
                   borderRadius: '6px',
-                  backgroundColor: (window.location.pathname.includes('/journals') && !window.location.pathname.startsWith('/catalog')) || window.location.pathname === '/' ? 'var(--primary-light)' : 'transparent',
-                  color: (window.location.pathname.includes('/journals') && !window.location.pathname.startsWith('/catalog')) || window.location.pathname === '/' ? 'var(--primary)' : 'var(--text-muted)',
-                  border: (window.location.pathname.includes('/journals') && !window.location.pathname.startsWith('/catalog')) || window.location.pathname === '/' ? '1px solid var(--border)' : '1px solid transparent',
-                  transition: 'all 0.2s'
+                  backgroundColor: pathname.includes('/journals') && !pathname.startsWith('/catalog') ? 'var(--primary-light)' : 'transparent',
+                  color: pathname.includes('/journals') && !pathname.startsWith('/catalog') ? 'var(--primary)' : 'var(--text-muted)',
+                  border: pathname.includes('/journals') && !pathname.startsWith('/catalog') ? '1px solid var(--border)' : '1px solid transparent',
+                  transition: 'all 0.2s',
+                  fontWeight: 500,
                 }}
               >
                 <Icon icon="lucide:book-open" width="14" />
                 {t('journals')}
               </Nav.Link>
-              <Nav.Link 
-                onClick={() => navigate('/articles')} 
-                className="px-3 py-1.5 text-sm font-semibold d-flex align-items-center gap-1.5"
+              {/* Bài báo */}
+              <Nav.Link
+                onClick={() => navigate('/articles')}
+                className="px-3 py-1 text-sm font-semibold d-flex align-items-center gap-1"
                 style={{
                   borderRadius: '6px',
-                  backgroundColor: window.location.pathname.startsWith('/articles') ? 'var(--primary-light)' : 'transparent',
-                  color: window.location.pathname.startsWith('/articles') ? 'var(--primary)' : 'var(--text-muted)',
-                  border: window.location.pathname.startsWith('/articles') ? '1px solid var(--border)' : '1px solid transparent',
-                  transition: 'all 0.2s'
+                  backgroundColor: pathname.startsWith('/articles') ? 'var(--primary-light)' : 'transparent',
+                  color: pathname.startsWith('/articles') ? 'var(--primary)' : 'var(--text-muted)',
+                  border: pathname.startsWith('/articles') ? '1px solid var(--border)' : '1px solid transparent',
+                  transition: 'all 0.2s',
+                  fontWeight: pathname.startsWith('/articles') ? 700 : 500,
                 }}
               >
                 <Icon icon="lucide:file-text" width="14" />
                 {t('articles')}
               </Nav.Link>
-              <Nav.Link 
-                onClick={() => navigate('/')} 
-                className="px-3 py-1.5 text-sm font-semibold d-flex align-items-center gap-1.5 text-muted-custom"
-                style={{ borderRadius: '6px', transition: 'all 0.2s' }}
+              {/* Tác giả */}
+              <Nav.Link
+                onClick={() => navigate('/authors')}
+                className="px-3 py-1 text-sm font-semibold d-flex align-items-center gap-1"
+                style={{
+                  borderRadius: '6px',
+                  backgroundColor: pathname.startsWith('/authors') ? 'var(--primary-light)' : 'transparent',
+                  color: pathname.startsWith('/authors') ? 'var(--primary)' : 'var(--text-muted)',
+                  border: pathname.startsWith('/authors') ? '1px solid var(--border)' : '1px solid transparent',
+                  transition: 'all 0.2s',
+                  fontWeight: pathname.startsWith('/authors') ? 700 : 500,
+                }}
               >
                 <Icon icon="lucide:users" width="14" />
                 {t('authors')}

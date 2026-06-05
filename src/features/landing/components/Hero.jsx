@@ -81,15 +81,14 @@ export default function Hero() {
           </Button>
 
           {/* View Trends Button */}
-          <Button
-            href="#features"
-            variant="outline-secondary"
-            className="rounded-pill px-5 py-3 d-flex align-items-center justify-content-center gap-2"
-            style={{ fontSize: '0.875rem', letterSpacing: '0.03em', background: 'var(--bg-chip)', border: '1px solid var(--border)', color: 'var(--text-main)' }}
-          >
-            <Icon icon="lucide:bar-chart-2" className="fs-5" style={{ color: 'var(--primary)' }} />
-            <span>{t('ctaTrends')}</span>
-          </Button>
+<Button
+  href="#features"
+  variant="outline-secondary"
+  className="btn-view-trends rounded-pill px-5 py-3 d-flex align-items-center justify-content-center gap-2"
+>
+  <Icon icon="lucide:bar-chart-2" className="fs-5 btn-view-trends-icon" />
+  <span>{t('ctaTrends')}</span>
+</Button>
         </div>
       </Container>
 
