@@ -8,6 +8,7 @@ import ArticleDetailPage from '../../features/article/pages/ArticleDetailPage';
 import DashboardPage from '../../features/dashboard/pages/DashboardPage';
 import RegisterPage from '../../features/auth/pages/RegisterPage';
 import LoginPage from '../../features/auth/pages/LoginPage';
+import ProfilePage from "../../features/profile/pages/ProfilePage";
 
 export default function AppRoutes() {
   return (
@@ -22,7 +23,9 @@ export default function AppRoutes() {
       <Route path="/register"   element={<RegisterPage />} />
       <Route path="/login"      element={<LoginPage />} />
       {/* Fallback */}
+      <Route path="/profile" element={<ProfilePage />} />
       <Route path="*"           element={<LandingPage />} />
+      
     </Routes>
   );
 }
