@@ -156,7 +156,8 @@ export default function Header() {
                 <Icon icon="lucide:file-text" width="14" />
                 {t('articles')}
               </Nav.Link>
-              {/* Tác giả */}
+              {/* Menu điều hướng đến trang Danh sách Tác giả (Giao diện Desktop) */}
+              {/* Kiểm tra active path bắt đầu bằng /authors để highlight màu chủ đạo var(--primary) */}
               <Nav.Link
                 onClick={() => navigate('/authors')}
                 className="px-3 py-1 text-sm font-semibold d-flex align-items-center gap-1"
@@ -359,6 +360,20 @@ export default function Header() {
               }}
             >
               {t('articles')}
+            </Nav.Link>
+            {/* Link điều hướng đến trang danh sách tác giả (Giao diện Mobile Offcanvas Drawer) */}
+            {/* Tự động đóng mobile menu offcanvas sau khi click và chuyển trang */}
+            <Nav.Link 
+              onClick={() => {
+                setShowMobileMenu(false);
+                navigate('/authors');
+              }}
+              className="text-muted-custom hover:text-main py-2 text-sm font-semibold border-bottom border-light"
+              style={{
+                color: window.location.pathname.startsWith('/authors') ? 'var(--primary)' : 'var(--text-muted)'
+              }}
+            >
+              {t('authors')}
             </Nav.Link>
             <Nav.Link 
               href="#features" 
