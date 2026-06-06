@@ -25,7 +25,7 @@ export default function RegisterPage() {
       // Assume success if no exception thrown
       setIsSuccess(true);
     } catch (err) {
-      console.error('Registration failed:', err);
+      console.error('Registration failed:', err.response?.data?.message || err.message);
       setError(
         err.response?.data?.message || 
         err.message || 

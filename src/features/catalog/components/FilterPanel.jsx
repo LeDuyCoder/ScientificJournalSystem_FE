@@ -49,7 +49,7 @@ export default function FilterPanel({
         {loading ? (
           <div className="text-muted-custom py-2" style={{ fontSize: '0.85rem' }}>Đang tải...</div>
         ) : (
-          <div className="d-flex flex-column gap-2.5 max-h-50 overflow-y-auto pr-1" style={{ maxHeight: '200px' }}>
+          <div className="d-flex flex-column gap-2 max-h-50 overflow-y-auto pr-1" style={{ maxHeight: '200px' }}>
             {subjectAreas.map((area) => {
               const isChecked = selectedAreas.includes(area.subject_area_id);
               return (
@@ -91,7 +91,7 @@ export default function FilterPanel({
             Chọn lĩnh vực để xem chuyên ngành
           </div>
         ) : (
-          <div className="d-flex flex-column gap-2.5 max-h-50 overflow-y-auto pr-1" style={{ maxHeight: '220px' }}>
+          <div className="d-flex flex-column gap-2 max-h-50 overflow-y-auto pr-1" style={{ maxHeight: '220px' }}>
             {visibleCategories.map((cat) => {
               const isChecked = selectedCategories.includes(cat.subject_category_id);
               return (
@@ -126,7 +126,7 @@ export default function FilterPanel({
         <h6 className="text-muted-custom fw-bold text-uppercase tracking-wider mb-3" style={{ fontSize: '0.75rem', letterSpacing: '0.05em' }}>
           Loại truy cập
         </h6>
-        <div className="d-flex flex-column gap-2.5">
+        <div className="d-flex flex-column gap-2">
           <div className="d-flex align-items-center justify-content-between">
             <Form.Check 
               type="checkbox"

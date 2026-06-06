@@ -1,4 +1,3 @@
-import React from 'react';
 import { Form } from 'react-bootstrap';
 import Icon from '../../../shared/components/Icon';
 
@@ -49,15 +48,14 @@ export default function GenderSelect({
         {/* Option: Male */}
         <div
           onClick={() => handleSelect(true)}
-          className="flex-fill h-100 d-flex align-items-center justify-content-center gap-2 rounded-2 transition-all select-none"
+          className={`gender-option ${value === true ? 'selected' : ''} ${disabled ? 'disabled' : ''} flex-fill h-100 d-flex align-items-center justify-content-center gap-2 rounded-2 select-none`}
           style={{
             cursor: disabled ? 'not-allowed' : 'pointer',
             background: value === true ? '#ffffff' : 'transparent',
             color: value === true ? 'var(--primary)' : 'var(--text-muted)',
             fontWeight: value === true ? '600' : '500',
             fontSize: '14px',
-            boxShadow: value === true ? '0 1px 3px rgba(0,0,0,0.08)' : 'none',
-            border: value === true ? '1px solid rgba(255, 122, 51, 0.15)' : '1px solid transparent',
+            border: '1px solid transparent',
             opacity: disabled ? 0.6 : 1
           }}
         >
@@ -68,15 +66,14 @@ export default function GenderSelect({
         {/* Option: Female */}
         <div
           onClick={() => handleSelect(false)}
-          className="flex-fill h-100 d-flex align-items-center justify-content-center gap-2 rounded-2 transition-all select-none"
+          className={`gender-option ${value === false ? 'selected' : ''} ${disabled ? 'disabled' : ''} flex-fill h-100 d-flex align-items-center justify-content-center gap-2 rounded-2 select-none`}
           style={{
             cursor: disabled ? 'not-allowed' : 'pointer',
             background: value === false ? '#ffffff' : 'transparent',
             color: value === false ? 'var(--primary)' : 'var(--text-muted)',
             fontWeight: value === false ? '600' : '500',
             fontSize: '14px',
-            boxShadow: value === false ? '0 1px 3px rgba(0,0,0,0.08)' : 'none',
-            border: value === false ? '1px solid rgba(255, 122, 51, 0.15)' : '1px solid transparent',
+            border: '1px solid transparent',
             opacity: disabled ? 0.6 : 1
           }}
         >
@@ -94,6 +91,22 @@ export default function GenderSelect({
           <span>{error}</span>
         </div>
       )}
+
+      {/* Dynamic hover and active selection styling */}
+      <style>{`
+        .gender-option {
+          transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .gender-option:hover:not(.disabled):not(.selected) {
+          background-color: rgba(255, 122, 51, 0.05) !important;
+          color: var(--primary) !important;
+        }
+        .gender-option.selected {
+          box-shadow: 0 2px 6px rgba(255, 122, 51, 0.12) !important;
+          border-color: rgba(255, 122, 51, 0.15) !important;
+        }
+      `}</style>
     </Form.Group>
   );
 }
+

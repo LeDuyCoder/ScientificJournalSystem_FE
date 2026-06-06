@@ -36,6 +36,7 @@ export function AuthProvider({ children }) {
       console.error('Fetch profile error:', err);
       setError(err.response?.data?.message || err.message);
       setUser(null);
+      localStorage.removeItem('researchpulse_token');
     } finally {
       setIsLoading(false);
     }
@@ -149,7 +150,8 @@ export function AuthProvider({ children }) {
     if (token && (!user || user.username === 'Researcher')) {
       fetchProfile();
     }
-  }, [fetchProfile, user]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fetchProfile]);
 
   const value = {
     user,

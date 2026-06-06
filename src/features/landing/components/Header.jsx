@@ -40,8 +40,12 @@ export default function Header() {
     localStorage.setItem('researchpulse_lang', lang);
   };
 
-  const handleAuthRedirect = () => {
+  const handleLoginRedirect = () => {
     navigate('/login');
+  };
+
+  const handleRegisterRedirect = () => {
+    navigate('/register');
   };
 
   return (
@@ -281,15 +285,15 @@ export default function Header() {
               ) : (
                 <>
                   <Button 
-                    variant="link" 
+                    variant="link"
                     className="text-muted-custom hover:text-main text-xs font-semibold text-decoration-none"
-                    onClick={handleAuthRedirect}
+                    onClick={handleLoginRedirect}
                   >
                     {t('signIn')}
                   </Button>
                   <Button 
                     className="btn-primary-glow rounded-pill px-4 py-2 text-xs font-bold"
-                    onClick={handleAuthRedirect}
+                    onClick={handleRegisterRedirect}
                   >
                     {t('signUp')}
                   </Button>
@@ -454,11 +458,11 @@ export default function Header() {
             ) : (
               <div className="d-flex flex-column gap-2">
                 <Button 
-                  variant="outline-secondary" 
-                  className="w-100 rounded-pill py-2.5 text-xs text-main border-secondary hover:bg-light"
+                  variant="link"
+                  className="text-muted-custom hover:text-main text-xs font-semibold text-decoration-none w-100 py-2 mb-2"
                   onClick={() => {
                     setShowMobileMenu(false);
-                    handleAuthRedirect();
+                    handleLoginRedirect();
                   }}
                 >
                   {t('signIn')}
@@ -467,7 +471,7 @@ export default function Header() {
                   className="btn-primary-glow w-100 rounded-pill py-2.5 text-xs font-bold"
                   onClick={() => {
                     setShowMobileMenu(false);
-                    handleAuthRedirect();
+                    handleRegisterRedirect();
                   }}
                 >
                   {t('signUp')}

@@ -31,10 +31,10 @@ export function useCatalogSearch(currentUser) {
   const page = parseInt(searchParams.get('page') || '1', 10);
   const limit = parseInt(searchParams.get('limit') || '10', 10);
   const sort = searchParams.get('sort') || 'relevance';
-  
+
   const selectedAreas = searchParams.getAll('area_id').map(id => String(id));
   const selectedCategories = searchParams.getAll('cat_id').map(id => String(id));
-  
+
   // Access: open_access or subscription
   const selectedAccess = searchParams.getAll('access');
   // Quartiles: Q1, Q2, Q3, Q4
@@ -55,15 +55,17 @@ export function useCatalogSearch(currentUser) {
           getSubjectAreasApi(),
           getSubjectCategoriesApi()
         ]);
-        
+
         if (areasRes.data?.success !== false) {
-          setSubjectAreas(areasRes.data?.data || []);
+          const areaData = areasRes.data?.data;
+          setSubjectAreas(Array.isArray(areaData) ? areaData : (areaData?.items || []));
         } else {
           setSubjectAreas([]);
         }
 
         if (catsRes.data?.success !== false) {
-          setSubjectCategories(catsRes.data?.data || []);
+          const catData = catsRes.data?.data;
+          setSubjectCategories(Array.isArray(catData) ? catData : (catData?.items || []));
         } else {
           setSubjectCategories([]);
         }
@@ -96,14 +98,14 @@ export function useCatalogSearch(currentUser) {
         sort,
         subject_area_ids: selectedAreas.join(','),
         subject_category_ids: selectedCategories.join(','),
-        is_open_access: selectedAccess.includes('open_access') && !selectedAccess.includes('subscription') 
-          ? true 
+        is_open_access: selectedAccess.includes('open_access') && !selectedAccess.includes('subscription')
+          ? true
           : (!selectedAccess.includes('open_access') && selectedAccess.includes('subscription') ? false : undefined),
         quartiles: selectedQuartiles.join(',')
       };
 
       const response = await searchJournalsApi(params);
-      
+
       if (response.data && response.data.success !== false) {
         const data = response.data.data || {};
         setJournals(data.items || []);
@@ -134,7 +136,7 @@ export function useCatalogSearch(currentUser) {
   // Handle Search Input submit
   const handleSearchSubmit = (e) => {
     if (e && e.preventDefault) e.preventDefault();
-    
+
     const nextParams = new URLSearchParams(searchParams);
     if (searchInput.trim()) {
       nextParams.set('search', searchInput.trim());
@@ -158,7 +160,7 @@ export function useCatalogSearch(currentUser) {
   const toggleParamValue = (key, value) => {
     const nextParams = new URLSearchParams(searchParams);
     const currentValues = nextParams.getAll(key);
-    
+
     if (currentValues.includes(String(value))) {
       // Remove item
       const updated = currentValues.filter(v => v !== String(value));
@@ -168,7 +170,7 @@ export function useCatalogSearch(currentUser) {
       // Add item
       nextParams.append(key, String(value));
     }
-    
+
     nextParams.set('page', '1'); // Reset to page 1 on filter change
     setSearchParams(nextParams);
   };
@@ -198,7 +200,7 @@ export function useCatalogSearch(currentUser) {
       const dependentCats = subjectCategories
         .filter(c => String(c.subject_area_id) === areaIdStr)
         .map(c => String(c.subject_category_id));
-      
+
       const remainingCats = currentCats.filter(id => !dependentCats.includes(id));
       nextParams.delete('cat_id');
       remainingCats.forEach(id => nextParams.append('cat_id', id));
@@ -255,12 +257,12 @@ export function useCatalogSearch(currentUser) {
     subjectAreas,
     subjectCategories,
     loadingFilters,
-    
+
     journals,
     total,
     loadingJournals,
     error,
-    
+
     search,
     page,
     limit,
@@ -269,11 +271,11 @@ export function useCatalogSearch(currentUser) {
     selectedCategories,
     selectedAccess,
     selectedQuartiles,
-    
+
     followedJournals,
     showAuthModal,
     setShowAuthModal,
-    
+
     handleSearchSubmit,
     searchForTag,
     handleQuartileToggle,

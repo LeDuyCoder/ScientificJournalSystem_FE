@@ -25,7 +25,7 @@ export default function LoginPage() {
       // Redirect on success
       navigate(from, { replace: true });
     } catch (err) {
-      console.error('Login failed:', err);
+      console.error('Login failed:', err.response?.data?.message || err.message);
       setError(
         err.response?.data?.message ||
         err.message ||

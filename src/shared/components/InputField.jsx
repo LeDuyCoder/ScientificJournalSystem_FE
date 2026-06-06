@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState } from 'react';
 import { Form, InputGroup } from 'react-bootstrap';
 import Icon from './Icon';
 
@@ -16,6 +16,8 @@ export default function InputField({
   disabled = false,
   ...props
 }) {
+  const [isFocused, setIsFocused] = useState(false);
+
   return (
     <Form.Group className="mb-3">
       {label && (
@@ -35,10 +37,12 @@ export default function InputField({
       <InputGroup 
         className="rounded-3 overflow-hidden border"
         style={{
-          borderColor: error ? '#ef4444' : 'var(--border)',
+          borderColor: error ? '#ef4444' : (isFocused ? 'var(--primary)' : 'var(--border)'),
           background: '#ffffff',
           transition: 'all 0.2s ease-in-out',
-          boxShadow: '0 1px 2px rgba(0, 0, 0, 0.02)'
+          boxShadow: error 
+            ? '0 0 0 3px rgba(239, 68, 68, 0.12)' 
+            : (isFocused ? '0 0 0 3px rgba(255, 122, 51, 0.15)' : '0 1px 2px rgba(0, 0, 0, 0.02)')
         }}
       >
         {icon && (
@@ -55,7 +59,14 @@ export default function InputField({
           name={name}
           value={value}
           onChange={onChange}
-          onBlur={onBlur}
+          onFocus={(e) => {
+            setIsFocused(true);
+            if (props.onFocus) props.onFocus(e);
+          }}
+          onBlur={(e) => {
+            setIsFocused(false);
+            if (onBlur) onBlur(e);
+          }}
           placeholder={placeholder}
           disabled={disabled}
           className="bg-transparent border-0 text-main text-sm py-2.5 ps-2"
@@ -80,3 +91,4 @@ export default function InputField({
     </Form.Group>
   );
 }
+

@@ -1,4 +1,3 @@
-import React from 'react';
 import Icon from '../../../shared/components/Icon';
 
 const FEATURES = [
@@ -43,8 +42,8 @@ export default function AuthBanner() {
             width: '40px',
             height: '40px',
             borderRadius: '10px',
-            background: 'var(--primary)',
-            boxShadow: '0 4px 12px rgba(255, 122, 51, 0.2)'
+            background: 'var(--btn-dark)',
+            boxShadow: '0 4px 12px rgba(7, 26, 28, 0.15)'
           }}
         >
           <Icon icon="lucide:activity" className="text-white text-lg" />
@@ -75,7 +74,7 @@ export default function AuthBanner() {
         </p>
 
         {/* Feature List */}
-        <div className="d-flex flex-column gap-3.5">
+        <div className="d-flex flex-column" style={{ gap: '1.25rem' }}>
           {FEATURES.map((feat, index) => (
             <div key={index} className="d-flex align-items-center gap-3">
               <div 
