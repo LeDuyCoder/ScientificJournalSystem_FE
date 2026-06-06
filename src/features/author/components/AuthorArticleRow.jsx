@@ -13,12 +13,12 @@ import { useNavigate } from 'react-router-dom';
 import Icon from '../../../shared/components/Icon';
 
 /**
- * @component AuthorArticleRow
- * @description Thành phần hiển thị một mục bài báo cụ thể trong danh mục xuất bản.
+ * Thành phần hiển thị một mục bài báo cụ thể trong danh mục xuất bản.
  * 
- * @param {Object} props
- * @param {Object} props.article - Thông tin chi tiết bài báo (tiêu đề, tên tạp chí, mã DOI, v.v.)
- * @param {boolean} [props.isLast] - Cờ ẩn đường viền dưới nếu đây là mục cuối cùng trong danh sách
+ * @param {Object} props - Thuộc tính truyền vào component.
+ * @param {Object} props.article - Thông tin chi tiết bài báo (tiêu đề, tên tạp chí, mã DOI, v.v.).
+ * @param {boolean} [props.isLast=false] - Cờ ẩn đường viền dưới nếu đây là mục cuối cùng trong danh sách.
+ * @returns {JSX.Element} Giao diện dòng bài báo của tác giả.
  */
 export default function AuthorArticleRow({ article, isLast = false }) {
   const navigate = useNavigate();
@@ -33,8 +33,9 @@ export default function AuthorArticleRow({ article, isLast = false }) {
   const doi = article.doi ?? '';
 
   /**
-   * @function handleTitleClick
-   * @description Điều hướng người dùng sang trang xem chi tiết bài báo tương ứng.
+   * Điều hướng người dùng sang trang xem chi tiết bài báo tương ứng.
+   * 
+   * @returns {void}
    */
   const handleTitleClick = () => {
     if (id) {
@@ -43,8 +44,10 @@ export default function AuthorArticleRow({ article, isLast = false }) {
   };
 
   /**
-   * @function handleCopyDoi
-   * @description Sao chép chuỗi DOI vào bộ nhớ tạm (clipboard) của hệ điều hành và hiển thị tạm thời biểu tượng tích xanh.
+   * Sao chép chuỗi DOI vào bộ nhớ tạm (clipboard) của hệ điều hành và hiển thị tạm thời biểu tượng tích xanh.
+   * 
+   * @param {React.MouseEvent} e - Sự kiện click chuột.
+   * @returns {void}
    */
   const handleCopyDoi = (e) => {
     e.stopPropagation(); // Ngăn sự kiện click vào nhãn DOI kích hoạt sự kiện điều hướng của thẻ bài báo

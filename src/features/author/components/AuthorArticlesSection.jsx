@@ -19,14 +19,14 @@ import EmptyState from '../../../shared/components/EmptyState';
 import ErrorState from '../../../shared/components/ErrorState';
 
 /**
- * @component AuthorArticlesSection
- * @description Component bao bọc danh sách bài báo khoa học kèm theo logic sắp xếp & phân trang cục bộ.
+ * Component bao bọc danh sách bài báo khoa học kèm theo logic sắp xếp & phân trang cục bộ.
  * 
- * @param {Object} props
- * @param {Array} props.articles - Tập hợp danh sách bài báo được viết bởi tác giả này
- * @param {boolean} props.loading - Cờ hiển thị trạng thái danh sách bài báo đang được tải
- * @param {Object|string} props.error - Đối tượng lỗi/thông báo lỗi khi tải danh sách bài báo thất bại
- * @param {Function} props.onRetry - Hàm gọi lại để thử tải lại danh sách bài báo khi có lỗi
+ * @param {Object} props - Thuộc tính truyền vào component.
+ * @param {Array} [props.articles=[]] - Tập hợp danh sách bài báo được viết bởi tác giả này.
+ * @param {boolean} [props.loading=false] - Cờ hiển thị trạng thái danh sách bài báo đang được tải.
+ * @param {Object|string} [props.error=null] - Đối tượng lỗi/thông báo lỗi khi tải danh sách bài báo thất bại.
+ * @param {Function} [props.onRetry=null] - Hàm gọi lại để thử tải lại danh sách bài báo khi có lỗi.
+ * @returns {JSX.Element} Giao diện danh mục bài báo của tác giả.
  */
 export default function AuthorArticlesSection({
   articles = [],

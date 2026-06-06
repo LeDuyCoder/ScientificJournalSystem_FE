@@ -9,12 +9,12 @@ import { useNavigate } from 'react-router-dom';
 import AuthorAvatar from './AuthorAvatar';
 
 /**
- * @component AuthorTableRow
- * @description Hiển thị một dòng cụ thể trong bảng danh sách đăng ký tác giả.
+ * Hiển thị một dòng cụ thể trong bảng danh sách đăng ký tác giả.
  * 
- * @param {Object} props
- * @param {Object} props.author - Bản ghi dữ liệu của tác giả
- * @param {number} props.index - Số thứ tự dòng hiển thị ở cột đầu tiên
+ * @param {Object} props - Thuộc tính truyền vào component.
+ * @param {Object} props.author - Bản ghi dữ liệu của tác giả.
+ * @param {number} props.index - Số thứ tự dòng hiển thị ở cột đầu tiên.
+ * @returns {JSX.Element|null} Giao diện dòng bảng tác giả.
  */
 export default function AuthorTableRow({ author, index }) {
   const navigate = useNavigate();
@@ -38,8 +38,10 @@ export default function AuthorTableRow({ author, index }) {
   const avatarColor = author.avatar_color ?? '#FF7A33';
 
   /**
-   * @function formatLocalNumber
-   * @description Định dạng số theo dấu chấm phân cách hàng nghìn kiểu Việt Nam.
+   * Định dạng số theo dấu chấm phân cách hàng nghìn kiểu Việt Nam.
+   * 
+   * @param {number} num - Số cần định dạng.
+   * @returns {string} Chuỗi số đã định dạng.
    */
   const formatLocalNumber = (num) => {
     if (num == null || isNaN(num)) return '0';
@@ -47,8 +49,9 @@ export default function AuthorTableRow({ author, index }) {
   };
 
   /**
-   * @function handleRowClick
-   * @description Điều hướng sang màn hình hồ sơ chi tiết tác giả.
+   * Điều hướng sang màn hình hồ sơ chi tiết tác giả.
+   * 
+   * @returns {void}
    */
   const handleRowClick = () => {
     if (id) {

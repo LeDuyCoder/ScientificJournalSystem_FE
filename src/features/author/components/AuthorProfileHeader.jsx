@@ -16,12 +16,12 @@ import Icon from '../../../shared/components/Icon';
 import AuthorAvatar from './AuthorAvatar';
 
 /**
- * @component AuthorProfileHeader
- * @description Component thẻ hồ sơ chi tiết ở thanh bên trái dành cho tác giả.
+ * Component thẻ hồ sơ chi tiết ở thanh bên trái dành cho tác giả.
  * 
- * @param {Object} props
- * @param {Object} props.author - Đối tượng chứa thông tin dữ liệu của tác giả
- * @param {boolean} [props.loading=false] - Cờ hiển thị trạng thái đang tải dữ liệu (skeleton)
+ * @param {Object} props - Thuộc tính truyền vào component.
+ * @param {Object} props.author - Đối tượng chứa thông tin dữ liệu của tác giả.
+ * @param {boolean} [props.loading=false] - Cờ hiển thị trạng thái đang tải dữ liệu (skeleton).
+ * @returns {JSX.Element|null} Giao diện thẻ thông tin hồ sơ của tác giả.
  */
 export default function AuthorProfileHeader({ author, loading = false }) {
   
@@ -64,8 +64,10 @@ export default function AuthorProfileHeader({ author, loading = false }) {
   const avatarColor = author.avatar_color ?? '#FF7A33';
 
   /**
-   * @function formatLocalNumber
-   * @description Định dạng hàng nghìn bằng dấu chấm phân cách.
+   * Định dạng hàng nghìn bằng dấu chấm phân cách.
+   * 
+   * @param {number} num - Số cần định dạng.
+   * @returns {string} Chuỗi số đã định dạng.
    */
   const formatLocalNumber = (num) => {
     if (num == null) return '0';

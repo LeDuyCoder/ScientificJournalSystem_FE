@@ -10,8 +10,11 @@
 import Icon from '../../../shared/components/Icon';
 
 /**
- * Component hiển thị huy hiệu thứ hạng tác giả
- * @param {number|string} rank - Thứ hạng hiển thị
+ * Component hiển thị huy hiệu thứ hạng tác giả.
+ * 
+ * @param {Object} props - Thuộc tính truyền vào component.
+ * @param {number|string} props.rank - Thứ hạng hiển thị.
+ * @returns {JSX.Element} Giao diện huy hiệu xếp hạng tác giả.
  */
 export default function AuthorRankBadge({ rank }) {
   const rankNum = parseInt(rank, 10);

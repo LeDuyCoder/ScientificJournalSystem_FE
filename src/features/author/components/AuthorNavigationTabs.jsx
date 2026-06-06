@@ -14,8 +14,11 @@ import { useNavigate } from 'react-router-dom';
 import Icon from '../../../shared/components/Icon';
 
 /**
- * Component thanh chuyển đổi Tab danh sách và bảng xếp hạng
- * @param {string} activeTab - Tab đang được chọn hiện tại ("list" hoặc "leaderboard")
+ * Component thanh chuyển đổi Tab danh sách và bảng xếp hạng.
+ * 
+ * @param {Object} props - Thuộc tính truyền vào component.
+ * @param {string} props.activeTab - Tab đang được chọn hiện tại ("list" hoặc "leaderboard").
+ * @returns {JSX.Element} Giao diện thanh tab điều hướng phụ.
  */
 export default function AuthorNavigationTabs({ activeTab }) {
   const navigate = useNavigate();

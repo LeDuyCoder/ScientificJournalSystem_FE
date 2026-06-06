@@ -212,8 +212,8 @@ const MOCK_BREAKDOWNS_MAP = {
 };
 
 /**
- * @hook useAuthors
- * @description Hook quản lý trạng thái tùy chỉnh chính cho mô-đun Tác giả.
+ * Hook quản lý trạng thái tùy chỉnh chính cho mô-đun Tác giả.
+ * 
  * @returns {Object} Các trạng thái, cờ loading, đối tượng lỗi và các hàm kích hoạt gọi API.
  */
 export default function useAuthors() {
@@ -243,9 +243,10 @@ export default function useAuthors() {
 
   // ── 1. Lấy danh sách tác giả kèm theo bộ lọc ─────────────────────────────────
   /**
-   * @function fetchAuthors
-   * @description Lấy danh sách đăng ký tác giả. Kích hoạt tìm kiếm dữ liệu giả định cục bộ nếu backend gặp lỗi.
-   * @param {Object} params - Tham số bộ lọc truy vấn.
+   * Lấy danh sách đăng ký tác giả. Kích hoạt tìm kiếm dữ liệu giả định cục bộ nếu backend gặp lỗi.
+   * 
+   * @param {Object} [params={}] - Tham số bộ lọc truy vấn.
+   * @returns {Promise<void>}
    */
   const fetchAuthors = useCallback(async (params = {}) => {
     setLoadingAuthors(true);
@@ -304,9 +305,10 @@ export default function useAuthors() {
 
   // ── 2. Lấy thông tin chi tiết của một tác giả ────────────────────────────────
   /**
-   * @function fetchAuthorDetail
-   * @description Lấy thông tin hồ sơ cơ bản (tiểu sử, tên, học vị) của một tác giả.
+   * Lấy thông tin hồ sơ cơ bản (tiểu sử, tên, học vị) của một tác giả.
+   * 
    * @param {string|number} authorId - Mã định danh duy nhất của tác giả.
+   * @returns {Promise<void>}
    */
   const fetchAuthorDetail = useCallback(async (authorId) => {
     if (!authorId) return;
@@ -330,9 +332,10 @@ export default function useAuthors() {
 
   // ── 3. Lấy danh sách bài báo của tác giả ───────────────────────────────────
   /**
-   * @function fetchAuthorArticles
-   * @description Lấy danh sách các bài báo nghiên cứu được viết bởi tác giả.
+   * Lấy danh sách các bài báo nghiên cứu được viết bởi tác giả.
+   * 
    * @param {string|number} authorId - Mã định danh duy nhất của tác giả.
+   * @returns {Promise<void>}
    */
   const fetchAuthorArticles = useCallback(async (authorId) => {
     if (!authorId) return;
@@ -356,9 +359,10 @@ export default function useAuthors() {
 
   // ── 4. Lấy tỷ lệ phân bổ lĩnh vực nghiên cứu của tác giả ─────────────────────
   /**
-   * @function fetchAuthorAreasBreakdown
-   * @description Lấy tỷ lệ phần trăm các danh mục xuất bản phục vụ hiển thị biểu đồ.
+   * Lấy tỷ lệ phần trăm các danh mục xuất bản phục vụ hiển thị biểu đồ.
+   * 
    * @param {string|number} authorId - Mã định danh duy nhất của tác giả.
+   * @returns {Promise<void>}
    */
   const fetchAuthorAreasBreakdown = useCallback(async (authorId) => {
     if (!authorId) return;
@@ -382,9 +386,10 @@ export default function useAuthors() {
 
   // ── 5. Lấy danh sách bảng xếp hạng toàn cầu ──────────────────────────────────
   /**
-   * @function fetchLeaderboard
-   * @description Lấy danh sách xếp hạng tác giả nổi bật toàn cầu.
-   * @param {Object} [params] - Tham số lọc truy vấn (giới hạn số lượng, lĩnh vực).
+   * Lấy danh sách xếp hạng tác giả nổi bật toàn cầu.
+   * 
+   * @param {Object} [params={}] - Tham số lọc truy vấn (giới hạn số lượng, lĩnh vực).
+   * @returns {Promise<void>}
    */
   const fetchLeaderboard = useCallback(async (params = {}) => {
     setLoadingLeaderboard(true);
@@ -419,9 +424,10 @@ export default function useAuthors() {
 
   // ── BỘ TẢI TIỆN ÍCH KẾT HỢP ────────────────────────────────────────────────
   /**
-   * @function fetchAuthorDetailsFull
-   * @description Hàm trợ giúp để lấy song song toàn bộ thông tin chi tiết của tác giả (Hồ sơ, Bài báo, Lĩnh vực).
+   * Hàm trợ giúp để lấy song song toàn bộ thông tin chi tiết của tác giả (Hồ sơ, Bài báo, Lĩnh vực).
+   * 
    * @param {string|number} authorId - Mã định danh duy nhất của tác giả.
+   * @returns {Promise<void>}
    */
   const fetchAuthorDetailsFull = useCallback(async (authorId) => {
     if (!authorId) return;

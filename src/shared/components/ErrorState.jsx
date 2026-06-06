@@ -5,8 +5,16 @@ import { Button } from 'react-bootstrap';
 import Icon from './Icon';
 
 /**
- * ErrorState Component
- * Hiển thị thông báo lỗi kèm nút bấm hành động thử lại (Retry).
+ * Thành phần hiển thị thông báo lỗi kèm nút bấm hành động thử lại (Retry).
+ * 
+ * @param {Object} props - Thuộc tính truyền vào component.
+ * @param {string} [props.title='Không thể tải dữ liệu'] - Tiêu đề lỗi chính.
+ * @param {string} [props.message='Vui lòng kiểm tra lại kết nối mạng hoặc thử lại sau.'] - Chi tiết thông báo lỗi.
+ * @param {string} [props.icon='lucide:alert-triangle'] - Icon biểu thị cảnh báo lỗi.
+ * @param {Function} [props.onRetry=null] - Hàm xử lý sự kiện khi bấm nút thử lại.
+ * @param {string} [props.retryLabel='Thử lại'] - Nhãn nút thử lại.
+ * @param {string} [props.className=''] - Lớp CSS tùy chọn bổ sung.
+ * @returns {JSX.Element} Giao diện thông báo lỗi.
  */
 export default function ErrorState({
   title = 'Không thể tải dữ liệu', // Tiêu đề lỗi chính

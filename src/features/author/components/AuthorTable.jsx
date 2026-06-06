@@ -18,15 +18,15 @@ import EmptyState from '../../../shared/components/EmptyState';
 import ErrorState from '../../../shared/components/ErrorState';
 
 /**
- * @component AuthorTable
- * @description Component bảng hiển thị danh sách đăng ký tác giả có hỗ trợ responsive.
+ * Component bảng hiển thị danh sách đăng ký tác giả có hỗ trợ responsive.
  * 
- * @param {Object} props
- * @param {Array} props.authors - Mảng các đối tượng tác giả cần hiển thị
- * @param {boolean} [props.loading=false] - Cờ hiển thị hiệu ứng khung xương tải dữ liệu (shimmer)
- * @param {Object|string} props.error - Đối tượng lỗi/thông báo lỗi hiển thị khi gọi API thất bại
- * @param {Function} props.onRetry - Hàm gọi lại xử lý tải lại dữ liệu khi nhấn nút thử lại
- * @param {number} [props.startIndex=1] - Giá trị chỉ số cơ sở phục vụ đánh số thứ tự phân trang
+ * @param {Object} props - Thuộc tính truyền vào component.
+ * @param {Array} [props.authors=[]] - Mảng các đối tượng tác giả cần hiển thị.
+ * @param {boolean} [props.loading=false] - Cờ hiển thị hiệu ứng khung xương tải dữ liệu (shimmer).
+ * @param {Object|string} [props.error=null] - Đối tượng lỗi/thông báo lỗi hiển thị khi gọi API thất bại.
+ * @param {Function} [props.onRetry=null] - Hàm gọi lại xử lý tải lại dữ liệu khi nhấn nút thử lại.
+ * @param {number} [props.startIndex=1] - Giá trị chỉ số cơ sở phục vụ đánh số thứ tự phân trang.
+ * @returns {JSX.Element} Giao diện bảng danh sách tác giả.
  */
 export default function AuthorTable({
   authors = [],

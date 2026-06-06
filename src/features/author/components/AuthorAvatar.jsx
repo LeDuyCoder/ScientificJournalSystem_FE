@@ -9,11 +9,15 @@
  */
 
 /**
- * Component hiển thị Avatar hình tròn
- * @param {string} name - Tên của tác giả để tạo chữ cái viết tắt
- * @param {string} url - Đường dẫn ảnh đại diện
- * @param {string} size - Kích thước ("sm", "md", "lg", "xl")
- * @param {string} bgColor - Mã màu nền tùy chọn
+ * Component hiển thị Avatar hình tròn.
+ * 
+ * @param {Object} props - Thuộc tính truyền vào component.
+ * @param {string} [props.name='Tác giả'] - Tên của tác giả để tạo chữ cái viết tắt.
+ * @param {string} [props.url=''] - Đường dẫn ảnh đại diện.
+ * @param {string} [props.size='md'] - Kích thước ("sm", "md", "lg", "xl").
+ * @param {string} [props.bgColor=''] - Mã màu nền tùy chọn.
+ * @param {string} [props.className=''] - Lớp CSS tùy chọn bổ sung.
+ * @returns {JSX.Element} Giao diện ảnh đại diện hoặc chữ viết tắt của tác giả.
  */
 export default function AuthorAvatar({
   name = 'Tác giả',

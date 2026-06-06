@@ -22,8 +22,9 @@ import AuthorAreasBreakdown from '../components/AuthorAreasBreakdown';
 import AuthorArticlesSection from '../components/AuthorArticlesSection';
 
 /**
- * @component AuthorDetailPage
- * @description Trang điều khiển chính cho tuyến đường chi tiết tác giả `/authors/:id`.
+ * Trang điều khiển chính cho tuyến đường chi tiết tác giả `/authors/:id`.
+ * 
+ * @returns {JSX.Element} Giao diện trang chi tiết tác giả.
  */
 export default function AuthorDetailPage() {
   const { id } = useParams(); // Lấy mã author_id từ tham số URL của React Router

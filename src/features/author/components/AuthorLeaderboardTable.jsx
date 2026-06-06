@@ -18,15 +18,15 @@ import EmptyState from '../../../shared/components/EmptyState';
 import ErrorState from '../../../shared/components/ErrorState';
 
 /**
- * @component AuthorLeaderboardTable
- * @description Component bảng hiển thị danh sách xếp hạng các tác giả nổi bật.
+ * Component bảng hiển thị danh sách xếp hạng các tác giả nổi bật.
  * 
- * @param {Object} props
- * @param {Array} props.authors - Mảng danh sách tác giả đã được xếp hạng
- * @param {boolean} props.loading - Cờ hiển thị trạng thái đang tải dữ liệu
- * @param {Object|string} props.error - Đối tượng lỗi/thông báo lỗi khi tải dữ liệu thất bại
- * @param {Function} props.onRetry - Hàm gọi lại xử lý nhấp chuột để tải lại khi có lỗi
- * @param {number} [props.limit] - Giới hạn số lượng hàng dữ liệu hiển thị (cắt bớt mảng)
+ * @param {Object} props - Thuộc tính truyền vào component.
+ * @param {Array} [props.authors=[]] - Mảng danh sách tác giả đã được xếp hạng.
+ * @param {boolean} [props.loading=false] - Cờ hiển thị trạng thái đang tải dữ liệu.
+ * @param {Object|string} [props.error=null] - Đối tượng lỗi/thông báo lỗi khi tải dữ liệu thất bại.
+ * @param {Function} [props.onRetry=null] - Hàm gọi lại xử lý nhấp chuột để tải lại khi có lỗi.
+ * @param {number} [props.limit=null] - Giới hạn số lượng hàng dữ liệu hiển thị (cắt bớt mảng).
+ * @returns {JSX.Element} Giao diện bảng xếp hạng tác giả.
  */
 export default function AuthorLeaderboardTable({
   authors = [],
@@ -57,8 +57,10 @@ export default function AuthorLeaderboardTable({
   const displayList = limit ? authors.slice(0, limit) : authors;
 
   /**
-   * @function formatLocalNumber
-   * @description Định dạng số theo quy chuẩn phân cách Việt Nam. Chuyển số lớn sang hậu tố K/M.
+   * Định dạng số theo quy chuẩn phân cách Việt Nam. Chuyển số lớn sang hậu tố K/M.
+   * 
+   * @param {number} num - Số cần định dạng.
+   * @returns {string} Chuỗi số đã định dạng.
    */
   const formatLocalNumber = (num) => {
     if (num == null) return '0';
@@ -68,8 +70,10 @@ export default function AuthorLeaderboardTable({
   };
 
   /**
-   * @function handleAuthorClick
-   * @description Điều hướng sang màn hình hồ sơ chi tiết của tác giả.
+   * Điều hướng sang màn hình hồ sơ chi tiết của tác giả.
+   * 
+   * @param {Object} author - Đối tượng dữ liệu tác giả được click.
+   * @returns {void}
    */
   const handleAuthorClick = (author) => {
     const id = author.author_id ?? author.id;

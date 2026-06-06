@@ -21,8 +21,9 @@ import AuthorLeaderboardTable from '../components/AuthorLeaderboardTable';
 import AuthorNavigationTabs from '../components/AuthorNavigationTabs';
 
 /**
- * @component AuthorLeaderboardPage
- * @description Hiển thị trang Bảng xếp hạng tác giả tại tuyến đường `/authors/leaderboard`.
+ * Hiển thị trang Bảng xếp hạng tác giả tại tuyến đường `/authors/leaderboard`.
+ * 
+ * @returns {JSX.Element} Giao diện trang Bảng xếp hạng tác giả.
  */
 export default function AuthorLeaderboardPage() {
   const navigate = useNavigate();

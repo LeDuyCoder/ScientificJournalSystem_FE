@@ -24,8 +24,9 @@ import LoadingSkeleton from '../../../shared/components/LoadingSkeleton';
 import AuthorNavigationTabs from '../components/AuthorNavigationTabs';
 
 /**
- * @component AuthorListPage
- * @description Trang bộ điều khiển chính cho tuyến đường danh sách tác giả `/authors`.
+ * Trang bộ điều khiển chính cho tuyến đường danh sách tác giả `/authors`.
+ * 
+ * @returns {JSX.Element} Giao diện trang danh sách tác giả.
  */
 export default function AuthorListPage() {
   const navigate = useNavigate();
@@ -68,8 +69,10 @@ export default function AuthorListPage() {
   }, [searchVal, pageVal, limitVal, sortVal, subjectAreaVal, countryVal, fetchAuthors]);
 
   /**
-   * @function handleSearchSubmit
-   * @description Đẩy giá trị nhập tìm kiếm cục bộ vào các tham số URL. Đặt lại trang hiện tại về 1.
+   * Đẩy giá trị nhập tìm kiếm cục bộ vào các tham số URL. Đặt lại trang hiện tại về 1.
+   * 
+   * @param {React.FormEvent} [e] - Sự kiện submit form.
+   * @returns {void}
    */
   const handleSearchSubmit = (e) => {
     if (e) e.preventDefault();
@@ -84,8 +87,11 @@ export default function AuthorListPage() {
   };
 
   /**
-   * @function handleFilterChange
-   * @description Đẩy các thay đổi của hộp chọn bộ lọc vào tham số URL. Đặt lại trang hiện tại về 1.
+   * Đẩy các thay đổi của hộp chọn bộ lọc vào tham số URL. Đặt lại trang hiện tại về 1.
+   * 
+   * @param {string} key - Khóa tham số URL cần cập nhật.
+   * @param {string} value - Giá trị mới cần thiết lập.
+   * @returns {void}
    */
   const handleFilterChange = (key, value) => {
     const nextParams = new URLSearchParams(searchParams);
@@ -99,8 +105,10 @@ export default function AuthorListPage() {
   };
 
   /**
-   * @function handlePageChange
-   * @description Cập nhật tham số trang trong URL khi nhấp vào nút phân trang.
+   * Cập nhật tham số trang trong URL khi nhấp vào nút phân trang.
+   * 
+   * @param {number} newPage - Chỉ số trang mới được chọn.
+   * @returns {void}
    */
   const handlePageChange = (newPage) => {
     const nextParams = new URLSearchParams(searchParams);

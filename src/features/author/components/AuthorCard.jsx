@@ -15,11 +15,11 @@ import { Card } from 'react-bootstrap';
 import AuthorAvatar from './AuthorAvatar';
 
 /**
- * @component AuthorCard
- * @description Hiển thị thẻ tóm tắt thông tin cho từng tác giả.
+ * Hiển thị thẻ tóm tắt thông tin cho từng tác giả.
  * 
- * @param {Object} props
- * @param {Object} props.author - Đối tượng chứa dữ liệu của tác giả
+ * @param {Object} props - Thuộc tính truyền vào component.
+ * @param {Object} props.author - Đối tượng chứa dữ liệu của tác giả.
+ * @returns {JSX.Element|null} Giao diện thẻ tóm tắt tác giả.
  */
 export default function AuthorCard({ author }) {
   const navigate = useNavigate();
@@ -39,8 +39,8 @@ export default function AuthorCard({ author }) {
   const avatarColor = author.avatar_color ?? '#FF7A33';
 
   /**
-   * @function formatLocalNumber
-   * @description Định dạng hàng nghìn bằng dấu chấm phân cách phù hợp với quy chuẩn thiết kế Việt Nam.
+   * Định dạng hàng nghìn bằng dấu chấm phân cách phù hợp với quy chuẩn thiết kế Việt Nam.
+   * 
    * @param {number} num - Số cần định dạng.
    * @returns {string} Chuỗi số đã định dạng.
    */
@@ -50,8 +50,9 @@ export default function AuthorCard({ author }) {
   };
 
   /**
-   * @function handleCardClick
-   * @description Điều hướng người dùng đến trang hồ sơ chi tiết của tác giả tương ứng.
+   * Điều hướng người dùng đến trang hồ sơ chi tiết của tác giả tương ứng.
+   * 
+   * @returns {void}
    */
   const handleCardClick = () => {
     if (id) {

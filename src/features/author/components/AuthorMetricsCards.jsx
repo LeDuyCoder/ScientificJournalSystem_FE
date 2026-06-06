@@ -12,9 +12,12 @@ import { Row, Col, Card } from 'react-bootstrap';
 import LoadingSkeleton from '../../../shared/components/LoadingSkeleton';
 
 /**
- * Component hiển thị 4 thẻ chỉ số học thuật nhanh của tác giả
- * @param {Object} stats - Các chỉ số bao gồm: { worksCount, citationsCount, hIndex, i10Index }
- * @param {boolean} loading - Trạng thái loading
+ * Component hiển thị 4 thẻ chỉ số học thuật nhanh của tác giả.
+ * 
+ * @param {Object} props - Thuộc tính truyền vào component.
+ * @param {Object} props.stats - Các chỉ số bao gồm: { worksCount, citationsCount, hIndex, i10Index }.
+ * @param {boolean} [props.loading=false] - Trạng thái loading.
+ * @returns {JSX.Element} Giao diện hàng thẻ chỉ số.
  */
 export default function AuthorMetricsCards({ stats, loading = false }) {
   
@@ -45,7 +48,10 @@ export default function AuthorMetricsCards({ stats, loading = false }) {
 
   /**
    * Định dạng số theo chuẩn phân cách hàng nghìn bằng dấu chấm (ví dụ: 4520 -> 4.520)
-   * Đồng thời thu gọn các số cực lớn bằng hậu tố K/M
+   * Đồng thời thu gọn các số cực lớn bằng hậu tố K/M.
+   * 
+   * @param {number} num - Số cần định dạng.
+   * @returns {string} Chuỗi số đã định dạng.
    */
   const formatLocalNumber = (num) => {
     if (num == null) return '0';

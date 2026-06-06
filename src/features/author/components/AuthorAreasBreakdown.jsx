@@ -15,13 +15,13 @@ import LoadingSkeleton from '../../../shared/components/LoadingSkeleton';
 import EmptyState from '../../../shared/components/EmptyState';
 
 /**
- * @component AuthorAreasBreakdown
- * @description Component hiển thị phân bổ lĩnh vực nghiên cứu của tác giả.
+ * Component hiển thị phân bổ lĩnh vực nghiên cứu của tác giả.
  * 
- * @param {Object} props
- * @param {Array} props.breakdown - Mảng thống kê các lĩnh vực: { subject_area, percentage, count }
- * @param {boolean} props.loading - Cờ hiển thị trạng thái đang tải dữ liệu
- * @param {Object|string} props.error - Đối tượng/thông báo lỗi khi gọi API thất bại
+ * @param {Object} props - Thuộc tính truyền vào component.
+ * @param {Array} [props.breakdown=[]] - Mảng thống kê các lĩnh vực: { subject_area, percentage, count }.
+ * @param {boolean} [props.loading=false] - Cờ hiển thị trạng thái đang tải dữ liệu.
+ * @param {Object|string} [props.error=null] - Đối tượng/thông báo lỗi khi gọi API thất bại.
+ * @returns {JSX.Element} Giao diện hiển thị phân bổ lĩnh vực nghiên cứu.
  */
 export default function AuthorAreasBreakdown({ breakdown = [], loading = false, error = null }) {
   

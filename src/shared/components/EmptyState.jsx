@@ -5,8 +5,16 @@ import { Button } from 'react-bootstrap';
 import Icon from './Icon';
 
 /**
- * EmptyState Component
- * Hiển thị giao diện thông báo trực quan khi không tìm thấy dữ liệu.
+ * Thành phần hiển thị giao diện thông báo trực quan khi không tìm thấy dữ liệu.
+ * 
+ * @param {Object} props - Thuộc tính truyền vào component.
+ * @param {string} [props.title='Không có dữ liệu'] - Tiêu đề thông báo.
+ * @param {string} [props.description='Không tìm thấy kết quả phù hợp.'] - Mô tả chi tiết thông báo trống.
+ * @param {string} [props.icon='lucide:folder-open'] - Icon hiển thị.
+ * @param {string} [props.actionLabel=''] - Nhãn của nút hành động đi kèm (nếu có).
+ * @param {Function} [props.onAction=null] - Hàm xử lý sự kiện khi click nút hành động.
+ * @param {string} [props.className=''] - Lớp CSS tùy chọn bổ sung.
+ * @returns {JSX.Element} Giao diện trạng thái trống.
  */
 export default function EmptyState({
   title = 'Không có dữ liệu', // Tiêu đề thông báo
