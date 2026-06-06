@@ -36,25 +36,13 @@ export default function AuthBanner() {
       />
 
       {/* Logo Brand */}
-      <div className="d-flex align-items-center gap-2" style={{ zIndex: 2 }}>
-        <div 
-          className="d-flex align-items-center justify-content-center"
-          style={{
-            width: '40px',
-            height: '40px',
-            borderRadius: '10px',
-            background: 'var(--primary)',
-            boxShadow: '0 4px 12px rgba(255, 122, 51, 0.2)'
-          }}
-        >
-          <Icon icon="lucide:activity" className="text-white text-lg" />
-        </div>
-        <span 
-          className="fs-4 fw-bold font-display" 
-          style={{ letterSpacing: '0.03em', color: 'var(--text-main)' }}
-        >
-          ResearchPulse
-        </span>
+
+      <div style={{ zIndex: 2 }}>
+        <img
+          src="/src/assets/images/researchpulse_logo_full.svg"
+          alt="ResearchPulse"
+          style={{ height: '36px' }}
+        />
       </div>
 
       {/* Content */}

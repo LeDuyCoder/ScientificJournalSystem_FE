@@ -6,7 +6,7 @@ import {
   loginGoogleApi,
   updateProfileApi,
   deleteAccountApi,
-} from '../api/auth.api';
+} from '../api/authApi';
 
 export const AuthContext = createContext(null);
 
