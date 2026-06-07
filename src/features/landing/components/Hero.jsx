@@ -18,7 +18,7 @@ export default function Hero() {
   return (
     <section className="relative min-vh-100 d-flex flex-column justify-content-between pt-5 pb-5 overflow-hidden grid-bg">
       {/* Radial overlay to fade out the grid pattern */}
-      <div className="absolute inset-0 radial-fade pointer-events-none" />
+      <div className="position-absolute w-100 h-100 radial-fade pe-none" style={{ top: 0, left: 0 }} />
 
       {/* Hero content container */}
       <Container className="position-relative d-flex flex-column justify-content-center align-items-center text-center flex-grow-1 z-3 pt-5">

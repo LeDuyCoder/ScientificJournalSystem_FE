@@ -6,4 +6,10 @@ export default defineConfig({
   plugins: [
     react(),
   ],
+  preview: {
+    allowedHosts: true // Cho phép host trên Railway truy cập
+  },
+  server: {
+    allowedHosts: true
+  }
 })

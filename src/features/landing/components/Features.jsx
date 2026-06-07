@@ -8,7 +8,7 @@ import Icon from '../../../shared/components/Icon';
 /**
  * Reusable Feature Card Component
  */
-function FeatureCard({ icon, title, description }) {
+function FeatureCard({ icon, color, title, description }) {
   return (
     <Card 
       className="glass-card rounded-4 p-4 h-100 text-start position-relative overflow-hidden"
@@ -56,32 +56,38 @@ export default function Features() {
 
   const featureList = [
     {
-      icon: 'lucide:search-code',
+      icon: 'lucide:search',
+      color: 'text-cyan-400',
       titleKey: 'feature1Title',
       descKey: 'feature1Desc',
     },
     {
-      icon: 'lucide:trending-up-down',
+      icon: 'lucide:trending-up',
+      color: 'text-blue-400',
       titleKey: 'feature2Title',
       descKey: 'feature2Desc',
     },
     {
-      icon: 'lucide:bell-ring',
+      icon: 'lucide:bell',
+      color: 'text-amber-400',
       titleKey: 'feature3Title',
       descKey: 'feature3Desc',
     },
     {
-      icon: 'lucide:folder-heart',
+      icon: 'lucide:folder',
+      color: 'text-emerald-400',
       titleKey: 'feature4Title',
       descKey: 'feature4Desc',
     },
     {
-      icon: 'lucide:file-bar-chart',
+      icon: 'lucide:file-text',
+      color: 'text-indigo-400',
       titleKey: 'feature5Title',
       descKey: 'feature5Desc',
     },
     {
       icon: 'lucide:gift',
+      color: 'text-purple-400',
       titleKey: 'feature6Title',
       descKey: 'feature6Desc',
     },
@@ -138,6 +144,9 @@ export default function Features() {
           >
             {t('featuresTitle')}
           </h2>
+          <p className="text-secondary fs-6 mx-auto mb-0" style={{ color: '#adb5bd', maxWidth: '36rem' }}>
+            {t('featuresDesc')}
+          </p>
         </div>
 
         {/* Grid of Feature Cards */}
