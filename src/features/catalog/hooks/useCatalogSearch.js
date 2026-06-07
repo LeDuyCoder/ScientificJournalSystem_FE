@@ -57,13 +57,13 @@ export function useCatalogSearch(currentUser) {
         ]);
         
         if (areasRes.data?.success !== false) {
-          setSubjectAreas(areasRes.data?.data || []);
+          setSubjectAreas(areasRes.data?.data?.items || areasRes.data?.data || []);
         } else {
           setSubjectAreas([]);
         }
 
         if (catsRes.data?.success !== false) {
-          setSubjectCategories(catsRes.data?.data || []);
+          setSubjectCategories(catsRes.data?.data?.items || catsRes.data?.data || []);
         } else {
           setSubjectCategories([]);
         }
@@ -107,7 +107,7 @@ export function useCatalogSearch(currentUser) {
       if (response.data && response.data.success !== false) {
         const data = response.data.data || {};
         setJournals(data.items || []);
-        setTotal(data.total || (data.items || []).length);
+        setTotal(data.pagination?.total || data.total || (data.items || []).length);
       } else {
         throw new Error(response.data?.message || 'Invalid search format');
       }
@@ -215,6 +215,48 @@ export function useCatalogSearch(currentUser) {
     toggleParamValue('cat_id', catId);
   };
 
+  // Dropdown Select handlers
+  const onAreaSelect = (areaId) => {
+    const nextParams = new URLSearchParams(searchParams);
+    nextParams.delete('area_id');
+    nextParams.delete('cat_id'); // Clear categories because area changed
+    if (areaId && areaId !== 'all') {
+      nextParams.set('area_id', String(areaId));
+    }
+    nextParams.set('page', '1');
+    setSearchParams(nextParams);
+  };
+
+  const onCategorySelect = (catId) => {
+    const nextParams = new URLSearchParams(searchParams);
+    nextParams.delete('cat_id');
+    if (catId && catId !== 'all') {
+      nextParams.set('cat_id', String(catId));
+    }
+    nextParams.set('page', '1');
+    setSearchParams(nextParams);
+  };
+
+  const onAccessSelect = (accessVal) => {
+    const nextParams = new URLSearchParams(searchParams);
+    nextParams.delete('access');
+    if (accessVal && accessVal !== 'all') {
+      nextParams.set('access', accessVal);
+    }
+    nextParams.set('page', '1');
+    setSearchParams(nextParams);
+  };
+
+  const onQuartileSelect = (quartileVal) => {
+    const nextParams = new URLSearchParams(searchParams);
+    nextParams.delete('quartile');
+    if (quartileVal && quartileVal !== 'all') {
+      nextParams.set('quartile', quartileVal);
+    }
+    nextParams.set('page', '1');
+    setSearchParams(nextParams);
+  };
+
   // Reset all filters
   const handleClearAll = () => {
     setSearchInput('');
@@ -280,6 +322,10 @@ export function useCatalogSearch(currentUser) {
     handleAccessToggle,
     handleAreaToggle,
     handleCategoryToggle,
+    onAreaSelect,
+    onCategorySelect,
+    onAccessSelect,
+    onQuartileSelect,
     handleClearAll,
     handleSortChange,
     handlePageChange,

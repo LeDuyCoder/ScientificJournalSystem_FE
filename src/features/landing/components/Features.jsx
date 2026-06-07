@@ -31,7 +31,7 @@ function FeatureCard({ icon, color, title, description }) {
           transition: 'all 0.3s ease'
         }}
       >
-        <Icon icon={icon} className="fs-4 text-primary" />
+        <Icon icon={icon} className="fs-4" />
       </div>
 
       {/* Card Content */}
@@ -134,7 +134,7 @@ export default function Features() {
         
         {/* Section Header */}
         <div className="text-center mb-5">
-          <div className="d-inline-flex align-items-center gap-2 mb-2 text-primary text-xs font-bold tracking-wider text-uppercase" style={{ fontSize: '0.75rem' }}>
+          <div className="d-inline-flex align-items-center gap-2 mb-2 text-xs font-bold tracking-wider text-uppercase" style={{ fontSize: '0.75rem', color: 'var(--primary)' }}>
             <span style={{ width: '24px', height: '1px', backgroundColor: 'var(--primary)' }} />
             <span>{t('featuresSubtitle')}</span>
           </div>

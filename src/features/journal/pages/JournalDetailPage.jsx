@@ -18,56 +18,13 @@ import RankingTabContent from '../components/RankingTabContent';
 import VolumesTabContent from '../components/VolumesTabContent';
 import ArticlesTabContent from '../components/ArticlesTabContent';
 import AuthRequiredModal from '../components/AuthRequiredModal';
+import AddToProjectModal from '../components/AddToProjectModal';
 
 export default function JournalDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const auth = useAuth ? useAuth() : { user: null };
   const currentUser = auth?.user;
-
-  const token = localStorage.getItem('researchpulse_token');
-
-  if (!token) {
-    return (
-      <div className="grid-bg min-vh-100 d-flex flex-column text-main" style={{ backgroundColor: 'var(--bg-main)' }}>
-        <Header />
-        <Container className="flex-grow-1 d-flex flex-column justify-content-center align-items-center py-5" style={{ marginTop: '80px' }}>
-          <div className="journal-dark-card p-5 text-center" style={{ maxWidth: '560px', borderRadius: '16px', border: '1px solid var(--border)', backgroundColor: 'var(--bg-card)' }}>
-            <div className="d-inline-flex align-items-center justify-content-center mb-4" style={{
-              width: '85px',
-              height: '85px',
-              borderRadius: '50%',
-              background: 'linear-gradient(135deg, rgba(239, 68, 68, 0.08) 0%, rgba(239, 68, 68, 0.15) 100%)',
-              border: '1px solid rgba(239, 68, 68, 0.2)'
-            }}>
-              <Icon icon="lucide:lock" className="text-danger" width="40" />
-            </div>
-            <h3 className="font-display fw-bold text-main mb-3">Nội dung dành cho Thành viên</h3>
-            <p className="text-muted-custom mb-4" style={{ fontSize: '0.95rem', lineHeight: '1.6' }}>
-              Vui lòng đăng nhập tài khoản ResearchPulse của bạn để xem chi tiết thông tin tạp chí, chỉ số xếp hạng, lịch sử ranking, volumes/issues và các bài báo gần đây.
-            </p>
-            <div className="d-flex align-items-center justify-content-center gap-3">
-              <Button 
-                variant="outline-secondary"
-                className="px-4 py-2.5 text-main border-secondary fw-semibold"
-                onClick={() => navigate('/')}
-                style={{ borderRadius: '8px', fontSize: '0.9rem' }}
-              >
-                Quay lại Trang chủ
-              </Button>
-              <Button 
-                className="btn-primary-glow border-0 px-4 py-2.5 fw-semibold text-white"
-                onClick={() => navigate('/login')}
-                style={{ borderRadius: '8px', fontSize: '0.9rem' }}
-              >
-                Đăng nhập ngay
-              </Button>
-            </div>
-          </div>
-        </Container>
-      </div>
-    );
-  }
 
   const {
     journal,
@@ -84,6 +41,8 @@ export default function JournalDetailPage() {
     notFound,
     showAuthModal,
     setShowAuthModal,
+    showProjectModal,
+    setShowProjectModal,
     isFollowing,
     isAddingToProject,
     handleFollow,
@@ -206,6 +165,14 @@ export default function JournalDetailPage() {
       <AuthRequiredModal 
         show={showAuthModal} 
         onHide={() => setShowAuthModal(false)} 
+      />
+
+      {/* Project selection modal */}
+      <AddToProjectModal
+        show={showProjectModal}
+        onHide={() => setShowProjectModal(false)}
+        journalId={id}
+        onConfirm={handleAddToProject}
       />
     </div>
   );

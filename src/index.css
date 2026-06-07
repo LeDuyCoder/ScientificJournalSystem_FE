@@ -87,15 +87,15 @@ html, body {
 }
 
 .btn-view-trends:hover {
-  background: var(--primary) !important;
-  border-color: var(--primary) !important;
-  color: #ffffff !important;
+  background: #e5e5e5 !important;
+  border-color: #d4d4d4 !important;
+  color: var(--text-main) !important;
   transform: translateY(-2px);
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.16);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
 .btn-view-trends:hover .btn-view-trends-icon {
-  color: #ffffff !important;
+  color: var(--primary) !important;
   transform: scale(1.08);
 }
 
@@ -330,16 +330,16 @@ body, p, span, li, div, input, textarea, select {
 
 /* ─── Dashboard button primary glow ─────────────────────────────── */
 .btn-primary-glow {
-  background: var(--btn-dark) !important;
+  background: var(--primary) !important;
   color: #fff !important;
   border: none !important;
-  box-shadow: 0 2px 12px rgba(7, 26, 28, 0.18);
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  box-shadow: 0 2px 12px rgba(255, 122, 51, 0.18);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background-color 0.15s ease;
 }
 .btn-primary-glow:hover {
   transform: translateY(-1px);
   box-shadow: 0 4px 18px rgba(255, 122, 51, 0.22);
-  background: var(--primary) !important;
+  background: #e8632a !important;
 }
 .btn-primary-glow:active {
   transform: translateY(0);
@@ -349,4 +349,36 @@ body, p, span, li, div, input, textarea, select {
 .text-main          { color: var(--text-main) !important; }
 .text-muted-custom  { color: var(--text-muted) !important; }
 .bg-card            { background-color: var(--bg-card) !important; }
+
+/* ─── Sandbox Suggestion Tags ────────────────────────────────────── */
+.sandbox-tag {
+  font-size: 0.75rem;
+  background: var(--bg-chip) !important;
+  border: none !important;
+  color: var(--text-muted) !important;
+  transition: all 0.2s ease !important;
+}
+.sandbox-tag:hover {
+  background: var(--primary-light) !important;
+  color: var(--primary) !important;
+}
+
+/* ─── Sandbox Result Items ────────────────────────────────────────── */
+.sandbox-result-item {
+  background-color: var(--bg-chip) !important;
+  border: 1px solid var(--border) !important;
+  transition: all 0.2s ease-in-out !important;
+}
+.sandbox-result-item:hover {
+  border-color: var(--primary-light) !important;
+  background-color: var(--bg-card) !important;
+}
+.sandbox-result-item.is-journal {
+  cursor: pointer !important;
+}
+.sandbox-result-item.is-journal:hover {
+  border-color: var(--primary) !important;
+  background-color: var(--primary-light) !important;
+}
+
 

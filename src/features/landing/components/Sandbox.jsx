@@ -97,25 +97,25 @@ export default function Sandbox() {
         <div 
           className="p-1 rounded-5"
           style={{
-            background: 'linear-gradient(135deg, rgba(0, 210, 255, 0.1) 0%, rgba(122, 0, 255, 0.05) 50%, rgba(0, 210, 255, 0.1) 100%)',
-            boxShadow: '0 15px 45px rgba(0, 0, 0, 0.4)'
+            background: 'linear-gradient(135deg, var(--primary-light) 0%, rgba(255, 255, 255, 0.5) 50%, var(--primary-light) 100%)',
+            boxShadow: '0 15px 45px rgba(255, 122, 51, 0.05)'
           }}
         >
           {/* Card Body */}
           <div 
             className="rounded-5 py-5 px-4 p-sm-5 text-center position-relative overflow-hidden"
-            style={{ backgroundColor: '#0c101d', zIndex: 1 }}
+            style={{ backgroundColor: 'var(--bg-card)', zIndex: 1 }}
           >
             {/* Header label */}
-            <div className="d-inline-flex align-items-center gap-2 mb-4 text-info text-xs font-bold tracking-wider text-uppercase" style={{ fontSize: '0.75rem' }}>
-              <Icon icon="lucide:sparkle" className="text-info animate-spin-slow" />
+            <div className="d-inline-flex align-items-center gap-2 mb-4 text-xs font-bold tracking-wider text-uppercase" style={{ fontSize: '0.75rem', color: 'var(--primary)' }}>
+              <Icon icon="lucide:sparkle" className="animate-spin-slow" style={{ color: 'var(--primary)' }} />
               <span>{t('sandboxTitle')}</span>
             </div>
 
             {/* Form */}
             <Form onSubmit={handleSearchSubmit} className="mx-auto mb-4" style={{ maxWidth: '720px' }}>
-              <InputGroup size="lg" className="rounded-pill overflow-hidden border border-white-10 bg-white-5 p-1 align-items-center">
-                <span className="bg-transparent border-0 text-white-50 px-3 d-flex align-items-center justify-content-center">
+              <InputGroup size="lg" className="rounded-pill overflow-hidden p-1 align-items-center" style={{ backgroundColor: 'var(--bg-chip)' }}>
+                <span className="bg-transparent border-0 px-3 d-flex align-items-center justify-content-center" style={{ color: 'var(--text-muted)' }}>
                   <Icon icon="lucide:search" className="fs-5" />
                 </span>
                 
@@ -124,9 +124,9 @@ export default function Sandbox() {
                   value={searchValue}
                   onChange={(e) => setSearchValue(e.target.value)}
                   placeholder={t('sandboxPlaceholder')}
-                  className="bg-transparent border-0 text-white placeholder-gray-500 shadow-none fs-6 py-2.5"
+                  className="bg-transparent border-0 shadow-none fs-6 py-2.5"
                   style={{
-                    color: '#ffffff',
+                    color: 'var(--text-main)',
                     backgroundColor: 'transparent'
                   }}
                 />
@@ -154,27 +154,24 @@ export default function Sandbox() {
 
             {/* Tag suggestions */}
             <div className="d-flex flex-column flex-sm-row align-items-center justify-content-center gap-3 mx-auto" style={{ maxWidth: '800px' }}>
-              <span className="text-white-50 font-bold tracking-wider text-uppercase d-flex align-items-center gap-1" style={{ fontSize: '0.7rem' }}>
+              <span className="text-muted-custom font-bold tracking-wider text-uppercase d-flex align-items-center gap-1" style={{ fontSize: '0.7rem' }}>
                 <Icon icon="lucide:sliders" style={{ fontSize: '0.65rem' }} />
                 <span>{t('tryNowLabel')}</span>
               </span>
               <div className="d-flex flex-wrap justify-content-center gap-2">
                 {tags.map((tag) => (
-                  <Button
+                  <button
                     key={tag}
-                    variant="dark"
-                    size="sm"
+                    type="button"
                     onClick={() => handleTagClick(tag)}
-                    className="px-3 py-1.5 rounded-pill border-white-5 text-white-50 hover:text-info hover:bg-info-10 hover:border-info-20 text-xs font-semibold"
+                    className="px-3 py-1.5 rounded-pill sandbox-tag text-xs font-semibold btn btn-sm"
                     style={{
                       fontSize: '0.75rem',
-                      background: 'rgba(255, 255, 255, 0.03)',
-                      borderColor: 'rgba(255, 255, 255, 0.05)',
                       transition: 'all 0.2s ease'
                     }}
                   >
                     {tag}
-                  </Button>
+                  </button>
                 ))}
               </div>
             </div>
@@ -182,33 +179,31 @@ export default function Sandbox() {
             {/* Interactive Mock Results */}
             {isLoading && (
               <div 
-                className="mt-4 mx-auto p-4 rounded-4 border d-flex align-items-center justify-content-center gap-2 text-white-50"
+                className="mt-4 mx-auto p-4 rounded-4 d-flex align-items-center justify-content-center gap-2 text-muted-custom"
                 style={{
                   maxWidth: '600px',
-                  backgroundColor: 'rgba(255, 255, 255, 0.02)',
-                  borderColor: 'rgba(255, 255, 255, 0.05)',
+                  backgroundColor: 'var(--bg-chip)',
                   fontSize: '0.85rem'
                 }}
               >
-                <Icon icon="lucide:database" className="text-info animate-bounce fs-5" />
+                <Icon icon="lucide:database" className="animate-bounce fs-5" style={{ color: 'var(--primary)' }} />
                 <span>Analyzing publications databases...</span>
               </div>
             )}
 
             {error && (
               <div 
-                className="mt-4 mx-auto p-4 rounded-4 border text-start"
+                className="mt-4 mx-auto p-4 rounded-4 text-start"
                 style={{
                   maxWidth: '600px',
-                  backgroundColor: 'rgba(220, 53, 69, 0.08)',
-                  borderColor: 'rgba(220, 53, 69, 0.2)'
+                  backgroundColor: 'rgba(220, 53, 69, 0.05)'
                 }}
               >
                 <div className="d-flex align-items-start gap-3 text-danger">
                   <Icon icon="lucide:alert-circle" className="fs-4 mt-1" />
                   <div>
-                    <h5 className="font-bold text-white text-sm m-0">API Error</h5>
-                    <p className="text-white-50 mt-1 mb-0" style={{ fontSize: '0.75rem' }}>{error}</p>
+                    <h5 className="font-bold text-main text-sm m-0">API Error</h5>
+                    <p className="text-muted-custom mt-1 mb-0" style={{ fontSize: '0.75rem' }}>{error}</p>
                   </div>
                 </div>
               </div>
@@ -216,15 +211,14 @@ export default function Sandbox() {
 
             {searchResult && (
               <div 
-                className="mt-4 mx-auto p-4 rounded-4 border text-start"
+                className="mt-4 mx-auto p-4 rounded-4 text-start"
                 style={{
                   maxWidth: '600px',
-                  backgroundColor: 'rgba(14, 20, 36, 0.8)',
-                  borderColor: 'rgba(255, 255, 255, 0.1)',
-                  boxShadow: '0 8px 32px rgba(0, 0, 0, 0.5)'
+                  backgroundColor: 'var(--bg-card)',
+                  boxShadow: '0 8px 32px rgba(0, 0, 0, 0.05)'
                 }}
               >
-                <div className="d-flex align-items-center justify-content-between mb-3 border-bottom border-white-10 pb-2">
+                <div className="d-flex align-items-center justify-content-between mb-3 pb-2" style={{ borderBottom: '1px solid var(--border)' }}>
                   <div className="d-flex align-items-center gap-2">
                     <div 
                       className="rounded-circle animate-pulse" 
@@ -244,13 +238,13 @@ export default function Sandbox() {
                       {searchResult.isRealData ? t('realData') : 'Offline Demo Data'}
                     </span>
                   </div>
-                  <span className="text-white-50" style={{ fontSize: '0.7rem' }}>
+                  <span className="text-muted-custom" style={{ fontSize: '0.7rem' }}>
                     {searchResult.isRealData ? t('sourceLiveApi') : 'Simulated Sandbox'}
                   </span>
                 </div>
                 
-                <h4 className="font-display font-bold text-white mb-3" style={{ fontSize: '1.05rem' }}>
-                  {t('resultsFor')} "<span className="text-info">{searchResult.keyword}</span>"
+                <h4 className="font-display font-bold text-main mb-3" style={{ fontSize: '1.05rem' }}>
+                  {t('resultsFor')} "<span style={{ color: 'var(--primary)' }}>{searchResult.keyword}</span>"
                 </h4>
 
                 {searchResult.items && searchResult.items.length > 0 ? (
@@ -260,10 +254,9 @@ export default function Sandbox() {
                       return (
                         <div
                           key={item.id || index}
-                          className="d-flex align-items-center justify-content-between p-3 rounded-3 border transition-all"
+                          className="d-flex align-items-center justify-content-between p-3 rounded-3 transition-all"
                           style={{
-                            backgroundColor: 'rgba(255, 255, 255, 0.03)',
-                            borderColor: 'rgba(255, 255, 255, 0.05)',
+                            backgroundColor: 'var(--bg-chip)',
                             transition: 'all 0.2s ease',
                             cursor: item.type === 'JOURNAL' ? 'pointer' : 'default'
                           }}
@@ -274,30 +267,27 @@ export default function Sandbox() {
                           }}
                           onMouseEnter={(e) => {
                             if (item.type === 'JOURNAL') {
-                              e.currentTarget.style.borderColor = 'rgba(0, 210, 255, 0.3)';
-                              e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.06)';
+                              e.currentTarget.style.backgroundColor = 'var(--primary-light)';
+                            } else {
+                              e.currentTarget.style.backgroundColor = 'rgba(255, 122, 51, 0.05)';
                             }
                           }}
                           onMouseLeave={(e) => {
-                            if (item.type === 'JOURNAL') {
-                              e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.05)';
-                              e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.03)';
-                            }
+                            e.currentTarget.style.backgroundColor = 'var(--bg-chip)';
                           }}
                         >
                           <div className="d-flex align-items-center gap-3 text-truncate">
                             <div 
-                              className="p-2 rounded-3 border d-flex align-items-center justify-content-center" 
+                              className="p-2 rounded-3 d-flex align-items-center justify-content-center" 
                               style={{
                                 color: cfg.textColor,
-                                backgroundColor: 'rgba(255, 255, 255, 0.04)',
-                                borderColor: 'rgba(255, 255, 255, 0.05)'
+                                backgroundColor: cfg.bgColor
                               }}
                             >
                               <Icon icon={cfg.icon} className="fs-5" />
                             </div>
                             <span 
-                              className="font-medium text-white text-sm text-truncate"
+                              className="font-medium text-main text-sm text-truncate"
                               style={{ fontSize: '0.875rem' }}
                             >
                               {item.name}
@@ -322,8 +312,8 @@ export default function Sandbox() {
                     })}
                   </div>
                 ) : (
-                  <div className="d-flex flex-column align-items-center justify-content-center py-5 text-center text-white-50">
-                    <Icon icon="lucide:search-x" className="fs-1 text-white-30 mb-2" />
+                  <div className="d-flex flex-column align-items-center justify-content-center py-5 text-center text-muted-custom">
+                    <Icon icon="lucide:search-x" className="fs-1 text-muted-custom mb-2" />
                     <p className="text-sm m-0" style={{ fontSize: '0.85rem' }}>{t('noResults')}</p>
                   </div>
                 )}

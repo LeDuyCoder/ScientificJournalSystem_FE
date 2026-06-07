@@ -2,6 +2,7 @@ import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import LandingPage from '../../features/landing/pages/LandingPage';
 import JournalDetailPage from '../../features/journal/pages/JournalDetailPage';
+import JournalListPage from '../../features/journal/pages/JournalListPage';
 import CatalogSearchPage from '../../features/catalog/pages/CatalogSearchPage';
 import ArticleListPage from '../../features/article/pages/ArticleListPage';
 import ArticleDetailPage from '../../features/article/pages/ArticleDetailPage';
@@ -27,7 +28,7 @@ export default function AppRoutes() {
         <Route path="/articles"   element={<ArticleListPage />} />
         <Route path="/articles/:id" element={<ArticleDetailPage />} />
       </Route>
-
+      
       {/* Fallback */}
       <Route path="/" element={<HomeRoute />} />
       <Route path="*"           element={<LandingPage />} />

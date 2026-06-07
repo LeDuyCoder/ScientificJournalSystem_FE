@@ -12,7 +12,7 @@ export default function Hero() {
     { valueKey: 'papersValue', labelKey: 'papersLabel', color: '#000000' },
     { valueKey: 'periodValue', labelKey: 'periodLabel', color: '#000000' },
     { valueKey: 'keywordsValue', labelKey: 'keywordsLabel', color: '#000000' },
-    { valueKey: 'freeValue', labelKey: 'freeLabel', color: '#000000' },
+    { valueKey: 'freeValue', labelKey: 'freeLabel', color: '#AB7E55' },
   ];
 
   return (

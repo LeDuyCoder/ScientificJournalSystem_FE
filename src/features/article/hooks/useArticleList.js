@@ -46,7 +46,11 @@ export default function useArticleList() {
         limit,
         search: search.trim() || undefined,
         sortBy: sortBy === 'citations' ? 'created_at' : sortBy,
-        sortOrder
+        sortOrder,
+        year: selectedYear !== 'all' ? selectedYear : undefined,
+        journal: selectedJournal !== 'all' ? selectedJournal : undefined,
+        topic: selectedTopic !== 'all' ? selectedTopic : undefined,
+        access: selectedAccess !== 'all' ? selectedAccess : undefined,
       };
 
       const response = await getArticlesListApi(apiParams);
@@ -68,29 +72,13 @@ export default function useArticleList() {
               display_name: item.journal_name || (index % 3 === 0 ? 'Nature Machine Intelligence' : (index % 3 === 1 ? 'Journal of Machine Learning Research' : 'IEEE Transactions on Computers')) 
             },
             primary_topic: matchedTopic,
-            is_open_access: item.doi ? (index % 2 === 0) : true,
+            is_open_access: item.is_open_access !== undefined ? item.is_open_access : (item.doi ? (index % 2 === 0) : true),
             citations: item.citations || (index % 4) * 12 + 5
           };
         });
 
-        // Áp dụng bộ lọc client-side bổ sung cho (Year, Journal, Topic, Access)
-        let filteredResult = [...enrichedItems];
-
-        if (selectedYear !== 'all') {
-          filteredResult = filteredResult.filter(a => String(a.publication_year) === selectedYear);
-        }
-        if (selectedJournal !== 'all') {
-          filteredResult = filteredResult.filter(a => a.journal && String(a.journal.journal_id) === selectedJournal);
-        }
-        if (selectedTopic !== 'all') {
-          filteredResult = filteredResult.filter(a => String(a.primary_topic).toLowerCase() === selectedTopic.toLowerCase());
-        }
-        if (selectedAccess === 'oa') {
-          filteredResult = filteredResult.filter(a => a.is_open_access === true);
-        }
-
-        setArticles(filteredResult);
-        setTotal(filteredResult.length < enrichedItems.length ? filteredResult.length : totalCount);
+        setArticles(enrichedItems);
+        setTotal(totalCount);
 
         // Cập nhật thống kê dựa trên kết quả thật từ database
         setStats({
