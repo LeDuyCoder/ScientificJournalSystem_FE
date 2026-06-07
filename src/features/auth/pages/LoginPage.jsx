@@ -6,23 +6,51 @@ import AuthBanner from '../components/AuthBanner';
 import LoginForm from '../components/LoginForm';
 import SocialAuthButton from '../components/SocialAuthButton';
 import Icon from '../../../shared/components/Icon';
+import { useGoogleLogin } from '@react-oauth/google';
+import { loginGoogleApi } from '../api/auth.api';
+import { toast } from '../../../shared/utils/toast';
+import { useAuthStore } from '../../../app/store/authStore';
 
 export default function LoginPage() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { login } = useAuth();
+  const { login, loginWithGoogle } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
+  const loginSuccess = useAuthStore((state) => state.loginSuccess);
 
-  // Redirect to original page or dashboard
   const from = location.state?.from?.pathname || '/dashboard';
 
+  const DASHBOARD_PAGE = "/dashboard";
+
+  /**
+   * Xử lý sự kiện submit form đăng nhập của người dùng.
+   * 
+   * Hàm này thực hiện các bước sau:
+   * 1. Bật trạng thái loading và xóa các lỗi cũ.
+   * 2. Gọi hàm `login` từ `AuthContext` truyền các thông tin xác thực (email, password, tùy chọn remember_login)
+   *    và callback `loginSuccess` từ zustand store để lưu token.
+   * 3. Nếu đăng nhập thành công, điều hướng người dùng quay lại trang họ định truy cập trước đó (`from`), 
+   *    hoặc trang mặc định (thường là ``/dashboard``). Sử dụng `replace: true` để tránh người dùng quay 
+   *    lại trang login khi bấm nút Back trên trình duyệt.
+   * 4. Nếu có lỗi xảy ra trong quá trình gọi API, bắt lỗi và hiển thị thông báo lỗi phù hợp lên giao diện.
+   * 5. Tắt trạng thái loading bất kể thành công hay thất bại.
+   *
+   * @async
+   * @function handleLoginSubmit
+   * @param {Object} payload - Dữ liệu submit từ form đăng nhập.
+   * @param {string} payload.email - Địa chỉ email của người dùng.
+   * @param {string} payload.password - Mật khẩu của người dùng.
+   * @param {boolean} payload.remember_login - Cờ đánh dấu người dùng có muốn ghi nhớ đăng nhập (Remember Me) hay không.
+   * @returns {Promise<void>} Promise hoàn thành sau khi quá trình xử lý đăng nhập kết thúc.
+   */
   const handleLoginSubmit = async (payload) => {
     setIsLoading(true);
     setError(null);
     try {
-      await login(payload.email, payload.password);
-      // Redirect on success
+      await login(payload.email, payload.password, payload.remember_login, loginSuccess);
+      const storeToken = useAuthStore.getState().token;
+
       navigate(from, { replace: true });
     } catch (err) {
       console.error('Login failed:', err);
@@ -36,9 +64,31 @@ export default function LoginPage() {
     }
   };
 
-  const handleGoogleAuth = () => {
-    alert('Đăng nhập bằng Google OAuth đang được cấu hình.');
-  };
+  /**
+   * Xử lý sự kiện đăng nhập bằng tài khoản Google.
+   * 
+   * Hàm này thực hiện luồng công việc sau:
+   * 1. Bật trạng thái loading (`setIsLoading(true)`) và xóa bỏ các lỗi hiển thị cũ (`setError(null)`).
+   * 2. Gọi hàm `loginWithGoogle` để khởi chạy luồng xác thực Google (truyền vào hằng số `DASHBOARD_PAGE` làm đích đến sau khi đăng nhập thành công).
+   * 3. Nếu xảy ra lỗi trong quá trình đăng nhập, bắt lỗi (`catch`) và hiển thị thông báo "Đăng nhập thất bại" qua thư viện `toast`.
+   * 4. Đảm bảo luôn tắt trạng thái loading (`setIsLoading(false)`) ở khối `finally` cho dù đăng nhập thành công hay thất bại.
+   *
+   * @function handleLoginWithGoogle
+   * @returns {void} Hàm không trả về giá trị.
+   */
+  const handleLoginWithGoogle = () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      try{
+        loginWithGoogle(DASHBOARD_PAGE);
+      }catch(e){
+        toast.error("Đăng nhập thất bại");
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  }
 
   return (
     <AuthLayout banner={<AuthBanner />}>
@@ -53,7 +103,7 @@ export default function LoginPage() {
 
       {/* Google Button */}
       <div className="mb-4">
-        <SocialAuthButton onClick={handleGoogleAuth} disabled={isLoading} />
+        <SocialAuthButton onClick={handleLoginWithGoogle} disabled={isLoading} />
       </div>
 
       {/* Divider */}

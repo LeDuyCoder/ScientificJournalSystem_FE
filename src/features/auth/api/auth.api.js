@@ -34,8 +34,8 @@ export const loginApi = (data) => {
  * @param {string} idToken - Google Credential ID Token
  * @returns {Promise} Axios promise
  */
-export const loginGoogleApi = (idToken) => {
-  return api.post('/auth/google', { token: idToken });
+export const loginGoogleApi = (code) => {
+  return api.post('/auth/google', { code: code });
 };
 
 /**
