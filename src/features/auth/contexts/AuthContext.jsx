@@ -10,13 +10,16 @@ import {
 import { useGoogleLogin } from '@react-oauth/google';
 import { toast } from '../../../shared/utils/toast';
 import { useAuthStore } from '../../../app/store/authStore';
+import { useUserStore } from '../../../app/store/userStore';
 import { useNavigate } from 'react-router-dom';
+import { getToken, removeToken } from '../../../shared/utils/auth';
+import { jwtDecode } from 'jwt-decode';
 
 export const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(() => {
-    const token = localStorage.getItem('researchpulse_token');
+    const token = getToken();
     if (token) {
       return { username: 'Researcher', email: 'user@example.com' };
     }
@@ -31,6 +34,35 @@ export function AuthProvider({ children }) {
 
   const loginSuccess = useAuthStore((state) => state.loginSuccess);
 
+  //=====================/Define Function/=====================/
+
+  /**
+   * Lấy thông tin profile người dùng từ API và set vào Zustand store.
+   */
+  const fetchProfile = useCallback(async () => {
+    setIsLoading(true);
+    setError(null);
+    try {
+      const response = await getProfileApi();
+      if (response.data && response.data.success !== false) {
+        const userData = response.data.data;
+        setUser(userData);
+        useUserStore.getState().setEmail(userData.email);
+        console.log('✅ fetchProfile success:', userData);
+        return userData;
+      } else {
+        throw new Error(response.data?.message || 'Failed to fetch profile');
+      }
+    } catch (err) {
+      console.error('❌ Fetch profile error:', err);
+      setError(err.response?.data?.message || err.message);
+      setUser(null);
+      useUserStore.getState().clearEmail();
+    } finally {
+      setIsLoading(false);
+    }
+  }, []);
+
   const googleLogin = useGoogleLogin({
     flow: "auth-code",
 
@@ -44,8 +76,20 @@ export function AuthProvider({ children }) {
 
         if (body.code == "GOOGLE_LOGIN_SUCCESS") {
           toast.success("Đăng nhập thành công");
-          loginSuccess(body.data.token);
-          localStorage.setItem('token', body.data.token);
+          const token = body.data.token;
+          loginSuccess(token);
+          localStorage.setItem('token', token);
+
+          // Decode JWT để lấy email
+          try {
+            const decoded = jwtDecode(token);
+            const email = decoded.email || decoded.sub || 'User';
+            useUserStore.getState().setEmail(email);
+            console.log('✅ Google login success, email:', email);
+          } catch (decodeErr) {
+            console.warn('Could not decode JWT, using default email');
+            useUserStore.getState().setEmail('User');
+          }
 
           navigate(googleRedirect, { replace: true });
         } else {
@@ -62,28 +106,6 @@ export function AuthProvider({ children }) {
       toast.error("Đăng nhập thất bại");
     },
   });
-
-  //=====================/Define Function/=====================/
-
-  const fetchProfile = useCallback(async () => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      const response = await getProfileApi();
-      if (response.data && response.data.success !== false) {
-        setUser(response.data.data);
-        return response.data.data;
-      } else {
-        throw new Error(response.data?.message || 'Failed to fetch profile');
-      }
-    } catch (err) {
-      console.error('Fetch profile error:', err);
-      setError(err.response?.data?.message || err.message);
-      setUser(null);
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
 
   /**
    * Thực hiện gọi API đăng nhập và xử lý lưu trữ token.
@@ -122,9 +144,10 @@ export function AuthProvider({ children }) {
           }
           
           loginSuccess(token);
-        
+          // Lưu email vào userStore
+          useUserStore.getState().setEmail(email);
+          console.log('✅ Login success, email:', email);
         }
-        // setUser(userData || null);
         return response.data;
       } else {
         throw new Error(response.data?.message || 'Login failed');
@@ -171,7 +194,9 @@ export function AuthProvider({ children }) {
   }, []);
 
   const logout = useCallback(() => {
-    localStorage.removeItem('researchpulse_token');
+    removeToken();
+    useAuthStore.getState().logout();
+    useUserStore.getState().clearEmail();
     setUser(null);
   }, []);
 
@@ -181,7 +206,11 @@ export function AuthProvider({ children }) {
     try {
       const response = await updateProfileApi(data);
       if (response.data && response.data.success !== false) {
-        setUser(response.data.data);
+        const userData = response.data.data;
+        setUser(userData);
+        if (userData.email) {
+          useUserStore.getState().setEmail(userData.email);
+        }
         return response.data;
       } else {
         throw new Error(response.data?.message || 'Update profile failed');
@@ -214,7 +243,7 @@ export function AuthProvider({ children }) {
   }, [logout]);
 
   useEffect(() => {
-    const token = localStorage.getItem('researchpulse_token');
+    const token = getToken();
     if (token && (!user || user.username === 'Researcher')) {
       fetchProfile();
     }

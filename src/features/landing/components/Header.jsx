@@ -10,14 +10,16 @@ import Offcanvas from 'react-bootstrap/Offcanvas';
 import Dropdown from 'react-bootstrap/Dropdown';
 import Icon from '../../../shared/components/Icon';
 import useAuth from '../../auth/hooks/useAuth';
+import { useUserStore } from '../../../app/store/userStore';
 
 export default function Header() {
   const { t, i18n } = useTranslation();
   const navigate  = useNavigate();
   const location   = useLocation();
   const pathname   = location.pathname;
-  const auth    = useAuth?.() ?? { user: null, logout: () => {} };
-  const { user, logout } = auth;
+  const auth    = useAuth?.() ?? { logout: () => {} };
+  const { logout } = auth;
+  const email = useUserStore((state) => state.email);
   const language = i18n.language || 'vi';
 
   const [isScrolled, setIsScrolled] = useState(false);
@@ -217,7 +219,7 @@ export default function Header() {
               </div>
 
               {/* Notification icon */}
-              {user && (
+              {email && (
                 <div className="text-muted-custom hover:text-main position-relative" style={{ cursor: 'pointer' }}>
                   <Icon icon="lucide:bell" width="18" />
                   <span className="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle">
@@ -227,7 +229,7 @@ export default function Header() {
               )}
 
               {/* User Authentication Display/Buttons */}
-              {user ? (
+              {email ? (
                 <Dropdown align="end">
                   <Dropdown.Toggle 
                     as="div" 
@@ -253,14 +255,10 @@ export default function Header() {
 
                   <Dropdown.Menu className="border-0 shadow-sm mt-2" style={{ minWidth: '180px' }}>
                     <div className="px-3 py-2 text-xs font-bold text-main border-bottom pb-2 mb-1">
-                      {user.first_name && user.last_name 
-                        ? `${user.last_name} ${user.first_name}` 
-                        : (user.username || 'Nhà nghiên cứu')}
-                      {user.email && (
-                        <div className="text-muted-custom font-normal mt-0.5 text-truncate" style={{ fontSize: '10px', color: 'var(--text-muted)' }}>
-                          {user.email}
-                        </div>
-                      )}
+                      Người dùng
+                      <div className="text-muted-custom font-normal mt-0.5 text-truncate" style={{ fontSize: '10px', color: 'var(--text-muted)' }}>
+                        {email}
+                      </div>
                     </div>
                     <Dropdown.Item 
                       onClick={() => navigate('/dashboard')}
@@ -404,7 +402,7 @@ export default function Header() {
             </div>
 
             {/* Mobile Auth options */}
-            {user ? (
+            {email ? (
               <div className="d-flex flex-column gap-3">
                 <Button
                   variant="outline-primary"
@@ -432,15 +430,11 @@ export default function Header() {
                   </div>
                   <div className="text-start">
                     <div className="text-xs text-main font-bold" style={{ lineHeight: '1.2' }}>
-                      {user.first_name && user.last_name 
-                        ? `${user.last_name} ${user.first_name}` 
-                        : (user.username || 'Nhà nghiên cứu')}
+                      Người dùng
                     </div>
-                    {user.email && (
-                      <div className="text-xxs text-muted" style={{ fontSize: '9px', marginTop: '1px' }}>
-                        {user.email}
-                      </div>
-                    )}
+                    <div className="text-xxs text-muted" style={{ fontSize: '9px', marginTop: '1px' }}>
+                      {email}
+                    </div>
                   </div>
                 </div>
                 <Button

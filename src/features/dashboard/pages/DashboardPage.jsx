@@ -5,6 +5,7 @@ import { Icon } from '@iconify/react';
 
 import Header from '../../landing/components/Header';
 import useAuth from '../../auth/hooks/useAuth';
+import { useUserStore } from '../../../app/store/userStore';
 import useDashboard from '../hooks/useDashboard';
 
 import DashboardStatCards     from '../components/DashboardStatCards';
@@ -27,14 +28,15 @@ import AuthRequiredModal      from '../../journal/components/AuthRequiredModal';
  */
 export default function DashboardPage() {
   const navigate  = useNavigate();
-  const { user }  = useAuth?.() ?? { user: null };
+  const { logout } = useAuth?.() ?? { logout: () => {} };
+  const email = useUserStore((state) => state.email);
 
   const {
     projects, analytics, trendingKeywords, topAuthors, summaryStats,
     loadingProjects, loadingAnalytics, loadingKeywords, loadingAuthors,
     errorProjects, errorAnalytics, errorKeywords, errorAuthors,
     refetchAnalytics, refetchKeywords, refetchAll,
-  } = useDashboard(user);
+  } = useDashboard(email);
 
   // Quick search state
   const [quickSearch, setQuickSearch] = useState('');
@@ -49,7 +51,7 @@ export default function DashboardPage() {
   }, [quickSearch, navigate]);
 
   const handleCreateProject = () => {
-    if (!user) {
+    if (!email) {
       setShowAuthModal(true);
     } else {
       navigate('/projects/create');
