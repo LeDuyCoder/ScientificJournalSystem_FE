@@ -11,6 +11,8 @@ import RegisterPage from '../../features/auth/pages/RegisterPage';
 import LoginPage from '../../features/auth/pages/LoginPage';
 import ProtectedRoute, { LoginRouteCheck } from './ProtectedRoute';
 import HomeRoute from './HomeRoute';
+import KeywordTrackingPage from '../../features/keyword/pages/KeywordTrackingPage';
+
 export default function AppRoutes() {
   return (
     <Routes>
@@ -22,6 +24,7 @@ export default function AppRoutes() {
       <Route element={<ProtectedRoute />}>
         
         <Route path="/dashboard"  element={<DashboardPage />} />
+        <Route path="/projects/:id/keywords" element={<KeywordTrackingPage />} />
         <Route path="/journals/:id" element={<JournalDetailPage />} />
         <Route path="/catalog"    element={<CatalogSearchPage />} />
         <Route path="/search"     element={<CatalogSearchPage />} />
