@@ -158,119 +158,10 @@ export default function Header() {
                 <Icon icon="lucide:search" width="14" />
                 {t("search")}
               </Nav.Link>
-              {/* Tạp chí */}
-              <Nav.Link
-                onClick={() => navigate("/journals")}
-                className="px-3 py-1 text-sm font-semibold d-flex align-items-center gap-1"
-                style={{
-                  borderRadius: "6px",
-                  backgroundColor:
-                    pathname === "/journals"
-                      ? "var(--primary-light)"
-                      : "transparent",
-                  color:
-                    pathname === "/journals"
-                      ? "var(--primary)"
-                      : "var(--text-muted)",
-                  border:
-                    pathname === "/journals"
-                      ? "1px solid var(--border)"
-                      : "1px solid transparent",
-                  transition: "all 0.2s",
-                  fontWeight: pathname === "/journals" ? 700 : 500,
-                }}
-              >
-                <Icon icon="lucide:book-open" width="14" />
-                {t("journals")}
-              </Nav.Link>
-              {/* Bài báo */}
-              <Nav.Link
-                onClick={() => navigate("/articles")}
-                className="px-3 py-1 text-sm font-semibold d-flex align-items-center gap-1"
-                style={{
-                  borderRadius: "6px",
-                  backgroundColor: pathname.startsWith("/articles")
-                    ? "var(--primary-light)"
-                    : "transparent",
-                  color: pathname.startsWith("/articles")
-                    ? "var(--primary)"
-                    : "var(--text-muted)",
-                  border: pathname.startsWith("/articles")
-                    ? "1px solid var(--border)"
-                    : "1px solid transparent",
-                  transition: "all 0.2s",
-                  fontWeight: pathname.startsWith("/articles") ? 700 : 500,
-                }}
-              >
-                <Icon icon="lucide:file-text" width="14" />
-                {t("articles")}
-              </Nav.Link>
-              {/* Tác giả */}
-              <Nav.Link
-                onClick={() => navigate("/authors")}
-                className="px-3 py-1 text-sm font-semibold d-flex align-items-center gap-1"
-                style={{
-                  borderRadius: "6px",
-                  backgroundColor: pathname.startsWith("/authors")
-                    ? "var(--primary-light)"
-                    : "transparent",
-                  color: pathname.startsWith("/authors")
-                    ? "var(--primary)"
-                    : "var(--text-muted)",
-                  border: pathname.startsWith("/authors")
-                    ? "1px solid var(--border)"
-                    : "1px solid transparent",
-                  transition: "all 0.2s",
-                  fontWeight: pathname.startsWith("/authors") ? 700 : 500,
-                }}
-              >
-                <Icon icon="lucide:users" width="14" />
-                {t("authors")}
-              </Nav.Link>
             </Nav>
 
             <div className="d-flex align-items-center gap-3">
-              {/* Language Dropdown Selector */}
-              <NavDropdown
-                title={
-                  <span className="d-flex align-items-center text-muted-custom hover:text-main text-xs font-semibold uppercase">
-                    <Icon icon="lucide:languages" className="me-1" />
-                    {language.startsWith("vi") ? "Tiếng Việt" : "English"}
-                  </span>
-                }
-                id="language-nav-dropdown"
-                align="end"
-                className="bg-transparent border-0"
-              >
-                <NavDropdown.Item
-                  onClick={() => changeLanguage("vi")}
-                  className={`d-flex align-items-center justify-content-between text-xs py-2 ${
-                    language.startsWith("vi") ? "text-primary" : "text-dark"
-                  }`}
-                >
-                  <span>Tiếng Việt</span>
-                  {language.startsWith("vi") && (
-                    <Icon
-                      icon="lucide:check"
-                      className="text-primary text-xs ms-2"
-                    />
-                  )}
-                </NavDropdown.Item>
-                <NavDropdown.Item
-                  onClick={() => changeLanguage("en")}
-                  className={`d-flex align-items-center justify-content-between text-xs py-2 ${
-                    language.startsWith("en") ? "text-primary" : "text-dark"
-                  }`}
-                >
-                  <span>English</span>
-                  {language.startsWith("en") && (
-                    <Icon
-                      icon="lucide:check"
-                      className="text-primary text-xs ms-2"
-                    />
-                  )}
-                </NavDropdown.Item>
-              </NavDropdown>
+              {/* (Compact) Language selector moved to the far right below */}
 
               {/* Theme Toggle Sun/Moon Icon */}
               <div
@@ -371,6 +262,48 @@ export default function Header() {
                   </Button>
                 </>
               )}
+              {/* Compact language icon on the far right */}
+              <NavDropdown
+                title={
+                  <Icon
+                    icon="lucide:globe"
+                    width="18"
+                    className="text-muted-custom"
+                  />
+                }
+                id="language-nav-compact"
+                align="end"
+                className="bg-transparent border-0"
+              >
+                <NavDropdown.Item
+                  onClick={() => changeLanguage("vi")}
+                  className={`d-flex align-items-center justify-content-between text-xs py-2 ${
+                    language.startsWith("vi") ? "text-primary" : "text-dark"
+                  }`}
+                >
+                  <span>Tiếng Việt</span>
+                  {language.startsWith("vi") && (
+                    <Icon
+                      icon="lucide:check"
+                      className="text-primary text-xs ms-2"
+                    />
+                  )}
+                </NavDropdown.Item>
+                <NavDropdown.Item
+                  onClick={() => changeLanguage("en")}
+                  className={`d-flex align-items-center justify-content-between text-xs py-2 ${
+                    language.startsWith("en") ? "text-primary" : "text-dark"
+                  }`}
+                >
+                  <span>English</span>
+                  {language.startsWith("en") && (
+                    <Icon
+                      icon="lucide:check"
+                      className="text-primary text-xs ms-2"
+                    />
+                  )}
+                </NavDropdown.Item>
+              </NavDropdown>
             </div>
           </Navbar.Collapse>
         </Container>
@@ -417,54 +350,20 @@ export default function Header() {
             <Nav.Link
               onClick={() => {
                 setShowMobileMenu(false);
+                navigate("/dashboard");
+              }}
+              className="text-muted-custom hover:text-main py-2 text-sm font-semibold border-bottom border-light"
+            >
+              Tổng quan
+            </Nav.Link>
+            <Nav.Link
+              onClick={() => {
+                setShowMobileMenu(false);
                 navigate("/catalog");
               }}
               className="text-muted-custom hover:text-main py-2 text-sm font-semibold border-bottom border-light"
             >
               {t("search")}
-            </Nav.Link>
-            <Nav.Link
-              onClick={() => {
-                setShowMobileMenu(false);
-                navigate("/journals");
-              }}
-              className="text-muted-custom hover:text-main py-2 text-sm font-semibold border-bottom border-light"
-              style={{
-                color:
-                  pathname === "/journals"
-                    ? "var(--primary)"
-                    : "var(--text-muted)",
-              }}
-            >
-              {t("journals")}
-            </Nav.Link>
-            <Nav.Link
-              onClick={() => {
-                setShowMobileMenu(false);
-                navigate("/articles");
-              }}
-              className="text-muted-custom hover:text-main py-2 text-sm font-semibold border-bottom border-light"
-              style={{
-                color: window.location.pathname.startsWith("/articles")
-                  ? "var(--primary)"
-                  : "var(--text-muted)",
-              }}
-            >
-              {t("articles")}
-            </Nav.Link>
-            <Nav.Link
-              href="#features"
-              onClick={() => setShowMobileMenu(false)}
-              className="text-muted-custom hover:text-main py-2 text-sm font-semibold border-bottom border-light"
-            >
-              {t("features")}
-            </Nav.Link>
-            <Nav.Link
-              href="#how-to-use"
-              onClick={() => setShowMobileMenu(false)}
-              className="text-muted-custom hover:text-main py-2 text-sm font-semibold border-bottom border-light"
-            >
-              {t("howToUse")}
             </Nav.Link>
           </Nav>
 

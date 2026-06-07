@@ -40,15 +40,9 @@ export function useCatalogSearch(currentUser) {
   // Quartiles: Q1, Q2, Q3, Q4
   const selectedQuartiles = searchParams.getAll('quartile');
 
-  // Load subject filters from API (only when logged in — BE requires auth)
+  // Load subject filters from API
   useEffect(() => {
     async function loadFilters() {
-      if (!currentUser) {
-        // Subject areas/categories require auth — skip silently for guests
-        setSubjectAreas([]);
-        setSubjectCategories([]);
-        return;
-      }
       setLoadingFilters(true);
       try {
         const [areasRes, catsRes] = await Promise.all([
@@ -77,7 +71,7 @@ export function useCatalogSearch(currentUser) {
     }
 
     loadFilters();
-  }, [currentUser]);
+  }, []);
 
   const selectedAreasStr = selectedAreas.join(',');
   const selectedCategoriesStr = selectedCategories.join(',');
@@ -114,7 +108,8 @@ export function useCatalogSearch(currentUser) {
     } catch (err) {
       const status = err.response?.status;
       if (status === 401) {
-        setError('Bạn cần đăng nhập để tìm kiếm journal.');
+        // Backend may require auth for some filter endpoints; do not force login for search.
+        setError('Không thể tải kết quả tìm kiếm. Vui lòng thử lại sau.');
       } else if (status === 404) {
         setError('Không tìm thấy dữ liệu.');
       } else {
