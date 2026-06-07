@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card, Button, Badge } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 
 export default function JournalResultCard({
@@ -9,6 +9,7 @@ export default function JournalResultCard({
   onFollow,
   onTagClick
 }) {
+  const navigate = useNavigate();
   const id = journal.id || journal.journal_id;
   const {
     display_name,
@@ -25,6 +26,7 @@ export default function JournalResultCard({
 
   return (
     <Card 
+      onClick={() => navigate(`/journals/${id}`)}
       className="journal-dark-card mb-3 text-start position-relative transition-all duration-300 card-hover-lift"
       style={{ 
         borderRadius: '16px',
@@ -41,6 +43,7 @@ export default function JournalResultCard({
           <div className="flex-grow-1">
             <Link 
               to={`/journals/${id}`} 
+              onClick={(e) => e.stopPropagation()}
               className="text-decoration-none text-main hover:text-primary d-block mb-2"
             >
               <h5 className="font-display fw-bold mb-1 fs-5" style={{ letterSpacing: '-0.02em', lineHeight: '1.3' }}>

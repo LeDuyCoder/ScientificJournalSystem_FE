@@ -20,12 +20,12 @@ export default function AppRoutes() {
       </Route>
 
       <Route element={<ProtectedRoute />}>
-        <Route path="/journals/:id" element={<JournalDetailPage />} />
         <Route path="/articles" element={<ArticleListPage />} />
         <Route path="/articles/:id" element={<ArticleDetailPage />} />
       </Route>
 
-      {/* Public pages: Dashboard and Search should not require login */}
+      {/* Public pages: Dashboard, Search, and Journal Details should not require login */}
+      <Route path="/journals/:id" element={<JournalDetailPage />} />
       <Route path="/dashboard" element={<DashboardPage />} />
       <Route path="/catalog" element={<CatalogSearchPage />} />
       <Route path="/search" element={<CatalogSearchPage />} />
