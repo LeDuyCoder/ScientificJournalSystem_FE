@@ -5,6 +5,7 @@
  */
 import { Container, Row, Col, Form, Button, InputGroup, Pagination, Dropdown, Breadcrumb } from 'react-bootstrap';
 import { Icon } from '@iconify/react';
+import { useNavigate } from 'react-router-dom';
 import { useCatalogSearch } from '../hooks/useCatalogSearch';
 import FilterPanel from '../components/FilterPanel';
 import JournalTable from '../components/JournalTable';
@@ -14,6 +15,7 @@ import Header from '../../landing/components/Header';
 import useAuth from '../../auth/hooks/useAuth';
 
 export default function CatalogSearchPage() {
+  const navigate = useNavigate();
   const auth = useAuth();
   const { user } = auth;
 

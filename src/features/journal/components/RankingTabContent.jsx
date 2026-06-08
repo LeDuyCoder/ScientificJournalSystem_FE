@@ -3,7 +3,7 @@
  *
  * File: features\journal\components\RankingTabContent.jsx
  */
-import { Row, Col, Table, Badge } from 'react-bootstrap';
+import { Row, Col, Table } from 'react-bootstrap';
 import LoadingSkeleton from '../../../shared/components/LoadingSkeleton';
 
 export default function RankingTabContent({ rankingHistory = [], metricName = 'Impact Factor', loading }) {

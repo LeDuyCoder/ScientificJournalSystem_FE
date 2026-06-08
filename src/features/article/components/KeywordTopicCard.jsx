@@ -1,7 +1,9 @@
-﻿/**
- * File source thuộc hệ thống FE ResearchPulse.
+/**
+ * Card hiển thị keyword và topic trong trang chi tiết bài báo.
+ * - Keywords: click được, điều hướng tới /keywords/:id/articles hoặc /keywords?keyword=...
+ * - Topics: chỉ hiển thị, KHÔNG click vì route /topics/:id/articles chưa có trong AppRoutes.
  *
- * File: features\article\components\KeywordTopicCard.jsx
+ * File: features/article/components/KeywordTopicCard.jsx
  */
 import { Card, Badge } from 'react-bootstrap';
 import { Icon } from '@iconify/react';
@@ -20,6 +22,7 @@ export default function KeywordTopicCard({ primaryTopic, keywords, topics = [] }
     ? [{ topic_id: null, display_name: primaryTopic, is_primary: true }]
     : [];
 
+  // Dùng topics từ BE nếu có, nếu không thì fallback về primaryTopic string
   const displayTopics = topicList.length > 0 ? topicList : fallbackTopic;
 
   /**
@@ -31,24 +34,14 @@ export default function KeywordTopicCard({ primaryTopic, keywords, topics = [] }
   const handleKeywordClick = (keyword) => {
     if (keyword.keyword_id) {
       navigate(`/keywords/${keyword.keyword_id}/articles`);
-    } else {
-      navigate(`/keywords?keyword=${encodeURIComponent(keyword.display_name)}`);
-    }
-  };
-
-  /**
-   * Topic hiện chưa có route public đầy đủ như keyword.
-   * Nếu có `topic_id` thì đi theo route topic; nếu không thì fallback về catalog search.
-   */
-  const handleTopicClick = (topic) => {
-    if (topic.topic_id) {
-      navigate(`/topics/${topic.topic_id}/articles`);
       return;
     }
-    navigate(`/catalog?search=${encodeURIComponent(topic.display_name)}`);
+    navigate(`/keywords?keyword=${encodeURIComponent(keyword.display_name)}`);
   };
 
-  const hasContent = displayTopics.length > 0 || keywordList.length > 0;
+  const hasKeywords = keywordList.length > 0;
+  const hasTopics = displayTopics.length > 0;
+  const hasContent = hasKeywords || hasTopics;
 
   return (
     <Card
@@ -68,45 +61,88 @@ export default function KeywordTopicCard({ primaryTopic, keywords, topics = [] }
       {!hasContent ? (
         <span className="text-muted-custom text-sm">Chưa có thông tin từ khóa hoặc chủ đề.</span>
       ) : (
-        <div className="d-flex flex-wrap gap-2">
-          {displayTopics.map((topic) => (
-            <Badge
-              key={`topic-${topic.topic_id || topic.display_name}`}
-              onClick={() => handleTopicClick(topic)}
-              className="py-2 px-3 text-xs font-semibold d-inline-flex align-items-center gap-1"
-              style={{
-                cursor: 'pointer',
-                borderRadius: '8px',
-                backgroundColor: topic.is_primary ? 'var(--primary-light)' : 'var(--bg-chip)',
-                color: topic.is_primary ? 'var(--primary)' : 'var(--text-main)',
-                border: topic.is_primary
-                  ? '1px solid rgba(255, 122, 51, 0.3)'
-                  : '1px solid var(--border)',
-                transition: 'all 0.2s',
-              }}
-            >
-              {topic.is_primary && <Icon icon="lucide:star" width="12" />}
-              {topic.display_name}
-            </Badge>
-          ))}
+        <div className="d-flex flex-column gap-3">
 
-          {keywordList.map((keyword) => (
-            <Badge
-              key={`keyword-${keyword.keyword_id || keyword.display_name}`}
-              onClick={() => handleKeywordClick(keyword)}
-              className="py-2 px-3 text-xs font-semibold"
-              style={{
-                cursor: 'pointer',
-                borderRadius: '8px',
-                backgroundColor: 'var(--bg-chip)',
-                color: 'var(--text-main)',
-                border: '1px solid var(--border)',
-                transition: 'all 0.2s',
-              }}
-            >
-              {keyword.display_name}
-            </Badge>
-          ))}
+          {/* ── Keywords ── click được, route /keywords/:id/articles */}
+          <section>
+            <div className="d-flex align-items-center gap-2 mb-2">
+              <Icon icon="lucide:key-round" width="14" style={{ color: 'var(--primary)' }} />
+              <span className="text-uppercase fw-semibold" style={{ fontSize: '0.7rem', color: 'var(--text-muted)', letterSpacing: '0.5px' }}>
+                Keywords
+              </span>
+            </div>
+
+            {hasKeywords ? (
+              <div className="d-flex flex-wrap gap-2">
+                {keywordList.map((keyword) => (
+                  <Badge
+                    key={`keyword-${keyword.keyword_id || keyword.display_name}`}
+                    onClick={() => handleKeywordClick(keyword)}
+                    className="py-2 px-3 text-xs font-semibold"
+                    title="Xem các bài báo theo keyword này"
+                    style={{
+                      cursor: 'pointer',
+                      borderRadius: '8px',
+                      backgroundColor: 'var(--bg-chip)',
+                      color: 'var(--text-main)',
+                      border: '1px solid var(--border)',
+                      transition: 'all 0.2s',
+                    }}
+                  >
+                    {keyword.display_name}
+                  </Badge>
+                ))}
+              </div>
+            ) : (
+              <div
+                className="text-xs px-3 py-2 rounded-3"
+                style={{
+                  color: 'var(--text-muted)',
+                  backgroundColor: 'rgba(0,0,0,0.03)',
+                  border: '1px dashed var(--border)',
+                }}
+              >
+                Bài báo này chưa có keyword từ dữ liệu backend.
+              </div>
+            )}
+          </section>
+
+          {/* ── Topics ── chỉ hiển thị, KHÔNG click (route chưa hoàn thiện) */}
+          {hasTopics && (
+            <section>
+              <div className="d-flex align-items-center gap-2 mb-2">
+                <Icon icon="lucide:network" width="14" style={{ color: 'var(--text-muted)' }} />
+                <span className="text-uppercase fw-semibold" style={{ fontSize: '0.7rem', color: 'var(--text-muted)', letterSpacing: '0.5px' }}>
+                  Topics
+                </span>
+                <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)' }}>(đang phát triển)</span>
+              </div>
+
+              <div className="d-flex flex-wrap gap-2">
+                {displayTopics.map((topic) => (
+                  <Badge
+                    key={`topic-${topic.topic_id || topic.display_name}`}
+                    className="py-2 px-3 text-xs font-semibold d-inline-flex align-items-center gap-1"
+                    title="Topic route chưa hoàn thiện"
+                    style={{
+                      cursor: 'default',
+                      borderRadius: '8px',
+                      backgroundColor: topic.is_primary ? 'var(--primary-light)' : 'var(--bg-chip)',
+                      color: topic.is_primary ? 'var(--primary)' : 'var(--text-main)',
+                      border: topic.is_primary
+                        ? '1px solid rgba(255, 122, 51, 0.3)'
+                        : '1px solid var(--border)',
+                      opacity: 0.85,
+                    }}
+                  >
+                    {topic.is_primary && <Icon icon="lucide:star" width="12" />}
+                    {topic.display_name}
+                  </Badge>
+                ))}
+              </div>
+            </section>
+          )}
+
         </div>
       )}
     </Card>

@@ -4,7 +4,7 @@
  * File: features\journal\components\VolumesTabContent.jsx
  */
 import { useState } from 'react';
-import { Spinner, Badge, Button } from 'react-bootstrap';
+import { Spinner, Button } from 'react-bootstrap';
 import { Icon } from '@iconify/react';
 import { useNavigate } from 'react-router-dom';
 import LoadingSkeleton from '../../../shared/components/LoadingSkeleton';
