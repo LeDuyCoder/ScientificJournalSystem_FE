@@ -94,25 +94,23 @@ export default function JournalDetailPage() {
       <Container className="pt-5 mt-5">
         
         {/* Custom Breadcrumb Nav */}
-        <div className="py-3 text-start">
-          <Breadcrumb className="mb-0 custom-breadcrumb">
-            <Breadcrumb.Item 
+        <div aria-label="breadcrumb" className="mb-4">
+          <Breadcrumb className="mb-0 custom-breadcrumb d-flex align-items-center">
+            <Breadcrumb.Item
               onClick={() => navigate('/')}
-              className="text-muted-custom hover-text-dark text-decoration-none"
-              style={{ cursor: 'pointer', fontSize: '0.9rem' }}
+              className="font-display d-flex align-items-center"
+              linkProps={{ style: { cursor: 'pointer', fontSize: '0.9rem', lineHeight: 1, color: 'var(--text-muted)', textDecoration: 'none' } }}
             >
               Trang chủ
             </Breadcrumb.Item>
-            <Breadcrumb.Item 
-              onClick={() => navigate('/')}
-              className="text-muted-custom hover-text-dark text-decoration-none"
-              style={{ cursor: 'pointer', fontSize: '0.9rem' }}
-            >
-              Danh mục
+            <Breadcrumb.Item
+            onClick={() => navigate('/search')}
+            active className="font-display d-flex align-items-center" style={{cursor: 'pointer' ,fontSize: '0.9rem', lineHeight: 1, color: 'var(--text-muted)' }}>
+              Tìm kiếm
             </Breadcrumb.Item>
             <Breadcrumb.Item 
               active 
-              className="text-primary font-display fw-semibold"
+              className="font-display d-flex align-items-center"
               style={{ fontSize: '0.9rem' }}
             >
               {loadingJournal ? 'Đang tải...' : journal?.display_name}

@@ -1,9 +1,9 @@
-﻿/**
+/**
  * File source thuộc hệ thống FE ResearchPulse.
  *
  * File: features\catalog\pages\CatalogSearchPage.jsx
  */
-import { Container, Row, Col, Form, Button, InputGroup, Pagination, Dropdown } from 'react-bootstrap';
+import { Container, Row, Col, Form, Button, InputGroup, Pagination, Dropdown, Breadcrumb } from 'react-bootstrap';
 import { Icon } from '@iconify/react';
 import { useCatalogSearch } from '../hooks/useCatalogSearch';
 import FilterPanel from '../components/FilterPanel';
@@ -143,14 +143,21 @@ export default function CatalogSearchPage() {
 
       <Container>
         {/* Breadcrumbs */}
-        <nav aria-label="breadcrumb" className="mb-4">
-          <ol className="breadcrumb mb-0" style={{ fontSize: '0.8rem' }}>
-            <li className="breadcrumb-item">
-              <span className="text-muted-custom" style={{ cursor: 'pointer' }} onClick={() => window.location.href = '/'}>Home</span>
-            </li>
-            <li className="breadcrumb-item active text-muted-custom" aria-current="page">Tìm kiếm</li>
-          </ol>
-        </nav>
+        <div aria-label="breadcrumb" className="mb-4">
+          <Breadcrumb className="mb-0 custom-breadcrumb d-flex align-items-center">
+            <Breadcrumb.Item
+              onClick={() => navigate('/')}
+              className="font-display d-flex align-items-center"
+              linkProps={{ style: { cursor: 'pointer', fontSize: '0.9rem', lineHeight: 1, color: 'var(--text-muted)', textDecoration: 'none' } }}
+            >
+              Trang chủ
+            </Breadcrumb.Item>
+            <Breadcrumb.Item active className="font-display d-flex align-items-center" style={{ fontSize: '0.9rem', lineHeight: 1, color: 'var(--text-muted)' }}>
+              Tìm kiếm
+            </Breadcrumb.Item>
+
+          </Breadcrumb>
+        </div>
 
         {/* Page Title & Subtitle */}
         <div className="text-start mb-4">
@@ -236,12 +243,12 @@ export default function CatalogSearchPage() {
                 >
                   <Icon icon="lucide:arrow-up-down" width="14" />
                   <span>
-                    {sort === 'metric' && 'Mặc định - Metric cao nhất'}
+                    {sort === 'metric' && 'Mặc định'}
                     {sort === 'name' && 'Tên A-Z'}
                   </span>
                 </Dropdown.Toggle>
                 <Dropdown.Menu className="bg-white border-light">
-                  <Dropdown.Item onClick={() => handleSortChange('metric')} className="text-main hover:bg-light text-xs py-2">Mặc định - Metric cao nhất</Dropdown.Item>
+                  <Dropdown.Item onClick={() => handleSortChange('metric')} className="text-main hover:bg-light text-xs py-2">Mặc định</Dropdown.Item>
                   <Dropdown.Item onClick={() => handleSortChange('name')} className="text-main hover:bg-light text-xs py-2">Tên A-Z</Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>

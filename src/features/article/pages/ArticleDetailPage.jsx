@@ -119,7 +119,7 @@ export default function ArticleDetailPage() {
           <Button 
             variant="link" 
             onClick={() => navigate('/articles')}
-            className="text-primary hover:text-dark p-0 text-decoration-none d-flex align-items-center gap-2 mb-3 font-semibold"
+            className="text-main hover:text-dark p-0 text-decoration-none d-flex align-items-center gap-2 mb-3 font-semibold"
             style={{ fontSize: '0.9rem', fontWeight: 600 }}
           >
             <Icon icon="lucide:arrow-left" width="18" />

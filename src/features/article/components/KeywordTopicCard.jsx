@@ -61,7 +61,7 @@ export default function KeywordTopicCard({ primaryTopic, keywords, topics = [] }
       }}
     >
       <h5 className="font-display font-weight-bold text-main mb-3 d-flex align-items-center gap-2">
-        <Icon icon="lucide:tags" className="text-primary" />
+        <Icon icon="lucide:tags" style={{ color: 'var(--primary)' }} width="20" />
         Từ khóa & Chủ đề (Keywords & Topics)
       </h5>
 

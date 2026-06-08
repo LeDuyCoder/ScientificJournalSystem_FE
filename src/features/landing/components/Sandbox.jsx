@@ -326,11 +326,25 @@ export default function Sandbox() {
                             backgroundColor: "var(--bg-chip)",
                             transition: "all 0.2s ease",
                             cursor:
-                              item.type === "JOURNAL" ? "pointer" : "default",
+                              item.type === "JOURNAL" ||
+                              item.type === "AUTHOR" ||
+                              item.type === "ARTICLE" ||
+                              item.type === "KEYWORD"
+                                ? "pointer"
+                                : "default",
                           }}
                           onClick={() => {
                             if (item.type === "JOURNAL") {
                               navigate(`/journals/${item.id}`);
+                            }
+                            if (item.type === "AUTHOR") {
+                              navigate(`/authors/${item.id}`);
+                            }
+                            if (item.type === "ARTICLE") {
+                              navigate(`/articles/${item.id}`);
+                            }
+                            if (item.type === "KEYWORD") {
+                              navigate(`/keywords/${item.id}`);
                             }
                           }}
                           onMouseEnter={(e) => {
@@ -366,13 +380,13 @@ export default function Sandbox() {
                           </div>
                           <span
                             style={{
-                              backgroundColor: ["KEYWORD", "AUTHOR", "ARTICLE"].includes(item.type)
+                              backgroundColor: ["KEYWORD", "AUTHOR", "ARTICLE", "JOURNAL"].includes(item.type)
                                 ? "transparent"
                                 : cfg.bgColor,
-                              color: ["KEYWORD", "AUTHOR", "ARTICLE"].includes(item.type)
+                              color: ["KEYWORD", "AUTHOR", "ARTICLE", "JOURNAL"].includes(item.type)
                                 ? "#000000"
                                 : cfg.textColor,
-                              border: ["KEYWORD", "AUTHOR", "ARTICLE"].includes(item.type)
+                              border: ["KEYWORD", "AUTHOR", "ARTICLE", "JOURNAL"].includes(item.type)
                                 ? "none"
                                 : `1px solid ${cfg.borderColor}`,
                               fontSize: "0.65rem",

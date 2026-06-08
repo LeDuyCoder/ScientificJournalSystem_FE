@@ -1,4 +1,4 @@
-﻿/**
+/**
  * File source thuộc hệ thống FE ResearchPulse.
  *
  * File: features\journal\components\RankingTabContent.jsx
@@ -252,31 +252,17 @@ export default function RankingTabContent({ rankingHistory = [], metricName = 'I
                     className="border-bottom border-secondary-subtle" 
                     style={{ borderColor: 'var(--border) !important', cursor: 'pointer' }}
                   >
-                    <td className="py-3 fw-medium text-main">{row.year}</td>
+                    <td className="py-3">{row.year}</td>
                     <td className="py-3">
                       {row.quartile ? (
-                        <Badge 
-                          className="font-display"
-                          style={{ 
-                            fontWeight: 700, 
-                            borderRadius: '4px', 
-                            fontSize: '0.75rem',
-                            backgroundColor: row.quartile === 'Q1' ? 'rgba(47, 198, 70, 0.12)'
-                                           : row.quartile === 'Q2' ? 'var(--primary-light)' 
-                                           : 'var(--bg-section)',
-                            color: row.quartile === 'Q1' ? 'var(--q1-color)' 
-                                 : row.quartile === 'Q2' ? 'var(--primary)' 
-                                 : 'var(--text-muted)',
-                            border: row.quartile === 'Q1' ? '1px solid rgba(47, 198, 70, 0.3)' : '1px solid var(--border)'
-                          }}
-                        >
+                        <span className="text-main">
                           {row.quartile}
-                        </Badge>
+                        </span>
                       ) : (
                         <span className="text-muted">—</span>
                       )}
                     </td>
-                    <td className="py-3 fw-bold text-primary font-display">
+                    <td className="py-3 fw-bold text-main font-display">
                       {row.value !== null && row.value !== undefined ? row.value : <span className="text-muted">—</span>}
                     </td>
                     <td className="py-3 text-muted-custom font-display">
