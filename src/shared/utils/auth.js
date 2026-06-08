@@ -1,94 +1,39 @@
-import { jwtDecode } from "jwt-decode";
 import { useAuthStore } from "../../app/store/authStore";
-import { STORAGE_KEYS } from "../constants/storageKeys";
+import api from "../services/api";
 
-const TOKEN_KEY = STORAGE_KEYS.ACCESS_TOKEN;
-
-/**
- * Lấy JWT token từ bộ nhớ của trình duyệt.
- * 
- * Hàm sẽ ưu tiên tìm kiếm token trong `localStorage` trước (dành cho trường hợp người dùng
- * có chọn "Ghi nhớ đăng nhập"). Nếu không tìm thấy, hàm sẽ tiếp tục tìm trong `sessionStorage`.
- *
- * @function getToken
- * @returns {string|null} Trả về chuỗi JWT token nếu tồn tại, ngược lại trả về `null`.
- */
-export const getToken = () => {
-  return (
-    localStorage.getItem(TOKEN_KEY) ||
-    sessionStorage.getItem(TOKEN_KEY)
-  );
-};
-
-/**
- * Xóa toàn bộ token xác thực khỏi bộ nhớ của trình duyệt.
- * 
- * Hàm này thường được gọi khi người dùng Đăng xuất (Logout) hoặc khi phát hiện 
- * token đã hết hạn. Hàm đảm bảo dọn sạch token ở cả `localStorage` và `sessionStorage`.
- *
- * @function removeToken
- * @returns {void} Hàm không trả về giá trị.
- */
 export const removeToken = () => {
-  localStorage.removeItem(TOKEN_KEY);
-  sessionStorage.removeItem(TOKEN_KEY);
+  localStorage.removeItem('token');
+  sessionStorage.removeItem('token');
+  localStorage.removeItem('researchpulse_token');
+  sessionStorage.removeItem('researchpulse_token');
 };
 
-/**
- * Kiểm tra xem JWT token đã hết hạn hay chưa.
- * 
- * Hàm thực hiện giải mã (decode) payload của token để lấy thuộc tính `exp` (Thời gian hết hạn).
- * Sau đó so sánh nó với thời gian hiện tại của hệ thống. 
- * Nếu token bị lỗi format và không thể giải mã (rơi vào khối `catch`), hàm sẽ mặc định 
- * coi như token đã hết hạn (trả về `true`) để đảm bảo an toàn bảo mật.
- *
- * @function isTokenExpired
- * @param {string} token - Chuỗi JWT token cần kiểm tra.
- * @returns {boolean} Trả về `true` nếu token đã hết hạn hoặc không hợp lệ, `false` nếu token vẫn còn hạn sử dụng.
- */
-export const isTokenExpired = (token) => {
+export const isAuthenticated = async () => {
   try {
-    const { exp } = jwtDecode(token);
+    // 1. Nếu Zustand đang báo có User (đã đăng nhập thành công trước đó trong phiên này)
+    const storeUser = useAuthStore.getState().user;
+    if (storeUser) {
+      return true;
+    }
 
-    const now = Date.now() / 1000;
+    // 2. Nếu F5 lại trang, Zustand bị mất data -> Gọi API /me để Cookie quét xác thực
+    const res = await api.get("/users/me");
 
-    return exp < now;
-  } catch {
-    return true;
-  }
-};
+    if (res.status === 200) {
+      const { user } = res.data; // Backend chỉ trả về dữ liệu user sạch, không trả token
+      
+      // Cập nhật vào Zustand trạng thái đăng nhập thành công
+      // Lưu ý: Hàm này trong store của bạn chỉ cần set state: user và isAuthenticated = true
+      useAuthStore.getState().loginSuccess(null, user); 
+      
+      return true;
+    }
 
-/**
- * Kiểm tra trạng thái xác thực toàn cục (Authentication Status) của người dùng.
- * 
- * Luồng xử lý kiểm tra bảo mật nhiều lớp:
- * 1. Lấy token từ storage. Nếu không có => Chưa đăng nhập (`false`).
- * 2. Giải mã và kiểm tra hạn của token. Nếu hết hạn => Xóa rác trong storage và trả về `false`.
- * 3. [Quan trọng] Nếu người dùng F5/Reload lại trang, biến state trong Zustand (`useAuthStore`) 
- *    sẽ bị reset về null. Hàm này sẽ lấy token hợp lệ từ storage và "bơm" (sync) ngược lại vào 
- *    Zustand store thông qua `loginSuccess(token)`.
- * 4. Hoàn tất kiểm tra và trả về `true` (Hợp lệ).
- *
- * @function isAuthenticated
- * @returns {boolean} Trả về `true` nếu người dùng đã đăng nhập và token còn hợp lệ, ngược lại trả về `false`.
- */
-export const isAuthenticated = () => {
-  const token = getToken();
-
-  if (!token) {
     return false;
-  }
-
-  if (isTokenExpired(token)) {
+  } catch {
+    // Nếu dính lỗi 401 triệt để (kể cả sau khi Axios Interceptor đã cố Refresh thất bại)
+    useAuthStore.getState().logout(); // Đảm bảo clear sạch Zustand cũ nếu có
     removeToken();
     return false;
   }
-
-  const storeToken = useAuthStore.getState().token;
-
-  if (!storeToken) {
-    useAuthStore.getState().loginSuccess(token);
-  }
-
-  return true;
 };

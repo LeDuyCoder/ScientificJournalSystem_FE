@@ -18,15 +18,18 @@ export const useAuthStore = create((set) => {
     error: null,
 
     /**
-     * Cập nhật token sau khi đăng nhập hoặc đồng bộ lại từ browser storage.
+     * Cập nhật trạng thái đăng nhập sau login, refresh token hoặc /users/me.
+     * Nhánh Duy có thể gọi loginSuccess(null, user) khi xác thực bằng cookie.
      *
-     * @param {string} token - JWT access token hợp lệ.
+     * @param {string|null} token - JWT access token mới, nếu backend trả về.
+     * @param {Object|null} user - User sạch từ backend khi xác thực bằng cookie.
      */
-    loginSuccess: (token) => set({
-      token,
-      isAuthenticated: !!token,
+    loginSuccess: (token = null, user = null) => set((state) => ({
+      token: token ?? state.token,
+      user: user ?? state.user,
+      isAuthenticated: Boolean(token ?? state.token ?? user ?? state.user),
       error: null,
-    }),
+    })),
 
     /**
      * Cập nhật hồ sơ người dùng đã đăng nhập.

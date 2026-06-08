@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { getToken } from '../utils/auth';
+import { useAuthStore } from '../../app/store/authStore';
 
 // Base Axios instance pointing to the backend API base URL
 const api = axios.create({
@@ -7,18 +7,40 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  withCredentials: true
 });
 
-// Request interceptor to dynamically inject the bearer auth token
-api.interceptors.request.use(
-  (config) => {
-    const token = getToken();
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
+api.interceptors.response.use(
+  (response) => {
+    return response;
   },
-  (error) => {
+  async (error) => {
+    const originalRequest = error.config;
+    
+    if (error.response && error.response.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
+      
+      try {
+        const res = await axios.get(
+          `${import.meta.env.VITE_API_URL}/auth/refresh`,
+          { withCredentials: true } 
+        );
+
+        if (res.status === 200) {
+          const newToken = res.data.token;
+          
+          // 🔥 ĐÂY LÀ CHỖ THAY ĐỔI: Lấy hàm loginSuccess trực tiếp từ kho Zustand mà không dùng Hook
+          const { loginSuccess } = useAuthStore.getState(); 
+          loginSuccess(newToken); 
+          
+          originalRequest.headers['Authorization'] = `Bearer ${newToken}`;
+          
+          return api(originalRequest);
+        }
+      } catch (refreshError) {
+        return Promise.reject(refreshError);
+      }
+    }
     return Promise.reject(error);
   }
 );
