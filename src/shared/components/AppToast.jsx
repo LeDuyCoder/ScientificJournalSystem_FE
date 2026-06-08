@@ -1,3 +1,8 @@
+﻿/**
+ * File source thuộc hệ thống FE ResearchPulse.
+ *
+ * File: shared\components\AppToast.jsx
+ */
 import { useEffect, useState } from "react";
 import { Toast, ToastContainer } from "react-bootstrap";
 import { Icon } from "@iconify/react";

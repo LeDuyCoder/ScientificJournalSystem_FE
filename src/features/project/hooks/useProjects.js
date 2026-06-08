@@ -1,3 +1,8 @@
+﻿/**
+ * File source thuộc hệ thống FE ResearchPulse.
+ *
+ * File: features\project\hooks\useProjects.js
+ */
 import { useState, useCallback } from 'react';
 import { getProjectsApi, createProjectApi, deleteProjectApi } from '../api/project.api';
 

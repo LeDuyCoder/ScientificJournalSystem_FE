@@ -1,5 +1,9 @@
+﻿/**
+ * File source thuộc hệ thống FE ResearchPulse.
+ *
+ * File: features\dashboard\components\RecentProjectsCard.jsx
+ */
 import { Icon } from '@iconify/react';
-import { Badge } from 'react-bootstrap';
 import { truncate } from '../../../shared/utils/formatNumber';
 
 /** Status badge config */

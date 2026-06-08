@@ -1,3 +1,8 @@
+﻿/**
+ * File source thuộc hệ thống FE ResearchPulse.
+ *
+ * File: features\zone\api\zone.api.js
+ */
 import api from '../../../shared/services/api';
 
 /**

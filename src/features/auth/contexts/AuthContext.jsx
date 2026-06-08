@@ -1,4 +1,9 @@
-import React, { createContext, useState, useEffect, useCallback } from 'react';
+﻿/**
+ * File source thuộc hệ thống FE ResearchPulse.
+ *
+ * File: features\auth\contexts\AuthContext.jsx
+ */
+import { createContext, useState, useEffect, useCallback } from 'react';
 import {
   loginApi,
   registerApi,
@@ -143,7 +148,7 @@ export function AuthProvider({ children }) {
    * @param {Function} [loginSuccess] - (Tùy chọn) Hàm callback để xử lý sau khi lấy được token (lưu ý: hiện chưa được sử dụng trực tiếp trong thân hàm này, có thể đang được xử lý ở `onSuccess` của `useGoogleLogin`).
    * @returns {void} Hàm không trả về giá trị.
    */
-  const loginWithGoogle = (redirectTo = "/", loginSuccess) => {
+  const loginWithGoogle = (redirectTo = "/") => {
     setGoogleRedirect(redirectTo);
     googleLogin();
   };
