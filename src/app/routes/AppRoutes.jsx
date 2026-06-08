@@ -9,12 +9,13 @@ import ArticleDetailPage from '../../features/article/pages/ArticleDetailPage';
 import DashboardPage from '../../features/dashboard/pages/DashboardPage';
 import RegisterPage from '../../features/auth/pages/RegisterPage';
 import LoginPage from '../../features/auth/pages/LoginPage';
-import ProtectedRoute, { LoginRouteCheck } from './ProtectedRoute';
+import ProtectedRoute from './ProtectedRoute';
 import HomeRoute from './HomeRoute';
+import PublicRoute from './PublicRoute';
 export default function AppRoutes() {
   return (
     <Routes>
-      <Route element={<LoginRouteCheck />}>
+      <Route element={<PublicRoute />}>
         <Route path="/login"      element={<LoginPage />} />
         <Route path="/register"   element={<RegisterPage />} />
       </Route>

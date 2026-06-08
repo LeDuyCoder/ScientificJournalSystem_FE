@@ -22,7 +22,7 @@ export const verifyEmailApi = (token) => {
 
 /**
  * Log in a user with email and password
- * @param {Object} data - { email, password }
+ * @param {Object} data - { email, password, remember }
  * @returns {Promise} Axios promise
  */
 export const loginApi = (data) => {
