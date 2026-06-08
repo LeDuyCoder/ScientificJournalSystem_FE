@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useAuth from '../hooks/useAuth';
 import AuthLayout from '../../../app/layouts/AuthLayout';
@@ -20,7 +20,7 @@ export default function RegisterPage() {
     setError(null);
     try {
       setRegisteredEmail(payload.email);
-      const res = await register(payload);
+      await register(payload);
       
       // Assume success if no exception thrown
       setIsSuccess(true);

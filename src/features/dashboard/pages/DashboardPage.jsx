@@ -4,7 +4,6 @@ import { Container, Row, Col } from "react-bootstrap";
 import { Icon } from "@iconify/react";
 
 import Header from "../../landing/components/Header";
-import useAuth from "../../auth/hooks/useAuth";
 import { useUserStore } from "../../../app/store/userStore";
 import useDashboard from "../hooks/useDashboard";
 
@@ -28,7 +27,6 @@ import AuthRequiredModal from "../../journal/components/AuthRequiredModal";
  */
 export default function DashboardPage() {
   const navigate = useNavigate();
-  const { logout } = useAuth?.() ?? { logout: () => {} };
   const email = useUserStore((state) => state.email);
 
   const {
@@ -46,8 +44,6 @@ export default function DashboardPage() {
     errorKeywords,
     errorAuthors,
     refetchAnalytics,
-    refetchKeywords,
-    refetchAll,
   } = useDashboard(email);
 
   // Quick search state

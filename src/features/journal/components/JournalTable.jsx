@@ -1,4 +1,3 @@
-import React from 'react';
 import { Table, Badge, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';

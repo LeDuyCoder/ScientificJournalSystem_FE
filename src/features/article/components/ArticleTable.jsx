@@ -1,4 +1,3 @@
-import React from 'react';
 import { Table, Card, Button } from 'react-bootstrap';
 import { Icon } from '@iconify/react';
 import ArticleTableRow from './ArticleTableRow';

@@ -1,16 +1,15 @@
-import React from 'react';
 import { Container, Row, Col, Form, Button, InputGroup, Pagination, Dropdown } from 'react-bootstrap';
 import { Icon } from '@iconify/react';
 import { useCatalogSearch } from '../hooks/useCatalogSearch';
 import FilterPanel from '../components/FilterPanel';
-import JournalResultCard from '../components/JournalResultCard';
+import JournalTable from '../components/JournalTable';
 import LoadingSkeleton from '../../../shared/components/LoadingSkeleton';
 import AuthRequiredModal from '../../journal/components/AuthRequiredModal';
 import Header from '../../landing/components/Header';
 import useAuth from '../../auth/hooks/useAuth';
 
 export default function CatalogSearchPage() {
-  const auth = useAuth ? useAuth() : { user: null };
+  const auth = useAuth();
   const { user } = auth;
 
   const {
@@ -23,23 +22,24 @@ export default function CatalogSearchPage() {
     total,
     loadingJournals,
     error,
-    search,
     page,
-    limit,
     sort,
     selectedAreas,
     selectedCategories,
     selectedAccess,
     selectedQuartiles,
+    selectedYear,
+    isOaDiamond,
     followedJournals,
     showAuthModal,
     setShowAuthModal,
     handleSearchSubmit,
-    searchForTag,
     onAreaSelect,
     onCategorySelect,
     onAccessSelect,
     onQuartileSelect,
+    onYearSelect,
+    handleOaDiamondToggle,
     handleClearAll,
     handleSortChange,
     handlePageChange,
@@ -47,32 +47,88 @@ export default function CatalogSearchPage() {
     fetchJournals
   } = useCatalogSearch(user);
 
-  const totalPages = Math.ceil(total / limit) || 1;
+  const totalPages = Math.ceil(total / 10) || 1;
 
-  // Build Pagination Item array
-  const renderPaginationItems = () => {
+  // Pagination giống trang Article List (ellipsis + sliding window)
+  const renderPagination = () => {
+    if (totalPages <= 1) return null;
     const items = [];
-    const maxPageButtons = 5;
-    let startPage = Math.max(1, page - Math.floor(maxPageButtons / 2));
-    let endPage = Math.min(totalPages, startPage + maxPageButtons - 1);
 
-    if (endPage - startPage + 1 < maxPageButtons) {
-      startPage = Math.max(1, endPage - maxPageButtons + 1);
+    // Nút Trước
+    items.push(
+      <Pagination.Prev 
+        key="prev" 
+        disabled={page === 1}
+        onClick={() => handlePageChange(page - 1)}
+        className="mx-0.5"
+      />
+    );
+
+    const maxButtons = 5;
+    let startPage = Math.max(1, page - Math.floor(maxButtons / 2));
+    let endPage = Math.min(totalPages, startPage + maxButtons - 1);
+    if (endPage - startPage + 1 < maxButtons) {
+      startPage = Math.max(1, endPage - maxButtons + 1);
     }
 
+    // Trang 1 nếu có ellipsis
+    if (startPage > 1) {
+      items.push(
+        <Pagination.Item key={1} active={1 === page} onClick={() => handlePageChange(1)}>1</Pagination.Item>
+      );
+      if (startPage > 2) {
+        items.push(<Pagination.Ellipsis key="ellipsis-start" disabled />);
+      }
+    }
+
+    // Các trang ở giữa
     for (let p = startPage; p <= endPage; p++) {
       items.push(
-        <Pagination.Item 
-          key={p} 
-          active={p === page}
-          onClick={() => handlePageChange(p)}
-          className="mx-0.5"
-        >
-          {p}
-        </Pagination.Item>
+        <Pagination.Item key={p} active={p === page} onClick={() => handlePageChange(p)}>{p}</Pagination.Item>
       );
     }
-    return items;
+
+    // Trang cuối nếu có ellipsis
+    if (endPage < totalPages) {
+      if (endPage < totalPages - 1) {
+        items.push(<Pagination.Ellipsis key="ellipsis-end" disabled />);
+      }
+      items.push(
+        <Pagination.Item key={totalPages} active={totalPages === page} onClick={() => handlePageChange(totalPages)}>{totalPages}</Pagination.Item>
+      );
+    }
+
+    // Nút Tiếp
+    items.push(
+      <Pagination.Next 
+        key="next" 
+        disabled={page === totalPages}
+        onClick={() => handlePageChange(page + 1)}
+        className="mx-0.5"
+      />
+    );
+
+    return (
+      <Pagination 
+        className="justify-content-center m-0 custom-pagination"
+        style={{
+          '--bs-pagination-bg': 'var(--bg-card)',
+          '--bs-pagination-border-color': 'var(--border)',
+          '--bs-pagination-color': 'var(--text-muted)',
+          '--bs-pagination-hover-color': 'var(--primary)',
+          '--bs-pagination-hover-bg': 'var(--bg-main)',
+          '--bs-pagination-hover-border-color': 'var(--border)',
+          '--bs-pagination-active-bg': 'var(--primary)',
+          '--bs-pagination-active-border-color': 'var(--primary)',
+          '--bs-pagination-active-color': '#ffffff',
+          '--bs-pagination-disabled-bg': 'var(--bg-main)',
+          '--bs-pagination-disabled-color': 'var(--text-muted)',
+          '--bs-pagination-disabled-border-color': 'var(--border)'
+        }}
+      >
+        {items}
+      </Pagination>
+    );
   };
 
   return (
@@ -87,7 +143,7 @@ export default function CatalogSearchPage() {
             <li className="breadcrumb-item">
               <span className="text-muted-custom" style={{ cursor: 'pointer' }} onClick={() => window.location.href = '/'}>Home</span>
             </li>
-            <li className="breadcrumb-item active text-primary" aria-current="page">Tìm kiếm</li>
+            <li className="breadcrumb-item active text-muted-custom" aria-current="page">Tìm kiếm</li>
           </ol>
         </nav>
 
@@ -143,6 +199,10 @@ export default function CatalogSearchPage() {
             onCategorySelect={onCategorySelect}
             onAccessSelect={onAccessSelect}
             onQuartileSelect={onQuartileSelect}
+            selectedYear={selectedYear}
+            onYearSelect={onYearSelect}
+            isOaDiamond={isOaDiamond}
+            onOaDiamondToggle={handleOaDiamondToggle}
             onClearAll={handleClearAll}
             loading={loadingFilters}
           />
@@ -156,13 +216,12 @@ export default function CatalogSearchPage() {
                 <span>Đang tìm kiếm tạp chí...</span>
               ) : (
                 <span>
-                  Tìm thấy <strong className="text-primary font-monospace">{total}</strong> journals · Trang <span className="font-monospace">{page}/{totalPages}</span>
+                  Tìm thấy <strong className="font-monospace" style={{ color: 'var(--text-main, #111)' }}>{total}</strong> journals · Trang <span className="font-monospace">{page}/{totalPages}</span>
                 </span>
               )}
             </div>
 
-            {/* Sort Selection & View toggles */}
-            <div className="d-flex align-items-center gap-3">
+            {/* Sort Dropdown */}
               <Dropdown align="end">
                 <Dropdown.Toggle 
                   variant="light" 
@@ -172,27 +231,15 @@ export default function CatalogSearchPage() {
                 >
                   <Icon icon="lucide:arrow-up-down" width="14" />
                   <span>
-                    {sort === 'relevance' && 'Mặc định'}
-                    {sort === 'metric' && 'Metric cao nhất'}
+                    {sort === 'metric' && 'Mặc định - Metric cao nhất'}
                     {sort === 'name' && 'Tên A-Z'}
                   </span>
                 </Dropdown.Toggle>
                 <Dropdown.Menu className="bg-white border-light">
-                  <Dropdown.Item onClick={() => handleSortChange('relevance')} className="text-main hover:bg-light text-xs py-2">Mặc định</Dropdown.Item>
-                  <Dropdown.Item onClick={() => handleSortChange('metric')} className="text-main hover:bg-light text-xs py-2">Metric cao nhất</Dropdown.Item>
+                  <Dropdown.Item onClick={() => handleSortChange('metric')} className="text-main hover:bg-light text-xs py-2">Mặc định - Metric cao nhất</Dropdown.Item>
                   <Dropdown.Item onClick={() => handleSortChange('name')} className="text-main hover:bg-light text-xs py-2">Tên A-Z</Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
-
-              <div className="d-flex border border-light rounded-3 overflow-hidden bg-white">
-                <Button variant="light" className="border-0 bg-transparent text-primary p-2 d-flex align-items-center">
-                  <Icon icon="lucide:list" width="18" />
-                </Button>
-                <Button variant="light" disabled className="border-0 bg-transparent text-muted-custom p-2 d-flex align-items-center">
-                  <Icon icon="lucide:grid" width="18" />
-                </Button>
-              </div>
-            </div>
 
           </div>
 
@@ -244,34 +291,17 @@ export default function CatalogSearchPage() {
               </Button>
             </div>
           ) : (
-            // List cards map
-            <div className="d-flex flex-column">
-              {journals.map((journal) => (
-                <JournalResultCard
-                  key={journal.id}
-                  journal={journal}
-                  isFollowed={!!followedJournals[journal.id]}
-                  onFollow={handleFollowJournal}
-                  onTagClick={searchForTag}
-                />
-              ))}
-            </div>
+            <JournalTable
+              journals={journals}
+              followedJournals={followedJournals}
+              onFollow={handleFollowJournal}
+            />
           )}
 
           {/* Pagination Controls */}
           {totalPages > 1 && !loadingJournals && (
             <div className="d-flex justify-content-center mt-5">
-              <Pagination className="custom-pagination border border-light p-1 rounded-3 bg-white">
-                <Pagination.Prev 
-                  disabled={page === 1}
-                  onClick={() => handlePageChange(page - 1)}
-                />
-                {renderPaginationItems()}
-                <Pagination.Next 
-                  disabled={page === totalPages}
-                  onClick={() => handlePageChange(page + 1)}
-                />
-              </Pagination>
+              {renderPagination()}
             </div>
           )}
         </div>

@@ -1,4 +1,3 @@
-import React from 'react';
 import { Form, Row, Col, Button, InputGroup } from 'react-bootstrap';
 import { Icon } from '@iconify/react';
 

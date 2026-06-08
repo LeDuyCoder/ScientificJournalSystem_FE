@@ -1,5 +1,4 @@
 import { Icon } from '@iconify/react';
-import { useNavigate } from 'react-router-dom';
 
 /** keyword pill colours cycle */
 const PILL_COLORS = [

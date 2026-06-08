@@ -158,6 +158,29 @@ export default function Header() {
                 <Icon icon="lucide:search" width="14" />
                 {t("search")}
               </Nav.Link>
+
+              {/* Bài báo */}
+              <Nav.Link
+                onClick={() => navigate("/articles")}
+                className="px-3 py-1 text-sm font-semibold d-flex align-items-center gap-1"
+                style={{
+                  borderRadius: "6px",
+                  backgroundColor: pathname.startsWith("/articles")
+                    ? "var(--primary-light)"
+                    : "transparent",
+                  color: pathname.startsWith("/articles")
+                    ? "var(--primary)"
+                    : "var(--text-muted)",
+                  border: pathname.startsWith("/articles")
+                    ? "1px solid var(--border)"
+                    : "1px solid transparent",
+                  transition: "all 0.2s",
+                  fontWeight: pathname.startsWith("/articles") ? 700 : 500,
+                }}
+              >
+                <Icon icon="lucide:file-text" width="14" />
+                Bài báo
+              </Nav.Link>
             </Nav>
 
             <div className="d-flex align-items-center gap-3">
@@ -364,6 +387,21 @@ export default function Header() {
               className="text-muted-custom hover:text-main py-2 text-sm font-semibold border-bottom border-light"
             >
               {t("search")}
+            </Nav.Link>
+            <Nav.Link
+              onClick={() => {
+                setShowMobileMenu(false);
+                navigate("/articles");
+              }}
+              className="text-muted-custom hover:text-main py-2 text-sm font-semibold border-bottom border-light"
+              style={{
+                color: pathname.startsWith("/articles")
+                  ? "var(--primary)"
+                  : "var(--text-muted)",
+                fontWeight: pathname.startsWith("/articles") ? 700 : 600,
+              }}
+            >
+              Bài báo
             </Nav.Link>
           </Nav>
 

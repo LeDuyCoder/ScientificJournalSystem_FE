@@ -65,8 +65,8 @@ export const addJournalToProjectApi = (projectId, journalId) => {
 };
 
 /**
- * Search journals with filters, pagination, sorting
- * @param {Object} params - Query params (search, page, limit, subject_area_id, subject_category_id, is_open_access, quartile, sort)
+ * Search journals with filters, pagination, sorting.
+ * @param {Object} params - Query params (search, page, limit, sort, subject_area_ids, subject_category_ids, is_open_access, quartiles)
  * @returns {Promise} Axios promise
  */
 export const searchJournalsApi = (params) => {

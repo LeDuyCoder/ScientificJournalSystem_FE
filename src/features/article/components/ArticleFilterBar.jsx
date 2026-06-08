@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Row, Col, Form, Button } from 'react-bootstrap';
 import { Icon } from '@iconify/react';
 import ArticleSearchBar from './ArticleSearchBar';
 import { searchJournalsApi } from '../../journal/api/journalApi';
+import { getTopicsApi } from '../../topic/api/topic.api';
 
 const YEAR_OPTIONS = [
   { value: 'all', label: 'Tất cả năm' },
@@ -13,14 +14,6 @@ const YEAR_OPTIONS = [
   { value: '2022', label: '2022' }
 ];
 
-const TOPIC_OPTIONS = [
-  { value: 'all', label: 'Tất cả chủ đề' },
-  { value: 'Machine Learning', label: 'Machine Learning' },
-  { value: 'Computer Science', label: 'Computer Science' },
-  { value: 'Medicine', label: 'Medicine' },
-  { value: 'Physics', label: 'Physics' },
-  { value: 'Bioinformatics', label: 'Bioinformatics' }
-];
 
 const ACCESS_OPTIONS = [
   { value: 'all', label: 'Tất cả trạng thái' },
@@ -34,35 +27,57 @@ const SORT_OPTIONS = [
   { value: 'title-desc', label: 'Tiêu đề Z-A' },
   { value: 'publication_year-desc', label: 'Năm xuất bản (Giảm)' },
   { value: 'publication_year-asc', label: 'Năm xuất bản (Tăng)' },
-  { value: 'citations-desc', label: 'Trích dẫn nhiều nhất' }
 ];
 
 export default function ArticleFilterBar({ filters, updateFilters, clearFilters }) {
   const [journalOptions, setJournalOptions] = useState([
     { value: 'all', label: 'Tất cả tạp chí' }
   ]);
+  const [topicOptions, setTopicOptions] = useState([
+    { value: 'all', label: 'Tất cả chủ đề' }
+  ]);
+  const [loadingFilters, setLoadingFilters] = useState(false);
 
   useEffect(() => {
-    const fetchJournals = async () => {
+    const fetchFilterOptions = async () => {
+      setLoadingFilters(true);
       try {
-        const response = await searchJournalsApi({ limit: 100 });
-        if (response?.data?.success && response?.data?.data?.items) {
-          const fetchedOptions = response.data.data.items.map(item => ({
+        const [journalResponse, topicResponse] = await Promise.allSettled([
+          searchJournalsApi({ limit: 100 }),
+          getTopicsApi({ limit: 100, sort_by: 'display_name', sort_order: 'asc' })
+        ]);
+
+        if (journalResponse.status === 'fulfilled' && journalResponse.value?.data?.success && journalResponse.value?.data?.data?.items) {
+          const fetchedOptions = journalResponse.value.data.data.items.map(item => ({
             value: String(item.journal_id),
             label: item.display_name
           }));
-          // Sắp xếp Alphabet theo tên tạp chí
           fetchedOptions.sort((a, b) => a.label.localeCompare(b.label));
           setJournalOptions([
             { value: 'all', label: 'Tất cả tạp chí' },
             ...fetchedOptions
           ]);
         }
+
+        if (topicResponse.status === 'fulfilled' && topicResponse.value?.data?.success) {
+          const topicData = topicResponse.value.data;
+          const topicItems = topicData?.data?.topics || topicData?.data?.items || topicData?.data || [];
+          const fetchedTopics = topicItems.map((item) => ({
+            value: String(item.topic_id || item.id),
+            label: item.display_name || item.name || `Topic #${item.topic_id || item.id}`
+          })).filter((item) => item.value && item.label);
+          setTopicOptions([
+            { value: 'all', label: 'Tất cả chủ đề' },
+            ...fetchedTopics
+          ]);
+        }
       } catch (error) {
-        console.error('Failed to fetch journals for filter bar:', error);
+        console.error('Failed to fetch article filter options:', error);
+      } finally {
+        setLoadingFilters(false);
       }
     };
-    fetchJournals();
+    fetchFilterOptions();
   }, []);
 
   const handleSearchChange = (val) => {
@@ -148,15 +163,16 @@ export default function ArticleFilterBar({ filters, updateFilters, clearFilters 
             <Form.Select
               value={filters.selectedTopic}
               onChange={handleSelectChange('topic')}
+              disabled={loadingFilters}
               className="bg-white text-main border-light py-2 text-xs rounded-2 shadow-none"
               style={{
-                width: '140px',
+                width: '160px',
                 borderColor: 'var(--border)',
                 fontSize: '0.8rem',
-                cursor: 'pointer'
+                cursor: loadingFilters ? 'wait' : 'pointer'
               }}
             >
-              {TOPIC_OPTIONS.map(opt => (
+              {topicOptions.map(opt => (
                 <option key={opt.value} value={opt.value}>{opt.label}</option>
               ))}
             </Form.Select>

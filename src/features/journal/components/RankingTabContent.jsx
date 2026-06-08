@@ -1,4 +1,3 @@
-import React from 'react';
 import { Row, Col, Table, Badge } from 'react-bootstrap';
 import LoadingSkeleton from '../../../shared/components/LoadingSkeleton';
 

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Button } from 'react-bootstrap';
 import { Icon } from '@iconify/react';
@@ -23,11 +23,12 @@ import LoginRequiredModal from '../components/LoginRequiredModal';
 import ArticleDetailSkeleton from '../components/ArticleDetailSkeleton';
 import ArticleDetailEmpty from '../components/ArticleDetailEmpty';
 import ArticleDetailError from '../components/ArticleDetailError';
+import { normalizeArticleDetail } from '../utils/articleFormatters';
 
 export default function ArticleDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const auth = useAuth ? useAuth() : { user: null };
+  const auth = useAuth();
   const currentUser = auth?.user;
 
   // States
@@ -39,32 +40,15 @@ export default function ArticleDetailPage() {
   const [showLoginModal, setShowLoginModal] = useState(false);
 
   // Fetch article detail
-  const fetchArticleDetail = async () => {
+  const fetchArticleDetail = useCallback(async () => {
     setIsLoading(true);
     setError(null);
     try {
       const response = await getArticleDetailApi(id);
       if (response.data && response.data.success !== false) {
         const apiData = response.data.data || {};
-        
-        // Ensure robust default properties
-        const parsedArticle = {
-          article_id: apiData.article_id || apiData.id || id,
-          title: apiData.title || 'Untitled Article',
-          abstract: apiData.abstract || 'Không có tóm tắt cho bài báo này.',
-          publication_year: apiData.publication_year || null,
-          doi: apiData.doi || '',
-          primary_topic: apiData.primary_topic || apiData.topic || '',
-          keywords: apiData.keywords || '',
-          is_open_access: apiData.is_open_access !== undefined ? apiData.is_open_access : false,
-          citations: apiData.citations !== undefined ? apiData.citations : 0,
-          authors: apiData.authors || '',
-          volume: apiData.volume || '',
-          issue: apiData.issue || '',
-          pages: apiData.pages || '',
-          journal: apiData.journal || null,
-          journal_name: apiData.journal_name || apiData.journal?.display_name || ''
-        };
+        // Normalize backend response and support both legacy and enriched detail fields.
+        const parsedArticle = normalizeArticleDetail(apiData, id);
         
         setArticle(parsedArticle);
 
@@ -81,11 +65,11 @@ export default function ArticleDetailPage() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [id, currentUser]);
 
   useEffect(() => {
     fetchArticleDetail();
-  }, [id, currentUser]);
+  }, [fetchArticleDetail]);
 
   // Bookmark toggle handler
   const handleBookmarkToggle = async () => {
@@ -167,8 +151,9 @@ export default function ArticleDetailPage() {
 
               {/* Keywords & Topics Card */}
               <KeywordTopicCard 
-                primaryTopic={article.primary_topic} 
-                keywords={article.keywords} 
+                primaryTopic={article.topic_name || article.primary_topic} 
+                keywords={article.keywords}
+                topics={article.topics}
               />
 
               {/* Authors Card */}
@@ -183,7 +168,6 @@ export default function ArticleDetailPage() {
                 isBookmarked={isBookmarked}
                 onBookmarkToggle={handleBookmarkToggle}
                 isBookmarkLoading={isBookmarkLoading}
-                isLoggedIn={!!currentUser}
               />
 
               {/* Statistics Card */}

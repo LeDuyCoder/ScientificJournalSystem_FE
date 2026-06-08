@@ -1,15 +1,11 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import useAuth from '../hooks/useAuth';
 import AuthLayout from '../../../app/layouts/AuthLayout';
 import AuthBanner from '../components/AuthBanner';
 import LoginForm from '../components/LoginForm';
 import SocialAuthButton from '../components/SocialAuthButton';
-import Icon from '../../../shared/components/Icon';
-import { useGoogleLogin } from '@react-oauth/google';
-import { loginGoogleApi } from '../api/auth.api';
 import { toast } from '../../../shared/utils/toast';
-import { useAuthStore } from '../../../app/store/authStore';
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -17,7 +13,6 @@ export default function LoginPage() {
   const { login, loginWithGoogle } = useAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-  const loginSuccess = useAuthStore((state) => state.loginSuccess);
 
   const from = location.state?.from?.pathname || '/dashboard';
 
@@ -48,8 +43,7 @@ export default function LoginPage() {
     setIsLoading(true);
     setError(null);
     try {
-      await login(payload.email, payload.password, payload.remember_login, loginSuccess);
-      const storeToken = useAuthStore.getState().token;
+      await login(payload.email, payload.password, payload.remember_login);
 
       navigate(from, { replace: true });
     } catch (err) {
@@ -82,7 +76,7 @@ export default function LoginPage() {
     try {
       try{
         loginWithGoogle(DASHBOARD_PAGE);
-      }catch(e){
+      }catch{
         toast.error("Đăng nhập thất bại");
       }
     } finally {

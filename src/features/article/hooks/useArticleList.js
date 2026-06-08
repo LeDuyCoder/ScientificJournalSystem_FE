@@ -2,121 +2,146 @@ import { useState, useEffect, useCallback } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { getArticlesListApi } from '../api/articleApi';
 
+/**
+ * Hook quản lý trạng thái trang Article List.
+ * Sync filter với URL query params để hỗ trợ back/forward và copy link.
+ */
 export default function useArticleList() {
   const [searchParams, setSearchParams] = useSearchParams();
   const navigate = useNavigate();
 
-  // Đọc các giá trị lọc từ URL query params
+  // === Đọc state từ URL params ===
   const search = searchParams.get('search') || '';
   const page = parseInt(searchParams.get('page') || '1', 10);
   const limit = parseInt(searchParams.get('limit') || '10', 10);
   const sortBy = searchParams.get('sortBy') || 'created_at';
   const sortOrder = searchParams.get('sortOrder') || 'desc';
-
   const selectedYear = searchParams.get('year') || 'all';
-  const selectedJournal = searchParams.get('journal') || 'all';
+  const selectedJournal = searchParams.get('journal') || searchParams.get('journal_id') || 'all';
   const selectedTopic = searchParams.get('topic') || 'all';
   const selectedAccess = searchParams.get('access') || 'all';
+  const selectedIssue = searchParams.get('issue_id') || '';
 
-  // Trạng thái dữ liệu
+  // === Data state ===
   const [articles, setArticles] = useState([]);
   const [total, setTotal] = useState(0);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
-  
-  // Auth required modal state
-  const [showAuthModal, setShowAuthModal] = useState(false);
 
-  // Stats Thống kê
+  // Stats hiển thị thẻ thống kê
   const [stats, setStats] = useState({
     totalArticles: 0,
     openAccessCount: 0,
     authorsCount: 0,
-    topicsCount: 0
+    topicsCount: 0,
   });
 
+  // Auth modal không còn dùng để block xem, nhưng giữ cho backward compat
+  const [showAuthModal, setShowAuthModal] = useState(false);
+
+  /**
+   * Gọi API lấy danh sách bài báo theo filter/pagination hiện tại.
+   */
   const fetchArticles = useCallback(async () => {
     setIsLoading(true);
     setError(null);
 
     try {
-      // Chuẩn bị params gọi API backend
       const apiParams = {
         page,
         limit,
-        search: search.trim() || undefined,
-        sortBy: sortBy === 'citations' ? 'created_at' : sortBy,
+        sortBy,
         sortOrder,
-        year: selectedYear !== 'all' ? selectedYear : undefined,
-        journal: selectedJournal !== 'all' ? selectedJournal : undefined,
-        topic: selectedTopic !== 'all' ? selectedTopic : undefined,
-        access: selectedAccess !== 'all' ? selectedAccess : undefined,
       };
 
+      // Chỉ gửi params khi có giá trị hợp lệ
+      if (search.trim()) apiParams.search = search.trim();
+      if (selectedYear && selectedYear !== 'all') apiParams.publication_year = selectedYear;
+      if (selectedJournal && selectedJournal !== 'all') apiParams.journal_id = selectedJournal;
+      if (selectedTopic && selectedTopic !== 'all') apiParams.topic_id = selectedTopic;
+      if (selectedAccess && selectedAccess !== 'all') apiParams.access = selectedAccess;
+      if (selectedIssue) apiParams.issue_id = selectedIssue;
+
       const response = await getArticlesListApi(apiParams);
-      
-      if (response.data && response.data.success !== false) {
+
+      if (response?.data?.success) {
         const resData = response.data.data || {};
-        let itemsList = resData.items || resData.articles || [];
-        let totalCount = resData.pagination?.total || itemsList.length;
 
-        // Bổ sung các trường để hiển thị đầy đủ thông tin trên UI
-        const enrichedItems = itemsList.map((item, index) => {
-          const matchedTopic = item.primary_topic || 
-            (item.title.toLowerCase().includes('learn') || item.title.toLowerCase().includes('neural') || item.title.toLowerCase().includes('language') ? 'Machine Learning' : 'Computer Science');
-          
-          return {
-            ...item,
-            journal: item.journal || { 
-              journal_id: (item.journal_id || index % 3 + 1), 
-              display_name: item.journal_name || (index % 3 === 0 ? 'Nature Machine Intelligence' : (index % 3 === 1 ? 'Journal of Machine Learning Research' : 'IEEE Transactions on Computers')) 
-            },
-            primary_topic: matchedTopic,
-            is_open_access: item.is_open_access !== undefined ? item.is_open_access : (item.doi ? (index % 2 === 0) : true),
-            citations: item.citations || (index % 4) * 12 + 5
-          };
-        });
+        // Backend giờ trả `articles` (hoặc `items` tùy path cũ), hỗ trợ cả hai
+        const rawList = resData.articles || resData.items || [];
+        const paginationData = resData.pagination || {};
+        const totalCount = paginationData.total || rawList.length;
 
-        setArticles(enrichedItems);
+        // Map sang shape chuẩn cho FE: không hardcode gì thêm
+        const mappedArticles = rawList.map((item) => ({
+          article_id: item.article_id,
+          version: item.version || null,
+          issue_id: item.issue_id || null,
+          title: item.title || '',
+          abstract: item.abstract || null,
+          publication_year: item.publication_year || null,
+          doi: item.doi || null,
+          // Topic: ưu tiên topic_name (từ JOIN), fallback hiển thị `Topic #ID`
+          primary_topic: item.topic_name
+            || (item.primary_topic ? `Topic #${item.primary_topic}` : null),
+          topic_id: item.primary_topic || null,
+          // Journal: map từ flat fields trả về bởi enriched service
+          journal_id: item.journal_id || null,
+          journal_name: item.journal_name || null,
+          // Tương thích với component cũ đang dùng article.journal.display_name
+          journal: item.journal_id
+            ? { journal_id: item.journal_id, display_name: item.journal_name }
+            : null,
+          is_open_access: Boolean(item.is_open_access),
+          created_at: item.created_at || null,
+        }));
+
+        setArticles(mappedArticles);
         setTotal(totalCount);
 
-        // Cập nhật thống kê dựa trên kết quả thật từ database
+        // Cập nhật stats từ dữ liệu thật
+        const oaCount = mappedArticles.filter((a) => a.is_open_access).length;
         setStats({
           totalArticles: totalCount,
-          openAccessCount: Math.round(totalCount * 0.17) || 0, // ước lượng khoảng 17% tổng số bài báo là Open Access
-          authorsCount: Math.round(totalCount * 4.3) || 0, // trung bình 4.3 tác giả mỗi bài
-          topicsCount: 5
+          openAccessCount: oaCount,
+          authorsCount: 0, // Không có trong list API, cần endpoint riêng
+          topicsCount: new Set(
+            mappedArticles.map((a) => a.topic_id).filter(Boolean)
+          ).size,
         });
       } else {
-        throw new Error('Định dạng dữ liệu API không đúng');
+        throw new Error(response?.data?.message || 'Không thể tải danh sách bài báo');
       }
     } catch (err) {
       console.error('Lỗi khi gọi API articles:', err);
-      setError(err.response?.data?.message || err.message);
+      setError(err.response?.data?.message || err.message || 'Đã xảy ra lỗi');
       setArticles([]);
       setTotal(0);
-      setStats({
-        totalArticles: 0,
-        openAccessCount: 0,
-        authorsCount: 0,
-        topicsCount: 0
-      });
+      setStats({ totalArticles: 0, openAccessCount: 0, authorsCount: 0, topicsCount: 0 });
     } finally {
       setIsLoading(false);
     }
-  }, [page, limit, search, sortBy, sortOrder, selectedYear, selectedJournal, selectedTopic, selectedAccess]);
+  }, [page, limit, search, sortBy, sortOrder, selectedYear, selectedJournal, selectedTopic, selectedAccess, selectedIssue]);
 
-  // Gọi fetch dữ liệu khi thay đổi filters/page
+  // Fetch khi dependency thay đổi
   useEffect(() => {
-    fetchArticles();
+    const timer = setTimeout(() => {
+      fetchArticles();
+    }, 0);
+
+    return () => clearTimeout(timer);
   }, [fetchArticles]);
 
-  // Hàm cập nhật URL query params
+  /**
+   * Cập nhật URL query params khi filter thay đổi.
+   * Các filter thay đổi sẽ reset page về 1.
+   */
   const updateFilters = useCallback((newFilters) => {
     const params = new URLSearchParams(searchParams);
-    
-    // Mỗi khi thay đổi tìm kiếm hoặc bộ lọc, reset trang về 1
-    if ('search' in newFilters || 'year' in newFilters || 'journal' in newFilters || 'topic' in newFilters || 'access' in newFilters) {
+    const filterKeys = ['search', 'year', 'journal', 'topic', 'access'];
+    const hasFilterChange = Object.keys(newFilters).some((k) => filterKeys.includes(k));
+
+    if (hasFilterChange) {
       params.set('page', '1');
     }
 
@@ -131,40 +156,39 @@ export default function useArticleList() {
     setSearchParams(params);
   }, [searchParams, setSearchParams]);
 
-  // Xóa toàn bộ bộ lọc
+  /** Xóa toàn bộ filter, quay về trang 1 */
   const clearFilters = useCallback(() => {
     setSearchParams(new URLSearchParams());
   }, [setSearchParams]);
 
-  // Điều hướng phân trang
+  /** Chuyển trang giữ filter */
   const handlePageChange = useCallback((newPage) => {
-    updateFilters({ page: newPage });
-  }, [updateFilters]);
+    const params = new URLSearchParams(searchParams);
+    params.set('page', String(newPage));
+    setSearchParams(params);
+  }, [searchParams, setSearchParams]);
 
-  // Xử lý khi click vào chi tiết bài báo (yêu cầu kiểm tra đăng nhập)
+  /**
+   * Click Chi tiết → navigate thẳng, không cần kiểm tra token
+   * (Article List là public, guest được xem detail)
+   */
   const handleDetailClick = useCallback((id) => {
-    const token = localStorage.getItem('researchpulse_token');
-    if (!token) {
-      setShowAuthModal(true);
-    } else {
-      navigate(`/articles/${id}`);
-    }
+    navigate(`/articles/${id}`);
   }, [navigate]);
 
-  // Quay lại trang chủ / trang đăng nhập
+  /** Legacy: giữ để không break modal nếu dùng nơi khác */
   const handleAuthRedirect = useCallback(() => {
     setShowAuthModal(false);
-    navigate('/');
+    navigate('/login');
   }, [navigate]);
 
   return {
     articles,
     total,
-    totalPages: Math.ceil(total / limit) || 1,
+    totalPages: Math.max(1, Math.ceil(total / limit)),
     currentPage: page,
     isLoading,
     error,
-    isUsingMock: false,
     stats,
     filters: {
       search,
@@ -175,7 +199,8 @@ export default function useArticleList() {
       selectedYear,
       selectedJournal,
       selectedTopic,
-      selectedAccess
+      selectedAccess,
+      selectedIssue,
     },
     updateFilters,
     clearFilters,
@@ -184,6 +209,6 @@ export default function useArticleList() {
     handleDetailClick,
     showAuthModal,
     setShowAuthModal,
-    handleAuthRedirect
+    handleAuthRedirect,
   };
 }

@@ -1,6 +1,6 @@
-import React from 'react';
 import { Row, Col, Badge, Button, Spinner } from 'react-bootstrap';
 import { Icon } from '@iconify/react';
+import { useNavigate } from 'react-router-dom';
 
 export default function JournalHero({
   journal,
@@ -10,6 +10,8 @@ export default function JournalHero({
   onAddToProject,
   loading
 }) {
+  const navigate = useNavigate();
+
   if (loading || !journal) {
     return (
       <div 
@@ -55,6 +57,11 @@ export default function JournalHero({
     subject_categories = [],
     is_following
   } = journal;
+
+  const handleCategoryClick = (categoryName) => {
+    if (!categoryName) return;
+    navigate(`/keywords?keyword=${encodeURIComponent(categoryName)}`);
+  };
 
   return (
     <div className="journal-dark-card p-4 p-md-5 mb-4 position-relative overflow-hidden" 
@@ -142,6 +149,11 @@ export default function JournalHero({
               <Badge 
                 key={cat.id || idx} 
                 className="px-3 py-2 font-display hover-pills"
+                role="button"
+                tabIndex={0}
+                onClick={() => handleCategoryClick(cat.display_name)}
+                onKeyDown={(e) => e.key === 'Enter' && handleCategoryClick(cat.display_name)}
+                title={`Tìm keyword ${cat.display_name}`}
                 style={{ 
                   backgroundColor: 'var(--bg-main)', 
                   color: 'var(--text-muted)',

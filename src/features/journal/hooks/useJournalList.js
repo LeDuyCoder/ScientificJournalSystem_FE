@@ -147,7 +147,6 @@ export default function useJournalList() {
       setIsLoading(false);
     }
   }, [searchQuery, pagination.page, pagination.limit, quartile, isOpenAccess]);
-
   useEffect(() => {
     fetchJournals();
   }, [fetchJournals]);

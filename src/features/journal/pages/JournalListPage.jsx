@@ -1,4 +1,3 @@
-import React from 'react';
 import { Container, Pagination } from 'react-bootstrap';
 import { Icon } from '@iconify/react';
 import Header from '../../landing/components/Header';
@@ -22,8 +21,7 @@ export default function JournalListPage() {
     isOpenAccess,
     setIsOpenAccess,
     handleSearchSubmit,
-    handlePageChange,
-    refetch
+    handlePageChange
   } = useJournalList();
 
   const totalPages = Math.ceil(pagination.total / pagination.limit) || 1;

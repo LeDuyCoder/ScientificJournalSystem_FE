@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Modal, Button, Form, Spinner, Alert } from 'react-bootstrap';
 import { Icon } from '@iconify/react';
 import { getProjectsApi, createProjectApi, getProjectByIdApi, updateProjectApi } from '../../project/api/project.api';
@@ -14,18 +14,6 @@ export default function AddToProjectModal({ show, onHide, journalId, onConfirm }
   const [mode, setMode] = useState('select');
   const [selectedProjectId, setSelectedProjectId] = useState('');
   const [newProjectTitle, setNewProjectTitle] = useState('');
-
-  // Fetch projects on show
-  useEffect(() => {
-    if (show) {
-      fetchProjects();
-      setError(null);
-      setSuccess(false);
-      setMode('select');
-      setSelectedProjectId('');
-      setNewProjectTitle('');
-    }
-  }, [show]);
 
   const fetchProjects = async () => {
     setLoading(true);
@@ -43,6 +31,17 @@ export default function AddToProjectModal({ show, onHide, journalId, onConfirm }
       setLoading(false);
     }
   };
+
+  // Fetch projects on show and reset form state
+  useEffect(() => {
+    if (!show) return;
+    setError(null);
+    setSuccess(false);
+    setMode('select');
+    setSelectedProjectId('');
+    setNewProjectTitle('');
+    fetchProjects();
+  }, [show]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

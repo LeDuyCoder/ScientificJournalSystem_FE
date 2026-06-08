@@ -8,7 +8,7 @@ import Icon from '../../../shared/components/Icon';
 /**
  * Reusable Feature Card Component
  */
-function FeatureCard({ icon, color, title, description }) {
+function FeatureCard({ icon, title, description }) {
   return (
     <Card 
       className="glass-card rounded-4 p-4 h-100 text-start position-relative overflow-hidden"

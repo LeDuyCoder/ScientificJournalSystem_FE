@@ -1,5 +1,4 @@
 import { Icon } from '@iconify/react';
-import { Badge } from 'react-bootstrap';
 import { truncate } from '../../../shared/utils/formatNumber';
 
 /** Status badge config */

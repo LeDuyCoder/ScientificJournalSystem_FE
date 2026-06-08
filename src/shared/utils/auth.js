@@ -1,7 +1,8 @@
 import { jwtDecode } from "jwt-decode";
 import { useAuthStore } from "../../app/store/authStore";
+import { STORAGE_KEYS } from "../constants/storageKeys";
 
-const TOKEN_KEY = "token";
+const TOKEN_KEY = STORAGE_KEYS.ACCESS_TOKEN;
 
 /**
  * Lấy JWT token từ bộ nhớ của trình duyệt.
@@ -87,7 +88,6 @@ export const isAuthenticated = () => {
 
   if (!storeToken) {
     useAuthStore.getState().loginSuccess(token);
-    console.log(useAuthStore.getState().token);
   }
 
   return true;

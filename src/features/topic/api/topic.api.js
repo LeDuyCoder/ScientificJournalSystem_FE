@@ -8,3 +8,13 @@ import api from '../../../shared/services/api';
 export const getTopicArticlesApi = (id) => {
   return api.get(`/topics/${id}/articles`);
 };
+
+/**
+ * Lấy danh sách topics để hiển thị trong filter bài báo.
+ *
+ * @param {Object} params - Query params gửi lên backend.
+ * @returns {Promise} Axios response chứa danh sách topics.
+ */
+export const getTopicsApi = (params = {}) => {
+  return api.get('/topics', { params });
+};
