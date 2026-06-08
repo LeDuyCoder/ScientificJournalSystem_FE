@@ -45,7 +45,6 @@ export function AuthProvider({ children }) {
         if (body.code == "GOOGLE_LOGIN_SUCCESS") {
           toast.success("Đăng nhập thành công");
           loginSuccess(body.data.token);
-          localStorage.setItem('token', body.data.token);
 
           navigate(googleRedirect, { replace: true });
         } else {
@@ -111,18 +110,11 @@ export function AuthProvider({ children }) {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await loginApi({ email, password });
+      const response = await loginApi({ email, password, remember });
       if (response.data && response.data.success !== false) {
         const token = response.data.data.token;
         if (token) {
-          if(remember){
-            localStorage.setItem('token', token);
-          }else{
-            sessionStorage.setItem('token', token);
-          }
-          
           loginSuccess(token);
-        
         }
         // setUser(userData || null);
         return response.data;
