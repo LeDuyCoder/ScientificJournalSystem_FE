@@ -31,7 +31,7 @@ export default function AppRoutes() {
       </Route>
       
       {/* Fallback */}
-      <Route path="/" element={<HomeRoute />} />
+      <Route path="/" element={<LandingPage />} />
       <Route path="*"           element={<LandingPage />} />
     </Routes>
   );
