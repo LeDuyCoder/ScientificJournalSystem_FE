@@ -52,7 +52,7 @@ const getEmailFromToken = (token) => {
  * @returns {Promise<{response: Object, token: string|null, email: string}>}
  */
 export const loginWithPassword = async (email, password, remember = true) => {
-  const response = await loginApi({ email, password });
+  const response = await loginApi({ email, password, remember});
   const token = response.data?.data?.token;
   if (token) {
     persistToken(token, remember);

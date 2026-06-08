@@ -39,7 +39,7 @@ export default function AppRoutes() {
 
       <Route element={<PublicRoute />}>
         <Route path="/login" element={<LoginPage />} />
-      <Route path="/register" element={<RegisterPage />} />
+        <Route path="/register" element={<RegisterPage />} />
       </Route>
 
       <Route path="/journals/:id" element={<JournalDetailPage />} />
