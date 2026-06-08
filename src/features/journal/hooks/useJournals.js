@@ -1,3 +1,8 @@
+﻿/**
+ * File source thuộc hệ thống FE ResearchPulse.
+ *
+ * File: features\journal\hooks\useJournals.js
+ */
 import { useState, useCallback } from 'react';
 import {
   getJournalsApi,

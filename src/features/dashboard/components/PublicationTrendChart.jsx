@@ -1,3 +1,8 @@
+﻿/**
+ * File source thuộc hệ thống FE ResearchPulse.
+ *
+ * File: features\dashboard\components\PublicationTrendChart.jsx
+ */
 import { Icon } from '@iconify/react';
 
 /**

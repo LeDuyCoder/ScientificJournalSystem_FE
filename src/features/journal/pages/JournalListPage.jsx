@@ -1,4 +1,8 @@
-import React from 'react';
+﻿/**
+ * File source thuộc hệ thống FE ResearchPulse.
+ *
+ * File: features\journal\pages\JournalListPage.jsx
+ */
 import { Container, Pagination } from 'react-bootstrap';
 import { Icon } from '@iconify/react';
 import Header from '../../landing/components/Header';
@@ -22,8 +26,7 @@ export default function JournalListPage() {
     isOpenAccess,
     setIsOpenAccess,
     handleSearchSubmit,
-    handlePageChange,
-    refetch
+    handlePageChange
   } = useJournalList();
 
   const totalPages = Math.ceil(pagination.total / pagination.limit) || 1;

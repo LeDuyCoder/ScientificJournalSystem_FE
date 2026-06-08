@@ -1,4 +1,8 @@
-import React from 'react';
+﻿/**
+ * File source thuộc hệ thống FE ResearchPulse.
+ *
+ * File: features\journal\components\JournalMetadataGrid.jsx
+ */
 import { Row, Col } from 'react-bootstrap';
 
 export default function JournalMetadataGrid({ journal, loading }) {
@@ -26,20 +30,23 @@ export default function JournalMetadataGrid({ journal, loading }) {
 
   const {
     issn,
-    e_issn,
+    publisher_name,
     country_name,
-    established_year,
-    h_index,
-    cite_score
+    region_name,
+    coverage
   } = journal;
 
+  const issnParts = String(issn || '').split(',').map(s => s.trim());
+  const displayIssn = issnParts[0] || '';
+  const displayEIssn = issnParts[1] || '';
+
   const metadataItems = [
-    { label: 'ISSN', value: issn },
-    { label: 'E-ISSN', value: e_issn },
+    { label: 'ISSN', value: displayIssn },
+    { label: 'E-ISSN', value: displayEIssn },
+    { label: 'Publisher', value: publisher_name },
     { label: 'Quốc gia', value: country_name },
-    { label: 'Năm thành lập', value: established_year },
-    { label: 'H-Index', value: h_index },
-    { label: 'Cite Score', value: cite_score }
+    { label: 'Khu vực', value: region_name },
+    { label: 'Coverage', value: coverage }
   ];
 
   return (
@@ -58,7 +65,7 @@ export default function JournalMetadataGrid({ journal, loading }) {
               {item.label}
             </div>
             <div className="text-main fw-bold font-display" style={{ fontSize: '1.1rem' }}>
-              {item.value !== undefined && item.value !== null ? item.value : 'Chưa cập nhật'}
+              {item.value !== undefined && item.value !== null && item.value !== '' ? item.value : 'Chưa cập nhật'}
             </div>
           </Col>
         ))}

@@ -1,3 +1,8 @@
+﻿/**
+ * File source thuộc hệ thống FE ResearchPulse.
+ *
+ * File: features\landing\api\landingApi.js
+ */
 import api from '../../../shared/services/api';
 
 /**

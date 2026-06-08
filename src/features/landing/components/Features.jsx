@@ -1,3 +1,8 @@
+﻿/**
+ * File source thuộc hệ thống FE ResearchPulse.
+ *
+ * File: features\landing\components\Features.jsx
+ */
 import { useTranslation } from 'react-i18next';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -8,7 +13,7 @@ import Icon from '../../../shared/components/Icon';
 /**
  * Reusable Feature Card Component
  */
-function FeatureCard({ icon, color, title, description }) {
+function FeatureCard({ icon, title, description }) {
   return (
     <Card 
       className="glass-card rounded-4 p-4 h-100 text-start position-relative overflow-hidden"

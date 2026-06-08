@@ -1,6 +1,10 @@
-import React from 'react';
+﻿/**
+ * File source thuộc hệ thống FE ResearchPulse.
+ *
+ * File: features\journal\pages\JournalDetailPage.jsx
+ */
 import { useParams, useNavigate } from 'react-router-dom';
-import { Container, Breadcrumb, Row, Col, Button } from 'react-bootstrap';
+import { Container, Breadcrumb, Button } from 'react-bootstrap';
 import { Icon } from '@iconify/react';
 
 // Shared Layout Header
@@ -23,7 +27,7 @@ import AddToProjectModal from '../components/AddToProjectModal';
 export default function JournalDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const auth = useAuth ? useAuth() : { user: null };
+  const auth = useAuth();
   const currentUser = auth?.user;
 
   const {
@@ -31,6 +35,9 @@ export default function JournalDetailPage() {
     rankingHistory,
     volumes,
     issuesByVolume,
+    issueErrors,
+    volumePagination,
+    issuePaginationByVolume,
     recentArticles,
     activeTab,
     setActiveTab,
@@ -38,6 +45,7 @@ export default function JournalDetailPage() {
     loadingRanking,
     loadingVolumes,
     loadingArticles,
+    volumesError,
     notFound,
     showAuthModal,
     setShowAuthModal,
@@ -47,7 +55,9 @@ export default function JournalDetailPage() {
     isAddingToProject,
     handleFollow,
     handleAddToProject,
-    fetchIssuesForVolume
+    fetchIssuesForVolume,
+    handleVolumePageChange,
+    handleIssuePageChange
   } = useJournalDetail(id, currentUser);
 
   // Fallback for not found or empty ID
@@ -146,8 +156,15 @@ export default function JournalDetailPage() {
             <VolumesTabContent 
               volumes={volumes} 
               issuesByVolume={issuesByVolume}
+              issueErrors={issueErrors}
+              journalId={id}
               onVolumeExpand={fetchIssuesForVolume}
               loading={loadingVolumes}
+              error={volumesError}
+              volumePagination={volumePagination}
+              issuePaginationByVolume={issuePaginationByVolume}
+              onVolumePageChange={handleVolumePageChange}
+              onIssuePageChange={handleIssuePageChange}
             />
           )}
 
@@ -155,7 +172,7 @@ export default function JournalDetailPage() {
             <ArticlesTabContent 
               recentArticles={recentArticles} 
               loading={loadingArticles}
-              onArticleClick={(artId) => alert(`Xem chi tiết bài báo ${artId} (Mô phỏng)`)}
+              onArticleClick={(artId) => navigate(`/articles/${artId}`)}
             />
           )}
         </div>
