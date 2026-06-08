@@ -1,4 +1,9 @@
-import React, { useState } from 'react';
+﻿/**
+ * File source thuộc hệ thống FE ResearchPulse.
+ *
+ * File: features\auth\components\PasswordInput.jsx
+ */
+import { useState } from 'react';
 import { Form, InputGroup } from 'react-bootstrap';
 import Icon from '../../../shared/components/Icon';
 

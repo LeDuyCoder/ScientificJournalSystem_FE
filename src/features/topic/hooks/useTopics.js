@@ -1,3 +1,8 @@
+﻿/**
+ * File source thuộc hệ thống FE ResearchPulse.
+ *
+ * File: features\topic\hooks\useTopics.js
+ */
 import { useState, useCallback } from 'react';
 import { getTopicArticlesApi } from '../api/topic.api';
 

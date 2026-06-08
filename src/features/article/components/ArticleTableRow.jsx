@@ -1,5 +1,9 @@
-import React from 'react';
-import { Badge, Button } from 'react-bootstrap';
+﻿/**
+ * File source thuộc hệ thống FE ResearchPulse.
+ *
+ * File: features\article\components\ArticleTableRow.jsx
+ */
+import { Button } from 'react-bootstrap';
 import { Icon } from '@iconify/react';
 import { useNavigate } from 'react-router-dom';
 
@@ -90,13 +94,14 @@ export default function ArticleTableRow({ article, index, onDetailClick }) {
 
       {/* Journal Name */}
       <td style={{ maxWidth: '180px' }}>
-        {article.journal ? (
+        {article.journal_id || article.journal?.journal_id ? (
           <div 
-            onClick={(e) => handleJournalClick(e, article.journal.journal_id)}
+            onClick={(e) => handleJournalClick(e, article.journal_id || article.journal?.journal_id)}
             className="text-main hover:text-primary text-sm text-truncate"
             style={{ textDecoration: 'none', cursor: 'pointer', fontWeight: 500 }}
+            title={article.journal_name || article.journal?.display_name}
           >
-            {article.journal.display_name}
+            {article.journal_name || article.journal?.display_name || 'Chưa có thông tin journal'}
           </div>
         ) : (
           <span className="text-muted text-xs">Chưa có thông tin journal</span>

@@ -1,4 +1,9 @@
-import React, { useState } from 'react';
+﻿/**
+ * File source thuộc hệ thống FE ResearchPulse.
+ *
+ * File: features\auth\components\RegisterForm.jsx
+ */
+import { useState } from 'react';
 import { Form, Row, Col } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import InputField from '../../../shared/components/InputField';
@@ -126,7 +131,8 @@ export default function RegisterForm({ onSubmit, isLoading, apiError }) {
     if (!isValid) return;
 
     // Build payload for API (exclude terms)
-    const { terms, ...payload } = formData;
+    const payload = { ...formData };
+    delete payload.terms;
     onSubmit({
       ...payload,
       last_name: payload.last_name.trim(),

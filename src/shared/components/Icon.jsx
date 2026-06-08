@@ -1,3 +1,8 @@
+﻿/**
+ * File source thuộc hệ thống FE ResearchPulse.
+ *
+ * File: shared\components\Icon.jsx
+ */
 import { Icon as IconifyIcon } from '@iconify/react';
 
 /**
