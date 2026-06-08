@@ -1,4 +1,9 @@
-import React, { useState, useEffect, useRef } from 'react';
+﻿/**
+ * File source thuộc hệ thống FE ResearchPulse.
+ *
+ * File: features\article\components\ArticleSearchBar.jsx
+ */
+import { useState, useEffect, useRef } from 'react';
 import { Form, InputGroup } from 'react-bootstrap';
 import { Icon } from '@iconify/react';
 

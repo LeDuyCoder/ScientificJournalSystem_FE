@@ -1,4 +1,8 @@
-import React from 'react';
+﻿/**
+ * File source thuộc hệ thống FE ResearchPulse.
+ *
+ * File: features\auth\components\CheckboxField.jsx
+ */
 import { Form } from 'react-bootstrap';
 import Icon from '../../../shared/components/Icon';
 

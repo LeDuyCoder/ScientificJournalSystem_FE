@@ -1,3 +1,8 @@
+﻿/**
+ * File source thuộc hệ thống FE ResearchPulse.
+ *
+ * File: features\dashboard\components\TopAuthorsTable.jsx
+ */
 import { Icon } from '@iconify/react';
 import { useNavigate } from 'react-router-dom';
 import { formatCount } from '../../../shared/utils/formatNumber';

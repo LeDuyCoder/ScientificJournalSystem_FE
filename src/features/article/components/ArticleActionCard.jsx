@@ -1,4 +1,9 @@
-import React, { useState } from 'react';
+﻿/**
+ * File source thuộc hệ thống FE ResearchPulse.
+ *
+ * File: features\article\components\ArticleActionCard.jsx
+ */
+import { useState } from 'react';
 import { Card, Button, Spinner } from 'react-bootstrap';
 import { Icon } from '@iconify/react';
 
@@ -6,8 +11,7 @@ export default function ArticleActionCard({
   article, 
   isBookmarked, 
   onBookmarkToggle, 
-  isBookmarkLoading, 
-  isLoggedIn 
+  isBookmarkLoading,
 }) {
   const [showCopiedToast, setShowCopiedToast] = useState(false);
 
@@ -21,8 +25,8 @@ export default function ArticleActionCard({
   };
 
   const handleOpenSource = () => {
-    if (!article?.doi) return;
-    const url = article.doi.startsWith('http') ? article.doi : `https://doi.org/${article.doi}`;
+    const url = article?.source_url || article?.doi_url || (article?.doi?.startsWith('http') ? article.doi : article?.doi ? `https://doi.org/${article.doi}` : '');
+    if (!url) return;
     window.open(url, '_blank', 'noopener,noreferrer');
   };
 

@@ -1,3 +1,8 @@
+﻿/**
+ * File source thuộc hệ thống FE ResearchPulse.
+ *
+ * File: features\zone\hooks\useZoneStats.js
+ */
 import { useState, useCallback } from 'react';
 import { getCountryStatsApi, getRegionStatsApi } from '../api/zone.api';
 
