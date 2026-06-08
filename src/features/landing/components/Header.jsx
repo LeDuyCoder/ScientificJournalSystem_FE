@@ -134,6 +134,7 @@ export default function Header() {
                 <Icon icon="lucide:layout-dashboard" width="14" />
                 Tổng quan
               </Nav.Link>
+
               {/* Tìm kiếm */}
               <Nav.Link
                 onClick={() => navigate("/catalog")}
@@ -189,6 +190,31 @@ export default function Header() {
                 <Icon icon="lucide:file-text" width="14" />
                 Bài báo
               </Nav.Link>
+
+              {/* Dự án - Hiển thị chỉ khi đã login */}
+              {email && (
+                <Nav.Link
+                  onClick={() => navigate("/projects")}
+                  className="px-3 py-1 text-sm font-semibold d-flex align-items-center gap-1"
+                  style={{
+                    borderRadius: "6px",
+                    backgroundColor: pathname.startsWith("/projects")
+                      ? "var(--primary-light)"
+                      : "transparent",
+                    color: pathname.startsWith("/projects")
+                      ? "var(--primary)"
+                      : "var(--text-muted)",
+                    border: pathname.startsWith("/projects")
+                      ? "1px solid var(--border)"
+                      : "1px solid transparent",
+                    transition: "all 0.2s",
+                    fontWeight: pathname.startsWith("/projects") ? 700 : 500,
+                  }}
+                >
+                  <Icon icon="lucide:briefcase" width="14" />
+                  Dự án
+                </Nav.Link>
+              )}
             </Nav>
 
             <div className="d-flex align-items-center gap-3">

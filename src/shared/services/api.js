@@ -23,6 +23,19 @@ const api = axios.create({
   withCredentials: true,
 });
 
+// Request interceptor: thêm token từ localStorage vào header Authorization
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem('token') || sessionStorage.getItem('token');
+    console.log('[API Request]', config.url, 'Token:', token ? 'exists' : 'missing');
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error),
+);
+
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
@@ -43,6 +56,7 @@ api.interceptors.response.use(
           const newToken = res.data?.token || res.data?.data?.token || null;
 
           if (newToken) {
+            localStorage.setItem('token', newToken);
             useAuthStore.getState().loginSuccess(newToken);
             originalRequest.headers.Authorization = `Bearer ${newToken}`;
           }

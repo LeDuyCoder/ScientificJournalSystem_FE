@@ -5,8 +5,15 @@ import { useNavigate } from "react-router-dom";
 import useAuth from "../../auth/hooks/useAuth";
 
 export default function ProfilePage() {
-  const { user, fetchProfile, updateProfile, deleteAccount, isLoading, error } =
-    useAuth();
+  const {
+    user,
+    isAuthenticated,
+    fetchProfile,
+    updateProfile,
+    deleteAccount,
+    isLoading,
+    error,
+  } = useAuth();
   const navigate = useNavigate();
 
   // Modal xác nhận xóa tài khoản
@@ -23,19 +30,12 @@ export default function ProfilePage() {
     url_image: "",
   });
 
-  // Kiểm tra đăng nhập & Điều hướng Guest User (Hỗ trợ cả token lẫn trạng thái null từ hook)
+  // Gọi API profile nếu đã auth.
   useEffect(() => {
-    const token = localStorage.getItem("researchpulse_token");
-
-    if (!token) {
-      navigate("/login");
+    if (isAuthenticated) {
+      fetchProfile();
     }
-  }, [navigate]);
-
-  // Gọi API lấy profile - Không gây lặp loading nhờ điều kiện render an toàn bên dưới
-  useEffect(() => {
-    fetchProfile();
-  }, [fetchProfile]);
+  }, [fetchProfile, isAuthenticated]);
 
   // Đổ dữ liệu user vào form
   useEffect(() => {
@@ -121,205 +121,253 @@ export default function ProfilePage() {
     <>
       <Header />
 
-      <div className="profile-page">
-        <div className="profile-container">
-          {/* Tiêu đề trang */}
-          <div className="page-header">
-            <h1>Hồ sơ</h1>
-            <p>Quản lý thông tin cá nhân và thiết lập tài khoản của bạn.</p>
-          </div>
-
-          {/* Breadcrumb */}
-          <div className="breadcrumb">
-            Tổng quan
-            <span>&gt;</span>
-            Hồ sơ cá nhân
-          </div>
-
-          <div className="profile-content">
-            {/* Sidebar */}
-            <div className="profile-sidebar">
-              <div className="avatar">
-                {formData.url_image ? (
-                  <img
-                    src={formData.url_image}
-                    alt="avatar"
-                    className="avatar-image"
-                    onError={(e) => {
-                      // Xử lý link ảnh hỏng: Ẩn thẻ img để fallback hiển thị Initials chữ cái đầu
-                      e.target.style.display = "none";
-                      e.target.parentElement.classList.add("avatar-fallback");
-                    }}
-                  />
-                ) : null}
-                <span className="avatar-initials">
-                  {formData.first_name
-                    ? formData.first_name.charAt(0).toUpperCase()
-                    : "U"}
-                </span>
-              </div>
-
-              <h2>
-                {formData.last_name} {formData.first_name}
-              </h2>
-
-              <div className="role-badge">
-                {formData.role || "Nhà nghiên cứu"}
-              </div>
-
-              {/* Status Badge động theo trạng thái is_active từ API */}
-              <div
-                className={`status-badge ${(user?.is_active ?? true) ? "active" : "inactive"}`}
-              >
-                {(user?.is_active ?? true) ? "Active" : "Inactive"}
-              </div>
-
-              <hr />
-
-              <div className="activity-title">Hoạt động</div>
-
-              <div className="stat-row">
-                <span>Dự án đang theo dõi</span>
-                <strong>2</strong>
-              </div>
-
-              <div className="stat-row">
-                <span>Từ khóa đã lưu</span>
-                <strong>5</strong>
-              </div>
+      {!isAuthenticated ? (
+        <div className="profile-page">
+          <div className="profile-container">
+            <div className="page-header">
+              <h1>Hồ sơ</h1>
+              <p>Quản lý thông tin cá nhân và thiết lập tài khoản của bạn.</p>
             </div>
 
-            {/* Nội dung chính */}
-            <div className="profile-card">
-              <h2>Thông tin tài khoản</h2>
+            <div
+              style={{
+                background: "white",
+                borderRadius: "20px",
+                padding: "60px 40px",
+                textAlign: "center",
+                marginTop: "40px",
+                boxShadow: "0 2px 10px rgba(0, 0, 0, 0.06)",
+              }}
+            >
+              <h2 style={{ marginBottom: "16px" }}>Vui lòng đăng nhập</h2>
+              <p
+                style={{
+                  color: "#666",
+                  marginBottom: "32px",
+                  fontSize: "16px",
+                }}
+              >
+                Bạn cần đăng nhập để xem và quản lý hồ sơ cá nhân của mình
+              </p>
+              <button
+                onClick={() => navigate("/login")}
+                style={{
+                  background: "#ff7a30",
+                  color: "white",
+                  border: "none",
+                  padding: "12px 32px",
+                  borderRadius: "10px",
+                  fontSize: "16px",
+                  fontWeight: "600",
+                  cursor: "pointer",
+                  marginRight: "12px",
+                }}
+              >
+                Đăng nhập
+              </button>
+              <button
+                onClick={() => navigate("/register")}
+                style={{
+                  background: "transparent",
+                  color: "#ff7a30",
+                  border: "2px solid #ff7a30",
+                  padding: "10px 30px",
+                  borderRadius: "10px",
+                  fontSize: "16px",
+                  fontWeight: "600",
+                  cursor: "pointer",
+                }}
+              >
+                Đăng kí
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div className="profile-page">
+          <div className="profile-container">
+            <div className="page-header">
+              <h1>Hồ sơ</h1>
+              <p>Quản lý thông tin cá nhân và thiết lập tài khoản của bạn.</p>
+            </div>
 
-              <div className="form-grid">
-                {/* Họ */}
-                <div className="form-group">
-                  <label>HỌ</label>
-                  <input
-                    type="text"
-                    value={formData.last_name}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        last_name: e.target.value,
-                      })
-                    }
-                  />
+            <div className="breadcrumb">
+              Tổng quan
+              <span>&gt;</span>
+              Hồ sơ cá nhân
+            </div>
+
+            <div className="profile-content">
+              <div className="profile-sidebar">
+                <div className="avatar">
+                  {formData.url_image ? (
+                    <img
+                      src={formData.url_image}
+                      alt="avatar"
+                      className="avatar-image"
+                      onError={(e) => {
+                        e.target.style.display = "none";
+                        e.target.parentElement.classList.add("avatar-fallback");
+                      }}
+                    />
+                  ) : null}
+                  <span className="avatar-initials">
+                    {formData.first_name
+                      ? formData.first_name.charAt(0).toUpperCase()
+                      : "U"}
+                  </span>
                 </div>
 
-                {/* Tên */}
-                <div className="form-group">
-                  <label>TÊN</label>
-                  <input
-                    type="text"
-                    value={formData.first_name}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        first_name: e.target.value,
-                      })
-                    }
-                  />
+                <h2>
+                  {formData.last_name} {formData.first_name}
+                </h2>
+
+                <div className="role-badge">
+                  {formData.role || "Nhà nghiên cứu"}
                 </div>
 
-                {/* Email (Readonly) */}
-                <div className="form-group">
-                  <label>ĐỊA CHỈ EMAIL</label>
-                  <input
-                    type="email"
-                    value={formData.email}
-                    readOnly
-                    className="readonly-input"
-                  />
-                </div>
-
-                {/* Vai trò (Readonly - Đảm bảo an toàn không cho tự thay đổi ADMINISTRATOR) */}
-                <div className="form-group">
-                  <label>VAI TRÒ / CHỨC DANH</label>
-                  <input
-                    type="text"
-                    value={formData.role || "Nhà nghiên cứu"}
-                    readOnly
-                    className="readonly-input"
-                  />
-                </div>
-
-                {/* Giới tính */}
-                <div className="form-group">
-                  <label>GIỚI TÍNH</label>
-                  <select
-                    value={formData.gender ? "male" : "female"}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        gender: e.target.value === "male",
-                      })
-                    }
-                  >
-                    <option value="male">Nam</option>
-                    <option value="female">Nữ</option>
-                  </select>
-                </div>
-
-                {/* Ngày sinh */}
-                <div className="form-group">
-                  <label>NGÀY SINH</label>
-                  <input
-                    type="date"
-                    value={formData.date_of_birth}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        date_of_birth: e.target.value,
-                      })
-                    }
-                  />
-                </div>
-              </div>
-
-              {/* Avatar URL */}
-              <div className="form-group full-width">
-                <label>AVATAR URL</label>
-                <input
-                  type="text"
-                  value={formData.url_image}
-                  onChange={(e) =>
-                    setFormData({
-                      ...formData,
-                      url_image: e.target.value,
-                    })
-                  }
-                  placeholder="https://example.com/avatar.png"
-                />
-              </div>
-
-              {/* Nút lưu */}
-              <div className="button-area">
-                <button className="save-btn" onClick={handleSave}>
-                  Lưu thay đổi
-                </button>
-              </div>
-
-              {/* Danger Zone */}
-              <div className="danger-zone">
-                <h3>Danger Zone</h3>
-                <p>Hành động này sẽ xóa tài khoản vĩnh viễn.</p>
-                <button
-                  className="delete-btn"
-                  onClick={() => setShowDeleteModal(true)}
+                <div
+                  className={`status-badge ${(user?.is_active ?? true) ? "active" : "inactive"}`}
                 >
-                  Xóa tài khoản
-                </button>
+                  {(user?.is_active ?? true) ? "Active" : "Inactive"}
+                </div>
+
+                <hr />
+
+                <div className="activity-title">Hoạt động</div>
+
+                <div className="stat-row">
+                  <span>Dự án đang theo dõi</span>
+                  <strong>2</strong>
+                </div>
+
+                <div className="stat-row">
+                  <span>Từ khóa đã lưu</span>
+                  <strong>5</strong>
+                </div>
+              </div>
+
+              <div className="profile-card">
+                <h2>Thông tin tài khoản</h2>
+
+                <div className="form-grid">
+                  <div className="form-group">
+                    <label>HỌ</label>
+                    <input
+                      type="text"
+                      value={formData.last_name}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          last_name: e.target.value,
+                        })
+                      }
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label>TÊN</label>
+                    <input
+                      type="text"
+                      value={formData.first_name}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          first_name: e.target.value,
+                        })
+                      }
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label>ĐỊA CHỈ EMAIL</label>
+                    <input
+                      type="email"
+                      value={formData.email}
+                      readOnly
+                      className="readonly-input"
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label>VAI TRÒ / CHỨC DANH</label>
+                    <input
+                      type="text"
+                      value={formData.role || "Nhà nghiên cứu"}
+                      readOnly
+                      className="readonly-input"
+                    />
+                  </div>
+
+                  <div className="form-group">
+                    <label>GIỚI TÍNH</label>
+                    <select
+                      value={formData.gender ? "male" : "female"}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          gender: e.target.value === "male",
+                        })
+                      }
+                    >
+                      <option value="male">Nam</option>
+                      <option value="female">Nữ</option>
+                    </select>
+                  </div>
+
+                  <div className="form-group">
+                    <label>NGÀY SINH</label>
+                    <input
+                      type="date"
+                      value={formData.date_of_birth}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          date_of_birth: e.target.value,
+                        })
+                      }
+                    />
+                  </div>
+                </div>
+
+                <div className="form-group full-width">
+                  <label>AVATAR URL</label>
+                  <input
+                    type="text"
+                    value={formData.url_image}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        url_image: e.target.value,
+                      })
+                    }
+                    placeholder="https://example.com/avatar.png"
+                  />
+                </div>
+
+                <div className="button-area">
+                  <button className="save-btn" onClick={handleSave}>
+                    Lưu thay đổi
+                  </button>
+                </div>
+
+                <div className="danger-zone">
+                  <h3>Danger Zone</h3>
+                  <p>Hành động này sẽ xóa tài khoản vĩnh viễn.</p>
+                  <button
+                    className="delete-btn"
+                    onClick={() => setShowDeleteModal(true)}
+                  >
+                    Xóa tài khoản
+                  </button>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      )}
 
-      {/* Modal xác nhận xóa */}
-      {showDeleteModal && (
+      {showDeleteModal && isAuthenticated && (
         <div className="modal-overlay">
           <div className="modal-content">
             <h3>Xác nhận xóa tài khoản</h3>

@@ -32,7 +32,16 @@ export const isAuthenticated = async () => {
     const storeUser = useAuthStore.getState().user;
     if (storeUser) return true;
 
-    const res = await api.get('/users/me');
+    let res;
+    try {
+      res = await api.get('/users/me');
+    } catch (error) {
+      if (error.response?.status === 404) {
+        res = await api.get('/users/profile');
+      } else {
+        throw error;
+      }
+    }
 
     if (res.status === 200) {
       const { user } = res.data;

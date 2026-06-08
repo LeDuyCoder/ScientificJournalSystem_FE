@@ -53,9 +53,18 @@ const getEmailFromToken = (token) => {
  */
 export const loginWithPassword = async (email, password, remember = true) => {
   const response = await loginApi({ email, password });
-  const token = response.data?.data?.token;
+  console.log('[loginWithPassword] Response:', response.data);
+  
+  // Extract token từ response
+  let token = response.data?.data?.token;
+  if (!token) {
+    token = response.data?.token; // Fallback nếu structure khác
+  }
+  
+  console.log('[loginWithPassword] Token extracted:', token ? 'exists' : 'missing');
   if (token) {
     persistToken(token, remember);
+    console.log('[loginWithPassword] Token saved to', remember ? 'localStorage' : 'sessionStorage');
   }
 
   return {
@@ -104,9 +113,18 @@ export const registerUser = async (payload) => {
  */
 export const fetchCurrentProfile = async () => {
   const response = await getProfileApi();
+  console.log('[fetchCurrentProfile] Response:', response.data);
+  
+  // Backend có thể trả success=false nhưng code=SUCCESS_GET_USER, nên check status và data trước
+  if (response.status === 200 && response.data?.data) {
+    return response.data.data;
+  }
+  
+  // Fallback: nếu response.data.success là true
   if (response.data?.success) {
     return response.data.data;
   }
+  
   throw new Error(response.data?.message || 'Failed to fetch profile');
 };
 
