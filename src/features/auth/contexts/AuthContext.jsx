@@ -1,3 +1,8 @@
+﻿/**
+ * File source thuộc hệ thống FE ResearchPulse.
+ *
+ * File: features\auth\contexts\AuthContext.jsx
+ */
 import { createContext, useState, useEffect, useCallback } from 'react';
 import {
   loginApi,

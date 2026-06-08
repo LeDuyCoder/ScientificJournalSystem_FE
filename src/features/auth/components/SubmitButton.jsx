@@ -1,3 +1,8 @@
+﻿/**
+ * File source thuộc hệ thống FE ResearchPulse.
+ *
+ * File: features\auth\components\SubmitButton.jsx
+ */
 import { Button, Spinner } from 'react-bootstrap';
 
 export default function SubmitButton({

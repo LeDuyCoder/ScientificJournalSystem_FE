@@ -1,3 +1,8 @@
+﻿/**
+ * File source thuộc hệ thống FE ResearchPulse.
+ *
+ * File: features\catalog\store\catalogSearchStore.js
+ */
 import { create } from 'zustand';
 
 export const CATALOG_DEFAULT_SEARCH_STATE = {

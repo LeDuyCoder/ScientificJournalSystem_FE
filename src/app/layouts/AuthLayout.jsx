@@ -1,3 +1,8 @@
+﻿/**
+ * File source thuộc hệ thống FE ResearchPulse.
+ *
+ * File: app\layouts\AuthLayout.jsx
+ */
 import { Row, Col } from 'react-bootstrap';
 
 export default function AuthLayout({ banner, children }) {

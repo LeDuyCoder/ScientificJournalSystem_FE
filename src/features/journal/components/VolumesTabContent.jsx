@@ -1,3 +1,8 @@
+﻿/**
+ * File source thuộc hệ thống FE ResearchPulse.
+ *
+ * File: features\journal\components\VolumesTabContent.jsx
+ */
 import { useState } from 'react';
 import { Spinner, Badge } from 'react-bootstrap';
 import { Icon } from '@iconify/react';

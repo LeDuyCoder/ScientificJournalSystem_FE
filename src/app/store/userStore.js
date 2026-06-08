@@ -1,3 +1,8 @@
+﻿/**
+ * File source thuộc hệ thống FE ResearchPulse.
+ *
+ * File: app\store\userStore.js
+ */
 import { create } from 'zustand';
 
 /**

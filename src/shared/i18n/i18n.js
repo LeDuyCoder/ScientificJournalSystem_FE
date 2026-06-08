@@ -1,3 +1,8 @@
+﻿/**
+ * File source thuộc hệ thống FE ResearchPulse.
+ *
+ * File: shared\i18n\i18n.js
+ */
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import viTranslation from './locales/vi.json';

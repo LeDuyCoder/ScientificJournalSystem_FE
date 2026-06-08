@@ -1,3 +1,8 @@
+﻿/**
+ * File source thuộc hệ thống FE ResearchPulse.
+ *
+ * File: features\article\pages\ArticleListPage.jsx
+ */
 import { Container, Pagination, Modal, Button } from 'react-bootstrap';
 import { Icon } from '@iconify/react';
 import Header from '../../landing/components/Header';

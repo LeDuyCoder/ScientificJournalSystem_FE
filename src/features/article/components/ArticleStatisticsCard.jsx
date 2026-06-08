@@ -1,3 +1,8 @@
+﻿/**
+ * File source thuộc hệ thống FE ResearchPulse.
+ *
+ * File: features\article\components\ArticleStatisticsCard.jsx
+ */
 import { Card, Row, Col } from 'react-bootstrap';
 import { Icon } from '@iconify/react';
 

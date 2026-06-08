@@ -1,3 +1,8 @@
+﻿/**
+ * File source thuộc hệ thống FE ResearchPulse.
+ *
+ * File: app\routes\PublicRoute.jsx
+ */
 import { useEffect, useState } from "react";
 import { Navigate, Outlet } from "react-router-dom";
 import { isAuthenticated } from "../../shared/utils/auth";

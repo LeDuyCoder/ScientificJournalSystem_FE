@@ -1,3 +1,8 @@
+﻿/**
+ * File source thuộc hệ thống FE ResearchPulse.
+ *
+ * File: features\journal\components\JournalSearchBar.jsx
+ */
 import { Form, Row, Col, Button, InputGroup } from 'react-bootstrap';
 import { Icon } from '@iconify/react';
 

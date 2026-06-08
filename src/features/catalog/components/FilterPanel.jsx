@@ -1,3 +1,8 @@
+﻿/**
+ * File source thuộc hệ thống FE ResearchPulse.
+ *
+ * File: features\catalog\components\FilterPanel.jsx
+ */
 import { Form, Button } from 'react-bootstrap';
 
 export default function FilterPanel({

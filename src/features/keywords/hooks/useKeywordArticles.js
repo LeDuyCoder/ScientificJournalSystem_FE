@@ -1,3 +1,8 @@
+﻿/**
+ * File source thuộc hệ thống FE ResearchPulse.
+ *
+ * File: features\keywords\hooks\useKeywordArticles.js
+ */
 import { useState, useEffect, useCallback } from 'react';
 import keywordApi from '../api/keywordApi';
 import { normalizeKeywordDetailResponse, normalizeKeywordArticlesResponse } from '../services/keywordService';

@@ -1,3 +1,8 @@
+﻿/**
+ * File source thuộc hệ thống FE ResearchPulse.
+ *
+ * File: features\journal\pages\JournalDetailPage.jsx
+ */
 import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Breadcrumb, Button } from 'react-bootstrap';
 import { Icon } from '@iconify/react';

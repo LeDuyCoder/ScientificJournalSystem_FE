@@ -1,3 +1,8 @@
+﻿/**
+ * File source thuộc hệ thống FE ResearchPulse.
+ *
+ * File: features\keywords\pages\KeywordArticlesPage.jsx
+ */
 import { Container } from 'react-bootstrap';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';

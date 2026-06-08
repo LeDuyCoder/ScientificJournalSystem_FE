@@ -1,3 +1,8 @@
+﻿/**
+ * File source thuộc hệ thống FE ResearchPulse.
+ *
+ * File: features\auth\services\authService.js
+ */
 import { jwtDecode } from 'jwt-decode';
 import {
   loginApi,

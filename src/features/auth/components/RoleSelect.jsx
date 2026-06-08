@@ -1,3 +1,8 @@
+﻿/**
+ * File source thuộc hệ thống FE ResearchPulse.
+ *
+ * File: features\auth\components\RoleSelect.jsx
+ */
 import { Form, Row, Col } from 'react-bootstrap';
 import Icon from '../../../shared/components/Icon';
 

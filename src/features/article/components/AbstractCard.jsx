@@ -1,3 +1,8 @@
+﻿/**
+ * File source thuộc hệ thống FE ResearchPulse.
+ *
+ * File: features\article\components\AbstractCard.jsx
+ */
 import { useState } from 'react';
 import { Card, Button } from 'react-bootstrap';
 import { Icon } from '@iconify/react';

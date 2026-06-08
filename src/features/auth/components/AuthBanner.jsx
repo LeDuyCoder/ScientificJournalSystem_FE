@@ -1,3 +1,8 @@
+﻿/**
+ * File source thuộc hệ thống FE ResearchPulse.
+ *
+ * File: features\auth\components\AuthBanner.jsx
+ */
 import Icon from '../../../shared/components/Icon';
 
 const FEATURES = [

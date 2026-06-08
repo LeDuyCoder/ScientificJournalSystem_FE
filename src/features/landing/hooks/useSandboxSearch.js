@@ -1,3 +1,8 @@
+﻿/**
+ * File source thuộc hệ thống FE ResearchPulse.
+ *
+ * File: features\landing\hooks\useSandboxSearch.js
+ */
 import { useState } from 'react';
 import { searchGlobalApi } from '../api/landingApi';
 

@@ -1,3 +1,8 @@
+﻿/**
+ * File source thuộc hệ thống FE ResearchPulse.
+ *
+ * File: features\catalog\pages\CatalogSearchPage.jsx
+ */
 import { Container, Row, Col, Form, Button, InputGroup, Pagination, Dropdown } from 'react-bootstrap';
 import { Icon } from '@iconify/react';
 import { useCatalogSearch } from '../hooks/useCatalogSearch';

@@ -1,3 +1,8 @@
+﻿/**
+ * File source thuộc hệ thống FE ResearchPulse.
+ *
+ * File: features\journal\components\RankingTabContent.jsx
+ */
 import { Row, Col, Table, Badge } from 'react-bootstrap';
 import LoadingSkeleton from '../../../shared/components/LoadingSkeleton';
 

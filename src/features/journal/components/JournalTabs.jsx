@@ -1,3 +1,8 @@
+﻿/**
+ * File source thuộc hệ thống FE ResearchPulse.
+ *
+ * File: features\journal\components\JournalTabs.jsx
+ */
 import { Nav } from 'react-bootstrap';
 import { Icon } from '@iconify/react';
 

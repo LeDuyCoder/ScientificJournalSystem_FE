@@ -1,3 +1,8 @@
+﻿/**
+ * File source thuộc hệ thống FE ResearchPulse.
+ *
+ * File: features\keywords\components\KeywordSearchBar.jsx
+ */
 import { useState, useEffect } from 'react';
 import { InputGroup, Form, Button } from 'react-bootstrap';
 import { Icon } from '@iconify/react';

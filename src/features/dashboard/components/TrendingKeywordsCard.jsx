@@ -1,3 +1,8 @@
+﻿/**
+ * File source thuộc hệ thống FE ResearchPulse.
+ *
+ * File: features\dashboard\components\TrendingKeywordsCard.jsx
+ */
 import { Icon } from '@iconify/react';
 
 /** keyword pill colours cycle */

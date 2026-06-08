@@ -1,3 +1,8 @@
+﻿/**
+ * File source thuộc hệ thống FE ResearchPulse.
+ *
+ * File: features\landing\components\Header.jsx
+ */
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -42,9 +47,12 @@ export default function Header() {
     localStorage.setItem("researchpulse_lang", lang);
   };
 
-  const handleAuthRedirect = () => {
+  const handleAuthLogin = () => {
     navigate("/login");
   };
+  const handleAuthRegister = () => {
+    navigate("/register")
+  }
 
   return (
     <>
@@ -273,13 +281,13 @@ export default function Header() {
                   <Button
                     variant="link"
                     className="text-muted-custom hover:text-main text-xs font-semibold text-decoration-none"
-                    onClick={handleAuthRedirect}
+                    onClick={handleAuthLogin}
                   >
                     {t("signIn")}
                   </Button>
                   <Button
                     className="btn-primary-glow rounded-pill px-4 py-2 text-xs font-bold"
-                    onClick={handleAuthRedirect}
+                    onClick={handleAuthRegister}
                   >
                     {t("signUp")}
                   </Button>
@@ -498,7 +506,7 @@ export default function Header() {
                   className="w-100 rounded-pill py-2.5 text-xs text-main border-secondary hover:bg-light"
                   onClick={() => {
                     setShowMobileMenu(false);
-                    handleAuthRedirect();
+                    handleAuthLogin();
                   }}
                 >
                   {t("signIn")}
@@ -507,7 +515,7 @@ export default function Header() {
                   className="btn-primary-glow w-100 rounded-pill py-2.5 text-xs font-bold"
                   onClick={() => {
                     setShowMobileMenu(false);
-                    handleAuthRedirect();
+                    handleAuthRegister();
                   }}
                 >
                   {t("signUp")}

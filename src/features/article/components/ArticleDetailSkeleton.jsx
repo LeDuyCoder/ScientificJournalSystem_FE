@@ -1,3 +1,8 @@
+﻿/**
+ * File source thuộc hệ thống FE ResearchPulse.
+ *
+ * File: features\article\components\ArticleDetailSkeleton.jsx
+ */
 import { Row, Col, Card } from 'react-bootstrap';
 import LoadingSkeleton from '../../../shared/components/LoadingSkeleton';
 

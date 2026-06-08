@@ -1,3 +1,8 @@
+﻿/**
+ * File source thuộc hệ thống FE ResearchPulse.
+ *
+ * File: features\article\utils\articleFormatters.js
+ */
 export const emptyText = '—';
 
 export const getDoiUrl = (doi) => {

@@ -1,3 +1,8 @@
+﻿/**
+ * File source thuộc hệ thống FE ResearchPulse.
+ *
+ * File: features\journal\components\JournalMetadataGrid.jsx
+ */
 import { Row, Col } from 'react-bootstrap';
 
 export default function JournalMetadataGrid({ journal, loading }) {

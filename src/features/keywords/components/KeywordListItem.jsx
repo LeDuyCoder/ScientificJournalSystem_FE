@@ -1,3 +1,8 @@
+﻿/**
+ * File source thuộc hệ thống FE ResearchPulse.
+ *
+ * File: features\keywords\components\KeywordListItem.jsx
+ */
 import { Badge, Button } from 'react-bootstrap';
 import { Icon } from '@iconify/react';
 
