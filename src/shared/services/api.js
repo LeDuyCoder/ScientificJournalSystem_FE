@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { useAuthStore } from '../../app/store/authStore';
 
 // Base Axios instance pointing to the backend API base URL
 const api = axios.create({
@@ -6,40 +7,40 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  withCredentials: true
 });
 
-// Request interceptor to dynamically inject the bearer auth token
-api.interceptors.request.use(
-  async (config) => {
-    let token = localStorage.getItem('researchpulse_token');
+api.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  async (error) => {
+    const originalRequest = error.config;
     
-    if (!token) {
-      // For guest users, try to use a cached guest token
-      token = localStorage.getItem('researchpulse_guest_token');
+    if (error.response && error.response.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true;
       
-      // If not cached, fetch it from login API
-      if (!token && !config.url.endsWith('/auth/login') && !config.url.endsWith('/auth/register')) {
-        try {
-          const res = await axios.post(`${import.meta.env.VITE_API_URL}/auth/login`, {
-            email: 'phunghao2701@gmail.com',
-            password: '12345678'
-          });
-          if (res.data?.success && res.data?.data?.token) {
-            token = res.data.data.token;
-            localStorage.setItem('researchpulse_guest_token', token);
-          }
-        } catch (err) {
-          console.error('Error fetching guest token in background:', err);
+      try {
+        const res = await axios.get(
+          `${import.meta.env.VITE_API_URL}/auth/refresh`,
+          { withCredentials: true } 
+        );
+
+        if (res.status === 200) {
+          const newToken = res.data.token;
+          
+          // 🔥 ĐÂY LÀ CHỖ THAY ĐỔI: Lấy hàm loginSuccess trực tiếp từ kho Zustand mà không dùng Hook
+          const { loginSuccess } = useAuthStore.getState(); 
+          loginSuccess(newToken); 
+          
+          originalRequest.headers['Authorization'] = `Bearer ${newToken}`;
+          
+          return api(originalRequest);
         }
+      } catch (refreshError) {
+        return Promise.reject(refreshError);
       }
     }
-
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => {
     return Promise.reject(error);
   }
 );
