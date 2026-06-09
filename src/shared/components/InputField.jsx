@@ -1,4 +1,8 @@
-import React from 'react';
+﻿/**
+ * File source thuộc hệ thống FE ResearchPulse.
+ *
+ * File: shared\components\InputField.jsx
+ */
 import { Form, InputGroup } from 'react-bootstrap';
 import Icon from './Icon';
 

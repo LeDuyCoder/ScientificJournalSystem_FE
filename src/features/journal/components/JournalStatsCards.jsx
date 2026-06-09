@@ -1,4 +1,8 @@
-import React from 'react';
+﻿/**
+ * File source thuộc hệ thống FE ResearchPulse.
+ *
+ * File: features\journal\components\JournalStatsCards.jsx
+ */
 import { Row, Col, Card } from 'react-bootstrap';
 import { Icon } from '@iconify/react';
 

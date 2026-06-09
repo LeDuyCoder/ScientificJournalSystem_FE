@@ -1,3 +1,8 @@
+﻿/**
+ * File source thuộc hệ thống FE ResearchPulse.
+ *
+ * File: main.jsx
+ */
 import { StrictMode } from 'react'
 import './shared/i18n/i18n'
 import { createRoot } from 'react-dom/client'

@@ -1,6 +1,11 @@
-import React from 'react';
-import { Row, Col, Badge, Button, Spinner } from 'react-bootstrap';
+/**
+ * File source thuộc hệ thống FE ResearchPulse.
+ *
+ * File: features\journal\components\JournalHero.jsx
+ */
+import { Row, Col, Button, Spinner } from 'react-bootstrap';
 import { Icon } from '@iconify/react';
+import { useNavigate } from 'react-router-dom';
 
 export default function JournalHero({
   journal,
@@ -10,6 +15,8 @@ export default function JournalHero({
   onAddToProject,
   loading
 }) {
+  const navigate = useNavigate();
+
   if (loading || !journal) {
     return (
       <div 
@@ -56,6 +63,11 @@ export default function JournalHero({
     is_following
   } = journal;
 
+  const handleCategoryClick = (categoryName) => {
+    if (!categoryName) return;
+    navigate(`/keywords?keyword=${encodeURIComponent(categoryName)}`);
+  };
+
   return (
     <div className="journal-dark-card p-4 p-md-5 mb-4 position-relative overflow-hidden" 
          style={{ 
@@ -81,25 +93,18 @@ export default function JournalHero({
           {/* Badges */}
           <div className="d-flex flex-wrap gap-2 mb-3">
             {quartile && (
-              <Badge 
-                className="px-3 py-2 font-display" 
+              <span 
+                className="px-3 py-2 font-display text-main border-secondary"
                 style={{ 
                   fontWeight: 700, 
                   borderRadius: '6px',
-                  backgroundColor: quartile === 'Q1' ? 'rgba(47, 198, 70, 0.12)' 
-                                 : quartile === 'Q2' ? 'var(--primary-light)' 
-                                 : 'var(--bg-section)',
-                  color: quartile === 'Q1' ? 'var(--q1-color)' 
-                       : quartile === 'Q2' ? 'var(--primary)' 
-                       : 'var(--text-muted)',
-                  border: quartile === 'Q1' ? '1px solid rgba(47, 198, 70, 0.3)' : '1px solid var(--border)'
                 }}
               >
                 {quartile}
-              </Badge>
+              </span>
             )}
             {is_open_access && (
-              <Badge 
+              <badge 
                 className="px-3 py-2" 
                 style={{ 
                   backgroundColor: 'rgba(25, 135, 84, 0.08)', 
@@ -109,20 +114,18 @@ export default function JournalHero({
                 }}
               >
                 Open Access
-              </Badge>
+              </badge>
             )}
             {publisher_name && (
-              <Badge 
-                className="px-3 py-2" 
+              <span 
+className="px-3 py-2 font-display text-main border-secondary"
                 style={{ 
-                  backgroundColor: 'var(--bg-main)', 
-                  color: 'var(--text-muted)',
-                  border: '1px solid var(--border)', 
-                  borderRadius: '6px' 
+                  fontWeight: 700, 
+                  borderRadius: '6px',
                 }}
               >
                 {publisher_name}
-              </Badge>
+              </span>
             )}
           </div>
 
@@ -139,21 +142,19 @@ export default function JournalHero({
           {/* Subject Category tags */}
           <div className="d-flex flex-wrap gap-2">
             {subject_categories.map((cat, idx) => (
-              <Badge 
+              <span 
                 key={cat.id || idx} 
-                className="px-3 py-2 font-display hover-pills"
-                style={{ 
-                  backgroundColor: 'var(--bg-main)', 
-                  color: 'var(--text-muted)',
-                  border: '1px solid var(--border)', 
-                  borderRadius: '20px', 
-                  cursor: 'pointer',
-                  fontWeight: 500,
-                  fontSize: '0.85rem'
-                }}
+                className="px-3 py-1 rounded-pill font-display text-main fw-semibold"
+                role="button"
+                tabIndex={0}
+                onClick={() => handleCategoryClick(cat.display_name)}
+                onKeyDown={(e) => e.key === 'Enter' && handleCategoryClick(cat.display_name)}
+                title={`Tìm keyword ${cat.display_name}`}
+                
+              style={{ backgroundColor: 'rgba(0,0,0,0.07)', border: '1px solid rgba(0,0,0,0.10)' }}
               >
                 {cat.display_name}
-              </Badge>
+              </span>
             ))}
           </div>
         </Col>
@@ -162,10 +163,10 @@ export default function JournalHero({
         <Col lg={4} md={5} className="text-md-end text-start mt-lg-2">
           {metric_value ? (
             <div className="mb-4">
-              <div className="font-display fw-bold text-primary d-inline-block" style={{ fontSize: '4rem', lineHeight: '1' }}>
+              <div className="font-display fw-bold text-main d-inline-block" style={{ fontSize: '4rem', lineHeight: '1' }}>
                 {metric_value}
               </div>
-              <div className="text-muted-custom text-uppercase fw-semibold" style={{ fontSize: '0.8rem', letterSpacing: '1px' }}>
+              <div className="font-display text-muted-custom text-uppercase fw-semibold" style={{ fontSize: '1rem', letterSpacing: '1px' }}>
                 {metric_name} {metric_year}
               </div>
             </div>

@@ -1,6 +1,10 @@
-import React from 'react';
+/**
+ * File source thuộc hệ thống FE ResearchPulse.
+ *
+ * File: features\journal\pages\JournalDetailPage.jsx
+ */
 import { useParams, useNavigate } from 'react-router-dom';
-import { Container, Breadcrumb, Row, Col, Button } from 'react-bootstrap';
+import { Container, Breadcrumb, Button } from 'react-bootstrap';
 import { Icon } from '@iconify/react';
 
 // Shared Layout Header
@@ -17,13 +21,13 @@ import JournalTabs from '../components/JournalTabs';
 import RankingTabContent from '../components/RankingTabContent';
 import VolumesTabContent from '../components/VolumesTabContent';
 import ArticlesTabContent from '../components/ArticlesTabContent';
-import AuthRequiredModal from '../components/AuthRequiredModal';
+import AuthRequiredModal from '../../../shared/components/AuthRequiredModal';
 import AddToProjectModal from '../components/AddToProjectModal';
 
 export default function JournalDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const auth = useAuth ? useAuth() : { user: null };
+  const auth = useAuth();
   const currentUser = auth?.user;
 
   const {
@@ -31,6 +35,9 @@ export default function JournalDetailPage() {
     rankingHistory,
     volumes,
     issuesByVolume,
+    issueErrors,
+    volumePagination,
+    issuePaginationByVolume,
     recentArticles,
     activeTab,
     setActiveTab,
@@ -38,6 +45,7 @@ export default function JournalDetailPage() {
     loadingRanking,
     loadingVolumes,
     loadingArticles,
+    volumesError,
     notFound,
     showAuthModal,
     setShowAuthModal,
@@ -47,7 +55,9 @@ export default function JournalDetailPage() {
     isAddingToProject,
     handleFollow,
     handleAddToProject,
-    fetchIssuesForVolume
+    fetchIssuesForVolume,
+    handleVolumePageChange,
+    handleIssuePageChange
   } = useJournalDetail(id, currentUser);
 
   // Fallback for not found or empty ID
@@ -84,25 +94,23 @@ export default function JournalDetailPage() {
       <Container className="pt-5 mt-5">
         
         {/* Custom Breadcrumb Nav */}
-        <div className="py-3 text-start">
-          <Breadcrumb className="mb-0 custom-breadcrumb">
-            <Breadcrumb.Item 
+        <div aria-label="breadcrumb" className="mb-4">
+          <Breadcrumb className="mb-0 custom-breadcrumb d-flex align-items-center">
+            <Breadcrumb.Item
               onClick={() => navigate('/')}
-              className="text-muted-custom hover-text-dark text-decoration-none"
-              style={{ cursor: 'pointer', fontSize: '0.9rem' }}
+              className="font-display d-flex align-items-center"
+              linkProps={{ style: { cursor: 'pointer', fontSize: '0.9rem', lineHeight: 1, color: 'var(--text-muted)', textDecoration: 'none' } }}
             >
               Trang chủ
             </Breadcrumb.Item>
-            <Breadcrumb.Item 
-              onClick={() => navigate('/')}
-              className="text-muted-custom hover-text-dark text-decoration-none"
-              style={{ cursor: 'pointer', fontSize: '0.9rem' }}
-            >
-              Danh mục
+            <Breadcrumb.Item
+            onClick={() => navigate('/search')}
+            active className="font-display d-flex align-items-center" style={{cursor: 'pointer' ,fontSize: '0.9rem', lineHeight: 1, color: 'var(--text-muted)' }}>
+              Tìm kiếm
             </Breadcrumb.Item>
             <Breadcrumb.Item 
               active 
-              className="text-primary font-display fw-semibold"
+              className="font-display d-flex align-items-center"
               style={{ fontSize: '0.9rem' }}
             >
               {loadingJournal ? 'Đang tải...' : journal?.display_name}
@@ -146,8 +154,15 @@ export default function JournalDetailPage() {
             <VolumesTabContent 
               volumes={volumes} 
               issuesByVolume={issuesByVolume}
+              issueErrors={issueErrors}
+              journalId={id}
               onVolumeExpand={fetchIssuesForVolume}
               loading={loadingVolumes}
+              error={volumesError}
+              volumePagination={volumePagination}
+              issuePaginationByVolume={issuePaginationByVolume}
+              onVolumePageChange={handleVolumePageChange}
+              onIssuePageChange={handleIssuePageChange}
             />
           )}
 
@@ -155,7 +170,7 @@ export default function JournalDetailPage() {
             <ArticlesTabContent 
               recentArticles={recentArticles} 
               loading={loadingArticles}
-              onArticleClick={(artId) => alert(`Xem chi tiết bài báo ${artId} (Mô phỏng)`)}
+              onArticleClick={(artId) => navigate(`/articles/${artId}`)}
             />
           )}
         </div>

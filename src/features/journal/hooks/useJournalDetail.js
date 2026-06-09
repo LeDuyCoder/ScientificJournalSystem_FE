@@ -1,3 +1,8 @@
+﻿/**
+ * File source thuộc hệ thống FE ResearchPulse.
+ *
+ * File: features\journal\hooks\useJournalDetail.js
+ */
 import { useState, useEffect, useCallback } from 'react';
 import {
   getJournalByIdApi,
@@ -6,7 +11,6 @@ import {
   getCatalogIssuesApi,
   getJournalArticlesApi,
   followJournalApi,
-  addJournalToProjectApi,
 } from '../api/journalApi';
 
 export function useJournalDetail(journalId, currentUser) {
@@ -15,6 +19,9 @@ export function useJournalDetail(journalId, currentUser) {
   const [rankingHistory, setRankingHistory] = useState([]);
   const [volumes, setVolumes] = useState([]);
   const [issuesByVolume, setIssuesByVolume] = useState({});
+  const [issueErrors, setIssueErrors] = useState({});
+  const [volumePagination, setVolumePagination] = useState({ page: 1, limit: 10, total: 0, total_pages: 1 });
+  const [issuePaginationByVolume, setIssuePaginationByVolume] = useState({});
   const [recentArticles, setRecentArticles] = useState([]);
   const [activeTab, setActiveTab] = useState('ranking');
 
@@ -23,6 +30,7 @@ export function useJournalDetail(journalId, currentUser) {
   const [loadingRanking, setLoadingRanking] = useState(false);
   const [loadingVolumes, setLoadingVolumes] = useState(false);
   const [loadingArticles, setLoadingArticles] = useState(false);
+  const [volumesError, setVolumesError] = useState(false);
   const [error, setError] = useState(null);
   const [notFound, setNotFound] = useState(false);
 
@@ -30,7 +38,7 @@ export function useJournalDetail(journalId, currentUser) {
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showProjectModal, setShowProjectModal] = useState(false);
   const [isFollowing, setIsFollowing] = useState(false);
-  const [isAddingToProject, setIsAddingToProject] = useState(false);
+  const [isAddingToProject, setIsAddingToProject] = useState(false); // eslint-disable-line no-unused-vars
 
   // Fetch Core Journal Info
   const fetchJournalInfo = useCallback(async () => {
@@ -89,48 +97,59 @@ export function useJournalDetail(journalId, currentUser) {
   }, [journalId]);
 
   // Fetch Volumes
-  const fetchVolumes = useCallback(async () => {
-    if (volumes.length > 0) return; // cache loaded
+  const fetchVolumes = useCallback(async (nextPage = 1) => {
     setLoadingVolumes(true);
+    setVolumesError(false);
     try {
-      const response = await getCatalogVolumesApi({ journal_id: journalId });
+      const response = await getCatalogVolumesApi({ journal_id: journalId, page: nextPage, limit: volumePagination.limit });
       if (response.data && response.data.data) {
-        setVolumes(response.data.data);
+        const payload = response.data.data;
+        setVolumes(payload.items || payload || []);
+        setVolumePagination(payload.pagination || { page: nextPage, limit: volumePagination.limit, total: payload.length || 0, total_pages: 1 });
       } else {
         setVolumes([]);
       }
     } catch (err) {
       console.error('API error fetching volumes:', err);
+      setVolumesError(true);
       setVolumes([]);
     } finally {
       setLoadingVolumes(false);
     }
-  }, [journalId, volumes.length]);
+  }, [journalId, volumePagination.limit]);
 
   // Fetch Issues for a specific volume
-  const fetchIssuesForVolume = useCallback(async (volumeId) => {
-    if (issuesByVolume[volumeId]) return; // already loaded
+  const fetchIssuesForVolume = useCallback(async (volumeId, nextPage = 1) => {
+    const currentPagination = issuePaginationByVolume[volumeId] || { limit: 10 };
+    if (issuesByVolume[volumeId] && !issueErrors[volumeId] && currentPagination.page === nextPage) return; // already loaded successfully
+    setIssueErrors(prev => ({ ...prev, [volumeId]: false }));
     try {
-      const response = await getCatalogIssuesApi({ volume_id: volumeId });
+      const response = await getCatalogIssuesApi({ volume_id: volumeId, page: nextPage, limit: currentPagination.limit || 10 });
       if (response.data && response.data.data) {
-        setIssuesByVolume(prev => ({ ...prev, [volumeId]: response.data.data }));
+        const payload = response.data.data;
+        setIssuesByVolume(prev => ({ ...prev, [volumeId]: payload.items || payload || [] }));
+        setIssuePaginationByVolume(prev => ({
+          ...prev,
+          [volumeId]: payload.pagination || { page: nextPage, limit: currentPagination.limit || 10, total: (payload || []).length, total_pages: 1 }
+        }));
       } else {
         setIssuesByVolume(prev => ({ ...prev, [volumeId]: [] }));
       }
     } catch (err) {
       console.error(`API error fetching issues for volume ${volumeId}:`, err);
-      setIssuesByVolume(prev => ({ ...prev, [volumeId]: [] }));
+      setIssueErrors(prev => ({ ...prev, [volumeId]: true }));
     }
-  }, [issuesByVolume]);
+  }, [issuesByVolume, issueErrors, issuePaginationByVolume]);
 
   // Fetch Recent Articles
   const fetchRecentArticles = useCallback(async () => {
     if (recentArticles.length > 0) return; // cache loaded
     setLoadingArticles(true);
     try {
-      const response = await getJournalArticlesApi({ journal_id: journalId });
-      if (response.data && response.data.data) {
-        setRecentArticles(response.data.data);
+      const response = await getJournalArticlesApi({ journal_id: journalId, limit: 6, sortBy: 'publication_year', sortOrder: 'DESC' });
+      const payload = response.data?.data;
+      if (payload) {
+        setRecentArticles(payload.items || payload.articles || payload.data || []);
       } else {
         setRecentArticles([]);
       }
@@ -170,6 +189,16 @@ export function useJournalDetail(journalId, currentUser) {
       fetchRecentArticles();
     }
   }, [activeTab, fetchVolumes, fetchRecentArticles]);
+
+  /** Chuyển trang volume trong tab Volumes & Issues */
+  const handleVolumePageChange = useCallback((nextPage) => {
+    fetchVolumes(nextPage);
+  }, [fetchVolumes]);
+
+  /** Chuyển trang issue bên trong một volume accordion */
+  const handleIssuePageChange = useCallback((volumeId, nextPage) => {
+    fetchIssuesForVolume(volumeId, nextPage);
+  }, [fetchIssuesForVolume]);
 
   // Actions
   const handleFollow = useCallback(async () => {
@@ -211,6 +240,9 @@ export function useJournalDetail(journalId, currentUser) {
     rankingHistory,
     volumes,
     issuesByVolume,
+    issueErrors,
+    volumePagination,
+    issuePaginationByVolume,
     recentArticles,
     activeTab,
     setActiveTab,
@@ -218,6 +250,7 @@ export function useJournalDetail(journalId, currentUser) {
     loadingRanking,
     loadingVolumes,
     loadingArticles,
+    volumesError,
     error,
     notFound,
     showAuthModal,
@@ -228,6 +261,8 @@ export function useJournalDetail(journalId, currentUser) {
     isAddingToProject,
     handleFollow,
     handleAddToProject,
-    fetchIssuesForVolume
+    fetchIssuesForVolume,
+    handleVolumePageChange,
+    handleIssuePageChange
   };
 }
