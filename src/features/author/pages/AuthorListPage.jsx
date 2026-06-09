@@ -12,7 +12,7 @@
  * - Tích hợp phân trang đầy đủ với bộ điều khiển phân trang tùy chỉnh.
  */
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { Container, Row, Col, Form, InputGroup, Card, Button, Pagination } from 'react-bootstrap';
 import Icon from '../../../shared/components/Icon';
@@ -36,18 +36,24 @@ export default function AuthorListPage() {
   const {
     authors,
     totalAuthors,
+    totalPages,
+    subjectAreas,
     loadingAuthors,
+    loadingSubjectAreas,
     errorAuthors,
-    fetchAuthors
+    fetchAuthors,
+    fetchSubjectAreas
   } = useAuthors();
 
   // Chuyển đổi chế độ xem cục bộ (mặc định là 'grid' khớp với ảnh thiết kế 2)
   const [viewMode, setViewMode] = useState('grid'); // Hiển thị kiểu 'grid' hoặc 'table'
+  const [subjectAreaDropdownOpen, setSubjectAreaDropdownOpen] = useState(false);
+  const subjectAreaMenuRef = useRef(null);
 
   // Trích xuất các tham số truy vấn URL với giá trị mặc định an toàn
   const searchVal = searchParams.get('search') || '';
   const pageVal = parseInt(searchParams.get('page') || '1', 10);
-  const limitVal = parseInt(searchParams.get('limit') || '4', 10); // Mặc định là 4 tác giả mỗi trang (phù hợp với Ảnh 2)
+  const limitVal = parseInt(searchParams.get('limit') || '10', 10);
   const sortVal = searchParams.get('sort') || '';
   const subjectAreaVal = searchParams.get('subject_area') || '';
   const countryVal = searchParams.get('country') || '';
@@ -58,16 +64,44 @@ export default function AuthorListPage() {
   // ── SIDE EFFECT: ĐỒNG BỘ GỌI API FETCH ─────────────────────────────────────
   // Gọi lại API lấy danh sách tác giả mỗi khi bất kỳ tham số truy vấn URL nào thay đổi.
   useEffect(() => {
-    fetchAuthors({
+    // 1. Tạo object gom các tham số lại
+    const params = {
       search: searchVal,
       page: pageVal,
       limit: limitVal,
       sort: sortVal,
       subject_area: subjectAreaVal,
       country: countryVal
-    });
+    };
+
+    // 2. Lọc bỏ các key có giá trị là chuỗi rỗng, null hoặc undefined
+    const filteredParams = Object.fromEntries(
+      Object.entries(params).filter(([_, value]) => value !== '')
+    );
+
+    // 3. Truyền object đã lọc vào API
+    fetchAuthors(filteredParams);
+    
   }, [searchVal, pageVal, limitVal, sortVal, subjectAreaVal, countryVal, fetchAuthors]);
 
+  useEffect(() => {
+    if (!subjectAreas || subjectAreas.length === 0) {
+      fetchSubjectAreas();
+    }
+  }, [subjectAreas, fetchSubjectAreas]);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (subjectAreaMenuRef.current && !subjectAreaMenuRef.current.contains(event.target)) {
+        setSubjectAreaDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
   /**
    * Đẩy giá trị nhập tìm kiếm cục bộ vào các tham số URL. Đặt lại trang hiện tại về 1.
    * 
@@ -116,22 +150,143 @@ export default function AuthorListPage() {
     setSearchParams(nextParams);
   };
 
-  // Tính toán giới hạn phân trang
-  const totalPages = Math.ceil(totalAuthors / limitVal);
+  const totalPagesCount = Math.max(1, totalPages);
   const startIndex = (pageVal - 1) * limitVal + 1;
 
-  // Dữ liệu tĩnh hiển thị trên các thẻ thống kê
+  const formatLocalNumber = (value) => {
+    if (value === null || value === undefined || Number.isNaN(Number(value))) {
+      return '0';
+    }
+    return Number(value).toLocaleString('vi-VN');
+  };
+
+  const visibleAuthorsCount = authors.length;
+  const featuredAuthorsCount = authors.filter((author) => Number(author.h_index ?? author.hindex ?? 0) >= 30).length;
+  const totalWorksCount = authors.reduce((sum, author) => sum + (Number(author.works_count ?? author.article_count ?? 0) || 0), 0);
+  const totalCitationCount = authors.reduce((sum, author) => sum + (Number(author.cited_by_count ?? author.citation_count ?? 0) || 0), 0);
+
+  const renderPagination = () => {
+    if (totalPagesCount <= 1) return null;
+
+    const items = [];
+    items.push(
+      <Pagination.Prev
+        key="prev"
+        disabled={pageVal === 1}
+        onClick={() => handlePageChange(pageVal - 1)}
+        className="mx-0.5"
+      />
+    );
+
+    const maxButtons = 7;
+    let startPage = Math.max(1, pageVal - Math.floor(maxButtons / 2));
+    let endPage = Math.min(totalPagesCount, startPage + maxButtons - 1);
+
+    if (endPage - startPage + 1 < maxButtons) {
+      startPage = Math.max(1, endPage - maxButtons + 1);
+    }
+
+    if (startPage > 1) {
+      items.push(
+        <Pagination.Item key={1} active={1 === pageVal} onClick={() => handlePageChange(1)}>
+          1
+        </Pagination.Item>
+      );
+
+      if (startPage > 2) {
+        items.push(<Pagination.Ellipsis key="ellipsis-start" disabled />);
+      }
+    }
+
+    for (let p = startPage; p <= endPage; p += 1) {
+      items.push(
+        <Pagination.Item
+          key={p}
+          active={p === pageVal}
+          onClick={() => handlePageChange(p)}
+        >
+          {p}
+        </Pagination.Item>
+      );
+    }
+
+    if (endPage < totalPagesCount) {
+      if (endPage < totalPagesCount - 1) {
+        items.push(<Pagination.Ellipsis key="ellipsis-end" disabled />);
+      }
+      items.push(
+        <Pagination.Item key={totalPagesCount} active={totalPagesCount === pageVal} onClick={() => handlePageChange(totalPagesCount)}>
+          {totalPagesCount}
+        </Pagination.Item>
+      );
+    }
+
+    items.push(
+      <Pagination.Next
+        key="next"
+        disabled={pageVal === totalPagesCount}
+        onClick={() => handlePageChange(pageVal + 1)}
+        className="mx-0.5"
+      />
+    );
+
+    return (
+      <Pagination
+        className="justify-content-center m-0 custom-pagination"
+        style={{
+          '--bs-pagination-bg': 'var(--bg-card)',
+          '--bs-pagination-border-color': 'var(--border)',
+          '--bs-pagination-color': 'var(--text-muted)',
+          '--bs-pagination-hover-color': 'var(--primary)',
+          '--bs-pagination-hover-bg': 'var(--bg-main)',
+          '--bs-pagination-hover-border-color': 'var(--border)',
+          '--bs-pagination-active-bg': 'var(--primary)',
+          '--bs-pagination-active-border-color': 'var(--primary)',
+          '--bs-pagination-active-color': '#ffffff',
+          '--bs-pagination-disabled-bg': 'var(--bg-main)',
+          '--bs-pagination-disabled-color': 'var(--text-muted)',
+          '--bs-pagination-disabled-border-color': 'var(--border)'
+        }}
+      >
+        {items}
+      </Pagination>
+    );
+  };
+
+  // Dữ liệu hiển thị trên các thẻ thống kê sẽ sử dụng kết quả API nếu có
   const statCards = [
-    { label: 'Tổng tác giả', value: '4.821', icon: 'lucide:users', desc: 'Nhà nghiên cứu hệ thống' },
-    { label: 'Tác giả nổi bật', value: '124', icon: 'lucide:award', desc: 'H-index vượt trội (>=30)' },
-    { label: 'Tổng bài báo', value: '98.542', icon: 'lucide:file-text', desc: 'Công bố khoa học được lưu trữ' },
-    { label: 'Tổng citations', value: '1.2M+', icon: 'lucide:quote', desc: 'Trích dẫn nghiên cứu khoa học' }
+    {
+      label: 'Tổng tác giả',
+      value: formatLocalNumber(totalAuthors),
+      icon: 'lucide:users',
+      desc: 'Tổng tác giả trong hệ thống'
+    },
+    {
+      label: 'Tác giả nổi bật',
+      value: formatLocalNumber(featuredAuthorsCount || visibleAuthorsCount),
+      icon: 'lucide:award',
+      desc: visibleAuthorsCount > 0
+        ? `Trong ${formatLocalNumber(visibleAuthorsCount)} tác giả đang hiển thị`
+        : 'H-index vượt trội (>=30)'
+    },
+    {
+      label: 'Tổng bài báo',
+      value: formatLocalNumber(totalWorksCount),
+      icon: 'lucide:file-text',
+      desc: 'Tổng bài báo trên trang hiện tại'
+    },
+    {
+      label: 'Tổng citations',
+      value: formatLocalNumber(totalCitationCount),
+      icon: 'lucide:quote',
+      desc: 'Tổng citations trên trang hiện tại'
+    }
   ];
 
   return (
     <div
-      className="min-vh-100"
-      style={{ backgroundColor: 'var(--bg-main)', color: 'var(--text-main)', paddingTop: '80px' }}
+      className="w-100"
+      style={{ minHeight: 'calc(100vh - 80px)', backgroundColor: 'var(--bg-main)', color: 'var(--text-main)', paddingTop: '80px' }}
     >
       {/* Thanh Header điều hướng phía trên */}
       <Header />
@@ -244,19 +399,84 @@ export default function AuthorListPage() {
 
               {/* Hộp chọn bộ lọc Lĩnh vực nghiên cứu */}
               <Col xs={12} sm={6} lg={3}>
-                <Form.Select
-                  size="sm"
-                  value={subjectAreaVal}
-                  onChange={e => handleFilterChange('subject_area', e.target.value)}
-                  className="text-muted-custom text-sm"
-                  style={{ borderColor: 'var(--border)', padding: '0.5rem 0.75rem', fontSize: '0.82rem' }}
-                >
-                  <option value="">Tất cả lĩnh vực</option>
-                  <option value="Machine Learning">Machine Learning</option>
-                  <option value="Computer Vision">Computer Vision</option>
-                  <option value="Natural Language Processing">Natural Language Processing</option>
-                  <option value="Quantum Optics">Quantum Optics</option>
-                </Form.Select>
+                <Form.Group className="position-relative" ref={subjectAreaMenuRef}>
+                  <InputGroup
+                    className="rounded-3 border overflow-hidden bg-transparent"
+                    style={{ borderColor: 'var(--border)' }}
+                  >
+                    <Form.Control
+                      id="subjectAreaInput"
+                      size="sm"
+                      type="text"
+                      placeholder="Nhập hoặc chọn lĩnh vực"
+                      value={subjectAreaVal}
+                      onChange={e => {
+                        handleFilterChange('subject_area', e.target.value);
+                        setSubjectAreaDropdownOpen(true);
+                      }}
+                      onFocus={() => setSubjectAreaDropdownOpen(true)}
+                      className="text-muted-custom text-sm"
+                      style={{
+                        border: 'none',
+                        boxShadow: 'none',
+                        padding: '0.5rem 0.75rem',
+                        fontSize: '0.82rem',
+                        backgroundColor: 'transparent'
+                      }}
+                    />
+                    <InputGroup.Text
+                      className="bg-white border-0 px-3"
+                      style={{
+                        borderLeft: '1px solid var(--border)',
+                        backgroundColor: 'var(--bg-card)',
+                        cursor: 'pointer'
+                      }}
+                      onClick={() => setSubjectAreaDropdownOpen((prev) => !prev)}
+                    >
+                      <Icon icon="lucide:chevron-down" width="16" />
+                    </InputGroup.Text>
+                  </InputGroup>
+
+                  {subjectAreaDropdownOpen && subjectAreas && subjectAreas.length > 0 && (
+                    <div
+                      className="position-absolute w-100 border rounded-3 overflow-hidden"
+                      style={{
+                        backgroundColor: 'var(--bg-card)',
+                        borderColor: 'var(--border)',
+                        top: 'calc(100% + 0.35rem)',
+                        zIndex: 1050,
+                        maxHeight: '240px',
+                        overflowY: 'auto'
+                      }}
+                    >
+                      <button
+                        type="button"
+                        className="w-100 text-start px-3 py-2 border-0 bg-transparent text-muted-custom"
+                        style={{ fontSize: '0.82rem' }}
+                        onClick={() => {
+                          handleFilterChange('subject_area', '');
+                          setSubjectAreaDropdownOpen(false);
+                        }}
+                      >
+                        Tất cả lĩnh vực
+                      </button>
+                      {subjectAreas.map((area) => (
+                        <button
+                          key={area.subject_area_id || area.id || area.display_name}
+                          type="button"
+                          className="w-100 text-start px-3 py-2 border-0 bg-transparent hover-bg-light"
+                          style={{ fontSize: '0.82rem', color: 'var(--text-main)' }}
+                          onClick={() => {
+                            handleFilterChange('subject_area', area.display_name || area.name || '');
+                            setSubjectAreaDropdownOpen(false);
+                          }}
+                        >
+                          {area.display_name || area.name || ''}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </Form.Group>
               </Col>
 
               {/* Hộp chọn Chế độ Sắp xếp */}
@@ -375,34 +595,7 @@ export default function AuthorListPage() {
         </div>
 
         {/* 6. Các nút điều khiển thanh phân trang */}
-        {totalPages > 1 && (
-          <div className="d-flex justify-content-center mt-4">
-            <Pagination className="m-0">
-              <Pagination.Prev 
-                disabled={pageVal === 1}
-                onClick={() => handlePageChange(pageVal - 1)}
-              />
-              {Array.from({ length: totalPages }).map((_, idx) => (
-                <Pagination.Item
-                  key={idx + 1}
-                  active={pageVal === idx + 1}
-                  onClick={() => handlePageChange(idx + 1)}
-                  style={{
-                    '--bs-pagination-active-bg': 'var(--primary)',
-                    '--bs-pagination-active-border-color': 'var(--primary)',
-                    '--bs-pagination-color': 'var(--text-muted)'
-                  }}
-                >
-                  {idx + 1}
-                </Pagination.Item>
-              ))}
-              <Pagination.Next 
-                disabled={pageVal === totalPages}
-                onClick={() => handlePageChange(pageVal + 1)}
-              />
-            </Pagination>
-          </div>
-        )}
+        {renderPagination()}
       </Container>
     </div>
   );

@@ -27,7 +27,7 @@ export default function AuthorNavigationTabs({ activeTab }) {
     <Nav 
       variant="tabs" 
       activeKey={activeTab}
-      className="tab-nav-custom mb-4 border-0 d-flex flex-nowrap overflow-auto"
+      className="tab-nav-custom mb-4 border-0 d-flex flex-nowrap overflow-x-auto"
       style={{ gap: '4px' }}
     >
       {/* Tab điều hướng Danh sách tác giả */}

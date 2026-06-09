@@ -24,10 +24,11 @@ export default function AuthorTableRow({ author, index }) {
 
   // Trích xuất các biến an toàn kèm dữ liệu dự phòng phù hợp
   const id = author.author_id ?? author.id;
-  const name = author.full_name ?? author.name ?? 'Tác giả';
+  const name = author.display_name ?? author.full_name ?? author.name ?? 'Tác giả';
   const orcid = author.orcid ?? '—';
-  const institution1 = author.institution_1 ?? author.institution ?? '—';
+  const institution1 = author.institution_1 ?? author.affiliation ?? author.institution ?? '—';
   const institution2 = author.institution_2 ?? author.department ?? '';
+  const avatarUrl = author.url_image || author.avatar_url || '';
   
   // Nối tên phòng ban và tên cơ quan chính nếu có dữ liệu.
   const institutionText = institution2 ? `${institution1} - ${institution2}` : institution1;
@@ -75,7 +76,7 @@ export default function AuthorTableRow({ author, index }) {
       {/* Cột 2: Avatar nhỏ & Tên chi tiết kèm thông tin ORCID */}
       <td>
         <div className="d-flex align-items-center gap-2">
-          <AuthorAvatar name={name} size="sm" bgColor={avatarColor} />
+          <AuthorAvatar name={name} url={avatarUrl} size="sm" bgColor={avatarColor} />
           <div className="min-w-0">
             <div className="text-main fw-semibold text-truncate" style={{ fontSize: '0.85rem' }}>
               {name}

@@ -24,6 +24,7 @@ import EmptyState from '../../../shared/components/EmptyState';
  * @returns {JSX.Element} Giao diện hiển thị phân bổ lĩnh vực nghiên cứu.
  */
 export default function AuthorAreasBreakdown({ breakdown = [], loading = false, error = null }) {
+  const breakdownItems = Array.isArray(breakdown) ? breakdown : [];
   
   // ── TRẠNG THÁI LOADING ──────────────────────────────────────────────────────
   // Hiển thị khung tròn shimmer đại diện cho biểu đồ donut và các thanh skeleton song song cho các giá trị.
@@ -56,7 +57,7 @@ export default function AuthorAreasBreakdown({ breakdown = [], loading = false, 
 
   // ── TRẠNG THÁI TRỐNG & LỖI ──────────────────────────────────────────────────
   // Hiển thị giao diện EmptyState tiêu chuẩn trong một Card được định dạng sẵn.
-  if (error || !breakdown || breakdown.length === 0) {
+  if (error || breakdownItems.length === 0) {
     return (
       <Card 
         className="p-4 mb-4" 
@@ -121,7 +122,7 @@ export default function AuthorAreasBreakdown({ breakdown = [], loading = false, 
               />
               
               {/* Các lát cắt hình tròn động bằng SVG */}
-              {breakdown.map((item, idx) => {
+              {breakdownItems.map((item, idx) => {
                 const strokeColor = colors[idx % colors.length];
                 const pct = item.percentage ?? 0;
                 
@@ -173,7 +174,7 @@ export default function AuthorAreasBreakdown({ breakdown = [], loading = false, 
         {/* Cột phải: Danh sách chú thích dạng văn bản đi kèm Thanh tiến trình dạng đường thẳng */}
         <Col xs={12} md={7}>
           <div className="d-flex flex-column gap-3.5">
-            {breakdown.map((item, idx) => {
+            {breakdownItems.map((item, idx) => {
               const color = colors[idx % colors.length];
               const name = item.subject_area ?? item.name ?? 'Lĩnh vực khác';
               const pct = item.percentage ?? 0;

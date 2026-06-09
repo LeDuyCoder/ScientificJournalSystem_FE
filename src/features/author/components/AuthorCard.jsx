@@ -29,13 +29,18 @@ export default function AuthorCard({ author }) {
 
   // Trích xuất các biến an toàn kèm dữ liệu dự phòng
   const id = author.author_id ?? author.id;
-  const name = author.full_name ?? author.name ?? 'Tác giả';
-  const institution1 = author.institution_1 ?? author.institution ?? '—';
+  const name = author.display_name ?? author.full_name ?? author.name ?? 'Tác giả';
+  const institution1 = author.institution_1 ?? author.affiliation ?? author.institution ?? '—';
   const institution2 = author.institution_2 ?? author.department ?? '';
-  const hIndex = author.h_index ?? 0;
+  const hIndex = author.h_index ?? author.hindex ?? 0;
   const citations = author.citation_count ?? author.citations ?? 0;
-  const articlesCount = author.article_count ?? author.papers ?? 0;
-  const tags = author.subject_areas ?? [];
+  const articlesCount = author.article_count ?? author.papers ?? author.article_count ?? 0;
+  const tags = Array.isArray(author.subject_areas)
+    ? author.subject_areas
+    : author.subject_area
+      ? [author.subject_area]
+      : [];
+  const avatarUrl = author.url_image || author.avatar_url || '';
   const avatarColor = author.avatar_color ?? '#FF7A33';
 
   /**
@@ -88,6 +93,7 @@ export default function AuthorCard({ author }) {
       <div className="d-flex align-items-start gap-3 mb-3">
         <AuthorAvatar 
           name={name} 
+          url={avatarUrl}
           size="md" 
           bgColor={avatarColor}
           className="flex-shrink-0"

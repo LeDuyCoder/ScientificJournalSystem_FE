@@ -10,6 +10,7 @@ import {
   getAuthorAreasBreakdownApi,
   getAuthorArticlesApi,
   getAuthorLeaderboardApi,
+  getSubjectAreasApi,
 } from '../api/author.api';
 
 // ── DỮ LIỆU GIẢ ĐỊNH DỰ PHÒNG (KHỚP VỚI THIẾT KẾ GIAO DIỆN) ───────────────────
@@ -178,6 +179,26 @@ const MOCK_ARTICLES_MAP = {
   ]
 };
 
+// Chuẩn hóa dữ liệu tác giả từ API để các component có thể hiển thị nhất quán.
+const normalizeAuthorRecord = (author) => {
+  if (!author || typeof author !== 'object') return author;
+  const rawName = author.display_name ?? author.full_name ?? author.name ?? '';
+  const cleanedName = String(rawName).trim().replace(/^[\s;'"`]+/, '').trim() || 'Tác giả';
+
+  return {
+    ...author,
+    full_name: cleanedName,
+    name: cleanedName,
+    institution_1: author.institution_1 ?? author.last_known_institution ?? author.institution ?? '',
+    institution_2: author.institution_2 ?? author.department ?? author.affiliation ?? '',
+    article_count: author.article_count ?? author.works_count ?? 0,
+    citation_count: author.citation_count ?? author.cited_by_count ?? 0,
+    homepage: author.homepage ?? author.homepage_url ?? '',
+    bio: author.bio ?? author.description ?? '',
+    orcid: author.orcid ?? '',
+  };
+};
+
 // Cơ sở dữ liệu giả định cho tỷ lệ phần trăm đóng góp của các lĩnh vực nghiên cứu.
 const MOCK_BREAKDOWNS_MAP = {
   '1': [
@@ -203,6 +224,73 @@ const MOCK_BREAKDOWNS_MAP = {
   ]
 };
 
+const normalizeAreasBreakdown = (data) => {
+  if (!data) return [];
+  if (Array.isArray(data)) return data;
+  if (Array.isArray(data?.items)) return data.items;
+  if (Array.isArray(data?.breakdown)) return data.breakdown;
+  if (Array.isArray(data?.data)) return data.data;
+
+  // Nếu backend trả về một object chứa metadata và các trường lĩnh vực,
+  // chúng ta cố gắng chuyển đổi nó thành mảng phù hợp để component có thể render.
+  if (typeof data === 'object') {
+    const ignoredKeys = new Set(['author_id', 'orcid', 'display_name', 'full_name', 'name', 'success', 'message']);
+    const keys = Object.keys(data).filter((key) => !ignoredKeys.has(key));
+
+    if (keys.length > 0) {
+      const items = keys.map((key) => {
+        const value = data[key];
+        if (typeof value === 'object' && value !== null) {
+          return {
+            subject_area: value.subject_area ?? key,
+            percentage: value.percentage ?? value.percent ?? 0,
+            count: value.count ?? value.article_count ?? 0,
+            ...value,
+          };
+        }
+
+        return {
+          subject_area: key,
+          percentage: Number(value) || 0,
+          count: 0,
+        };
+      });
+
+      if (items.some((item) => item.subject_area || item.percentage || item.count)) {
+        return items;
+      }
+    }
+
+    return [{
+      subject_area: data.subject_area ?? data.name ?? 'Lĩnh vực khác',
+      percentage: data.percentage ?? data.percent ?? 0,
+      count: data.count ?? data.article_count ?? 0,
+    }];
+  }
+
+  return [];
+};
+
+const getPrimarySubjectAreaFromBreakdown = (breakdown = []) => {
+  if (!Array.isArray(breakdown) || breakdown.length === 0) return '';
+  const first = [...breakdown].sort((a, b) => (Number(b.percentage) || 0) - (Number(a.percentage) || 0))[0];
+  return first.category_name ?? first.subject_area ?? first.subject_area_name ?? first.name ?? first.display_name ?? '';
+};
+
+const enrichLeaderboardAuthors = (authors = [], breakdownMap = {}) => {
+  return authors.map((author) => {
+    const id = author.author_id ?? author.id;
+    const breakdown = breakdownMap[id] || [];
+    const primarySubjectArea = author.subject_area ?? author.field ?? author.area ?? getPrimarySubjectAreaFromBreakdown(breakdown);
+
+    return {
+      ...author,
+      breakdown,
+      primary_subject_area: primarySubjectArea,
+    };
+  });
+};
+
 /**
  * Hook quản lý trạng thái tùy chỉnh chính cho mô-đun Tác giả.
  * 
@@ -212,10 +300,13 @@ export default function useAuthors() {
   // ── CÁC TRẠNG THÁI DỮ LIỆU CHÍNH ───────────────────────────────────────────
   const [authors, setAuthors] = useState([]);                      // Danh sách tác giả hiển thị trên trang danh sách/lưới
   const [totalAuthors, setTotalAuthors] = useState(0);              // Tổng số lượng tác giả phục vụ tính toán phân trang
+  const [totalPages, setTotalPages] = useState(1);                  // Tổng số trang từ API pagination
   const [currentAuthor, setCurrentAuthor] = useState(null);          // Thông tin hồ sơ chi tiết của tác giả đang được xem
   const [authorArticles, setAuthorArticles] = useState([]);          // Danh sách bài báo được viết bởi tác giả đang được xem
-  const [authorBreakdown, setAuthorBreakdown] = useState(null);      // Chỉ số đóng góp của các lĩnh vực nghiên cứu
+  const [authorBreakdown, setAuthorBreakdown] = useState([]);         // Chỉ số đóng góp của các lĩnh vực nghiên cứu
+  const [subjectAreas, setSubjectAreas] = useState([]);               // Danh sách subject area cho bộ lọc
   const [leaderboard, setLeaderboard] = useState([]);                // Danh sách bảng xếp hạng các tác giả hàng đầu
+  const [leaderboardBreakdowns, setLeaderboardBreakdowns] = useState({}); // Breakdown theo tác giả cho leaderboard
 
   // ── CÁC TRẠNG THÁI LOADING RIÊNG BIỆT ──────────────────────────────────────
   // Mỗi quá trình tải dữ liệu có cờ loading spinner/skeleton riêng để tránh làm nghẽn giao diện.
@@ -223,6 +314,7 @@ export default function useAuthors() {
   const [loadingAuthorDetail, setLoadingAuthorDetail] = useState(false);
   const [loadingArticles, setLoadingArticles] = useState(false);
   const [loadingAreas, setLoadingAreas] = useState(false);
+  const [loadingSubjectAreas, setLoadingSubjectAreas] = useState(false);
   const [loadingLeaderboard, setLoadingLeaderboard] = useState(false);
 
   // ── CÁC TRẠNG THÁI LỖI RIÊNG BIỆT ─────────────────────────────────────────
@@ -231,6 +323,7 @@ export default function useAuthors() {
   const [errorAuthorDetail, setErrorAuthorDetail] = useState(null);
   const [errorArticles, setErrorArticles] = useState(null);
   const [errorAreas, setErrorAreas] = useState(null);
+  const [errorSubjectAreas, setErrorSubjectAreas] = useState(null);
   const [errorLeaderboard, setErrorLeaderboard] = useState(null);
 
   // ── 1. Lấy danh sách tác giả kèm theo bộ lọc ─────────────────────────────────
@@ -247,10 +340,20 @@ export default function useAuthors() {
       const response = await getAuthorsApi(params);
       // Xác thực phản hồi. Kiểm tra trường hợp dự phòng của Axios/Vite (ví dụ: trả về index.html)
       if (response.data && typeof response.data === 'object' && response.data.success !== false) {
-        const payload = response.data.data || {};
-        const items = Array.isArray(payload.items) ? payload.items : (Array.isArray(payload) ? payload : []);
-        setAuthors(items);
-        setTotalAuthors(payload.total || items.length);
+        const payload = response.data.data;
+        const items = Array.isArray(payload)
+          ? payload
+          : Array.isArray(payload?.items)
+            ? payload.items
+            : [];
+        const normalizedItems = items.map(normalizeAuthorRecord);
+        const pagination = response.data.pagination || payload?.pagination || {};
+        const total = pagination.total ?? payload?.total ?? normalizedItems.length;
+        const limit = pagination.limit ?? (parseInt(params.limit || '1', 10) || normalizedItems.length || 1);
+
+        setAuthors(normalizedItems);
+        setTotalAuthors(total);
+        setTotalPages(Math.max(1, Math.ceil(total / limit)));
       } else {
         throw new Error(response.data?.message || 'Failed to fetch authors');
       }
@@ -290,6 +393,7 @@ export default function useAuthors() {
 
       setAuthors(paginated);
       setTotalAuthors(filtered.length);
+      setTotalPages(Math.max(1, Math.ceil(filtered.length / limit)));
     } finally {
       setLoadingAuthors(false);
     }
@@ -309,7 +413,8 @@ export default function useAuthors() {
     try {
       const response = await getAuthorDetailApi(authorId);
       if (response.data && typeof response.data === 'object' && response.data.success !== false) {
-        setCurrentAuthor(response.data.data || null);
+        const rawAuthor = response.data.data || {};
+        setCurrentAuthor(normalizeAuthorRecord(rawAuthor));
       } else {
         throw new Error(response.data?.message || 'Failed to fetch author detail');
       }
@@ -363,7 +468,7 @@ export default function useAuthors() {
     try {
       const response = await getAuthorAreasBreakdownApi(authorId);
       if (response.data && typeof response.data === 'object' && response.data.success !== false) {
-        setAuthorBreakdown(response.data.data || null);
+        setAuthorBreakdown(normalizeAreasBreakdown(response.data.data));
       } else {
         throw new Error(response.data?.message || 'Failed to fetch areas breakdown');
       }
@@ -373,6 +478,26 @@ export default function useAuthors() {
       setAuthorBreakdown(matched);
     } finally {
       setLoadingAreas(false);
+    }
+  }, []);
+
+  const fetchSubjectAreas = useCallback(async () => {
+    setLoadingSubjectAreas(true);
+    setErrorSubjectAreas(null);
+    try {
+      const response = await getSubjectAreasApi();
+      if (response.data && typeof response.data === 'object' && response.data.success !== false) {
+        const payload = response.data.data || {};
+        setSubjectAreas(Array.isArray(payload.items) ? payload.items : payload.items || []);
+      } else {
+        throw new Error(response.data?.message || 'Failed to fetch subject areas');
+      }
+    } catch (err) {
+      console.warn('API error fetching subject areas:', err?.message || String(err));
+      setSubjectAreas([]);
+      setErrorSubjectAreas(err?.message || 'Không thể tải lĩnh vực nghiên cứu');
+    } finally {
+      setLoadingSubjectAreas(false);
     }
   }, []);
 
@@ -387,10 +512,32 @@ export default function useAuthors() {
     setLoadingLeaderboard(true);
     setErrorLeaderboard(null);
     try {
-      const response = await getAuthorLeaderboardApi();
+      const response = await getAuthorLeaderboardApi(params);
       if (response.data && typeof response.data === 'object' && response.data.success !== false) {
-        const data = response.data.data || [];
-        setLeaderboard(data);
+        const rawData = Array.isArray(response.data.data) ? response.data.data : [];
+        const normalizedData = rawData.map(normalizeAuthorRecord);
+
+        const breakdownMap = {};
+        await Promise.allSettled(
+          normalizedData.map(async (author) => {
+            const id = author.author_id ?? author.id;
+            if (!id) return;
+            try {
+              const breakdownResponse = await getAuthorAreasBreakdownApi(id);
+              if (breakdownResponse.data && typeof breakdownResponse.data === 'object' && breakdownResponse.data.success !== false) {
+                breakdownMap[id] = normalizeAreasBreakdown(breakdownResponse.data.data);
+              } else {
+                breakdownMap[id] = [];
+              }
+            } catch (error) {
+              breakdownMap[id] = [];
+            }
+          })
+        );
+
+        const enrichedList = enrichLeaderboardAuthors(normalizedData, breakdownMap);
+        setLeaderboardBreakdowns(breakdownMap);
+        setLeaderboard(enrichedList);
       } else {
         throw new Error(response.data?.message || 'Failed to fetch leaderboard');
       }
@@ -436,6 +583,7 @@ export default function useAuthors() {
     currentAuthor,
     authorArticles,
     authorBreakdown,
+    subjectAreas,
     leaderboard,
 
     // Loading states for selective Spinner/Skeleton displays
@@ -443,6 +591,7 @@ export default function useAuthors() {
     loadingAuthorDetail,
     loadingArticles,
     loadingAreas,
+    loadingSubjectAreas,
     loadingLeaderboard,
 
     // Error structures for ErrorState banner rendering
@@ -450,6 +599,7 @@ export default function useAuthors() {
     errorAuthorDetail,
     errorArticles,
     errorAreas,
+    errorSubjectAreas,
     errorLeaderboard,
 
     // Async Fetch Trigger Functions
@@ -457,7 +607,9 @@ export default function useAuthors() {
     fetchAuthorDetail,
     fetchAuthorArticles,
     fetchAuthorAreasBreakdown,
+    fetchSubjectAreas,
     fetchLeaderboard,
+    totalPages,
     fetchAuthorDetailsFull,
   };
 }

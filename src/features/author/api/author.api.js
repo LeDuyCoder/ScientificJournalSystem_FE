@@ -6,6 +6,14 @@
 import api from '../../../shared/services/api';
 
 /**
+ * Gọi API lấy danh sách các subject area học thuật.
+ * @returns {Promise} Axios promise
+ */
+export const getSubjectAreasApi = () => {
+  return api.get('/subject-areas');
+};
+
+/**
  * Gọi API lấy phân tích phần trăm đóng góp theo lĩnh vực nghiên cứu của tác giả
  * @param {number|string} id - ID của tác giả
  * @returns {Promise} Axios promise
@@ -27,8 +35,8 @@ export const getAuthorArticlesApi = (id) => {
  * Gọi API lấy danh sách xếp hạng tác giả toàn cầu (Leaderboard)
  * @returns {Promise} Axios promise
  */
-export const getAuthorLeaderboardApi = () => {
-  return api.get('/author/leaderboard');
+export const getAuthorLeaderboardApi = (params = {}) => {
+  return api.get('/author/leaderboard', { params });
 };
 
 /**

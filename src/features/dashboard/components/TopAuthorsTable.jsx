@@ -137,10 +137,11 @@ export default function TopAuthorsTable({ authors, loading, error, onAuthorClick
 
           {/* Rows */}
           {authors.map((author, i) => {
-            const name      = author.full_name ?? author.author_name ?? author.name ?? 'Unknown';
-            const field     = author.subject_area ?? author.field ?? author.area ?? '—';
-            const articles  = author.article_count ?? author.papers ?? 0;
-            const citations = author.citation_count ?? author.citations ?? 0;
+            const name      = author.display_name ?? author.full_name ?? author.author_name ?? author.name ?? 'Unknown';
+            const orcid     = author.orcid ?? null;
+            const field     = author.subject_area ?? author.primary_subject_area ?? author.field ?? author.area ?? '—';
+            const articles  = author.article_count ?? author.papers ?? author.works_count ?? 0;
+            const citations = author.citation_count ?? author.citations ?? author.cited_by_count ?? 0;
             const rank      = i + 1;
 
             return (
@@ -160,11 +161,18 @@ export default function TopAuthorsTable({ authors, loading, error, onAuthorClick
                 <RankBadge rank={rank} />
                 <div className="d-flex align-items-center gap-2">
                   <AuthorAvatar name={name} />
-                  <span className="text-main fw-semibold text-truncate" style={{ fontSize: '0.83rem' }}>
-                    {truncate(name, 24)}
-                  </span>
+                  <div className="text-truncate" style={{ minWidth: 0 }}>
+                    <div className="text-main fw-semibold" style={{ fontSize: '0.83rem' }}>
+                      {truncate(name, 24)}
+                    </div>
+                    {orcid ? (
+                      <div className="text-muted-custom" style={{ fontSize: '0.7rem' }}>
+                        {truncate(orcid, 32)}
+                      </div>
+                    ) : null}
+                  </div>
                 </div>
-                <FieldBadge field={field} />
+                <FieldBadge field={field == "" ? "—" : field} />
                 <span className="text-muted-custom" style={{ fontSize: '0.8rem' }}>
                   {formatCount(articles)}
                 </span>

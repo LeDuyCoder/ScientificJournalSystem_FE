@@ -54,13 +54,13 @@ export default function AuthorProfileHeader({ author, loading = false }) {
   if (!author) return null;
 
   // Trích xuất các biến an toàn kèm dữ liệu dự phòng mặc định
-  const name = author.full_name ?? author.name ?? 'Tác giả';
-  const institution1 = author.institution_1 ?? author.institution ?? '—';
+  const name = author.full_name ?? author.display_name ?? author.name ?? 'Tác giả';
+  const institution1 = author.institution_1 ?? author.last_known_institution ?? author.institution ?? '—';
   const institution2 = author.institution_2 ?? author.department ?? '';
   const email = author.email ?? '';
-  const hIndex = author.h_index ?? 0;
-  const citations = author.citation_count ?? author.citations ?? 0;
-  const articlesCount = author.article_count ?? author.papers ?? 0;
+  const hIndex = author.h_index ?? author.hindex ?? 0;
+  const citations = author.citation_count ?? author.cited_by_count ?? author.citations ?? 0;
+  const articlesCount = author.article_count ?? author.works_count ?? author.papers ?? 0;
   const avatarColor = author.avatar_color ?? '#FF7A33';
 
   /**

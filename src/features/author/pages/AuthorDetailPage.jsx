@@ -55,7 +55,7 @@ export default function AuthorDetailPage() {
     }
   }, [id, fetchAuthorDetailsFull]);
 
-  const authorName = currentAuthor?.full_name ?? currentAuthor?.name ?? 'Tác giả';
+  const authorName = currentAuthor?.full_name ?? currentAuthor?.display_name ?? currentAuthor?.name ?? 'Tác giả';
 
   return (
     <div

@@ -126,10 +126,11 @@ export default function AuthorLeaderboardTable({
             /* ── HIỂN THỊ DANH SÁCH DỮ LIỆU THỰC TẾ ─────────────────────────── */
             displayList.filter(Boolean).map((author, idx) => {
               const id = author.author_id ?? author.id;
-              const name = author.full_name ?? author.author_name ?? author.name ?? 'Unknown';
-              const field = author.subject_area ?? author.field ?? author.area ?? 'Lĩnh vực chung';
-              const articles = author.article_count ?? author.papers ?? 0;
-              const citations = author.citation_count ?? author.citations ?? 0;
+              const name = author.display_name ?? author.full_name ?? author.author_name ?? author.name ?? 'Unknown';
+              const orcid = author.orcid ?? '';
+              const field = author.subject_area ?? author.primary_subject_area ?? author.field ?? author.area ?? '—';
+              const articles = author.article_count ?? author.papers ?? author.works_count ?? 0;
+              const citations = author.citation_count ?? author.citations ?? author.cited_by_count ?? 0;
               const rank = idx + 1;
               const avatarColor = author.avatar_color ?? (rank === 1 ? '#FF7A33' : rank === 2 ? '#6366F1' : rank === 3 ? '#0EA5E9' : '#071A1C');
 
@@ -149,25 +150,36 @@ export default function AuthorLeaderboardTable({
                   <td>
                     <div className="d-flex align-items-center" style={{ gap: '14px' }}>
                       <AuthorAvatar name={name} size="sm" bgColor={avatarColor} />
-                      <span className="text-main fw-semibold" style={{ fontSize: '0.85rem' }}>
-                        {name}
-                      </span>
+                      <div>
+                        <div className="text-main fw-semibold" style={{ fontSize: '0.85rem' }}>
+                          {name}
+                        </div>
+                        {orcid ? (
+                          <div className="text-muted-custom" style={{ fontSize: '0.72rem' }}>
+                            {orcid}
+                          </div>
+                        ) : null}
+                      </div>
                     </div>
                   </td>
                   {/* Ô nhãn lĩnh vực chính */}
                   <td>
-                    <span
-                      className="px-2.5 py-1 rounded-pill"
-                      style={{
-                        fontSize: '0.68rem',
-                        fontWeight: 600,
-                        backgroundColor: 'var(--bg-chip)',
-                        color: 'var(--text-muted)',
-                        border: '1px solid var(--border)'
-                      }}
-                    >
-                      {field}
-                    </span>
+                    {!field || field === "" ? (
+                      "—"
+                    ) : (
+                      <span
+                        className="px-2.5 py-1 rounded-pill"
+                        style={{
+                          fontSize: '0.68rem',
+                          fontWeight: 600,
+                          backgroundColor: 'var(--bg-chip)',
+                          color: 'var(--text-muted)',
+                          border: '1px solid var(--border)'
+                        }}
+                      >
+                        {field}
+                      </span>
+                    )}
                   </td>
                   {/* Ô tổng số bài báo */}
                   <td className="text-main" style={{ fontSize: '0.82rem' }}>
