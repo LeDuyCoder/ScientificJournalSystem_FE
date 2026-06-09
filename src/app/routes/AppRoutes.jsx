@@ -1,4 +1,4 @@
-﻿/**
+/**
  * File source thuộc hệ thống FE ResearchPulse.
  *
  * File: app\routes\AppRoutes.jsx
@@ -13,7 +13,6 @@ import DashboardPage from '../../features/dashboard/pages/DashboardPage';
 import RegisterPage from '../../features/auth/pages/RegisterPage';
 import LoginPage from '../../features/auth/pages/LoginPage';
 import ProtectedRoute from './ProtectedRoute';
-import HomeRoute from './HomeRoute';
 import { KeywordListPage, KeywordArticlesPage } from '../../features/keywords';
 import PublicRoute from './PublicRoute';
 

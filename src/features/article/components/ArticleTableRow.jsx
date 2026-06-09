@@ -1,4 +1,4 @@
-﻿/**
+/**
  * File source thuộc hệ thống FE ResearchPulse.
  *
  * File: features\article\components\ArticleTableRow.jsx
@@ -169,8 +169,8 @@ export default function ArticleTableRow({ article, index, onDetailClick }) {
       {/* Actions */}
       <td className="text-end pe-3" style={{ width: '80px' }}>
         <span 
-          className="text-primary hover:text-dark font-semibold text-xs d-flex align-items-center justify-content-end gap-0.5"
-          style={{ transition: 'color 0.15s' }}
+          className="hover:text-dark font-semibold text-xs d-flex align-items-center justify-content-end gap-0.5"
+          style={{ transition: 'color 0.15s', color: '#111' }}
         >
           Chi tiết
           <Icon icon="lucide:arrow-right" width="12" />

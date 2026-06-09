@@ -1,10 +1,10 @@
-﻿/**
+/**
  * File source thuộc hệ thống FE ResearchPulse.
  *
  * File: features\journal\components\VolumesTabContent.jsx
  */
 import { useState } from 'react';
-import { Spinner, Badge } from 'react-bootstrap';
+import { Spinner, Button } from 'react-bootstrap';
 import { Icon } from '@iconify/react';
 import { useNavigate } from 'react-router-dom';
 import LoadingSkeleton from '../../../shared/components/LoadingSkeleton';
@@ -180,7 +180,7 @@ export default function VolumesTabContent({
                     · {volumeYear || 'Chưa cập nhật'}
                   </span>
                   {vol.issue_count !== undefined && vol.issue_count > 0 && (
-                    <Badge
+                    <span
                       className="ms-2 px-2 py-1"
                       style={{
                         fontSize: '0.72rem',
@@ -192,7 +192,7 @@ export default function VolumesTabContent({
                       }}
                     >
                       {vol.issue_count} issue
-                    </Badge>
+                    </span>
                   )}
                 </div>
               </div>
@@ -260,7 +260,7 @@ export default function VolumesTabContent({
                               </span>
                             )}
                             {issue.article_count !== undefined && (
-                              <Badge
+                              <span
                                 style={{
                                   fontSize: '0.72rem',
                                   fontWeight: 600,
@@ -271,34 +271,28 @@ export default function VolumesTabContent({
                                 }}
                               >
                                 {issue.article_count} bài báo
-                              </Badge>
+                              </span>
                             )}
                           </div>
 
                           {/* CTA Button */}
-                          <button
-                            type="button"
+                          <Button
+                            variant="outline-light"
                             onClick={(e) => handleViewArticles(e, issueId)}
+                            className="d-flex align-items-center gap-2 px-3 py-1.5"
                             style={{
-                              display: 'inline-flex',
-                              alignItems: 'center',
-                              gap: '5px',
-                              padding: '5px 13px',
-                              borderRadius: '7px',
-                              fontSize: '0.8rem',
-                              fontWeight: 600,
-                              cursor: 'pointer',
-                              transition: 'all 0.15s ease',
-                              backgroundColor: '#111',
-                              color: '#fff',
+                              borderRadius: '6px',
                               border: '1px solid #111',
+                              color: '#111',
+                              fontSize: '0.85rem',
+                              fontWeight: 600,
                               whiteSpace: 'nowrap',
-                              flexShrink: 0
+                              flexShrink: 0,
                             }}
                           >
-                            <Icon icon="lucide:book-open" width="13" />
-                            <span>Xem bài báo</span>
-                          </button>
+                            Xem bài báo
+                            <Icon icon="lucide:arrow-right" width="14" />
+                          </Button>
                         </div>
                       );
                     })}

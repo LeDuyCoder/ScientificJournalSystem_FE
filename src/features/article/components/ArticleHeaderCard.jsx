@@ -63,18 +63,12 @@ export default function ArticleHeaderCard({ article }) {
           </Badge>
         )}
         {article.publication_year && (
-          <Badge 
-            className="py-1.5 px-2.5 text-xs font-semibold" 
-            style={{ 
-              borderRadius: '6px', 
-              fontSize: '0.75rem',
-              backgroundColor: 'var(--bg-chip)',
-              color: 'var(--text-muted)',
-              border: '1px solid var(--border)'
-            }}
+          <span 
+            className="text-muted-custom border-top border-light" 
+          style={{ fontSize: '0.9rem' }}
           >
             Năm xuất bản: {article.publication_year}
-          </Badge>
+          </span>
         )}
       </div>
 
@@ -123,12 +117,12 @@ export default function ArticleHeaderCard({ article }) {
           className="d-flex align-items-center gap-2 text-muted-custom pt-3 border-top border-light" 
           style={{ fontSize: '0.9rem' }}
         >
-          <Icon icon="lucide:book-open" className="text-primary" width="18" />
+          <Icon icon="lucide:book-open" style={{ color: 'var(--primary)' }} width="20" />
           <span>Xuất bản trong:</span>
           {article.journal_id ? (
             <span 
               onClick={handleJournalClick}
-              className="text-primary font-weight-semibold hover:text-dark transition-colors"
+              className="text-main font-weight-semibold hover:text-dark transition-colors"
               style={{ cursor: 'pointer', fontWeight: 600, textDecoration: 'underline' }}
             >
               {article.journal_name}

@@ -31,7 +31,7 @@ export default function AuthorsCard({ authors }) {
       }}
     >
       <h5 className="font-display font-weight-bold text-main mb-3 d-flex align-items-center gap-2 border-bottom border-light pb-2">
-        <Icon icon="lucide:users" className="text-primary" />
+        <Icon icon="lucide:users" style={{ color: 'var(--primary)' }} width="20"/>
         Nhóm Tác giả (Authors)
       </h5>
 
