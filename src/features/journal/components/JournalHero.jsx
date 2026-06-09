@@ -144,7 +144,7 @@ className="px-3 py-2 font-display text-main border-secondary"
             {subject_categories.map((cat, idx) => (
               <span 
                 key={cat.id || idx} 
-                className="px-3 py-1 rounded-pill text-main fw-semibold"
+                className="px-3 py-1 rounded-pill font-display text-main fw-semibold"
                 role="button"
                 tabIndex={0}
                 onClick={() => handleCategoryClick(cat.display_name)}
@@ -163,10 +163,10 @@ className="px-3 py-2 font-display text-main border-secondary"
         <Col lg={4} md={5} className="text-md-end text-start mt-lg-2">
           {metric_value ? (
             <div className="mb-4">
-              <div className="font-display fw-bold text-primary d-inline-block" style={{ fontSize: '4rem', lineHeight: '1' }}>
+              <div className="font-display fw-bold text-main d-inline-block" style={{ fontSize: '4rem', lineHeight: '1' }}>
                 {metric_value}
               </div>
-              <div className="text-muted-custom text-uppercase fw-semibold" style={{ fontSize: '0.8rem', letterSpacing: '1px' }}>
+              <div className="font-display text-muted-custom text-uppercase fw-semibold" style={{ fontSize: '1rem', letterSpacing: '1px' }}>
                 {metric_name} {metric_year}
               </div>
             </div>

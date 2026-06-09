@@ -1,4 +1,4 @@
-﻿/**
+/**
  * File source thuộc hệ thống FE ResearchPulse.
  *
  * File: features\landing\components\Header.jsx
@@ -245,7 +245,13 @@ export default function Header() {
 
                   <Dropdown.Menu
                     className="border-0 shadow-sm mt-2"
-                    style={{ minWidth: "180px" }}
+                    style={{
+                      minWidth: "180px",
+                      "--bs-dropdown-link-active-bg": "rgba(0, 0, 0, 0.06)",
+                      "--bs-dropdown-link-active-color": "var(--text-main)",
+                      "--bs-dropdown-link-hover-bg": "rgba(0, 0, 0, 0.04)",
+                      "--bs-dropdown-link-hover-color": "var(--text-main)",
+                    }}
                   >
                     <div className="px-3 py-2 text-xs font-bold text-main border-bottom pb-2 mb-1">
                       Người dùng

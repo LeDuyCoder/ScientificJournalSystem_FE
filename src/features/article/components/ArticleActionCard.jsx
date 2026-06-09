@@ -41,7 +41,7 @@ export default function ArticleActionCard({
       }}
     >
       <h5 className="font-display font-weight-bold text-main mb-3 d-flex align-items-center gap-2 border-bottom border-light pb-2">
-        <Icon icon="lucide:sliders" className="text-primary" />
+        <Icon icon="lucide:sliders" style={{ color: 'var(--primary)' }} width="20"/>
         Hành động (Actions)
       </h5>
 

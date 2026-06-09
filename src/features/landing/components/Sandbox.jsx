@@ -1,4 +1,4 @@
-﻿/**
+/**
  * File source thuộc hệ thống FE ResearchPulse.
  *
  * File: features\landing\components\Sandbox.jsx
@@ -326,11 +326,25 @@ export default function Sandbox() {
                             backgroundColor: "var(--bg-chip)",
                             transition: "all 0.2s ease",
                             cursor:
-                              item.type === "JOURNAL" ? "pointer" : "default",
+                              item.type === "JOURNAL" ||
+                              item.type === "AUTHOR" ||
+                              item.type === "ARTICLE" ||
+                              item.type === "KEYWORD"
+                                ? "pointer"
+                                : "default",
                           }}
                           onClick={() => {
                             if (item.type === "JOURNAL") {
                               navigate(`/journals/${item.id}`);
+                            }
+                            if (item.type === "AUTHOR") {
+                              navigate(`/authors/${item.id}`);
+                            }
+                            if (item.type === "ARTICLE") {
+                              navigate(`/articles/${item.id}`);
+                            }
+                            if (item.type === "KEYWORD") {
+                              navigate(`/keywords/${item.id}`);
                             }
                           }}
                           onMouseEnter={(e) => {
@@ -347,7 +361,10 @@ export default function Sandbox() {
                               "var(--bg-chip)";
                           }}
                         >
-                          <div className="d-flex align-items-center gap-3 text-truncate">
+                          <div
+                            className="d-flex align-items-center gap-3 text-truncate"
+                            style={{ flex: "1 1 auto", minWidth: 0 }}
+                          >
                             <div
                               className="p-2 rounded-3 d-flex align-items-center justify-content-center"
                               style={{
@@ -359,20 +376,23 @@ export default function Sandbox() {
                             </div>
                             <span
                               className="font-medium text-main text-sm text-truncate"
-                              style={{ fontSize: "0.875rem" }}
+                              style={{
+                                fontSize: "0.875rem",
+                                maxWidth: "360px",
+                              }}
                             >
                               {item.name}
                             </span>
                           </div>
                           <span
                             style={{
-                              backgroundColor: ["KEYWORD", "AUTHOR", "ARTICLE"].includes(item.type)
-                                ? "transparent"
-                                : cfg.bgColor,
-                              color: ["KEYWORD", "AUTHOR", "ARTICLE"].includes(item.type)
+                              backgroundColor: ["KEYWORD", "AUTHOR", "ARTICLE", "JOURNAL"].includes(item.type)
+                                ? cfg.bgColor
+                                : "transparent",
+                              color: ["KEYWORD", "AUTHOR", "ARTICLE", "JOURNAL"].includes(item.type)
                                 ? "#000000"
                                 : cfg.textColor,
-                              border: ["KEYWORD", "AUTHOR", "ARTICLE"].includes(item.type)
+                              border: ["KEYWORD", "AUTHOR", "ARTICLE", "JOURNAL"].includes(item.type)
                                 ? "none"
                                 : `1px solid ${cfg.borderColor}`,
                               fontSize: "0.65rem",
@@ -380,8 +400,7 @@ export default function Sandbox() {
                               textTransform: "uppercase",
                               letterSpacing: "0.05em",
                               padding: "0.35em 0.65em",
-                              borderRadius: "4px",
-                              display: "inline-block",
+                              flexShrink: 0,
                             }}
                           >
                             {t(cfg.labelKey)}
