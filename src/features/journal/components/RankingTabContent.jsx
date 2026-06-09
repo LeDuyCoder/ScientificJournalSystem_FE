@@ -100,15 +100,15 @@ export default function RankingTabContent({ rankingHistory = [], metricName = 'I
               style={{ minWidth: '400px', height: 'auto' }}
             >
               <defs>
-                {/* Glowing glow effect filter */}
-                <filter id="cyan-glow" x="-20%" y="-20%" width="140%" height="140%">
+                {/* Glow effect for line/points */}
+                <filter id="line-glow" x="-20%" y="-20%" width="140%" height="140%">
                   <feGaussianBlur stdDeviation="4" result="blur" />
                   <feComposite in="SourceGraphic" in2="blur" operator="over" />
                 </filter>
-                {/* Shimmer gradient for columns */}
-                <linearGradient id="bar-fill" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="var(--primary)" stopOpacity="0.2" />
-                  <stop offset="100%" stopColor="var(--primary-light)" stopOpacity="0.02" />
+                {/* Soft area under the line */}
+                <linearGradient id="line-area-fill" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="var(--primary)" stopOpacity="0.18" />
+                  <stop offset="100%" stopColor="var(--primary)" stopOpacity="0.02" />
                 </linearGradient>
               </defs>
 
@@ -139,55 +139,77 @@ export default function RankingTabContent({ rankingHistory = [], metricName = 'I
                 );
               })}
 
-              {/* Bars */}
-              {chartData.map((d, idx) => {
-                if (d.value === null || d.value === undefined) return null;
-                const x = getX(idx);
-                const y = getY(d.value);
-                const barWidth = 32;
-                const barHeight = chartHeight - paddingBottom - y;
-                
+              {/* Line Chart */}
+              {(() => {
+                const points = chartData
+                  .map((d, idx) => ({ ...d, x: getX(idx), y: getY(d.value) }))
+                  .filter((d) => d.value !== null && d.value !== undefined && !Number.isNaN(Number(d.value)));
+
+                if (points.length === 0) return null;
+
+                const linePoints = points.map((point) => `${point.x},${point.y}`).join(' ');
+                const areaPoints = `${paddingLeft},${chartHeight - paddingBottom} ${linePoints} ${chartWidth - paddingRight},${chartHeight - paddingBottom}`;
+
                 return (
-                  <g key={idx} className="chart-bar-group">
-                    {/* Shadow/Glow behind stroke */}
-                    <rect 
-                      x={x - barWidth / 2} 
-                      y={y} 
-                      width={barWidth} 
-                      height={barHeight} 
-                      fill="transparent" 
-                      stroke="var(--primary)" 
-                      strokeWidth="1.5"
-                      rx="6"
-                      filter="url(#cyan-glow)"
-                      opacity="0.15"
-                    />
-                    {/* Visual Bar */}
-                    <rect 
-                      x={x - barWidth / 2} 
-                      y={y} 
-                      width={barWidth} 
-                      height={barHeight} 
-                      fill="url(#bar-fill)" 
-                      stroke="var(--primary)" 
-                      strokeWidth="2"
-                      rx="6"
-                      style={{ transition: 'all 0.3s' }}
-                    />
-                    {/* Hover text label */}
-                    <text 
-                      x={x} 
-                      y={y - 8} 
-                      fill="var(--primary)" 
-                      fontSize="10" 
-                      fontWeight="bold" 
-                      textAnchor="middle"
-                    >
-                      {d.value}
-                    </text>
+                  <g className="chart-line-group">
+                    {points.length > 1 && (
+                      <>
+                        <polygon
+                          points={areaPoints}
+                          fill="url(#line-area-fill)"
+                        />
+                        <polyline
+                          points={linePoints}
+                          fill="none"
+                          stroke="var(--primary)"
+                          strokeWidth="3"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          filter="url(#line-glow)"
+                          opacity="0.28"
+                        />
+                        <polyline
+                          points={linePoints}
+                          fill="none"
+                          stroke="var(--primary)"
+                          strokeWidth="2.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </>
+                    )}
+
+                    {points.map((point, idx) => (
+                      <g key={idx}>
+                        <circle
+                          cx={point.x}
+                          cy={point.y}
+                          r="6"
+                          fill="var(--bg-card)"
+                          stroke="var(--primary)"
+                          strokeWidth="3"
+                        />
+                        <circle
+                          cx={point.x}
+                          cy={point.y}
+                          r="3"
+                          fill="var(--primary)"
+                        />
+                        <text
+                          x={point.x}
+                          y={point.y - 12}
+                          fill="var(--primary)"
+                          fontSize="10"
+                          fontWeight="bold"
+                          textAnchor="middle"
+                        >
+                          {point.value}
+                        </text>
+                      </g>
+                    ))}
                   </g>
                 );
-              })}
+              })()}
 
               {/* X Axis Line */}
               <line 
