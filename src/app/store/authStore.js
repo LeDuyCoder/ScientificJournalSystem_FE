@@ -4,12 +4,6 @@
  * File: app\store\authStore.js
  */
 import { create } from 'zustand';
-import { STORAGE_KEYS } from '../../shared/constants/storageKeys';
-
-const getStoredToken = () => (
-  localStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN)
-  || sessionStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN)
-);
 
 /**
  * Store quản lý trạng thái xác thực toàn cục.
@@ -20,11 +14,9 @@ const getStoredToken = () => (
  * - `user`: thông tin user khôi phục từ `/users/me` khi cookie còn hợp lệ.
  */
 export const useAuthStore = create((set) => {
-  const initialToken = getStoredToken();
-
   return {
-    token: initialToken,
-    isAuthenticated: Boolean(initialToken),
+    token: null,
+    isAuthenticated: false,
     user: null,
     isLoading: false,
     error: null,

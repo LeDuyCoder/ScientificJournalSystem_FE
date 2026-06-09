@@ -1,4 +1,4 @@
-﻿/**
+/**
  * File source thuộc hệ thống FE ResearchPulse.
  *
  * File: features\auth\services\authService.js
@@ -12,21 +12,7 @@ import {
   deleteAccountApi,
   loginGoogleApi,
 } from '../api/auth.api';
-import { STORAGE_KEYS } from '../../../shared/constants/storageKeys';
 import { removeToken } from '../../../shared/utils/auth';
-
-/**
- * Persist access token according to remember-login option.
- *
- * @param {string} token - JWT access token from backend.
- * @param {boolean} remember - Whether token should persist in localStorage.
- */
-const persistToken = (token, remember = true) => {
-  const targetStorage = remember ? localStorage : sessionStorage;
-  const fallbackStorage = remember ? sessionStorage : localStorage;
-  fallbackStorage.removeItem(STORAGE_KEYS.ACCESS_TOKEN);
-  targetStorage.setItem(STORAGE_KEYS.ACCESS_TOKEN, token);
-};
 
 /**
  * Safely extract email-like identity from JWT payload.
@@ -52,11 +38,8 @@ const getEmailFromToken = (token) => {
  * @returns {Promise<{response: Object, token: string|null, email: string}>}
  */
 export const loginWithPassword = async (email, password, remember = true) => {
-  const response = await loginApi({ email, password });
+  const response = await loginApi({ email, password, remember});
   const token = response.data?.data?.token;
-  if (token) {
-    persistToken(token, remember);
-  }
 
   return {
     response: response.data,
@@ -75,9 +58,6 @@ export const loginWithGoogleCode = async (code) => {
   const result = await loginGoogleApi(code);
   const body = result.data;
   const token = body?.data?.token;
-  if (token) {
-    persistToken(token, true);
-  }
 
   return {
     response: body,
