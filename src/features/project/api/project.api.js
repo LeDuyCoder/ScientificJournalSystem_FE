@@ -1,16 +1,16 @@
 ﻿/**
  * File source thuộc hệ thống FE ResearchPulse.
  *
- * File: features\project\api\project.api.js
+ * File: features\project\api\project.httpClient.js
  */
-import api from '../../../shared/services/api';
+import httpClient from '../../../shared/services/httpClient';
 
 /**
  * Get user projects list
  * @returns {Promise} Axios promise
  */
 export const getProjectsApi = () => {
-  return api.get('/projects');
+  return httpClient.get('/projects');
 };
 
 /**
@@ -19,7 +19,7 @@ export const getProjectsApi = () => {
  * @returns {Promise} Axios promise
  */
 export const createProjectApi = (data) => {
-  return api.post('/projects', data);
+  return httpClient.post('/projects', data);
 };
 
 /**
@@ -28,7 +28,7 @@ export const createProjectApi = (data) => {
  * @returns {Promise} Axios promise
  */
 export const getProjectByIdApi = (id) => {
-  return api.get(`/projects/${id}`);
+  return httpClient.get(`/projects/${id}`);
 };
 
 /**
@@ -38,7 +38,7 @@ export const getProjectByIdApi = (id) => {
  * @returns {Promise} Axios promise
  */
 export const updateProjectApi = (id, data) => {
-  return api.put(`/projects/${id}`, data);
+  return httpClient.put(`/projects/${id}`, data);
 };
 
 /**
@@ -47,7 +47,7 @@ export const updateProjectApi = (id, data) => {
  * @returns {Promise} Axios promise
  */
 export const deleteProjectApi = (id) => {
-  return api.delete(`/projects/${id}`);
+  return httpClient.delete(`/projects/${id}`);
 };
 
 /**
@@ -57,7 +57,7 @@ export const deleteProjectApi = (id) => {
  * @returns {Promise} Axios promise
  */
 export const getRelatedArticlesApi = (id, limit = 5) => {
-  return api.get(`/projects/${id}/related-articles`, {
+  return httpClient.get(`/projects/${id}/related-articles`, {
     params: { limit },
   });
 };
@@ -68,7 +68,7 @@ export const getRelatedArticlesApi = (id, limit = 5) => {
  * @returns {Promise} Axios promise
  */
 export const getProjectAnalyticsApi = (id) => {
-  return api.get(`/projects/${id}/analytics`);
+  return httpClient.get(`/projects/${id}/analytics`);
 };
 
 /**
@@ -79,7 +79,7 @@ export const getProjectAnalyticsApi = (id) => {
  * @returns {Promise} Axios promise
  */
 export const getTrendingKeywordsApi = (id, limit = 20, sortBy = 'count') => {
-  return api.get(`/projects/${id}/keywords/trending`, {
+  return httpClient.get(`/projects/${id}/keywords/trending`, {
     params: { limit, sort_by: sortBy },
   });
 };
@@ -90,7 +90,7 @@ export const getTrendingKeywordsApi = (id, limit = 20, sortBy = 'count') => {
  * @returns {Promise} Axios promise
  */
 export const getWatchedKeywordArticlesApi = (id) => {
-  return api.get(`/projects/${id}/keywords/watch/articles`);
+  return httpClient.get(`/projects/${id}/keywords/watch/articles`);
 };
 
 /**
@@ -100,7 +100,7 @@ export const getWatchedKeywordArticlesApi = (id) => {
  * @returns {Promise} Axios promise
  */
 export const watchKeywordsApi = (id, keywords) => {
-  return api.post(`/projects/${id}/keywords/watch`, { keywords });
+  return httpClient.post(`/projects/${id}/keywords/watch`, { keywords });
 };
 
 /**
@@ -110,7 +110,7 @@ export const watchKeywordsApi = (id, keywords) => {
  * @returns {Promise} Axios promise
  */
 export const updateWatchedKeywordsApi = (id, keywords) => {
-  return api.put(`/projects/${id}/keywords/watch`, { keywords });
+  return httpClient.put(`/projects/${id}/keywords/watch`, { keywords });
 };
 
 /**
@@ -120,5 +120,5 @@ export const updateWatchedKeywordsApi = (id, keywords) => {
  * @returns {Promise} Axios promise
  */
 export const unwatchKeywordApi = (id, keywordId) => {
-  return api.delete(`/projects/${id}/keywords/${keywordId}`);
+  return httpClient.delete(`/projects/${id}/keywords/${keywordId}`);
 };

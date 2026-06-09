@@ -1,9 +1,9 @@
 ﻿/**
  * File source thuộc hệ thống FE ResearchPulse.
  *
- * File: features\volume\api\volume.api.js
+ * File: features\volume\api\volume.httpClient.js
  */
-import api from '../../../shared/services/api';
+import httpClient from '../../../shared/services/httpClient';
 
 /**
  * Create a new volume record
@@ -11,7 +11,7 @@ import api from '../../../shared/services/api';
  * @returns {Promise} Axios promise
  */
 export const createVolumeApi = (data) => {
-  return api.post('/volumes', data);
+  return httpClient.post('/volumes', data);
 };
 
 /**
@@ -20,7 +20,7 @@ export const createVolumeApi = (data) => {
  * @returns {Promise} Axios promise
  */
 export const getVolumesApi = (params) => {
-  return api.get('/volumes', { params });
+  return httpClient.get('/volumes', { params });
 };
 
 /**
@@ -29,7 +29,7 @@ export const getVolumesApi = (params) => {
  * @returns {Promise} Axios promise
  */
 export const getVolumeByIdApi = (id) => {
-  return api.get(`/volumes/${id}`);
+  return httpClient.get(`/volumes/${id}`);
 };
 
 /**
@@ -39,7 +39,7 @@ export const getVolumeByIdApi = (id) => {
  * @returns {Promise} Axios promise
  */
 export const updateVolumeApi = (id, data) => {
-  return api.put(`/volumes/${id}`, data);
+  return httpClient.put(`/volumes/${id}`, data);
 };
 
 /**
@@ -48,7 +48,7 @@ export const updateVolumeApi = (id, data) => {
  * @returns {Promise} Axios promise
  */
 export const deleteVolumeApi = (id) => {
-  return api.delete(`/volumes/${id}`);
+  return httpClient.delete(`/volumes/${id}`);
 };
 
 /**
@@ -57,5 +57,5 @@ export const deleteVolumeApi = (id) => {
  * @returns {Promise} Axios promise
  */
 export const restoreVolumeApi = (id) => {
-  return api.patch(`/volumes/${id}/restore`);
+  return httpClient.patch(`/volumes/${id}/restore`);
 };

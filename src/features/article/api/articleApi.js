@@ -3,7 +3,7 @@
  *
  * File: features\article\api\articleApi.js
  */
-import api from '../../../shared/services/api';
+import httpClient from '../../../shared/services/httpClient';
 
 /**
  * Lấy danh sách hoặc tìm kiếm bài báo khoa học
@@ -11,7 +11,7 @@ import api from '../../../shared/services/api';
  * @returns {Promise} Axios promise
  */
 export const getArticlesListApi = (params) => {
-  return api.get('/articles', { params });
+  return httpClient.get('/articles', { params });
 };
 
 /**
@@ -20,7 +20,7 @@ export const getArticlesListApi = (params) => {
  * @returns {Promise} Axios promise
  */
 export const getArticleDetailApi = (id) => {
-  return api.get(`/articles/${id}`);
+  return httpClient.get(`/articles/${id}`);
 };
 
 /**
@@ -29,6 +29,6 @@ export const getArticleDetailApi = (id) => {
  * @returns {Promise} Axios promise
  */
 export const bookmarkArticleApi = (id) => {
-  return api.post(`/articles/${id}/bookmark`);
+  return httpClient.post(`/articles/${id}/bookmark`);
 };
 

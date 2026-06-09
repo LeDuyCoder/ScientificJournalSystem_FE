@@ -1,9 +1,9 @@
 ﻿/**
  * File source thuộc hệ thống FE ResearchPulse.
  *
- * File: features\author\api\author.api.js
+ * File: features\author\api\author.httpClient.js
  */
-import api from '../../../shared/services/api';
+import httpClient from '../../../shared/services/httpClient';
 
 /**
  * Get author subject areas breakdown analysis
@@ -11,7 +11,7 @@ import api from '../../../shared/services/api';
  * @returns {Promise} Axios promise
  */
 export const getAuthorAreasBreakdownApi = (id) => {
-  return api.get(`/author/${id}/areas-breakdown`);
+  return httpClient.get(`/author/${id}/areas-breakdown`);
 };
 
 /**
@@ -20,7 +20,7 @@ export const getAuthorAreasBreakdownApi = (id) => {
  * @returns {Promise} Axios promise
  */
 export const getAuthorArticlesApi = (id) => {
-  return api.get(`/author/${id}/articles`);
+  return httpClient.get(`/author/${id}/articles`);
 };
 
 /**
@@ -28,5 +28,5 @@ export const getAuthorArticlesApi = (id) => {
  * @returns {Promise} Axios promise
  */
 export const getAuthorLeaderboardApi = () => {
-  return api.get('/author/leaderboard');
+  return httpClient.get('/author/leaderboard');
 };

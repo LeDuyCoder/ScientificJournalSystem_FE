@@ -1,4 +1,4 @@
-﻿/**
+/**
  * File source thuộc hệ thống FE ResearchPulse.
  *
  * File: features\journal\components\AddToProjectModal.jsx
@@ -6,7 +6,7 @@
 import { useState, useEffect } from 'react';
 import { Modal, Button, Form, Spinner, Alert } from 'react-bootstrap';
 import { Icon } from '@iconify/react';
-import { getProjectsApi, createProjectApi, getProjectByIdApi, updateProjectApi } from '../../project/api/project.api';
+import projectService from '../../project/services/projectService';
 
 export default function AddToProjectModal({ show, onHide, journalId, onConfirm }) {
   const [projects, setProjects] = useState([]);
@@ -23,9 +23,9 @@ export default function AddToProjectModal({ show, onHide, journalId, onConfirm }
   const fetchProjects = async () => {
     setLoading(true);
     try {
-      const res = await getProjectsApi();
-      if (res.data?.success && res.data?.data) {
-        setProjects(res.data.data);
+      const data = await projectService.getAllProjects();
+      if (data) {
+        setProjects(data);
       } else {
         setProjects([]);
       }
@@ -62,19 +62,19 @@ export default function AddToProjectModal({ show, onHide, journalId, onConfirm }
         }
 
         // Create new project with current journal ID
-        const res = await createProjectApi({
+        const res = await projectService.createProject({
           title: newProjectTitle.trim(),
           journal_ids: [parseInt(journalId, 10)]
         });
 
-        if (res.data?.success) {
+        if (res && res.success !== false) {
           setSuccess(true);
           setTimeout(() => {
             onHide();
-            if (onConfirm) onConfirm(res.data.data.project_id); // triggers callback to refresh detail page if necessary
+            if (onConfirm) onConfirm(res.data?.project_id || res.data?.id); // triggers callback to refresh detail page if necessary
           }, 1500);
         } else {
-          setError(res.data?.message || 'Tạo dự án mới thất bại');
+          setError(res?.message || 'Tạo dự án mới thất bại');
         }
       } else {
         if (!selectedProjectId) {
@@ -84,12 +84,12 @@ export default function AddToProjectModal({ show, onHide, journalId, onConfirm }
         }
 
         // Fetch details of selected project to append journal
-        const detailsRes = await getProjectByIdApi(selectedProjectId);
-        if (!detailsRes.data?.success || !detailsRes.data?.data) {
+        const detailsRes = await projectService.getProjectById(selectedProjectId);
+        if (!detailsRes || detailsRes.success === false || !detailsRes.data) {
           throw new Error('Không thể lấy chi tiết dự án để cập nhật');
         }
 
-        const project = detailsRes.data.data;
+        const project = detailsRes.data;
         const currentJournalIds = project.journals?.map(j => j.journal_id) || [];
         
         const numericJournalId = parseInt(journalId, 10);
@@ -100,21 +100,21 @@ export default function AddToProjectModal({ show, onHide, journalId, onConfirm }
         }
 
         // Call update API
-        const updateRes = await updateProjectApi(selectedProjectId, {
+        const updateRes = await projectService.updateProject(selectedProjectId, {
           title: project.title,
           subject_area: project.subject_area?.subject_area_id || null,
           subject_category_ids: project.subject_categories?.map(c => c.subject_category_id) || [],
           journal_ids: [...currentJournalIds, numericJournalId]
         });
 
-        if (updateRes.data?.success) {
+        if (updateRes && updateRes.success !== false) {
           setSuccess(true);
           setTimeout(() => {
             onHide();
             if (onConfirm) onConfirm(selectedProjectId);
           }, 1500);
         } else {
-          setError(updateRes.data?.message || 'Thêm tạp chí vào dự án thất bại');
+          setError(updateRes?.message || 'Thêm tạp chí vào dự án thất bại');
         }
       }
     } catch (err) {

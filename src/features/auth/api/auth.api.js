@@ -1,9 +1,9 @@
 ﻿/**
  * File source thuộc hệ thống FE ResearchPulse.
  *
- * File: features\auth\api\auth.api.js
+ * File: features\auth\api\auth.httpClient.js
  */
-import api from '../../../shared/services/api';
+import httpClient from '../../../shared/services/httpClient';
 
 /**
  * Register a new user account
@@ -11,7 +11,7 @@ import api from '../../../shared/services/api';
  * @returns {Promise} Axios promise
  */
 export const registerApi = (data) => {
-  return api.post('/auth/register', data);
+  return httpClient.post('/auth/register', data);
 };
 
 /**
@@ -20,7 +20,7 @@ export const registerApi = (data) => {
  * @returns {Promise} Axios promise
  */
 export const verifyEmailApi = (token) => {
-  return api.get('/auth/verify', {
+  return httpClient.get('/auth/verify', {
     params: { token },
   });
 };
@@ -31,7 +31,7 @@ export const verifyEmailApi = (token) => {
  * @returns {Promise} Axios promise
  */
 export const loginApi = (data) => {
-  return api.post('/auth/login', data);
+  return httpClient.post('/auth/login', data);
 };
 
 /**
@@ -40,7 +40,7 @@ export const loginApi = (data) => {
  * @returns {Promise} Axios promise
  */
 export const loginGoogleApi = (code) => {
-  return api.post('/auth/google', { code: code });
+  return httpClient.post('/auth/google', { code: code });
 };
 
 /**
@@ -49,7 +49,7 @@ export const loginGoogleApi = (code) => {
  * @returns {Promise} Axios promise
  */
 export const forgotPasswordApi = (email) => {
-  return api.post('/auth/forgot-password', { email });
+  return httpClient.post('/auth/forgot-password', { email });
 };
 
 /**
@@ -58,7 +58,7 @@ export const forgotPasswordApi = (email) => {
  * @returns {Promise} Axios promise
  */
 export const resetPasswordApi = (data) => {
-  return api.post('/auth/reset-password', data);
+  return httpClient.post('/auth/reset-password', data);
 };
 
 /**
@@ -66,7 +66,7 @@ export const resetPasswordApi = (data) => {
  * @returns {Promise} Axios promise
  */
 export const getProfileApi = () => {
-  return api.get('/users/profile');
+  return httpClient.get('/users/profile');
 };
 
 /**
@@ -75,7 +75,7 @@ export const getProfileApi = () => {
  * @returns {Promise} Axios promise
  */
 export const updateProfileApi = (data) => {
-  return api.put('/users/me', data);
+  return httpClient.put('/users/me', data);
 };
 
 /**
@@ -83,6 +83,6 @@ export const updateProfileApi = (data) => {
  * @returns {Promise} Axios promise
  */
 export const deleteAccountApi = () => {
-  return api.delete('/users/me');
+  return httpClient.delete('/users/me');
 };
 

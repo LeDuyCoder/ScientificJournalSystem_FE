@@ -1,11 +1,6 @@
 import { useState, useCallback, useEffect } from 'react';
-import {
-  getTrendingKeywordsApi,
-  getWatchedKeywordArticlesApi,
-  watchKeywordsApi,
-  unwatchKeywordApi,
-  getProjectByIdApi
-} from '../../project/api/project.api';
+import keywordService from '../services/keywordService';
+import projectService from '../../project/services/projectService';
 
 export const useKeywordTracking = (projectId) => {
   const [project, setProject] = useState(null);
@@ -17,30 +12,31 @@ export const useKeywordTracking = (projectId) => {
   const [error, setError] = useState(null);
   const [actionLoading, setActionLoading] = useState(false);
 
+  /**
+   * Lấy toàn bộ dữ liệu cần thiết cho màn hình Keyword Tracking
+   */
   const fetchAllData = useCallback(async () => {
     if (!projectId) return;
     setLoading(true);
     setError(null);
     try {
       // 1. Get Project Detail
-      const projectRes = await getProjectByIdApi(projectId);
-      const pData = projectRes.data?.data || projectRes.data || null;
-      setProject(pData);
+      const pData = await projectService.getProjectById(projectId);
+      const proj = pData?.data || pData || null;
+      setProject(proj);
       
-      let kwData = pData?.watched_keywords || pData?.keywords || [];
+      let kwData = proj?.watched_keywords || proj?.keywords || [];
       if (typeof kwData === 'string') {
         kwData = kwData.split(',').map(s => s.trim()).filter(Boolean);
       }
       setWatchedKeywords(Array.isArray(kwData) ? kwData : []);
 
       // 2. Get Trending Keywords
-      const trendingRes = await getTrendingKeywordsApi(projectId);
-      const tData = trendingRes.data?.data || trendingRes.data || [];
+      const tData = await keywordService.getTrendingKeywords(projectId);
       setTrendingKeywords(Array.isArray(tData) ? tData : []);
 
       // 3. Get Watch Articles
-      const articlesRes = await getWatchedKeywordArticlesApi(projectId);
-      const aData = articlesRes.data?.data || articlesRes.data || [];
+      const aData = await keywordService.getWatchedKeywordArticles(projectId);
       setWatchArticles(Array.isArray(aData) ? aData : []);
 
     } catch (err) {
@@ -55,10 +51,14 @@ export const useKeywordTracking = (projectId) => {
     fetchAllData();
   }, [fetchAllData]);
 
+  /**
+   * Thêm một keyword vào danh sách theo dõi
+   * @param {string} keywordStr Tên keyword
+   */
   const addKeywordWatch = async (keywordStr) => {
     setActionLoading(true);
     try {
-      await watchKeywordsApi(projectId, [keywordStr]);
+      await keywordService.watchKeywords(projectId, [keywordStr]);
       await fetchAllData();
       return true;
     } catch (err) {
@@ -69,10 +69,14 @@ export const useKeywordTracking = (projectId) => {
     }
   };
 
+  /**
+   * Bỏ theo dõi một keyword
+   * @param {number|string} keywordId ID của keyword
+   */
   const removeKeywordWatch = async (keywordId) => {
     setActionLoading(true);
     try {
-      await unwatchKeywordApi(projectId, keywordId);
+      await keywordService.unwatchKeyword(projectId, keywordId);
       await fetchAllData();
       return true;
     } catch (err) {

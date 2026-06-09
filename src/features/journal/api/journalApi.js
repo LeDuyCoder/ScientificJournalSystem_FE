@@ -3,7 +3,7 @@
  *
  * File: features\journal\api\journalApi.js
  */
-import api from '../../../shared/services/api';
+import httpClient from '../../../shared/services/httpClient';
 
 /**
  * Get detailed information for a journal by ID
@@ -11,7 +11,7 @@ import api from '../../../shared/services/api';
  * @returns {Promise} Axios promise
  */
 export const getJournalByIdApi = (id) => {
-  return api.get(`/journal/${id}`);
+  return httpClient.get(`/journal/${id}`);
 };
 
 /**
@@ -20,7 +20,7 @@ export const getJournalByIdApi = (id) => {
  * @returns {Promise} Axios promise
  */
 export const getJournalRankingsApi = (id) => {
-  return api.get(`/catalog/journals/${id}/rankings`);
+  return httpClient.get(`/catalog/journals/${id}/rankings`);
 };
 
 /**
@@ -29,7 +29,7 @@ export const getJournalRankingsApi = (id) => {
  * @returns {Promise} Axios promise
  */
 export const getCatalogVolumesApi = (params) => {
-  return api.get('/catalog/volumes', { params });
+  return httpClient.get('/catalog/volumes', { params });
 };
 
 /**
@@ -38,7 +38,7 @@ export const getCatalogVolumesApi = (params) => {
  * @returns {Promise} Axios promise
  */
 export const getCatalogIssuesApi = (params) => {
-  return api.get('/catalog/issues', { params });
+  return httpClient.get('/catalog/issues', { params });
 };
 
 /**
@@ -47,7 +47,7 @@ export const getCatalogIssuesApi = (params) => {
  * @returns {Promise} Axios promise
  */
 export const getJournalArticlesApi = (params) => {
-  return api.get('/articles', { params });
+  return httpClient.get('/articles', { params });
 };
 
 /**
@@ -56,7 +56,7 @@ export const getJournalArticlesApi = (params) => {
  * @returns {Promise} Axios promise
  */
 export const followJournalApi = (id) => {
-  return api.post(`/journals/${id}/follow`);
+  return httpClient.post(`/journals/${id}/follow`);
 };
 
 /**
@@ -66,7 +66,7 @@ export const followJournalApi = (id) => {
  * @returns {Promise} Axios promise
  */
 export const addJournalToProjectApi = (projectId, journalId) => {
-  return api.post(`/projects/${projectId}/journals`, { journalId });
+  return httpClient.post(`/projects/${projectId}/journals`, { journalId });
 };
 
 /**
@@ -75,5 +75,5 @@ export const addJournalToProjectApi = (projectId, journalId) => {
  * @returns {Promise} Axios promise
  */
 export const searchJournalsApi = (params) => {
-  return api.get('/journal/', { params });
+  return httpClient.get('/journal/', { params });
 };

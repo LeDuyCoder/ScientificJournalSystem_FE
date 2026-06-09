@@ -13,6 +13,7 @@ import DashboardPage from '../../features/dashboard/pages/DashboardPage';
 import RegisterPage from '../../features/auth/pages/RegisterPage';
 import LoginPage from '../../features/auth/pages/LoginPage';
 import ProtectedRoute from './ProtectedRoute';
+import CreateProjectPage from '../../features/project/pages/CreateProjectPage';
 import HomeRoute from './HomeRoute';
 import KeywordTrackingPage from '../../features/keyword/pages/KeywordTrackingPage';
 import { KeywordListPage, KeywordArticlesPage } from '../../features/keywords';
@@ -36,6 +37,7 @@ export default function AppRoutes() {
 
       <Route element={<ProtectedRoute />}>
         <Route path="/dashboard" element={<DashboardPage />} />
+        <Route path="/projects/create" element={<CreateProjectPage />} />
         <Route path="/projects/:id/keywords" element={<KeywordTrackingPage />} />
       </Route>
 
