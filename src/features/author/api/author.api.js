@@ -1,12 +1,8 @@
 /**
- * @file author.api.js
- * @description API service module quản lý các kết nối HTTP endpoints cho tính năng Tác giả.
- * 
- * Chức năng chính:
- * - Thực hiện các truy vấn HTTP GET tới backend server thông qua Axios client dùng chung.
- * - Cung cấp các hàm lấy danh sách tác giả, chi tiết tác giả, danh sách bài báo của tác giả và bảng xếp hạng.
+ * File source thuộc hệ thống FE ResearchPulse.
+ *
+ * File: features\author\api\author.api.js
  */
-
 import api from '../../../shared/services/api';
 
 /**

@@ -1,4 +1,8 @@
-import React from 'react';
+﻿/**
+ * File source thuộc hệ thống FE ResearchPulse.
+ *
+ * File: features\auth\components\SocialAuthButton.jsx
+ */
 import { Button } from 'react-bootstrap';
 import Icon from '../../../shared/components/Icon';
 

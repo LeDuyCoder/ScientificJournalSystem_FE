@@ -1,28 +1,28 @@
 /* Import Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;0,8..60,600;0,8..60,700;1,8..60,400&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;0,8..60,600;0,8..60,700;1,8..60,400&display=swap");
 
 :root {
-  --font-sans: 'Inter', sans-serif;
-  --font-display: 'Source Serif 4', serif;
-  --font-serif: 'Source Serif 4', serif;
+  --font-sans: "Inter", sans-serif;
+  --font-display: "Source Serif 4", serif;
+  --font-serif: "Source Serif 4", serif;
 
   /* ─── SCImago-style Palette ─── */
-  --bg-main:    #FFFFFF;       /* Background chính */
-  --bg-section: #ECECEC;       /* Section / card background */
-  --bg-chip:    #F2F2F2;       /* Chip / filter background */
-  --bg-card:    #FFFFFF;       /* White card surface */
-  --border:     #E6E6E6;       /* Border / divider */
+  --bg-main: #ffffff; /* Background chính */
+  --bg-section: #ececec; /* Section / card background */
+  --bg-chip: #f2f2f2; /* Chip / filter background */
+  --bg-card: #ffffff; /* White card surface */
+  --border: #e6e6e6; /* Border / divider */
 
-  --text-main:  #0D1B1C;       /* Text chính */
-  --text-muted: #6B6B6B;       /* Text phụ */
+  --text-main: #0d1b1c; /* Text chính */
+  --text-muted: #6b6b6b; /* Text phụ */
 
-  --primary:       #FF7A33;    /* Accent / link cam */
-  --primary-light: #FFF0E8;    /* Light tint của cam */
-  --btn-dark:      #071A1C;    /* Button đen xanh */
-  --q1-color:      #2FC646;    /* Q1 badge xanh lá */
+  --primary: #ff7a33; /* Accent / link cam */
+  --primary-light: #fff0e8; /* Light tint của cam */
+  --btn-dark: #071a1c; /* Button đen xanh */
+  --q1-color: #2fc646; /* Q1 badge xanh lá */
 
   /* Compatibility aliases */
-  --dark-bg:   var(--bg-main);
+  --dark-bg: var(--bg-main);
   --dark-card: var(--bg-card);
   --dark-border: var(--border);
   --brand-accent: var(--primary);
@@ -30,7 +30,8 @@
   --glow-accent: rgba(255, 122, 51, 0.08);
 }
 
-html, body {
+html,
+body {
   background-color: var(--bg-main);
   color: var(--text-main);
   font-family: var(--font-sans);
@@ -38,13 +39,15 @@ html, body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
-  transition: background-color 0.3s ease, color 0.3s ease;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
 }
 
 /* Custom background grid pattern for light mode */
 .grid-bg {
   background-color: var(--bg-main);
-  background-image: 
+  background-image:
     linear-gradient(rgba(236, 236, 236, 0.6) 1px, transparent 1px),
     linear-gradient(90deg, rgba(236, 236, 236, 0.6) 1px, transparent 1px);
   background-size: 40px 40px;
@@ -53,7 +56,11 @@ html, body {
 
 /* Radial light gradient to fade out grid lines on corners */
 .radial-fade {
-  background: radial-gradient(circle at 50% 30%, transparent 10%, var(--bg-main) 85%);
+  background: radial-gradient(
+    circle at 50% 30%,
+    transparent 10%,
+    var(--bg-main) 85%
+  );
 }
 
 /* Custom scrollbar */
@@ -87,15 +94,15 @@ html, body {
 }
 
 .btn-view-trends:hover {
-  background: var(--primary) !important;
-  border-color: var(--primary) !important;
-  color: #ffffff !important;
+  background: #e5e5e5 !important;
+  border-color: #d4d4d4 !important;
+  color: var(--text-main) !important;
   transform: translateY(-2px);
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.16);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
 }
 
 .btn-view-trends:hover .btn-view-trends-icon {
-  color: #ffffff !important;
+  color: var(--primary) !important;
   transform: scale(1.08);
 }
 
@@ -192,8 +199,12 @@ header.sticky-scrolled {
 }
 
 @keyframes spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .custom-scrollbar::-webkit-scrollbar {
@@ -263,64 +274,96 @@ header.sticky-scrolled {
 /* --- Font Customizations --- */
 
 /* 1. Logo / tên hệ thống */
-.navbar-brand, .logo-title, .system-logo, .brand-font {
+.navbar-brand,
+.logo-title,
+.system-logo,
+.brand-font {
   font-family: var(--font-display) !important;
   font-weight: 700 !important;
 }
 
 /* 2. Page titles */
-h1, h2, h3, .page-title, .font-display {
+h1,
+h2,
+h3,
+.page-title,
+.font-display {
   font-family: var(--font-display) !important;
   font-weight: 600 !important;
 }
 
 /* 3. Body text defaults */
-body, p, span, li, div, input, textarea, select {
+body,
+p,
+span,
+li,
+div,
+input,
+textarea,
+select {
   font-family: var(--font-sans);
   font-weight: 400;
 }
 
 /* 4. Menu/sidebar */
-.nav-link, .sidebar-link, .menu-item, .nav-item {
+.nav-link,
+.sidebar-link,
+.menu-item,
+.nav-item {
   font-family: var(--font-sans) !important;
   font-weight: 500 !important;
 }
 
 /* 5. Button */
-.btn, button, .btn-custom {
+.btn,
+button,
+.btn-custom {
   font-family: var(--font-sans) !important;
   font-weight: 500 !important;
 }
-.btn-fw-600, .btn-primary-glow {
+.btn-fw-600,
+.btn-primary-glow {
   font-weight: 600 !important;
 }
 
 /* 6. Table data */
-.table td, .table th, table, td, th {
+.table td,
+.table th,
+table,
+td,
+th {
   font-family: var(--font-sans) !important;
   font-weight: 400 !important;
 }
-.table th, th, .table-header {
+.table th,
+th,
+.table-header {
   font-weight: 500 !important;
 }
 
 /* 7. Badge/tag */
-.badge, .tag, .badge-custom {
+.badge,
+.tag,
+.badge-custom {
   font-family: var(--font-sans) !important;
   font-weight: 500 !important;
 }
 
 /* ─── Skeleton shimmer ────────────────────────────────────────────── */
 @keyframes skeleton-wave {
-  0%   { background-position: -200% 0; }
-  100% { background-position:  200% 0; }
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
 }
 
 .skeleton-shimmer {
   background: linear-gradient(
     90deg,
     var(--bg-section) 25%,
-    var(--border)     50%,
+    var(--border) 50%,
     var(--bg-section) 75%
   );
   background-size: 200% 100%;
@@ -330,23 +373,74 @@ body, p, span, li, div, input, textarea, select {
 
 /* ─── Dashboard button primary glow ─────────────────────────────── */
 .btn-primary-glow {
-  background: var(--btn-dark) !important;
+  background: var(--primary) !important;
   color: #fff !important;
   border: none !important;
-  box-shadow: 0 2px 12px rgba(7, 26, 28, 0.18);
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  box-shadow: 0 2px 12px rgba(255, 122, 51, 0.18);
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease,
+    background-color 0.15s ease;
 }
 .btn-primary-glow:hover {
   transform: translateY(-1px);
   box-shadow: 0 4px 18px rgba(255, 122, 51, 0.22);
-  background: var(--primary) !important;
+  background: #e8632a !important;
 }
 .btn-primary-glow:active {
   transform: translateY(0);
 }
 
 /* ─── Dashboard misc utilities ───────────────────────────────────── */
-.text-main          { color: var(--text-main) !important; }
-.text-muted-custom  { color: var(--text-muted) !important; }
-.bg-card            { background-color: var(--bg-card) !important; }
+.text-main {
+  color: var(--text-main) !important;
+}
+.text-muted-custom {
+  color: var(--text-muted) !important;
+}
+.bg-card {
+  background-color: var(--bg-card) !important;
+}
 
+/* ─── Sandbox Suggestion Tags ────────────────────────────────────── */
+.sandbox-tag {
+  font-size: 0.75rem;
+  background: var(--bg-chip) !important;
+  border: none !important;
+  color: var(--text-muted) !important;
+  transition: all 0.2s ease !important;
+}
+.sandbox-tag:hover {
+  background: var(--primary-light) !important;
+  color: var(--primary) !important;
+}
+
+/* ─── Sandbox Result Items ────────────────────────────────────────── */
+.sandbox-result-item {
+  background-color: var(--bg-chip) !important;
+  border: 1px solid var(--border) !important;
+  transition: all 0.2s ease-in-out !important;
+}
+.sandbox-result-item:hover {
+  border-color: var(--primary-light) !important;
+  background-color: var(--bg-card) !important;
+}
+.sandbox-result-item.is-journal {
+  cursor: pointer !important;
+}
+.sandbox-result-item.is-journal:hover {
+  border-color: var(--primary) !important;
+  background-color: var(--primary-light) !important;
+}
+
+/* ─── Auth Required Modal ─────────────────────────────────────────── */
+.auth-required-register-btn:hover {
+  background-color: var(--btn-dark) !important;
+  border-color: var(--btn-dark) !important;
+  color: #ffffff !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(7, 26, 28, 0.16);
+}
+.auth-required-register-btn:active {
+  transform: translateY(0);
+}

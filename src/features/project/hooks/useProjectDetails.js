@@ -1,3 +1,8 @@
+﻿/**
+ * File source thuộc hệ thống FE ResearchPulse.
+ *
+ * File: features\project\hooks\useProjectDetails.js
+ */
 import { useState, useCallback } from 'react';
 import {
   getProjectByIdApi,

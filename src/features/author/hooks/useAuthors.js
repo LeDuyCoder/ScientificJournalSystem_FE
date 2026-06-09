@@ -1,16 +1,8 @@
 /**
- * @file useAuthors.js
- * @description Hook React tùy chỉnh điều phối tất cả quản lý trạng thái, side effect,
- * và các tương tác API cho tính năng Tác giả (Author).
- * 
- * Chức năng chính:
- * 1. Tách biệt các trạng thái loading và error cho các phần khác nhau của trang. Điều này ngăn việc
- *    một lệnh gọi API lỗi (ví dụ: danh sách bài báo lỗi) làm hỏng toàn bộ thông tin chi tiết tác giả.
- * 2. Sử dụng cơ chế dữ liệu giả định dự phòng (Mock Data Fallback) mạnh mẽ. Nếu backend ngoại tuyến hoặc trả về lỗi 404,
- *    nó sẽ ghi cảnh báo ra console và trả về dữ liệu giả định chất lượng cao.
- * 3. Hỗ trợ tìm kiếm trực tiếp, lọc theo lĩnh vực, sắp xếp và phân trang trên cả API và dữ liệu mock.
+ * File source thuộc hệ thống FE ResearchPulse.
+ *
+ * File: features\author\hooks\useAuthors.js
  */
-
 import { useState, useCallback } from 'react';
 import {
   getAuthorsApi,
