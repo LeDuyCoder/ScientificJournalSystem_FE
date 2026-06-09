@@ -1,4 +1,4 @@
-﻿/**
+/**
  * File source thuộc hệ thống FE ResearchPulse.
  *
  * File: features\landing\components\Sandbox.jsx
@@ -361,7 +361,10 @@ export default function Sandbox() {
                               "var(--bg-chip)";
                           }}
                         >
-                          <div className="d-flex align-items-center gap-3 text-truncate">
+                          <div
+                            className="d-flex align-items-center gap-3 text-truncate"
+                            style={{ flex: "1 1 auto", minWidth: 0 }}
+                          >
                             <div
                               className="p-2 rounded-3 d-flex align-items-center justify-content-center"
                               style={{
@@ -373,7 +376,10 @@ export default function Sandbox() {
                             </div>
                             <span
                               className="font-medium text-main text-sm text-truncate"
-                              style={{ fontSize: "0.875rem" }}
+                              style={{
+                                fontSize: "0.875rem",
+                                maxWidth: "360px",
+                              }}
                             >
                               {item.name}
                             </span>
@@ -381,8 +387,8 @@ export default function Sandbox() {
                           <span
                             style={{
                               backgroundColor: ["KEYWORD", "AUTHOR", "ARTICLE", "JOURNAL"].includes(item.type)
-                                ? "transparent"
-                                : cfg.bgColor,
+                                ? cfg.bgColor
+                                : "transparent",
                               color: ["KEYWORD", "AUTHOR", "ARTICLE", "JOURNAL"].includes(item.type)
                                 ? "#000000"
                                 : cfg.textColor,
@@ -394,8 +400,7 @@ export default function Sandbox() {
                               textTransform: "uppercase",
                               letterSpacing: "0.05em",
                               padding: "0.35em 0.65em",
-                              borderRadius: "4px",
-                              display: "inline-block",
+                              flexShrink: 0,
                             }}
                           >
                             {t(cfg.labelKey)}

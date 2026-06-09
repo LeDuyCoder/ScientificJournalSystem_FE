@@ -432,3 +432,15 @@ th,
   border-color: var(--primary) !important;
   background-color: var(--primary-light) !important;
 }
+
+/* ─── Auth Required Modal ─────────────────────────────────────────── */
+.auth-required-register-btn:hover {
+  background-color: var(--btn-dark) !important;
+  border-color: var(--btn-dark) !important;
+  color: #ffffff !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(7, 26, 28, 0.16);
+}
+.auth-required-register-btn:active {
+  transform: translateY(0);
+}

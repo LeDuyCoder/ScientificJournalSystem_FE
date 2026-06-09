@@ -10,7 +10,7 @@ import { useCatalogSearch } from '../hooks/useCatalogSearch';
 import FilterPanel from '../components/FilterPanel';
 import JournalTable from '../components/JournalTable';
 import LoadingSkeleton from '../../../shared/components/LoadingSkeleton';
-import AuthRequiredModal from '../../journal/components/AuthRequiredModal';
+import AuthRequiredModal from '../../../shared/components/AuthRequiredModal';
 import Header from '../../landing/components/Header';
 import useAuth from '../../auth/hooks/useAuth';
 

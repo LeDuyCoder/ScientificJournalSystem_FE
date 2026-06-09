@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Card hiển thị keyword và topic trong trang chi tiết bài báo.
  * - Keywords: click được, điều hướng tới /keywords/:id/articles hoặc /keywords?keyword=...
  * - Topics: chỉ hiển thị, KHÔNG click vì route /topics/:id/articles chưa có trong AppRoutes.
@@ -75,22 +75,15 @@ export default function KeywordTopicCard({ primaryTopic, keywords, topics = [] }
             {hasKeywords ? (
               <div className="d-flex flex-wrap gap-2">
                 {keywordList.map((keyword) => (
-                  <Badge
+                  <span
                     key={`keyword-${keyword.keyword_id || keyword.display_name}`}
                     onClick={() => handleKeywordClick(keyword)}
-                    className="py-2 px-3 text-xs font-semibold"
+                    className="px-3 py-1 rounded-pill font-display text-main fw-semibold"
                     title="Xem các bài báo theo keyword này"
-                    style={{
-                      cursor: 'pointer',
-                      borderRadius: '8px',
-                      backgroundColor: 'var(--bg-chip)',
-                      color: 'var(--text-main)',
-                      border: '1px solid var(--border)',
-                      transition: 'all 0.2s',
-                    }}
+                    style={{ cursor: 'pointer', backgroundColor: 'rgba(0,0,0,0.07)', border: '1px solid rgba(0,0,0,0.10)' }}
                   >
                     {keyword.display_name}
-                  </Badge>
+                  </span>
                 ))}
               </div>
             ) : (
@@ -111,33 +104,23 @@ export default function KeywordTopicCard({ primaryTopic, keywords, topics = [] }
           {hasTopics && (
             <section>
               <div className="d-flex align-items-center gap-2 mb-2">
-                <Icon icon="lucide:network" width="14" style={{ color: 'var(--text-muted)' }} />
-                <span className="text-uppercase fw-semibold" style={{ fontSize: '0.7rem', color: 'var(--text-muted)', letterSpacing: '0.5px' }}>
-                  Topics
-                </span>
-                <span style={{ fontSize: '0.65rem', color: 'var(--text-muted)' }}>(đang phát triển)</span>
-              </div>
+              <Icon icon="lucide:network" width="14" style={{ color: 'var(--primary)' }} />
+              <span className="text-uppercase fw-semibold" style={{ fontSize: '0.7rem', color: 'var(--text-muted)', letterSpacing: '0.5px' }}>
+                Topics (đang phát triển)
+              </span>
+            </div>
 
               <div className="d-flex flex-wrap gap-2">
                 {displayTopics.map((topic) => (
-                  <Badge
+                  <span
                     key={`topic-${topic.topic_id || topic.display_name}`}
-                    className="py-2 px-3 text-xs font-semibold d-inline-flex align-items-center gap-1"
+                    className="px-3 py-1 rounded-pill font-display text-main fw-semibold"
                     title="Topic route chưa hoàn thiện"
-                    style={{
-                      cursor: 'default',
-                      borderRadius: '8px',
-                      backgroundColor: topic.is_primary ? 'var(--primary-light)' : 'var(--bg-chip)',
-                      color: topic.is_primary ? 'var(--primary)' : 'var(--text-main)',
-                      border: topic.is_primary
-                        ? '1px solid rgba(255, 122, 51, 0.3)'
-                        : '1px solid var(--border)',
-                      opacity: 0.85,
-                    }}
+                    style={{ cursor: 'pointer', backgroundColor: 'rgba(0,0,0,0.07)', border: '1px solid rgba(0,0,0,0.10)' }}
                   >
                     {topic.is_primary && <Icon icon="lucide:star" width="12" />}
                     {topic.display_name}
-                  </Badge>
+                  </span>
                 ))}
               </div>
             </section>

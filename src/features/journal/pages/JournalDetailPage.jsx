@@ -1,4 +1,4 @@
-﻿/**
+/**
  * File source thuộc hệ thống FE ResearchPulse.
  *
  * File: features\journal\pages\JournalDetailPage.jsx
@@ -21,7 +21,7 @@ import JournalTabs from '../components/JournalTabs';
 import RankingTabContent from '../components/RankingTabContent';
 import VolumesTabContent from '../components/VolumesTabContent';
 import ArticlesTabContent from '../components/ArticlesTabContent';
-import AuthRequiredModal from '../components/AuthRequiredModal';
+import AuthRequiredModal from '../../../shared/components/AuthRequiredModal';
 import AddToProjectModal from '../components/AddToProjectModal';
 
 export default function JournalDetailPage() {

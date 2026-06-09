@@ -56,7 +56,14 @@ export default function ArticleStatisticsCard({ article }) {
         <Row className="g-2 text-sm text-main">
           {metricCards.map((metric) => (
             <Col xs={6} key={metric.label}>
-              <div className="p-2.5 rounded-3 border h-100" style={{ borderColor: 'var(--border)', backgroundColor: 'var(--bg-card)' }}>
+              <div
+                className="py-1 pe-2 rounded-3 border h-100 d-flex flex-column justify-content-center"
+                style={{
+                  borderColor: 'var(--border)',
+                  backgroundColor: 'var(--bg-card)',
+                  paddingLeft: '1rem',
+                }}
+              >
                 <div className="text-muted-custom text-xxs font-semibold uppercase" style={{ fontSize: '0.65rem' }}>
                   {metric.label}
                 </div>
@@ -70,9 +77,9 @@ export default function ArticleStatisticsCard({ article }) {
         </Row>
 
         <div className="border-top border-light pt-3 mt-1">
-          <div className="d-flex justify-content-between align-items-start text-xs mb-2 gap-3">
+          <div className="justify-content-between align-items-start text-xs mb-2 gap-3">
             <span className="text-muted-custom">DOI:</span>
-            <span className="text-main font-semibold text-end" style={{ fontWeight: 600 }}>{doi}</span>
+            <span className="text-main font-semibold text-end" style={{ fontWeight: 600 }}> {doi}</span>
           </div>
           <div className="d-flex justify-content-between align-items-center text-xs">
             <span className="text-muted-custom">Số trang (Pages):</span>
