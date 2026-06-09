@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { Navigate, Outlet } from "react-router-dom";
 import { isAuthenticated } from "../../shared/utils/auth";
+import { useUserStore } from "../store/userStore";
+import { useAuthStore } from "../store/authStore";
 
 const ProtectedRoute = () => {
   const [loading, setLoading] = useState(true);
@@ -14,6 +16,9 @@ const ProtectedRoute = () => {
     };
     checkAuth();
   }, []);
+
+  console.log(useAuthStore.getState());
+  console.log(useUserStore.getState());
 
   if (loading) return <div>Đang kiểm tra quyền truy cập...</div>;
 
