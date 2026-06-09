@@ -176,20 +176,20 @@ export default function CatalogSearchPage() {
           <Form onSubmit={handleSearchSubmit}>
             <Row className="g-3">
               <Col xs={12}>
-                <InputGroup className="border border-light rounded-3 overflow-hidden bg-white">
-                  <InputGroup.Text className="bg-transparent border-0 text-muted-custom pe-0">
-                    <Icon icon="lucide:search" width="20" />
+                <InputGroup className="border border-light rounded-pill overflow-hidden p-1 bg-white align-items-center">
+                  <InputGroup.Text className="bg-transparent border-0 text-muted-custom pe-0 py-2 ps-3">
+                    <Icon icon="lucide:search" width="18" />
                   </InputGroup.Text>
                   <Form.Control
                     placeholder="Tìm journal, tác giả, ISSN..."
                     value={searchInput}
                     onChange={(e) => setSearchInput(e.target.value)}
-                    className="bg-transparent border-0 text-main py-3 px-3 fs-6 custom-input-placeholder"
+                    className="bg-transparent border-0 text-main py-2 px-3 fs-6 custom-input-placeholder shadow-none"
                     style={{ outline: 'none', boxShadow: 'none' }}
                   />
                   <Button 
                     type="submit" 
-                    className="btn-primary-glow border-0 px-4 text-white font-display fw-bold"
+                    className="btn-primary-glow border-0 px-4 py-2 text-white font-display fw-bold rounded-pill me-1"
                   >
                     Tìm kiếm
                   </Button>
