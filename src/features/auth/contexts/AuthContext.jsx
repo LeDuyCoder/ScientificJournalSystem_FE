@@ -20,13 +20,7 @@ import { useNavigate } from 'react-router-dom';
 export const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(() => {
-    const token = localStorage.getItem('researchpulse_token');
-    if (token) {
-      return { username: 'Researcher', email: 'user@example.com' };
-    }
-    return null;
-  });
+  const [user, setUser] = useState(null);
   
   const [googleRedirect, setGoogleRedirect] = useState("/");
   const navigate = useNavigate();
@@ -168,7 +162,6 @@ export function AuthProvider({ children }) {
   }, []);
 
   const logout = useCallback(() => {
-    localStorage.removeItem('researchpulse_token');
     setUser(null);
   }, []);
 
@@ -211,8 +204,7 @@ export function AuthProvider({ children }) {
   }, [logout]);
 
   useEffect(() => {
-    const token = localStorage.getItem('researchpulse_token');
-    if (token && (!user || user.username === 'Researcher')) {
+    if (!user) {
       fetchProfile();
     }
   }, [fetchProfile, user]);
