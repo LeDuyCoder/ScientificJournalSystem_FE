@@ -36,6 +36,8 @@ export default function CatalogSearchPage() {
     selectedAccess,
     selectedQuartiles,
     selectedYear,
+    selectedZone,
+    zones,
     isOaDiamond,
     followedJournals,
     showAuthModal,
@@ -46,6 +48,7 @@ export default function CatalogSearchPage() {
     onAccessSelect,
     onQuartileSelect,
     onYearSelect,
+    onZoneSelect,
     handleOaDiamondToggle,
     handleClearAll,
     handleSortChange,
@@ -214,7 +217,10 @@ export default function CatalogSearchPage() {
             onAccessSelect={onAccessSelect}
             onQuartileSelect={onQuartileSelect}
             selectedYear={selectedYear}
+            selectedZone={selectedZone}
+            zones={zones}
             onYearSelect={onYearSelect}
+            onZoneSelect={onZoneSelect}
             isOaDiamond={isOaDiamond}
             onOaDiamondToggle={handleOaDiamondToggle}
             onClearAll={handleClearAll}

@@ -29,7 +29,7 @@ export default function AuthorArticleRow({ article, isLast = false }) {
   const title = article.title ?? 'Bài báo nghiên cứu';
   const journal = article.journal_name ?? article.journal ?? 'Tạp chí khoa học';
   const year = article.publication_year ?? article.year ?? '—';
-  const citations = article.citation_count ?? article.citations ?? 0;
+  const citations = article.citation_count ?? article.cited_by_count ?? article.citations ?? 0;
   const doi = article.doi ?? '';
 
   /**

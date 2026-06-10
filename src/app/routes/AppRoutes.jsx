@@ -18,6 +18,7 @@ import PublicRoute from './PublicRoute';
 import AuthorLeaderboardPage from '../../features/author/pages/AuthorLeaderboardPage';
 import AuthorDetailPage from '../../features/author/pages/AuthorDetailPage';
 import AuthorListPage from '../../features/author/pages/AuthorListPage';
+import TopicDetailPage from '../../features/topic/pages/TopicDetailPage';
 
 /**
  * Nơi khai báo route chính của ứng dụng.
@@ -55,6 +56,7 @@ export default function AppRoutes() {
 
       <Route path="/keywords" element={<KeywordListPage />} />
       <Route path="/keywords/:keywordId/articles" element={<KeywordArticlesPage />} />
+      <Route path="/topics/:topicId" element={<TopicDetailPage />} />
       <Route path="*" element={<LandingPage />} />
     </Routes>
   );

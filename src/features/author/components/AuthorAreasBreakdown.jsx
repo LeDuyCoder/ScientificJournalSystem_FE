@@ -25,6 +25,15 @@ import EmptyState from '../../../shared/components/EmptyState';
  */
 export default function AuthorAreasBreakdown({ breakdown = [], loading = false, error = null }) {
   const breakdownItems = Array.isArray(breakdown) ? breakdown : [];
+  const maxVisibleAreas = 5;
+  const sortedBreakdownItems = [...breakdownItems].sort(
+    (a, b) => (Number(b.percentage ?? b.percent ?? 0) || 0) - (Number(a.percentage ?? a.percent ?? 0) || 0)
+  );
+  const visibleBreakdownItems = sortedBreakdownItems.slice(0, maxVisibleAreas);
+  const hiddenBreakdownCount = Math.max(0, sortedBreakdownItems.length - maxVisibleAreas);
+  const hiddenArticleCount = sortedBreakdownItems
+    .slice(maxVisibleAreas)
+    .reduce((sum, item) => sum + (Number(item.count ?? item.article_count ?? 0) || 0), 0);
   
   // ── TRẠNG THÁI LOADING ──────────────────────────────────────────────────────
   // Hiển thị khung tròn shimmer đại diện cho biểu đồ donut và các thanh skeleton song song cho các giá trị.
@@ -122,7 +131,7 @@ export default function AuthorAreasBreakdown({ breakdown = [], loading = false, 
               />
               
               {/* Các lát cắt hình tròn động bằng SVG */}
-              {breakdownItems.map((item, idx) => {
+              {visibleBreakdownItems.map((item, idx) => {
                 const strokeColor = colors[idx % colors.length];
                 const pct = item.percentage ?? 0;
                 
@@ -166,7 +175,7 @@ export default function AuthorAreasBreakdown({ breakdown = [], loading = false, 
               }}
             >
               <span className="text-muted-custom" style={{ fontSize: '0.65rem', fontWeight: 600, textTransform: 'uppercase', letterSpacing: '0.05em' }}>Lĩnh vực</span>
-              <span className="text-main fw-bold mt-0.5" style={{ fontSize: '1.25rem' }}>{breakdown.length}</span>
+              <span className="text-main fw-bold mt-0.5" style={{ fontSize: '1.25rem' }}>{breakdownItems.length}</span>
             </div>
           </div>
         </Col>
@@ -174,9 +183,9 @@ export default function AuthorAreasBreakdown({ breakdown = [], loading = false, 
         {/* Cột phải: Danh sách chú thích dạng văn bản đi kèm Thanh tiến trình dạng đường thẳng */}
         <Col xs={12} md={7}>
           <div className="d-flex flex-column gap-3.5">
-            {breakdownItems.map((item, idx) => {
+            {visibleBreakdownItems.map((item, idx) => {
               const color = colors[idx % colors.length];
-              const name = item.subject_area ?? item.name ?? 'Lĩnh vực khác';
+              const name = item.subject_area ?? item.category_name ?? item.subject_area_name ?? item.display_name ?? item.name ?? 'Chưa phân loại';
               const pct = item.percentage ?? 0;
               const count = item.count ?? item.article_count ?? 0;
 
@@ -216,6 +225,12 @@ export default function AuthorAreasBreakdown({ breakdown = [], loading = false, 
                 </div>
               );
             })}
+
+            {hiddenBreakdownCount > 0 && (
+              <div className="pt-1 text-muted-custom fw-semibold" style={{ fontSize: '0.78rem' }}>
+                … còn {hiddenBreakdownCount} lĩnh vực khác{hiddenArticleCount ? ` (${hiddenArticleCount} bài báo)` : ''}
+              </div>
+            )}
           </div>
         </Col>
       </Row>

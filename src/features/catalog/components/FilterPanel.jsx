@@ -1,4 +1,4 @@
-﻿/**
+/**
  * File source thuộc hệ thống FE ResearchPulse.
  *
  * File: features\catalog\components\FilterPanel.jsx
@@ -13,23 +13,45 @@ export default function FilterPanel({
   selectedAccess = [],
   selectedQuartiles = [],
   selectedYear = '',
+  selectedZone = '',
+  zones = [],
   onAreaSelect,
   onCategorySelect,
   onAccessSelect,
   onQuartileSelect,
   onYearSelect,
+  onZoneSelect,
   isOaDiamond = false,
   onOaDiamondToggle,
   onClearAll,
   loading = false
 }) {
-  const visibleCategories = selectedAreas.length > 0
+  const hasSelectedArea = selectedAreas.length > 0;
+  const visibleCategories = hasSelectedArea
     ? subjectCategories.filter(cat => selectedAreas.includes(String(cat.subject_area_id)))
-    : subjectCategories;
+    : [];
 
   const cleanLabel = (value = '') => {
     const parts = String(value).split(';').map(part => part.trim()).filter(Boolean);
     return parts.length > 0 ? parts[parts.length - 1] : value;
+  };
+
+  const categoryNameCounts = subjectCategories.reduce((acc, cat) => {
+    const label = cleanLabel(cat.display_name);
+    acc[label] = (acc[label] || 0) + 1;
+    return acc;
+  }, {});
+
+  const getAreaLabel = (areaId) => {
+    const area = subjectAreas.find(item => String(item.subject_area_id) === String(areaId));
+    return area ? cleanLabel(area.display_name) : '';
+  };
+
+  const getCategoryLabel = (cat) => {
+    const label = cleanLabel(cat.display_name);
+    const isDuplicateName = categoryNameCounts[label] > 1;
+    const areaLabel = getAreaLabel(cat.subject_area_id);
+    return isDuplicateName && areaLabel ? `${label} (${areaLabel})` : label;
   };
 
   const pillSelectStyle = {
@@ -96,26 +118,33 @@ export default function FilterPanel({
               <Form.Select
                 value={selectedCategories[0] || 'all'}
                 onChange={(e) => onCategorySelect(e.target.value)}
-                disabled={loading}
+                disabled={loading || !hasSelectedArea}
                 className="border-0"
-                style={{ ...pillSelectStyle, width: '300px', maxWidth: '100%' }}
+                style={{ ...pillSelectStyle, width: '300px', maxWidth: '100%', opacity: hasSelectedArea ? 1 : 0.72 }}
               >
-                <option value="all">All subject categories</option>
+                <option value="all">
+                  {hasSelectedArea ? 'All subject categories' : 'Select subject area first'}
+                </option>
                 {visibleCategories.map((cat) => (
                   <option key={cat.subject_category_id} value={cat.subject_category_id} title={cat.display_name}>
-                    {cleanLabel(cat.display_name)}
+                    {getCategoryLabel(cat)}
                   </option>
                 ))}
               </Form.Select>
 
               <Form.Select
-                value="all"
-                disabled
+                value={selectedZone || 'all'}
+                onChange={(e) => onZoneSelect?.(e.target.value)}
+                disabled={loading}
                 className="border-0"
-                title="Zone filter sẽ được bật khi backend cung cấp endpoint phù hợp"
-                style={{ ...pillSelectStyle, width: '170px', maxWidth: '100%', opacity: 0.72 }}
+                style={{ ...pillSelectStyle, width: '170px', maxWidth: '100%' }}
               >
                 <option value="all">Zone</option>
+                {zones.map((zone) => (
+                  <option key={zone.zone_id} value={zone.zone_id} title={zone.name}>
+                    {zone.name}
+                  </option>
+                ))}
               </Form.Select>
 
               <Form.Select

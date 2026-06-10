@@ -164,6 +164,22 @@ export default function ArticleListPage() {
           <p className="text-muted-custom text-sm mb-0" style={{ maxWidth: '680px' }}>
             Duyệt qua, tìm kiếm và lọc hàng nghìn bài báo chất lượng cao được lưu trữ trong hệ thống ResearchPulse.
           </p>
+          {filters.selectedVolume && (
+            <div
+              className="d-inline-flex align-items-center gap-2 mt-3 px-3 py-2 me-2"
+              style={{
+                borderRadius: '999px',
+                backgroundColor: 'rgba(0,0,0,0.06)',
+                border: '1px solid rgba(0,0,0,0.10)',
+                color: 'var(--text-main)',
+                fontSize: '0.88rem',
+                fontWeight: 600
+              }}
+            >
+              <Icon icon="solar:folder-with-files-bold" width="15" />
+              <span>Đang xem bài báo thuộc Volume #{filters.selectedVolume}</span>
+            </div>
+          )}
           {filters.selectedIssue && (
             <div
               className="d-inline-flex align-items-center gap-2 mt-3 px-3 py-2"

@@ -90,8 +90,8 @@ export default function AuthorDetailPage() {
           <Button
             variant="link"
             onClick={() => navigate('/authors')}
-            className="text-primary text-decoration-none text-xs fw-semibold p-0 d-flex align-items-center gap-1.5"
-            style={{ fontSize: '0.85rem' }}
+            className="btn btn-link btn-sm text-muted-custom d-flex align-items-center gap-2 p-0"
+            style={{ textDecoration: 'none', fontSize: '0.9rem' }}
           >
             <Icon icon="lucide:arrow-left" width="16" />
             Quay lại danh sách tác giả

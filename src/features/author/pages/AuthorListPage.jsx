@@ -479,21 +479,6 @@ export default function AuthorListPage() {
                 </Form.Group>
               </Col>
 
-              {/* Hộp chọn Chế độ Sắp xếp */}
-              <Col xs={12} sm={6} lg={2}>
-                <Form.Select
-                  size="sm"
-                  value={sortVal}
-                  onChange={e => handleFilterChange('sort', e.target.value)}
-                  className="text-muted-custom text-sm"
-                  style={{ borderColor: 'var(--border)', padding: '0.5rem 0.75rem', fontSize: '0.82rem' }}
-                >
-                  <option value="impact">Nổi bật nhất (H-index, citations, bài báo)</option>
-                  <option value="articles">Sắp xếp theo bài báo</option>
-                  <option value="citations">Sắp xếp theo citations</option>
-                </Form.Select>
-              </Col>
-
               {/* Các nút hành động (Tìm kiếm & Điều hướng) */}
               <Col xs={12} sm={6} lg={1} className="d-flex gap-2">
                 <Button 
@@ -505,46 +490,7 @@ export default function AuthorListPage() {
                 </Button>
               </Col>
 
-              {/* Bộ chuyển đổi chế độ hiển thị giao diện (Lưới/Grid vs Bảng/Table) */}
-              <Col xs={12} sm={6} lg={2} className="d-flex justify-content-lg-end gap-2">
-                <Button
-                  variant="outline-secondary"
-                  size="sm"
-                  active={viewMode === 'grid'}
-                  onClick={() => setViewMode('grid')}
-                  style={{
-                    borderColor: 'var(--border)',
-                    backgroundColor: viewMode === 'grid' ? 'var(--primary-light)' : 'transparent',
-                    color: viewMode === 'grid' ? 'var(--primary)' : 'var(--text-muted)'
-                  }}
-                  title="Xem dạng Lưới (Thiết kế ảnh mẫu)"
-                >
-                  <Icon icon="lucide:grid" width="14" />
-                </Button>
-                <Button
-                  variant="outline-secondary"
-                  size="sm"
-                  active={viewMode === 'table'}
-                  onClick={() => setViewMode('table')}
-                  style={{
-                    borderColor: 'var(--border)',
-                    backgroundColor: viewMode === 'table' ? 'var(--primary-light)' : 'transparent',
-                    color: viewMode === 'table' ? 'var(--primary)' : 'var(--text-muted)'
-                  }}
-                  title="Xem dạng Bảng (Thiết kế chuẩn)"
-                >
-                  <Icon icon="lucide:list" width="14" />
-                </Button>
-                <Button
-                  variant="link"
-                  onClick={() => navigate('/authors/leaderboard')}
-                  className=" text-decoration-none text-xs fw-semibold p-0 ms-2 d-flex align-items-center gap-1-5"
-                  style={{ color: "var(--primary)", fontSize: '0.8rem' }}
-                >
-                  <Icon icon="lucide:trophy" color="var(--primary)" width="14" />
-                  BXH →
-                </Button>
-              </Col>
+              
             </Row>
           </Form>
         </Card>
