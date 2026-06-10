@@ -54,7 +54,7 @@ export default function AuthorListPage() {
   const searchVal = searchParams.get('search') || '';
   const pageVal = parseInt(searchParams.get('page') || '1', 10);
   const limitVal = parseInt(searchParams.get('limit') || '10', 10);
-  const sortVal = searchParams.get('sort') || '';
+  const sortVal = searchParams.get('sort') || 'impact';
   const subjectAreaVal = searchParams.get('subject_area') || '';
   const countryVal = searchParams.get('country') || '';
 
@@ -259,7 +259,7 @@ export default function AuthorListPage() {
       label: 'Tổng tác giả',
       value: formatLocalNumber(totalAuthors),
       icon: 'lucide:users',
-      desc: 'Tổng tác giả trong hệ thống'
+      desc: 'Tổng tác giả trong hệ thống',
     },
     {
       label: 'Tác giả nổi bật',
@@ -300,7 +300,7 @@ export default function AuthorListPage() {
                 Tổng quan
               </span>
             </li>
-            <li className="breadcrumb-item active" aria-current="page" style={{ color: 'var(--primary)', fontWeight: 600 }}>
+            <li className="breadcrumb-item active" aria-current="page" style={{ color: 'var(--text-muted  )', fontWeight: 600 }}>
               Tác giả nổi bật
             </li>
           </ol>
@@ -343,7 +343,7 @@ export default function AuthorListPage() {
                   <span className="text-muted-custom" style={{ fontSize: '0.75rem', fontWeight: 600 }}>
                     {stat.label}
                   </span>
-                  <Icon icon={stat.icon} width="16" className="text-primary" />
+                  <Icon icon={stat.icon} width="16" style={{ color: 'var(--primary)' }} />
                 </div>
                 <div className="text-main fw-bold" style={{ fontSize: '1.45rem', fontFamily: 'var(--font-sans)' }}>
                   {stat.value}
@@ -488,7 +488,7 @@ export default function AuthorListPage() {
                   className="text-muted-custom text-sm"
                   style={{ borderColor: 'var(--border)', padding: '0.5rem 0.75rem', fontSize: '0.82rem' }}
                 >
-                  <option value="">Sắp xếp mặc định</option>
+                  <option value="impact">Nổi bật nhất (H-index, citations, bài báo)</option>
                   <option value="articles">Sắp xếp theo bài báo</option>
                   <option value="citations">Sắp xếp theo citations</option>
                 </Form.Select>
@@ -538,10 +538,10 @@ export default function AuthorListPage() {
                 <Button
                   variant="link"
                   onClick={() => navigate('/authors/leaderboard')}
-                  className="text-primary text-decoration-none text-xs fw-semibold p-0 ms-2 d-flex align-items-center gap-1-5"
-                  style={{ fontSize: '0.8rem' }}
+                  className=" text-decoration-none text-xs fw-semibold p-0 ms-2 d-flex align-items-center gap-1-5"
+                  style={{ color: "var(--primary)", fontSize: '0.8rem' }}
                 >
-                  <Icon icon="lucide:trophy" width="14" />
+                  <Icon icon="lucide:trophy" color="var(--primary)" width="14" />
                   BXH →
                 </Button>
               </Col>
