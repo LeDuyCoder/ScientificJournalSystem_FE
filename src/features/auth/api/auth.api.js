@@ -1,4 +1,4 @@
-﻿/**
+/**
  * File source thuộc hệ thống FE ResearchPulse.
  *
  * File: features\auth\api\auth.api.js
@@ -84,5 +84,13 @@ export const updateProfileApi = (data) => {
  */
 export const deleteAccountApi = () => {
   return api.delete('/users/me');
+};
+
+/**
+ * Log out current user and clear auth cookies on backend.
+ * @returns {Promise} Axios promise
+ */
+export const logoutApi = () => {
+  return api.post('/auth/logout');
 };
 
