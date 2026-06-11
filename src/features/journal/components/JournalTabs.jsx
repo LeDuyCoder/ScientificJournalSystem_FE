@@ -18,7 +18,7 @@ export default function JournalTabs({ activeTab, onTabChange }) {
       <Nav.Item>
         <Nav.Link 
           eventKey="ranking" 
-          className="d-flex align-items-center gap-2 border-0 px-3 py-2 text-nowrap"
+          className="d-flex align-items-center gap-2 px-3 py-2 text-nowrap"
         >
           <Icon icon="lucide:bar-chart-3" width="16" />
           Lịch sử Ranking
@@ -28,7 +28,7 @@ export default function JournalTabs({ activeTab, onTabChange }) {
       <Nav.Item>
         <Nav.Link 
           eventKey="volumes" 
-          className="d-flex align-items-center gap-2 border-0 px-3 py-2 text-nowrap"
+          className="d-flex align-items-center gap-2 px-3 py-2 text-nowrap"
         >
           <Icon icon="lucide:book-open" width="16" />
           Volumes & Issues
@@ -38,7 +38,7 @@ export default function JournalTabs({ activeTab, onTabChange }) {
       <Nav.Item>
         <Nav.Link 
           eventKey="articles" 
-          className="d-flex align-items-center gap-2 border-0 px-3 py-2 text-nowrap"
+          className="d-flex align-items-center gap-2 px-3 py-2 text-nowrap"
         >
           <Icon icon="lucide:file-text" width="16" />
           Bài báo gần đây

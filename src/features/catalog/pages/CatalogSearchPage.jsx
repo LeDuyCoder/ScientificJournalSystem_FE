@@ -1,19 +1,21 @@
-﻿/**
+/**
  * File source thuộc hệ thống FE ResearchPulse.
  *
  * File: features\catalog\pages\CatalogSearchPage.jsx
  */
-import { Container, Row, Col, Form, Button, InputGroup, Pagination, Dropdown } from 'react-bootstrap';
+import { Container, Row, Col, Form, Button, InputGroup, Pagination, Dropdown, Breadcrumb } from 'react-bootstrap';
 import { Icon } from '@iconify/react';
+import { useNavigate } from 'react-router-dom';
 import { useCatalogSearch } from '../hooks/useCatalogSearch';
 import FilterPanel from '../components/FilterPanel';
 import JournalTable from '../components/JournalTable';
 import LoadingSkeleton from '../../../shared/components/LoadingSkeleton';
-import AuthRequiredModal from '../../journal/components/AuthRequiredModal';
+import AuthRequiredModal from '../../../shared/components/AuthRequiredModal';
 import Header from '../../landing/components/Header';
 import useAuth from '../../auth/hooks/useAuth';
 
 export default function CatalogSearchPage() {
+  const navigate = useNavigate();
   const auth = useAuth();
   const { user } = auth;
 
@@ -143,14 +145,21 @@ export default function CatalogSearchPage() {
 
       <Container>
         {/* Breadcrumbs */}
-        <nav aria-label="breadcrumb" className="mb-4">
-          <ol className="breadcrumb mb-0" style={{ fontSize: '0.8rem' }}>
-            <li className="breadcrumb-item">
-              <span className="text-muted-custom" style={{ cursor: 'pointer' }} onClick={() => window.location.href = '/'}>Home</span>
-            </li>
-            <li className="breadcrumb-item active text-muted-custom" aria-current="page">Tìm kiếm</li>
-          </ol>
-        </nav>
+        <div aria-label="breadcrumb" className="mb-4">
+          <Breadcrumb className="mb-0 custom-breadcrumb d-flex align-items-center">
+            <Breadcrumb.Item
+              onClick={() => navigate('/')}
+              className="font-display d-flex align-items-center"
+              linkProps={{ style: { cursor: 'pointer', fontSize: '0.9rem', lineHeight: 1, color: 'var(--text-muted)', textDecoration: 'none' } }}
+            >
+              Trang chủ
+            </Breadcrumb.Item>
+            <Breadcrumb.Item active className="font-display d-flex align-items-center" style={{ fontSize: '0.9rem', lineHeight: 1, color: 'var(--text-muted)' }}>
+              Tìm kiếm
+            </Breadcrumb.Item>
+
+          </Breadcrumb>
+        </div>
 
         {/* Page Title & Subtitle */}
         <div className="text-start mb-4">
@@ -167,20 +176,20 @@ export default function CatalogSearchPage() {
           <Form onSubmit={handleSearchSubmit}>
             <Row className="g-3">
               <Col xs={12}>
-                <InputGroup className="border border-light rounded-3 overflow-hidden bg-white">
-                  <InputGroup.Text className="bg-transparent border-0 text-muted-custom pe-0">
-                    <Icon icon="lucide:search" width="20" />
+                <InputGroup className="border border-light rounded-pill overflow-hidden p-1 bg-white align-items-center">
+                  <InputGroup.Text className="bg-transparent border-0 text-muted-custom pe-0 py-2 ps-3">
+                    <Icon icon="lucide:search" width="18" />
                   </InputGroup.Text>
                   <Form.Control
                     placeholder="Tìm journal, tác giả, ISSN..."
                     value={searchInput}
                     onChange={(e) => setSearchInput(e.target.value)}
-                    className="bg-transparent border-0 text-main py-3 px-3 fs-6 custom-input-placeholder"
+                    className="bg-transparent border-0 text-main py-2 px-3 fs-6 custom-input-placeholder shadow-none"
                     style={{ outline: 'none', boxShadow: 'none' }}
                   />
                   <Button 
                     type="submit" 
-                    className="btn-primary-glow border-0 px-4 text-white font-display fw-bold"
+                    className="btn-primary-glow border-0 px-4 py-2 text-white font-display fw-bold rounded-pill me-1"
                   >
                     Tìm kiếm
                   </Button>
@@ -236,12 +245,12 @@ export default function CatalogSearchPage() {
                 >
                   <Icon icon="lucide:arrow-up-down" width="14" />
                   <span>
-                    {sort === 'metric' && 'Mặc định - Metric cao nhất'}
+                    {sort === 'metric' && 'Mặc định'}
                     {sort === 'name' && 'Tên A-Z'}
                   </span>
                 </Dropdown.Toggle>
                 <Dropdown.Menu className="bg-white border-light">
-                  <Dropdown.Item onClick={() => handleSortChange('metric')} className="text-main hover:bg-light text-xs py-2">Mặc định - Metric cao nhất</Dropdown.Item>
+                  <Dropdown.Item onClick={() => handleSortChange('metric')} className="text-main hover:bg-light text-xs py-2">Mặc định</Dropdown.Item>
                   <Dropdown.Item onClick={() => handleSortChange('name')} className="text-main hover:bg-light text-xs py-2">Tên A-Z</Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>

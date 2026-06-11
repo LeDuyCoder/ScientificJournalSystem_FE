@@ -1,9 +1,9 @@
-﻿/**
+/**
  * File source thuộc hệ thống FE ResearchPulse.
  *
  * File: features\catalog\components\JournalTable.jsx
  */
-import { Table, Badge } from 'react-bootstrap';
+import { Table } from 'react-bootstrap';
 import { Icon } from '@iconify/react';
 import { useNavigate } from 'react-router-dom';
 
@@ -16,9 +16,13 @@ export default function JournalTable({ journals = [], followedJournals = {}, onF
       style={{
         fontSize: '0.78rem',
         color: 'var(--text-main, #111)',
+        whiteSpace: 'nowrap',
+        display: 'inline-flex',
+        alignItems: 'center',
+        minWidth: journal.is_open_access ? '86px' : '82px',
       }}
     >
-      {journal.is_open_access ? '🔓 Open Access' : 'Subscription'}
+      {journal.is_open_access ? 'Open Access' : 'Subscription'}
     </span>
   );
 
@@ -42,7 +46,7 @@ export default function JournalTable({ journals = [], followedJournals = {}, onF
               <th className="px-3 py-3 text-muted-custom text-uppercase" style={{ fontSize: '0.72rem' }}>Quartile</th>
               <th className="px-3 py-3 text-muted-custom text-uppercase" style={{ fontSize: '0.72rem' }}>Metric</th>
               <th className="px-3 py-3 text-muted-custom text-uppercase" style={{ fontSize: '0.72rem' }}>Year</th>
-              <th className="px-3 py-3 text-muted-custom text-uppercase" style={{ fontSize: '0.72rem' }}>Access</th>
+              <th className="px-3 py-3 text-muted-custom text-uppercase" style={{ fontSize: '0.72rem', minWidth: '105px' }}>Access</th>
               <th className="px-4 py-3 text-muted-custom text-uppercase text-end" style={{ fontSize: '0.72rem' }}>Action</th>
             </tr>
           </thead>
@@ -61,7 +65,7 @@ export default function JournalTable({ journals = [], followedJournals = {}, onF
                   <td className="px-3 py-3 text-main">{journal.country || '—'}</td>
                   <td className="px-3 py-3">
                     {journal.quartile ? (
-                      <Badge className="px-2 py-1 fw-semibold" style={{
+                      <span className="px-2 py-1 fw-semibold" style={{
                         borderRadius: '6px',
                         backgroundColor: 'rgba(0,0,0,0.07)',
                         color: 'var(--text-main, #111)',
@@ -69,12 +73,12 @@ export default function JournalTable({ journals = [], followedJournals = {}, onF
                         fontSize: '0.73rem'
                       }}>
                         {journal.quartile}
-                      </Badge>
+                      </span>
                     ) : '—'}
                   </td>
                   <td className="px-3 py-3 fw-bold" style={{ color: 'var(--text-main, #111)', fontVariantNumeric: 'tabular-nums' }}>{journal.metric_value ?? '—'}</td>
                   <td className="px-3 py-3 text-main">{journal.metric_year || '—'}</td>
-                  <td className="px-3 py-3">{renderAccessBadge(journal)}</td>
+                  <td className="px-3 py-3" style={{ minWidth: '105px', whiteSpace: 'nowrap' }}>{renderAccessBadge(journal)}</td>
                   <td className="px-4 py-3 text-end">
                     <div className="d-inline-flex align-items-center">
                         <button

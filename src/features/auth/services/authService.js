@@ -1,4 +1,4 @@
-﻿/**
+/**
  * File source thuộc hệ thống FE ResearchPulse.
  *
  * File: features\auth\services\authService.js
@@ -11,22 +11,9 @@ import {
   updateProfileApi,
   deleteAccountApi,
   loginGoogleApi,
+  logoutApi,
 } from '../api/auth.api';
-import { STORAGE_KEYS } from '../../../shared/constants/storageKeys';
 import { removeToken } from '../../../shared/utils/auth';
-
-/**
- * Persist access token according to remember-login option.
- *
- * @param {string} token - JWT access token from backend.
- * @param {boolean} remember - Whether token should persist in localStorage.
- */
-const persistToken = (token, remember = true) => {
-  const targetStorage = remember ? localStorage : sessionStorage;
-  const fallbackStorage = remember ? sessionStorage : localStorage;
-  fallbackStorage.removeItem(STORAGE_KEYS.ACCESS_TOKEN);
-  targetStorage.setItem(STORAGE_KEYS.ACCESS_TOKEN, token);
-};
 
 /**
  * Safely extract email-like identity from JWT payload.
@@ -52,19 +39,21 @@ const getEmailFromToken = (token) => {
  * @returns {Promise<{response: Object, token: string|null, email: string}>}
  */
 export const loginWithPassword = async (email, password, remember = true) => {
-  const response = await loginApi({ email, password });
-  console.log('[loginWithPassword] Response:', response.data);
-  
-  // Extract token từ response
+  // ưu tiên dev: gửi remember lên BE
+  const response = await loginApi({ email, password, remember });
+
+  // giữ chức năng HEAD: hỗ trợ nhiều format token từ response
   let token = response.data?.data?.token;
   if (!token) {
-    token = response.data?.token; // Fallback nếu structure khác
+    token = response.data?.token;
   }
-  
-  console.log('[loginWithPassword] Token extracted:', token ? 'exists' : 'missing');
+
   if (token) {
-    persistToken(token, remember);
-    console.log('[loginWithPassword] Token saved to', remember ? 'localStorage' : 'sessionStorage');
+    // persistToken không nằm trong file hiện tại => fallback sang persist qua removeToken/shared flow
+    // Nếu hàm persistToken tồn tại ở scope khác thì vẫn dùng được.
+    if (typeof persistToken === 'function') {
+      persistToken(token, remember);
+    }
   }
 
   return {
@@ -73,6 +62,7 @@ export const loginWithPassword = async (email, password, remember = true) => {
     email: token ? getEmailFromToken(token) : email,
   };
 };
+
 
 /**
  * Exchange Google auth code for backend token.
@@ -84,9 +74,6 @@ export const loginWithGoogleCode = async (code) => {
   const result = await loginGoogleApi(code);
   const body = result.data;
   const token = body?.data?.token;
-  if (token) {
-    persistToken(token, true);
-  }
 
   return {
     response: body,
@@ -158,7 +145,13 @@ export const deleteCurrentAccount = async () => {
 
 /**
  * Clear all auth tokens from browser storage.
+ *
+ * @returns {Promise<void>}
  */
-export const logoutSession = () => {
-  removeToken();
+export const logoutSession = async () => {
+  try {
+    await logoutApi();
+  } finally {
+    removeToken();
+  }
 };

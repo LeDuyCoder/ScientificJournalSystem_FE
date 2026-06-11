@@ -1,10 +1,11 @@
-﻿/**
+/**
  * File source thuộc hệ thống FE ResearchPulse.
  *
  * File: features\article\pages\ArticleListPage.jsx
  */
-import { Container, Pagination, Modal, Button } from 'react-bootstrap';
+import { Container, Pagination, Modal, Button, Breadcrumb } from 'react-bootstrap';
 import { Icon } from '@iconify/react';
+import { useNavigate } from 'react-router-dom';
 import Header from '../../landing/components/Header';
 import useArticleList from '../hooks/useArticleList';
 import ArticleStatsCards from '../components/ArticleStatsCards';
@@ -12,6 +13,7 @@ import ArticleFilterBar from '../components/ArticleFilterBar';
 import ArticleTable from '../components/ArticleTable';
 
 export default function ArticleListPage() {
+  const navigate = useNavigate();
   const {
     articles,
     total,
@@ -138,10 +140,20 @@ export default function ArticleListPage() {
 
       <Container className="position-relative z-1">
         {/* Breadcrumb */}
-        <div className="d-flex align-items-center gap-2 mb-3 text-muted-custom text-xs font-display">
-          <span>Trang chủ</span>
-          <Icon icon="lucide:chevron-right" width="12" />
-          <span className="text-main">Bài báo</span>
+         <div aria-label="breadcrumb" className="mb-4">
+          <Breadcrumb className="mb-0 custom-breadcrumb d-flex align-items-center">
+            <Breadcrumb.Item
+              onClick={() => navigate('/')}
+              className="font-display d-flex align-items-center"
+              linkProps={{ style: { cursor: 'pointer', fontSize: '0.9rem', lineHeight: 1, color: 'var(--text-muted)', textDecoration: 'none' } }}
+            >
+              Trang chủ
+            </Breadcrumb.Item>
+            <Breadcrumb.Item
+            active className="font-display d-flex align-items-center" style={{fontSize: '0.9rem', lineHeight: 1, color: 'var(--text-muted)' }}>
+              Bài Báo
+            </Breadcrumb.Item>
+          </Breadcrumb>
         </div>
 
         {/* Page Header */}

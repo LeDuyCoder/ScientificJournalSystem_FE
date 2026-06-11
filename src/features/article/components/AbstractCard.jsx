@@ -28,7 +28,7 @@ export default function AbstractCard({ abstract }) {
       }}
     >
       <h5 className="font-display font-weight-bold text-main mb-3 d-flex align-items-center gap-2">
-        <Icon icon="lucide:align-left" className="text-primary" />
+        <Icon icon="lucide:align-left" style={{ color: 'var(--primary)' }} width="20" />
         Tóm tắt bài báo (Abstract)
       </h5>
       <p 
@@ -48,7 +48,7 @@ export default function AbstractCard({ abstract }) {
         <div className="d-flex justify-content-start mt-2">
           <Button
             variant="link"
-            className="text-primary hover:text-dark p-0 text-decoration-none d-flex align-items-center gap-1 mt-2 font-semibold"
+            className="text-main hover:text-dark p-0 text-decoration-none d-flex align-items-center gap-1 mt-2 font-semibold"
             style={{ fontSize: '0.875rem', fontWeight: 600 }}
             onClick={() => setIsExpanded(!isExpanded)}
           >

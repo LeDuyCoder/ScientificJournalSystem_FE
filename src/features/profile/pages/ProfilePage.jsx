@@ -1,8 +1,10 @@
 import "../styles/ProfilePage.css";
 import Header from "../../landing/components/Header";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useAuth from "../../auth/hooks/useAuth";
+import { isAuthenticated as isAuthenticatedUtil } from "../../../shared/utils/auth";
+
 
 export default function ProfilePage() {
   const {
@@ -30,12 +32,32 @@ export default function ProfilePage() {
     url_image: "",
   });
 
+  const computedIsAuthenticated = useMemo(() => {
+    // ưu tiên state từ hook dev đang có user/token
+    if (user) return true;
+    if (isAuthenticated) return true;
+    return false;
+  }, [isAuthenticated, user]);
+
   // Gọi API profile nếu đã auth.
   useEffect(() => {
-    if (isAuthenticated) {
-      fetchProfile();
-    }
-  }, [fetchProfile, isAuthenticated]);
+    let cancelled = false;
+
+    const run = async () => {
+      // nếu store chưa hydrate nhưng cookie vẫn tồn tại thì thử kiểm tra util
+      const shouldFetch = computedIsAuthenticated || (await isAuthenticatedUtil());
+      if (!cancelled && shouldFetch) {
+        fetchProfile();
+      }
+    };
+
+    run();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [computedIsAuthenticated, fetchProfile]);
+
 
   // Đổ dữ liệu user vào form
   useEffect(() => {
@@ -121,7 +143,8 @@ export default function ProfilePage() {
     <>
       <Header />
 
-      {!isAuthenticated ? (
+      {!computedIsAuthenticated ? (
+
         <div className="profile-page">
           <div className="profile-container">
             <div className="page-header">

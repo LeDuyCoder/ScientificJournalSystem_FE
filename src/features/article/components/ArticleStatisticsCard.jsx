@@ -38,7 +38,7 @@ export default function ArticleStatisticsCard({ article }) {
       }}
     >
       <h5 className="font-display font-weight-bold text-main mb-3 d-flex align-items-center gap-2 border-bottom border-light pb-2">
-        <Icon icon="lucide:bar-chart-3" className="text-primary" />
+        <Icon icon="lucide:bar-chart-3" style={{ color: 'var(--primary)' }} width="20" />
         Thống kê bài báo (Metrics)
       </h5>
 
@@ -47,7 +47,7 @@ export default function ArticleStatisticsCard({ article }) {
           <div className="text-muted-custom text-xs font-semibold mb-1 uppercase tracking-wider" style={{ fontSize: '0.7rem' }}>
             SỐ LƯỢT TRÍCH DẪN (CITATIONS)
           </div>
-          <div className="d-flex align-items-center justify-content-center gap-1.5 text-primary fs-3" style={{ fontWeight: 700 }}>
+          <div className="d-flex align-items-center justify-content-center text-main gap-1.5 fs-3" style={{ fontWeight: 700 }}>
             <Icon icon="lucide:quote" />
             <span>{citations}</span>
           </div>
@@ -56,12 +56,19 @@ export default function ArticleStatisticsCard({ article }) {
         <Row className="g-2 text-sm text-main">
           {metricCards.map((metric) => (
             <Col xs={6} key={metric.label}>
-              <div className="p-2.5 rounded-3 border h-100" style={{ borderColor: 'var(--border)', backgroundColor: 'var(--bg-card)' }}>
+              <div
+                className="py-1 pe-2 rounded-3 border h-100 d-flex flex-column justify-content-center"
+                style={{
+                  borderColor: 'var(--border)',
+                  backgroundColor: 'var(--bg-card)',
+                  paddingLeft: '1rem',
+                }}
+              >
                 <div className="text-muted-custom text-xxs font-semibold uppercase" style={{ fontSize: '0.65rem' }}>
                   {metric.label}
                 </div>
                 <div className="font-weight-bold mt-1 text-xs d-flex align-items-center gap-1" style={{ fontWeight: 700 }}>
-                  <Icon icon={metric.icon} className="text-primary" />
+                  <Icon icon={metric.icon} style={{ color: 'var(--primary)' }} />
                   <span>{metric.value}</span>
                 </div>
               </div>
@@ -70,9 +77,9 @@ export default function ArticleStatisticsCard({ article }) {
         </Row>
 
         <div className="border-top border-light pt-3 mt-1">
-          <div className="d-flex justify-content-between align-items-start text-xs mb-2 gap-3">
+          <div className="justify-content-between align-items-start text-xs mb-2 gap-3">
             <span className="text-muted-custom">DOI:</span>
-            <span className="text-main font-semibold text-end" style={{ fontWeight: 600 }}>{doi}</span>
+            <span className="text-main font-semibold text-end" style={{ fontWeight: 600 }}> {doi}</span>
           </div>
           <div className="d-flex justify-content-between align-items-center text-xs">
             <span className="text-muted-custom">Số trang (Pages):</span>

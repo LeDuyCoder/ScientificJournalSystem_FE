@@ -1,4 +1,4 @@
-﻿/**
+/**
  * File source thuộc hệ thống FE ResearchPulse.
  *
  * File: features\dashboard\pages\DashboardPage.jsx
@@ -18,7 +18,7 @@ import RecentProjectsCard from "../components/RecentProjectsCard";
 import TrendingKeywordsCard from "../components/TrendingKeywordsCard";
 import QuickAccessGrid from "../components/QuickAccessGrid";
 import TopAuthorsTable from "../components/TopAuthorsTable";
-import AuthRequiredModal from "../../journal/components/AuthRequiredModal";
+import AuthRequiredModal from "../../../shared/components/AuthRequiredModal";
 
 /**
  * DashboardPage — Trang Tổng quan / Dashboard

@@ -1,10 +1,14 @@
-﻿/**
+/**
  * File source thuộc hệ thống FE ResearchPulse.
  *
  * File: shared\utils\auth.js
  */
 import { useAuthStore } from '../../app/store/authStore';
+import { useUserStore } from '../../app/store/userStore';
 import api from '../services/api';
+import { jwtDecode } from 'jwt-decode';
+
+
 
 /**
  * Xóa các token cũ đang lưu ở phía client.
@@ -29,9 +33,14 @@ export const removeToken = () => {
  */
 export const isAuthenticated = async () => {
   try {
-    const storeUser = useAuthStore.getState().user;
-    if (storeUser) return true;
+    const authStore = useAuthStore.getState();
 
+    // ưu tiên dev: nếu Zustand đã đủ token + email thì trả true ngay
+    if (authStore.token && useUserStore.getState().email) {
+      return true;
+    }
+
+    // còn thiếu dữ liệu: gọi BE để xác thực theo luồng HEAD (users/me + fallback)
     let res;
     try {
       res = await api.get('/users/me');
@@ -43,17 +52,31 @@ export const isAuthenticated = async () => {
       }
     }
 
-    if (res.status === 200) {
-      const { user } = res.data;
-      useAuthStore.getState().loginSuccess(null, user);
+
+
+    // Dev nhánh có thêm /auth/check-auth để hydrate user state từ access token
+    // Giữ logic này để không mất chức năng.
+    const checkRes = await api.get("/auth/check-auth");
+
+    if (checkRes.status === 200 && checkRes.data?.authenticated === true) {
+      const token = checkRes.data.access_token;
+      const decoded = jwtDecode(token);
+
+      authStore.loginSuccess(token, {
+        id: decoded.id,
+        email: decoded.email,
+        role: decoded.role,
+      });
+
+      useUserStore.getState().setEmail(decoded.email);
       return true;
     }
 
+    // Nếu check-auth không authenticated thì coi như không đăng nhập
     return false;
-  } catch {
-    // Không xác thực được thì xóa state/token cũ để tránh UI hiểu nhầm là đã login.
+
+  } catch (error) {
     useAuthStore.getState().logout();
-    removeToken();
     return false;
   }
 };

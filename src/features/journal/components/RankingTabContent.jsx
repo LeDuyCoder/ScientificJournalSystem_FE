@@ -1,9 +1,9 @@
-﻿/**
+/**
  * File source thuộc hệ thống FE ResearchPulse.
  *
  * File: features\journal\components\RankingTabContent.jsx
  */
-import { Row, Col, Table, Badge } from 'react-bootstrap';
+import { Row, Col, Table } from 'react-bootstrap';
 import LoadingSkeleton from '../../../shared/components/LoadingSkeleton';
 
 export default function RankingTabContent({ rankingHistory = [], metricName = 'Impact Factor', loading }) {
@@ -100,15 +100,15 @@ export default function RankingTabContent({ rankingHistory = [], metricName = 'I
               style={{ minWidth: '400px', height: 'auto' }}
             >
               <defs>
-                {/* Glowing glow effect filter */}
-                <filter id="cyan-glow" x="-20%" y="-20%" width="140%" height="140%">
+                {/* Glow effect for line/points */}
+                <filter id="line-glow" x="-20%" y="-20%" width="140%" height="140%">
                   <feGaussianBlur stdDeviation="4" result="blur" />
                   <feComposite in="SourceGraphic" in2="blur" operator="over" />
                 </filter>
-                {/* Shimmer gradient for columns */}
-                <linearGradient id="bar-fill" x1="0" y1="0" x2="0" y2="1">
-                  <stop offset="0%" stopColor="var(--primary)" stopOpacity="0.2" />
-                  <stop offset="100%" stopColor="var(--primary-light)" stopOpacity="0.02" />
+                {/* Soft area under the line */}
+                <linearGradient id="line-area-fill" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="var(--primary)" stopOpacity="0.18" />
+                  <stop offset="100%" stopColor="var(--primary)" stopOpacity="0.02" />
                 </linearGradient>
               </defs>
 
@@ -139,55 +139,77 @@ export default function RankingTabContent({ rankingHistory = [], metricName = 'I
                 );
               })}
 
-              {/* Bars */}
-              {chartData.map((d, idx) => {
-                if (d.value === null || d.value === undefined) return null;
-                const x = getX(idx);
-                const y = getY(d.value);
-                const barWidth = 32;
-                const barHeight = chartHeight - paddingBottom - y;
-                
+              {/* Line Chart */}
+              {(() => {
+                const points = chartData
+                  .map((d, idx) => ({ ...d, x: getX(idx), y: getY(d.value) }))
+                  .filter((d) => d.value !== null && d.value !== undefined && !Number.isNaN(Number(d.value)));
+
+                if (points.length === 0) return null;
+
+                const linePoints = points.map((point) => `${point.x},${point.y}`).join(' ');
+                const areaPoints = `${paddingLeft},${chartHeight - paddingBottom} ${linePoints} ${chartWidth - paddingRight},${chartHeight - paddingBottom}`;
+
                 return (
-                  <g key={idx} className="chart-bar-group">
-                    {/* Shadow/Glow behind stroke */}
-                    <rect 
-                      x={x - barWidth / 2} 
-                      y={y} 
-                      width={barWidth} 
-                      height={barHeight} 
-                      fill="transparent" 
-                      stroke="var(--primary)" 
-                      strokeWidth="1.5"
-                      rx="6"
-                      filter="url(#cyan-glow)"
-                      opacity="0.15"
-                    />
-                    {/* Visual Bar */}
-                    <rect 
-                      x={x - barWidth / 2} 
-                      y={y} 
-                      width={barWidth} 
-                      height={barHeight} 
-                      fill="url(#bar-fill)" 
-                      stroke="var(--primary)" 
-                      strokeWidth="2"
-                      rx="6"
-                      style={{ transition: 'all 0.3s' }}
-                    />
-                    {/* Hover text label */}
-                    <text 
-                      x={x} 
-                      y={y - 8} 
-                      fill="var(--primary)" 
-                      fontSize="10" 
-                      fontWeight="bold" 
-                      textAnchor="middle"
-                    >
-                      {d.value}
-                    </text>
+                  <g className="chart-line-group">
+                    {points.length > 1 && (
+                      <>
+                        <polygon
+                          points={areaPoints}
+                          fill="url(#line-area-fill)"
+                        />
+                        <polyline
+                          points={linePoints}
+                          fill="none"
+                          stroke="var(--primary)"
+                          strokeWidth="3"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          filter="url(#line-glow)"
+                          opacity="0.28"
+                        />
+                        <polyline
+                          points={linePoints}
+                          fill="none"
+                          stroke="var(--primary)"
+                          strokeWidth="2.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                        />
+                      </>
+                    )}
+
+                    {points.map((point, idx) => (
+                      <g key={idx}>
+                        <circle
+                          cx={point.x}
+                          cy={point.y}
+                          r="6"
+                          fill="var(--bg-card)"
+                          stroke="var(--primary)"
+                          strokeWidth="3"
+                        />
+                        <circle
+                          cx={point.x}
+                          cy={point.y}
+                          r="3"
+                          fill="var(--primary)"
+                        />
+                        <text
+                          x={point.x}
+                          y={point.y - 12}
+                          fill="var(--primary)"
+                          fontSize="10"
+                          fontWeight="bold"
+                          textAnchor="middle"
+                        >
+                          {point.value}
+                        </text>
+                      </g>
+                    ))}
                   </g>
                 );
-              })}
+              })()}
 
               {/* X Axis Line */}
               <line 
@@ -252,31 +274,17 @@ export default function RankingTabContent({ rankingHistory = [], metricName = 'I
                     className="border-bottom border-secondary-subtle" 
                     style={{ borderColor: 'var(--border) !important', cursor: 'pointer' }}
                   >
-                    <td className="py-3 fw-medium text-main">{row.year}</td>
+                    <td className="py-3">{row.year}</td>
                     <td className="py-3">
                       {row.quartile ? (
-                        <Badge 
-                          className="font-display"
-                          style={{ 
-                            fontWeight: 700, 
-                            borderRadius: '4px', 
-                            fontSize: '0.75rem',
-                            backgroundColor: row.quartile === 'Q1' ? 'rgba(47, 198, 70, 0.12)'
-                                           : row.quartile === 'Q2' ? 'var(--primary-light)' 
-                                           : 'var(--bg-section)',
-                            color: row.quartile === 'Q1' ? 'var(--q1-color)' 
-                                 : row.quartile === 'Q2' ? 'var(--primary)' 
-                                 : 'var(--text-muted)',
-                            border: row.quartile === 'Q1' ? '1px solid rgba(47, 198, 70, 0.3)' : '1px solid var(--border)'
-                          }}
-                        >
+                        <span className="text-main">
                           {row.quartile}
-                        </Badge>
+                        </span>
                       ) : (
                         <span className="text-muted">—</span>
                       )}
                     </td>
-                    <td className="py-3 fw-bold text-primary font-display">
+                    <td className="py-3 fw-bold text-main font-display">
                       {row.value !== null && row.value !== undefined ? row.value : <span className="text-muted">—</span>}
                     </td>
                     <td className="py-3 text-muted-custom font-display">

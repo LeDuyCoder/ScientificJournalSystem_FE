@@ -1,4 +1,4 @@
-﻿/**
+/**
  * File source thuộc hệ thống FE ResearchPulse.
  *
  * File: features\journal\components\ArticlesTabContent.jsx
@@ -98,7 +98,7 @@ export default function ArticlesTabContent({ recentArticles = [], loading, onArt
             {/* Action button */}
             <div className="mt-auto d-flex justify-content-end">
               <Button
-                variant="outline-secondary"
+                variant="outline-light"
                 onClick={() => onArticleClick && onArticleClick(articleId)}
                 className="d-flex align-items-center gap-2 px-3 py-1.5"
                 style={{

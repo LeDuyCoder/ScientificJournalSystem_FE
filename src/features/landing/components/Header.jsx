@@ -1,4 +1,4 @@
-﻿/**
+/**
  * File source thuộc hệ thống FE ResearchPulse.
  *
  * File: features\landing\components\Header.jsx
@@ -191,30 +191,27 @@ export default function Header() {
                 Bài báo
               </Nav.Link>
 
-              {/* Dự án - Hiển thị chỉ khi đã login */}
-              {email && (
-                <Nav.Link
-                  onClick={() => navigate("/projects")}
-                  className="px-3 py-1 text-sm font-semibold d-flex align-items-center gap-1"
-                  style={{
-                    borderRadius: "6px",
-                    backgroundColor: pathname.startsWith("/projects")
-                      ? "var(--primary-light)"
-                      : "transparent",
-                    color: pathname.startsWith("/projects")
-                      ? "var(--primary)"
-                      : "var(--text-muted)",
-                    border: pathname.startsWith("/projects")
-                      ? "1px solid var(--border)"
-                      : "1px solid transparent",
-                    transition: "all 0.2s",
-                    fontWeight: pathname.startsWith("/projects") ? 700 : 500,
-                  }}
-                >
-                  <Icon icon="lucide:briefcase" width="14" />
-                  Dự án
-                </Nav.Link>
-              )}
+              {/* Tác Giả */}
+              <Nav.Link
+                onClick={() => navigate("/authors")}
+                className="px-3 py-1 text-sm font-semibold d-flex align-items-center gap-1"
+                style={{
+                  borderRadius: "6px",
+                  backgroundColor:
+                    pathname.startsWith("/authors") ? "var(--primary-light)" : "transparent",
+                  color:
+                    pathname.startsWith("/authors") ? "var(--primary)" : "var(--text-muted)",
+                  border: pathname.startsWith("/authors")
+                    ? "1px solid var(--border)"
+                    : "1px solid transparent",
+                  transition: "all 0.2s",
+                  fontWeight: pathname.startsWith("/authors") ? 700 : 500,
+                }}
+              >
+                <Icon icon="lucide:file-text" width="14" />
+                Tác Giả
+              </Nav.Link>
+
             </Nav>
 
             <div className="d-flex align-items-center gap-3">
@@ -271,7 +268,13 @@ export default function Header() {
 
                   <Dropdown.Menu
                     className="border-0 shadow-sm mt-2"
-                    style={{ minWidth: "180px" }}
+                    style={{
+                      minWidth: "180px",
+                      "--bs-dropdown-link-active-bg": "rgba(0, 0, 0, 0.06)",
+                      "--bs-dropdown-link-active-color": "var(--text-main)",
+                      "--bs-dropdown-link-hover-bg": "rgba(0, 0, 0, 0.04)",
+                      "--bs-dropdown-link-hover-color": "var(--text-main)",
+                    }}
                   >
                     <div className="px-3 py-2 text-xs font-bold text-main border-bottom pb-2 mb-1">
                       Người dùng

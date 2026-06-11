@@ -78,6 +78,17 @@ body {
   background: #94a3b8;
 }
 
+/* Hide right scrollbar while preserving scrolling behavior */
+html, body {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
 /* View Trends Button */
 .btn-view-trends {
   font-size: 0.875rem;
@@ -431,4 +442,16 @@ th,
 .sandbox-result-item.is-journal:hover {
   border-color: var(--primary) !important;
   background-color: var(--primary-light) !important;
+}
+
+/* ─── Auth Required Modal ─────────────────────────────────────────── */
+.auth-required-register-btn:hover {
+  background-color: var(--btn-dark) !important;
+  border-color: var(--btn-dark) !important;
+  color: #ffffff !important;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(7, 26, 28, 0.16);
+}
+.auth-required-register-btn:active {
+  transform: translateY(0);
 }
