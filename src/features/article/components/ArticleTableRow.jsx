@@ -10,10 +10,26 @@ import { useNavigate } from 'react-router-dom';
 export default function ArticleTableRow({ article, index, onDetailClick }) {
   const navigate = useNavigate();
 
-  // Helper to determine topic badge state
-  const hasTopic = (topic) => Boolean(topic);
+  // Helper to assign colors to topics
+  const getTopicClassName = (topic) => {
+    if (!topic) return '';
+    const name = String(topic).toLowerCase();
+    if (name.includes('machine learning') || name.includes('ml')) {
+      return 'article-topic-badge--ml';
+    }
+    if (name.includes('computer science') || name.includes('cs')) {
+      return 'article-topic-badge--cs';
+    }
+    if (name.includes('medicine') || name.includes('bio')) {
+      return 'article-topic-badge--medicine';
+    }
+    if (name.includes('physic')) {
+      return 'article-topic-badge--physics';
+    }
+    return 'article-topic-badge--other';
+  };
 
-  const topicActive = hasTopic(article.primary_topic);
+  const topicClassName = getTopicClassName(article.primary_topic);
 
   // Copy DOI link to clipboard
   const handleCopyDoi = (e, doi) => {
@@ -120,9 +136,7 @@ export default function ArticleTableRow({ article, index, onDetailClick }) {
 
       {/* Topic Badge */}
       <td style={{ width: '130px' }}>
-        <span
-          className={`article-topic-badge ${topicActive ? 'is-active' : ''}`}
-        >
+        <span className={`article-topic-badge ${topicClassName}`}>
           {article.primary_topic || 'Chưa phân loại'}
         </span>
       </td>

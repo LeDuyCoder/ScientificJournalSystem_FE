@@ -44,8 +44,24 @@ export default function ArticleTable({ articles, isLoading, onDetailClick, onCle
     </tbody>
   );
 
-  // Helper for topic visual state
-  const hasTopic = (topic) => Boolean(topic);
+  // Helper for topic colors
+  const getTopicClassName = (topic) => {
+    if (!topic) return '';
+    const name = String(topic).toLowerCase();
+    if (name.includes('machine learning') || name.includes('ml')) {
+      return 'article-topic-badge--ml';
+    }
+    if (name.includes('computer science') || name.includes('cs')) {
+      return 'article-topic-badge--cs';
+    }
+    if (name.includes('medicine') || name.includes('bio')) {
+      return 'article-topic-badge--medicine';
+    }
+    if (name.includes('physic')) {
+      return 'article-topic-badge--physics';
+    }
+    return 'article-topic-badge--other';
+  };
 
   // If loading and there are no items
   if (isLoading && articles.length === 0) {
@@ -136,7 +152,7 @@ export default function ArticleTable({ articles, isLoading, onDetailClick, onCle
       <div className="d-block d-md-none">
         <div className="d-flex flex-column gap-3">
           {articles.map((article, index) => {
-            const topicActive = hasTopic(article.primary_topic);
+            const topicClassName = getTopicClassName(article.primary_topic);
             return (
               <Card 
                 key={article.article_id}
@@ -147,7 +163,7 @@ export default function ArticleTable({ articles, isLoading, onDetailClick, onCle
                   <div className="d-flex align-items-center justify-content-between mb-2">
                     <span className="text-muted-custom text-xs font-display">#{index + 1}</span>
                     <div className="d-flex gap-1.5 align-items-center">
-                      <span className={`article-topic-badge ${topicActive ? 'is-active' : ''}`}>
+                      <span className={`article-topic-badge ${topicClassName}`}>
                         {article.primary_topic || 'Chưa phân loại'}
                       </span>
                       {article.is_open_access && (

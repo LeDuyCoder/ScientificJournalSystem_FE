@@ -230,6 +230,31 @@
   color: var(--primary);
 }
 
+.article-topic-badge--ml {
+  background: var(--primary-light) !important;
+  color: var(--primary) !important;
+}
+
+.article-topic-badge--cs {
+  background: rgba(6, 182, 212, 0.1) !important;
+  color: #0891b2 !important;
+}
+
+.article-topic-badge--medicine {
+  background: rgba(16, 185, 129, 0.1) !important;
+  color: #059669 !important;
+}
+
+.article-topic-badge--physics {
+  background: rgba(245, 158, 11, 0.1) !important;
+  color: #d97706 !important;
+}
+
+.article-topic-badge--other {
+  background: rgba(139, 92, 246, 0.1) !important;
+  color: #7c3aed !important;
+}
+
 .article-oa-badge {
   color: var(--q1-color);
 }
