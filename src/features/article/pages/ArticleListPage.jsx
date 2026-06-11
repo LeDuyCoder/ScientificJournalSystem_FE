@@ -11,6 +11,7 @@ import useArticleList from '../hooks/useArticleList';
 import ArticleStatsCards from '../components/ArticleStatsCards';
 import ArticleFilterBar from '../components/ArticleFilterBar';
 import ArticleTable from '../components/ArticleTable';
+import './ArticleListPage.css';
 
 export default function ArticleListPage() {
   const navigate = useNavigate();
@@ -38,11 +39,10 @@ export default function ArticleListPage() {
 
     // Nút Trước
     items.push(
-      <Pagination.Prev 
-        key="prev" 
+      <Pagination.Prev
+        key="prev"
         disabled={currentPage === 1}
         onClick={() => handlePageChange(currentPage - 1)}
-        className="mx-0.5"
       />
     );
 
@@ -70,9 +70,9 @@ export default function ArticleListPage() {
     // Các trang ở giữa
     for (let p = startPage; p <= endPage; p++) {
       items.push(
-        <Pagination.Item 
-          key={p} 
-          active={p === currentPage} 
+        <Pagination.Item
+          key={p}
+          active={p === currentPage}
           onClick={() => handlePageChange(p)}
         >
           {p}
@@ -94,118 +94,84 @@ export default function ArticleListPage() {
 
     // Nút Tiếp
     items.push(
-      <Pagination.Next 
-        key="next" 
+      <Pagination.Next
+        key="next"
         disabled={currentPage === totalPages}
         onClick={() => handlePageChange(currentPage + 1)}
-        className="mx-0.5"
       />
     );
 
     return (
-      <Pagination 
-        className="justify-content-center m-0 custom-pagination"
-        style={{
-          '--bs-pagination-bg': 'var(--bg-card)',
-          '--bs-pagination-border-color': 'var(--border)',
-          '--bs-pagination-color': 'var(--text-muted)',
-          '--bs-pagination-hover-color': 'var(--primary)',
-          '--bs-pagination-hover-bg': 'var(--bg-main)',
-          '--bs-pagination-hover-border-color': 'var(--border)',
-          '--bs-pagination-active-bg': 'var(--primary)',
-          '--bs-pagination-active-border-color': 'var(--primary)',
-          '--bs-pagination-active-color': '#ffffff',
-          '--bs-pagination-disabled-bg': 'var(--bg-main)',
-          '--bs-pagination-disabled-color': 'var(--text-muted)',
-          '--bs-pagination-disabled-border-color': 'var(--border)'
-        }}
-      >
+      <Pagination className="justify-content-center m-0 article-pagination">
         {items}
       </Pagination>
     );
   };
 
   return (
-    <div 
-      className="min-vh-100 text-main grid-bg"
-      style={{
-        backgroundColor: 'var(--bg-main)',
-        paddingTop: '90px',
-        paddingBottom: '60px'
-      }}
-    >
+    <div className="article-list-page grid-bg">
       <Header />
-      {/* Background gradients */}
-      <div className="radial-fade position-fixed w-100 h-100 top-0 start-0 z-0" style={{ pointerEvents: 'none' }} />
 
-      <Container className="position-relative z-1">
+      <Container className="article-list-shell">
         {/* Breadcrumb */}
-         <div aria-label="breadcrumb" className="mb-4">
-          <Breadcrumb className="mb-0 custom-breadcrumb d-flex align-items-center">
+        <nav aria-label="breadcrumb" className="article-list-breadcrumb mb-4">
+          <Breadcrumb className="mb-0 d-flex align-items-center">
             <Breadcrumb.Item
               onClick={() => navigate('/')}
-              className="font-display d-flex align-items-center"
-              linkProps={{ style: { cursor: 'pointer', fontSize: '0.9rem', lineHeight: 1, color: 'var(--text-muted)', textDecoration: 'none' } }}
+              linkProps={{ style: { cursor: 'pointer' } }}
             >
               Trang chủ
             </Breadcrumb.Item>
-            <Breadcrumb.Item
-            active className="font-display d-flex align-items-center" style={{fontSize: '0.9rem', lineHeight: 1, color: 'var(--text-muted)' }}>
-              Bài Báo
+            <Breadcrumb.Item active>
+              Bài báo
             </Breadcrumb.Item>
           </Breadcrumb>
-        </div>
+        </nav>
 
         {/* Page Header */}
-        <div className="mb-4">
-          <h1 className="font-display font-weight-bold text-main mb-2" style={{ fontSize: '2rem' }}>
-            Kho lưu trữ Bài báo Khoa học
-          </h1>
-          <p className="text-muted-custom text-sm mb-0" style={{ maxWidth: '680px' }}>
-            Duyệt qua, tìm kiếm và lọc hàng nghìn bài báo chất lượng cao được lưu trữ trong hệ thống ResearchPulse.
-          </p>
-          {filters.selectedVolume && (
-            <div
-              className="d-inline-flex align-items-center gap-2 mt-3 px-3 py-2 me-2"
-              style={{
-                borderRadius: '999px',
-                backgroundColor: 'rgba(0,0,0,0.06)',
-                border: '1px solid rgba(0,0,0,0.10)',
-                color: 'var(--text-main)',
-                fontSize: '0.88rem',
-                fontWeight: 600
-              }}
-            >
-              <Icon icon="solar:folder-with-files-bold" width="15" />
-              <span>Đang xem bài báo thuộc Volume #{filters.selectedVolume}</span>
+        <section className="article-list-hero" aria-labelledby="article-list-title">
+          <div>
+            <div className="article-list-eyebrow">
+              <Icon icon="lucide:library-big" width="15" height="15" />
+              ResearchPulse Articles
             </div>
-          )}
-          {filters.selectedIssue && (
-            <div
-              className="d-inline-flex align-items-center gap-2 mt-3 px-3 py-2"
-              style={{
-                borderRadius: '999px',
-                backgroundColor: 'rgba(0,0,0,0.06)',
-                border: '1px solid rgba(0,0,0,0.10)',
-                color: 'var(--text-main)',
-                fontSize: '0.88rem',
-                fontWeight: 600
-              }}
-            >
-              <Icon icon="lucide:layers-3" width="15" />
-              <span>Đang xem bài báo thuộc Issue #{filters.selectedIssue}</span>
+            <h1 id="article-list-title" className="article-list-title">
+              Kho lưu trữ Bài báo Khoa học
+            </h1>
+            <p className="article-list-description">
+              Duyệt qua, tìm kiếm và lọc hàng nghìn bài báo chất lượng cao được lưu trữ trong hệ thống ResearchPulse.
+            </p>
+
+            {filters.selectedVolume && (
+              <div className="article-list-scope">
+                <Icon icon="solar:folder-with-files-bold" width="15" />
+                <span>Đang xem bài báo thuộc Volume #{filters.selectedVolume}</span>
+              </div>
+            )}
+            {filters.selectedIssue && (
+              <div className="article-list-scope">
+                <Icon icon="lucide:layers-3" width="15" />
+                <span>Đang xem bài báo thuộc Issue #{filters.selectedIssue}</span>
+              </div>
+            )}
+          </div>
+
+          <aside className="article-list-summary" aria-label="Tổng kết bài báo">
+            <div className="article-list-summary__label">Tổng kết quả</div>
+            <div className="article-list-summary__value">
+              {new Intl.NumberFormat().format(total)}
             </div>
-          )}
-        </div>
+          </aside>
+        </section>
 
         {/* Thẻ thống kê */}
         <ArticleStatsCards stats={stats} isLoading={isLoading} />
 
         {/* Thanh lọc & Sắp xếp */}
-        <ArticleFilterBar 
-          filters={filters} 
-          updateFilters={updateFilters} 
-          clearFilters={clearFilters} 
+        <ArticleFilterBar
+          filters={filters}
+          updateFilters={updateFilters}
+          clearFilters={clearFilters}
         />
 
         {/* Kết quả đếm */}
@@ -217,9 +183,9 @@ export default function ArticleListPage() {
         </div>
 
         {/* Bảng dữ liệu */}
-        <ArticleTable 
-          articles={articles} 
-          isLoading={isLoading} 
+        <ArticleTable
+          articles={articles}
+          isLoading={isLoading}
           onDetailClick={handleDetailClick}
           onClearFilters={clearFilters}
         />
@@ -231,28 +197,18 @@ export default function ArticleListPage() {
       </Container>
 
       {/* Warning Auth Modal */}
-      <Modal 
-        show={showAuthModal} 
+      <Modal
+        show={showAuthModal}
         onHide={() => setShowAuthModal(false)}
         centered
-        contentClassName="border-0 shadow-lg text-main"
+        contentClassName="border-0 text-main"
         style={{
           '--bs-modal-bg': 'var(--bg-card)',
           '--bs-modal-border-radius': '16px'
         }}
       >
         <Modal.Body className="p-4 text-center">
-          <div 
-            className="d-inline-flex align-items-center justify-content-center mb-3"
-            style={{
-              width: '64px',
-              height: '64px',
-              borderRadius: '50%',
-              backgroundColor: 'var(--primary-light)',
-              color: 'var(--primary)',
-              border: '1px solid var(--border)'
-            }}
-          >
+          <div className="article-modal-icon mb-3">
             <Icon icon="lucide:lock" width="30" height="30" />
           </div>
           <h4 className="font-display font-weight-bold mb-3 text-main">Yêu cầu Đăng nhập</h4>
@@ -260,8 +216,8 @@ export default function ArticleListPage() {
             Để xem toàn bộ nội dung chi tiết bài báo, bao gồm tóm tắt học thuật đầy đủ, thông tin các tác giả liên kết và liên kết trích dẫn DOI, vui lòng đăng nhập tài khoản ResearchPulse của bạn.
           </p>
           <div className="d-flex align-items-center justify-content-center gap-3">
-            <Button 
-              variant="outline-secondary" 
+            <Button
+              variant="outline-secondary"
               onClick={() => setShowAuthModal(false)}
               className="px-4 py-2 text-xs font-semibold rounded-pill text-main border-secondary"
               style={{
@@ -270,7 +226,7 @@ export default function ArticleListPage() {
             >
               Đóng
             </Button>
-            <Button 
+            <Button
               className="btn-primary-glow border-0 px-4 py-2 text-xs font-semibold rounded-pill text-white"
               onClick={handleAuthRedirect}
               style={{
@@ -285,3 +241,4 @@ export default function ArticleListPage() {
     </div>
   );
 }
+

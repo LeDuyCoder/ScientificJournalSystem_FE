@@ -10,26 +10,10 @@ import { useNavigate } from 'react-router-dom';
 export default function ArticleTableRow({ article, index, onDetailClick }) {
   const navigate = useNavigate();
 
-  // Helper to assign colors to topics
-  const getTopicStyle = (topic) => {
-    if (!topic) return { bg: 'var(--bg-main)', color: 'var(--text-muted)' };
-    const name = String(topic).toLowerCase();
-    if (name.includes('machine learning') || name.includes('ml')) {
-      return { bg: 'var(--primary-light)', color: 'var(--primary)' }; // Blue
-    }
-    if (name.includes('computer science') || name.includes('cs')) {
-      return { bg: 'rgba(6, 182, 212, 0.1)', color: '#0891b2' }; // Cyan
-    }
-    if (name.includes('medicine') || name.includes('bio')) {
-      return { bg: 'rgba(16, 185, 129, 0.1)', color: '#059669' }; // Emerald/Green
-    }
-    if (name.includes('physic')) {
-      return { bg: 'rgba(245, 158, 11, 0.1)', color: '#d97706' }; // Amber
-    }
-    return { bg: 'rgba(139, 92, 246, 0.1)', color: '#7c3aed' }; // Violet
-  };
+  // Helper to determine topic badge state
+  const hasTopic = (topic) => Boolean(topic);
 
-  const topicStyle = getTopicStyle(article.primary_topic);
+  const topicActive = hasTopic(article.primary_topic);
 
   // Copy DOI link to clipboard
   const handleCopyDoi = (e, doi) => {
@@ -136,13 +120,8 @@ export default function ArticleTableRow({ article, index, onDetailClick }) {
 
       {/* Topic Badge */}
       <td style={{ width: '130px' }}>
-        <span 
-          className="px-2 py-1 rounded text-xs font-weight-bold"
-          style={{
-            backgroundColor: topicStyle.bg,
-            color: topicStyle.color,
-            fontSize: '0.7rem'
-          }}
+        <span
+          className={`article-topic-badge ${topicActive ? 'is-active' : ''}`}
         >
           {article.primary_topic || 'Chưa phân loại'}
         </span>
@@ -151,14 +130,7 @@ export default function ArticleTableRow({ article, index, onDetailClick }) {
       {/* Open Access */}
       <td className="text-center" style={{ width: '80px' }}>
         {article.is_open_access ? (
-          <span 
-            className="px-2 py-0.5 rounded text-xs font-weight-bold"
-            style={{
-              backgroundColor: 'rgba(16, 185, 129, 0.1)',
-              color: '#059669',
-              fontSize: '0.7rem'
-            }}
-          >
+          <span className="article-oa-badge">
             OA
           </span>
         ) : (
@@ -168,9 +140,8 @@ export default function ArticleTableRow({ article, index, onDetailClick }) {
 
       {/* Actions */}
       <td className="text-end pe-3" style={{ width: '80px' }}>
-        <span 
-          className="hover:text-dark font-semibold text-xs d-flex align-items-center justify-content-end gap-0.5"
-          style={{ transition: 'color 0.15s', color: '#111' }}
+        <span
+          className="article-action-link d-flex align-items-center justify-content-end gap-0.5"
         >
           Chi tiết
           <Icon icon="lucide:arrow-right" width="12" />

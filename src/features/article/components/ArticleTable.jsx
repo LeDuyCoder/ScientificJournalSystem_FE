@@ -44,35 +44,13 @@ export default function ArticleTable({ articles, isLoading, onDetailClick, onCle
     </tbody>
   );
 
-  // Helper for topic colors
-  const getTopicStyle = (topic) => {
-    if (!topic) return { bg: 'var(--bg-main)', color: 'var(--text-muted)' };
-    const name = String(topic).toLowerCase();
-    if (name.includes('machine learning') || name.includes('ml')) {
-      return { bg: 'var(--primary-light)', color: 'var(--primary)' };
-    }
-    if (name.includes('computer science') || name.includes('cs')) {
-      return { bg: 'rgba(6, 182, 212, 0.1)', color: '#0891b2' };
-    }
-    if (name.includes('medicine') || name.includes('bio')) {
-      return { bg: 'rgba(16, 185, 129, 0.1)', color: '#059669' };
-    }
-    if (name.includes('physic')) {
-      return { bg: 'rgba(245, 158, 11, 0.1)', color: '#d97706' };
-    }
-    return { bg: 'rgba(139, 92, 246, 0.1)', color: '#7c3aed' };
-  };
+  // Helper for topic visual state
+  const hasTopic = (topic) => Boolean(topic);
 
   // If loading and there are no items
   if (isLoading && articles.length === 0) {
     return (
-      <div 
-        className="w-100 rounded-3 overflow-hidden"
-        style={{
-          backgroundColor: 'var(--bg-card)',
-          border: '1px solid var(--border)'
-        }}
-      >
+      <div className="article-table-card w-100">
         <Table responsive hover className="m-0 bg-transparent text-main border-0">
           <thead>
             <tr style={{ borderBottom: '1px solid var(--border)' }}>
@@ -103,16 +81,7 @@ export default function ArticleTable({ articles, isLoading, onDetailClick, onCle
           minHeight: '320px'
         }}
       >
-        <div 
-          className="d-inline-flex align-items-center justify-content-center mb-3"
-          style={{
-            width: '64px',
-            height: '64px',
-            borderRadius: '50%',
-            backgroundColor: 'rgba(239, 68, 68, 0.08)',
-            color: '#ef4444'
-          }}
-        >
+        <div className="article-empty-icon mb-3">
           <Icon icon="lucide:search-code" width="30" height="30" />
         </div>
         <h5 className="text-main font-weight-bold mb-2 font-display">Không tìm thấy bài báo phù hợp</h5>
@@ -136,13 +105,7 @@ export default function ArticleTable({ articles, isLoading, onDetailClick, onCle
   return (
     <>
       {/* 1. TABLE LAYOUT (Desktop & Tablet) */}
-      <div 
-        className="w-100 rounded-3 overflow-hidden d-none d-md-block shadow-sm"
-        style={{
-          backgroundColor: 'var(--bg-card)',
-          border: '1px solid var(--border)'
-        }}
-      >
+      <div className="article-table-card w-100 d-none d-md-block">
         <Table responsive hover className="m-0 bg-transparent text-main border-0">
           <thead>
             <tr style={{ borderBottom: '1px solid var(--border)' }}>
@@ -173,42 +136,22 @@ export default function ArticleTable({ articles, isLoading, onDetailClick, onCle
       <div className="d-block d-md-none">
         <div className="d-flex flex-column gap-3">
           {articles.map((article, index) => {
-            const topicStyle = getTopicStyle(article.primary_topic);
+            const topicActive = hasTopic(article.primary_topic);
             return (
               <Card 
                 key={article.article_id}
                 onClick={() => onDetailClick(article.article_id)}
-                className="border-0 shadow-sm"
-                style={{
-                  backgroundColor: 'var(--bg-card)',
-                  border: '1px solid var(--border)',
-                  borderRadius: '12px',
-                  cursor: 'pointer'
-                }}
+                className="article-mobile-card"
               >
                 <Card.Body className="p-3">
                   <div className="d-flex align-items-center justify-content-between mb-2">
                     <span className="text-muted-custom text-xs font-display">#{index + 1}</span>
                     <div className="d-flex gap-1.5 align-items-center">
-                      <span 
-                        className="px-2 py-0.5 rounded text-xs font-weight-bold"
-                        style={{
-                          backgroundColor: topicStyle.bg,
-                          color: topicStyle.color,
-                          fontSize: '0.65rem'
-                        }}
-                      >
+                      <span className={`article-topic-badge ${topicActive ? 'is-active' : ''}`}>
                         {article.primary_topic || 'Chưa phân loại'}
                       </span>
                       {article.is_open_access && (
-                        <span 
-                          className="px-2 py-0.5 rounded text-xs font-weight-bold"
-                          style={{
-                            backgroundColor: 'rgba(16, 185, 129, 0.1)',
-                            color: '#059669',
-                            fontSize: '0.65rem'
-                          }}
-                        >
+                        <span className="article-oa-badge">
                           OA
                         </span>
                       )}
@@ -236,10 +179,7 @@ export default function ArticleTable({ articles, isLoading, onDetailClick, onCle
                         Năm: {article.publication_year} {article.doi ? `· DOI: ${article.doi}` : ''}
                       </div>
                     </div>
-                    <span 
-                      className="text-main hover:text-dark font-bold text-xs d-flex align-items-center gap-0.5"
-                      style={{ fontSize: '0.75rem', color: '#111' }}
-                    >
+                    <span className="article-action-link d-flex align-items-center gap-0.5">
                       Chi tiết
                       <Icon icon="lucide:arrow-right" width="12" />
                     </span>
