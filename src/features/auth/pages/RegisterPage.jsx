@@ -1,41 +1,54 @@
-import React, { useState } from 'react';
+/**
+ * Trang đăng ký tài khoản mới.
+ *
+ * File: features/auth/pages/RegisterPage.jsx
+ */
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import useAuth from '../hooks/useAuth';
 import AuthLayout from '../../../app/layouts/AuthLayout';
 import AuthBanner from '../components/AuthBanner';
 import RegisterForm from '../components/RegisterForm';
-import SocialAuthButton from '../components/SocialAuthButton';
 import Icon from '../../../shared/components/Icon';
 
 export default function RegisterPage() {
   const navigate = useNavigate();
   const { register } = useAuth();
+
+  // State phục vụ UI đăng ký: loading, lỗi API, màn hình thành công.
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
   const [isSuccess, setIsSuccess] = useState(false);
   const [registeredEmail, setRegisteredEmail] = useState('');
 
+  /**
+   * Gửi form đăng ký lên backend.
+   * Nếu API không ném lỗi, hiển thị màn hình thông báo xác thực email.
+   */
   const handleRegisterSubmit = async (payload) => {
     setIsLoading(true);
     setError(null);
+
     try {
       setRegisteredEmail(payload.email);
-      const res = await register(payload);
-      
-      // Assume success if no exception thrown
+      await register(payload);
       setIsSuccess(true);
     } catch (err) {
       console.error('Registration failed:', err.response?.data?.message || err.message);
       setError(
-        err.response?.data?.message || 
-        err.message || 
-        'Đăng ký không thành công. Vui lòng thử lại.'
+        err.response?.data?.message
+        || err.message
+        || 'Đăng ký không thành công. Vui lòng thử lại.',
       );
     } finally {
       setIsLoading(false);
     }
   };
 
+  /**
+   * Placeholder cho Google OAuth ở trang đăng ký.
+   * Hiện chức năng này chưa bật trực tiếp tại màn hình register.
+   */
   const handleGoogleAuth = () => {
     alert('Đăng nhập/Đăng ký bằng Google OAuth đang được cấu hình.');
   };
@@ -43,9 +56,8 @@ export default function RegisterPage() {
   return (
     <AuthLayout banner={<AuthBanner />}>
       {isSuccess ? (
-        /* Success State View */
         <div className="text-center py-4 animate-fade-in">
-          <div 
+          <div
             className="d-inline-flex align-items-center justify-content-center mb-4"
             style={{
               width: '80px',
@@ -53,16 +65,16 @@ export default function RegisterPage() {
               borderRadius: '50%',
               background: 'rgba(16, 185, 129, 0.08)',
               border: '2px solid #10b981',
-              boxShadow: '0 0 20px rgba(16, 185, 129, 0.1)'
+              boxShadow: '0 0 20px rgba(16, 185, 129, 0.1)',
             }}
           >
             <Icon icon="lucide:check-circle" className="text-success" style={{ fontSize: '40px' }} />
           </div>
-          
+
           <h2 className="font-display fw-bold mb-3" style={{ fontSize: '1.75rem', color: 'var(--text-main)' }}>
             Đăng ký thành công!
           </h2>
-          
+
           <p className="text-muted-custom mb-4" style={{ color: 'var(--text-muted) !important', lineHeight: '1.6', fontSize: '14px' }}>
             Một email xác thực đã được gửi tới địa chỉ <strong style={{ color: 'var(--text-main)' }}>{registeredEmail}</strong>. Vui lòng kiểm tra hộp thư (hoặc thư rác) và làm theo hướng dẫn để kích hoạt tài khoản của bạn.
           </p>
@@ -73,7 +85,7 @@ export default function RegisterPage() {
             style={{
               background: 'var(--btn-dark)',
               color: '#ffffff',
-              boxShadow: 'none'
+              boxShadow: 'none',
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.background = 'var(--primary)';
@@ -86,7 +98,6 @@ export default function RegisterPage() {
           </button>
         </div>
       ) : (
-        /* Register Form View */
         <>
           <div className="mb-4">
             <h2 className="font-display fw-bold mb-1" style={{ fontSize: '1.85rem', color: 'var(--text-main)' }}>
@@ -97,23 +108,17 @@ export default function RegisterPage() {
             </p>
           </div>
 
-          {/* Google Button */}
-          <div className="mb-4">
-            <SocialAuthButton onClick={handleGoogleAuth} disabled={isLoading} />
-          </div>
-
-          {/* Divider */}
+          {/* Đường phân cách giữa phần tiêu đề và form đăng ký. */}
           <div className="d-flex align-items-center justify-content-center mb-4 text-xs font-semibold select-none text-muted-custom" style={{ color: 'var(--text-muted) !important' }}>
             <div className="w-100" style={{ height: '1px', background: 'var(--border)' }} />
-            <span className="px-3 text-nowrap" style={{ letterSpacing: '0.05em' }}>HOẶC</span>
             <div className="w-100" style={{ height: '1px', background: 'var(--border)' }} />
           </div>
 
-          {/* Form */}
           <RegisterForm
             onSubmit={handleRegisterSubmit}
             isLoading={isLoading}
             apiError={error}
+            onGoogleAuth={handleGoogleAuth}
           />
         </>
       )}

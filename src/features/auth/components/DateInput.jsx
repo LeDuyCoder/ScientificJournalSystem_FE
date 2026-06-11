@@ -1,4 +1,8 @@
-import { useState } from 'react';
+/**
+ * File source thuộc hệ thống FE ResearchPulse.
+ *
+ * File: features\auth\components\DateInput.jsx
+ */
 import { Form, InputGroup } from 'react-bootstrap';
 import Icon from '../../../shared/components/Icon';
 

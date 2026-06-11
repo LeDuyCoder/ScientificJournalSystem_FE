@@ -1,3 +1,8 @@
+﻿/**
+ * File source thuộc hệ thống FE ResearchPulse.
+ *
+ * File: features\dashboard\components\StatCard.jsx
+ */
 import { Icon } from '@iconify/react';
 import { formatCount, formatGrowth } from '../../../shared/utils/formatNumber';
 

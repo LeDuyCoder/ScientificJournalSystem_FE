@@ -1,4 +1,9 @@
-import React, { useState } from 'react';
+/**
+ * File source thuộc hệ thống FE ResearchPulse.
+ *
+ * File: features\article\components\ArticleActionCard.jsx
+ */
+import { useState } from 'react';
 import { Card, Button, Spinner } from 'react-bootstrap';
 import { Icon } from '@iconify/react';
 
@@ -6,8 +11,7 @@ export default function ArticleActionCard({
   article, 
   isBookmarked, 
   onBookmarkToggle, 
-  isBookmarkLoading, 
-  isLoggedIn 
+  isBookmarkLoading,
 }) {
   const [showCopiedToast, setShowCopiedToast] = useState(false);
 
@@ -21,8 +25,8 @@ export default function ArticleActionCard({
   };
 
   const handleOpenSource = () => {
-    if (!article?.doi) return;
-    const url = article.doi.startsWith('http') ? article.doi : `https://doi.org/${article.doi}`;
+    const url = article?.source_url || article?.doi_url || (article?.doi?.startsWith('http') ? article.doi : article?.doi ? `https://doi.org/${article.doi}` : '');
+    if (!url) return;
     window.open(url, '_blank', 'noopener,noreferrer');
   };
 
@@ -37,25 +41,27 @@ export default function ArticleActionCard({
       }}
     >
       <h5 className="font-display font-weight-bold text-main mb-3 d-flex align-items-center gap-2 border-bottom border-light pb-2">
-        <Icon icon="lucide:sliders" className="text-primary" />
+        <Icon icon="lucide:sliders" style={{ color: 'var(--primary)' }} width="20"/>
         Hành động (Actions)
       </h5>
 
       {/* Floating Copied Message */}
       {showCopiedToast && (
         <div 
-          className="position-absolute start-50 translate-middle-x px-3 py-1.5 rounded text-white text-xs d-flex align-items-center gap-1.5 shadow"
+          className="position-absolute start-50 translate-middle-x d-flex align-items-center gap-2 px-3 py-2 shadow"
           style={{
-            top: '-20px',
-            backgroundColor: 'var(--btn-dark)',
-            border: '1px solid var(--primary)',
+            top: '-24px',
             zIndex: 100,
             whiteSpace: 'nowrap',
-            animation: 'fadeInUp 0.2s ease-out'
+            animation: 'fadeInUp 0.2s ease-out',
+            background: '#f0fdf4',
+            borderLeft: '4px solid #22c55e',
+            borderRadius: '14px',
+            color: '#166534'
           }}
         >
-          <Icon icon="lucide:check-circle" className="text-success" />
-          <span>Đã sao chép mã DOI!</span>
+          <Icon icon="solar:check-circle-bold" width="18" style={{ color: '#22c55e', flexShrink: 0 }} />
+          <span style={{ fontWeight: 500 }}>Đã sao chép mã DOI!</span>
         </div>
       )}
 

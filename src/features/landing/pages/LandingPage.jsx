@@ -1,3 +1,8 @@
+﻿/**
+ * File source thuộc hệ thống FE ResearchPulse.
+ *
+ * File: features\landing\pages\LandingPage.jsx
+ */
 import Header from '../components/Header';
 import Hero from '../components/Hero';
 import Sandbox from '../components/Sandbox';

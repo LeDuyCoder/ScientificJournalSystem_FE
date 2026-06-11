@@ -1,3 +1,8 @@
+﻿/**
+ * File source thuộc hệ thống FE ResearchPulse.
+ *
+ * File: features\volume\hooks\useVolumes.js
+ */
 import { useState, useCallback } from 'react';
 import {
   getVolumesApi,

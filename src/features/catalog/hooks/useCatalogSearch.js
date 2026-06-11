@@ -1,124 +1,140 @@
+﻿/**
+ * File source thuộc hệ thống FE ResearchPulse.
+ *
+ * File: features\catalog\hooks\useCatalogSearch.js
+ */
 import { useState, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { searchJournalsApi } from '../../journal/api/journalApi';
 import { getSubjectAreasApi, getSubjectCategoriesApi } from '../api/catalogApi';
+import { normalizeSearchResponse } from '../services/catalogSearchService';
+import { useCatalogSearchStore } from '../store/catalogSearchStore';
 
+/**
+ * Custom hook powering the catalog search page.
+ * Source of truth: URL search params (for shareability).
+ * Default sort: metric (highest metric first), per ISSUE_FE_SEARCH_PAGE.
+ */
 export function useCatalogSearch(currentUser) {
   const [searchParams, setSearchParams] = useSearchParams();
 
-  // Local Search Input value (not submitted yet)
+  /* ----- Local controlled search input (not yet submitted) ----- */
   const [searchInput, setSearchInput] = useState(searchParams.get('search') || '');
 
-  // Filter Categories dropdown lists
+  /* ----- Filter data lists ----- */
   const [subjectAreas, setSubjectAreas] = useState([]);
   const [subjectCategories, setSubjectCategories] = useState([]);
   const [loadingFilters, setLoadingFilters] = useState(false);
 
-  // Results & Pagination States
+  /* ----- Result state ----- */
   const [journals, setJournals] = useState([]);
   const [total, setTotal] = useState(0);
   const [loadingJournals, setLoadingJournals] = useState(false);
   const [error, setError] = useState(null);
 
-  // Follow states cache
+  /* ----- Auth-gated actions state ----- */
   const [followedJournals, setFollowedJournals] = useState({});
-
-  // Auth modal toggle
   const [showAuthModal, setShowAuthModal] = useState(false);
 
-  // Parse filters from searchParams
+  /* ----- View mode (list | table), stored globally via Zustand ----- */
+  const viewMode = useCatalogSearchStore((state) => state.viewMode);
+  const setViewMode = useCatalogSearchStore((state) => state.setViewMode);
+  const hydrateFromQuery = useCatalogSearchStore((state) => state.hydrateFromQuery);
+
+  /* ----- Parse active filters from URL (single source of truth) ----- */
   const search = searchParams.get('search') || '';
   const page = parseInt(searchParams.get('page') || '1', 10);
   const limit = parseInt(searchParams.get('limit') || '10', 10);
-  const sort = searchParams.get('sort') || 'relevance';
+  // Default to 'metric' (highest metric first) on first load per ISSUE_FE_SEARCH_PAGE
+  const sort = searchParams.get('sort') || 'metric';
 
-  const selectedAreas = searchParams.getAll('area_id').map(id => String(id));
-  const selectedCategories = searchParams.getAll('cat_id').map(id => String(id));
-
-  // Access: open_access or subscription
+  const selectedAreas = searchParams.getAll('area_id').map(String);
+  const selectedCategories = searchParams.getAll('cat_id').map(String);
   const selectedAccess = searchParams.getAll('access');
-  // Quartiles: Q1, Q2, Q3, Q4
   const selectedQuartiles = searchParams.getAll('quartile');
-
-  // Load subject filters from API (only when logged in — BE requires auth)
-  useEffect(() => {
-    async function loadFilters() {
-      if (!currentUser) {
-        // Subject areas/categories require auth — skip silently for guests
-        setSubjectAreas([]);
-        setSubjectCategories([]);
-        return;
-      }
-      setLoadingFilters(true);
-      try {
-        const [areasRes, catsRes] = await Promise.all([
-          getSubjectAreasApi(),
-          getSubjectCategoriesApi()
-        ]);
-
-        if (areasRes.data?.success !== false) {
-          const areaData = areasRes.data?.data;
-          setSubjectAreas(Array.isArray(areaData) ? areaData : (areaData?.items || []));
-        } else {
-          setSubjectAreas([]);
-        }
-
-        if (catsRes.data?.success !== false) {
-          const catData = catsRes.data?.data;
-          setSubjectCategories(Array.isArray(catData) ? catData : (catData?.items || []));
-        } else {
-          setSubjectCategories([]);
-        }
-      } catch (err) {
-        console.error('Failed to load catalog filters from backend API:', err);
-        setSubjectAreas([]);
-        setSubjectCategories([]);
-      } finally {
-        setLoadingFilters(false);
-      }
-    }
-
-    loadFilters();
-  }, [currentUser]);
+  const selectedYear = searchParams.get('ranking_year') || '';
+  const isOaDiamond = searchParams.get('is_oa_diamond') === 'true';
 
   const selectedAreasStr = selectedAreas.join(',');
   const selectedCategoriesStr = selectedCategories.join(',');
   const selectedAccessStr = selectedAccess.join(',');
   const selectedQuartilesStr = selectedQuartiles.join(',');
 
-  // Fetch journals based on filters & pagination
+  useEffect(() => {
+    hydrateFromQuery({
+      keyword: search,
+      page,
+      limit,
+      sort,
+      selectedAreas,
+      selectedCategories,
+      selectedAccess,
+      selectedQuartiles,
+      selectedYear,
+      isOaDiamond,
+      viewMode,
+    });
+  }, [search, page, limit, sort, selectedAreasStr, selectedCategoriesStr, selectedAccessStr, selectedQuartilesStr, viewMode, hydrateFromQuery]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  /* ----- Load filter dropdown lists on mount ----- */
+  useEffect(() => {
+    async function loadFilters() {
+      setLoadingFilters(true);
+      try {
+        const [areasRes, catsRes] = await Promise.all([
+          getSubjectAreasApi(),
+          getSubjectCategoriesApi(),
+        ]);
+        setSubjectAreas(areasRes.data?.data?.items || areasRes.data?.data || []);
+        setSubjectCategories(catsRes.data?.data?.items || catsRes.data?.data || []);
+      } catch (err) {
+        console.error('Failed to load catalog filter lists:', err);
+        setSubjectAreas([]);
+        setSubjectCategories([]);
+      } finally {
+        setLoadingFilters(false);
+      }
+    }
+    loadFilters();
+  }, []);
+
+  /* ----- Fetch journals whenever URL params change ----- */
+
   const fetchJournals = useCallback(async () => {
     setLoadingJournals(true);
     setError(null);
     try {
       const params = {
-        search,
+        search: search || undefined,
         page,
         limit,
         sort,
-        subject_area_ids: selectedAreas.join(','),
-        subject_category_ids: selectedCategories.join(','),
-        is_open_access: selectedAccess.includes('open_access') && !selectedAccess.includes('subscription')
-          ? true
-          : (!selectedAccess.includes('open_access') && selectedAccess.includes('subscription') ? false : undefined),
-        quartiles: selectedQuartiles.join(',')
+        subject_area_ids: selectedAreas.join(',') || undefined,
+        subject_category_ids: selectedCategories.join(',') || undefined,
+        is_open_access:
+          selectedAccess.includes('open_access') && !selectedAccess.includes('subscription')
+            ? true
+            : !selectedAccess.includes('open_access') && selectedAccess.includes('subscription')
+            ? false
+            : undefined,
+        quartiles: selectedQuartiles.join(',') || undefined,
+        ranking_year: selectedYear || undefined,
+        is_oa_diamond: isOaDiamond ? true : undefined,
       };
 
       const response = await searchJournalsApi(params);
 
       if (response.data && response.data.success !== false) {
-        const data = response.data.data || {};
-        setJournals(data.items || []);
-        setTotal(data.total || (data.items || []).length);
+        const { items, pagination } = normalizeSearchResponse(response.data);
+        setJournals(items);
+        setTotal(pagination.total);
       } else {
-        throw new Error(response.data?.message || 'Invalid search format');
+        throw new Error(response.data?.message || 'Lỗi không xác định từ server');
       }
     } catch (err) {
       const status = err.response?.status;
-      if (status === 401) {
-        setError('Bạn cần đăng nhập để tìm kiếm journal.');
-      } else if (status === 404) {
-        setError('Không tìm thấy dữ liệu.');
+      if (status === 404) {
+        setError('Không tìm thấy kết quả.');
       } else {
         setError(err.response?.data?.message || err.message || 'Lỗi kết nối đến server.');
       }
@@ -127,142 +143,192 @@ export function useCatalogSearch(currentUser) {
     } finally {
       setLoadingJournals(false);
     }
-  }, [search, page, limit, sort, selectedAreasStr, selectedCategoriesStr, selectedAccessStr, selectedQuartilesStr]);
+  }, [search, page, limit, sort, selectedAreasStr, selectedCategoriesStr, selectedAccessStr, selectedQuartilesStr, selectedYear, isOaDiamond]); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { fetchJournals(); }, [fetchJournals]);
 
+  /* ----- Ensure default sort is reflected in URL on first load ----- */
   useEffect(() => {
-    fetchJournals();
-  }, [fetchJournals]);
-
-  // Handle Search Input submit
-  const handleSearchSubmit = (e) => {
-    if (e && e.preventDefault) e.preventDefault();
-
-    const nextParams = new URLSearchParams(searchParams);
-    if (searchInput.trim()) {
-      nextParams.set('search', searchInput.trim());
-    } else {
-      nextParams.delete('search');
+    if (!searchParams.get('sort')) {
+      const next = new URLSearchParams(searchParams);
+      next.set('sort', 'metric');
+      setSearchParams(next, { replace: true });
     }
-    nextParams.set('page', '1'); // Reset to first page
-    setSearchParams(nextParams);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  /* ========================= HANDLERS ========================= */
+
+  /** Submit the local search input value. Resets to page 1. */
+  const handleSearchSubmit = (e) => {
+    if (e?.preventDefault) e.preventDefault();
+    const next = new URLSearchParams(searchParams);
+    if (searchInput.trim()) {
+      next.set('search', searchInput.trim());
+    } else {
+      next.delete('search');
+    }
+    next.set('page', '1');
+    setSearchParams(next);
   };
 
-  // Tag suggestion search
+  /** Jump-search by clicking a tag / badge label. */
   const searchForTag = (tag) => {
     setSearchInput(tag);
-    const nextParams = new URLSearchParams(searchParams);
-    nextParams.set('search', tag);
-    nextParams.set('page', '1');
-    setSearchParams(nextParams);
+    const next = new URLSearchParams(searchParams);
+    next.set('search', tag);
+    next.set('page', '1');
+    setSearchParams(next);
   };
 
-  // Helper to toggle multi-select URL parameters
+  /* ----- Multi-value param toggle helper ----- */
   const toggleParamValue = (key, value) => {
-    const nextParams = new URLSearchParams(searchParams);
-    const currentValues = nextParams.getAll(key);
-
-    if (currentValues.includes(String(value))) {
-      // Remove item
-      const updated = currentValues.filter(v => v !== String(value));
-      nextParams.delete(key);
-      updated.forEach(v => nextParams.append(key, v));
+    const next = new URLSearchParams(searchParams);
+    const current = next.getAll(key);
+    if (current.includes(String(value))) {
+      const updated = current.filter(v => v !== String(value));
+      next.delete(key);
+      updated.forEach(v => next.append(key, v));
     } else {
-      // Add item
-      nextParams.append(key, String(value));
+      next.append(key, String(value));
     }
-
-    nextParams.set('page', '1'); // Reset to page 1 on filter change
-    setSearchParams(nextParams);
+    next.set('page', '1');
+    setSearchParams(next);
   };
 
-  const handleQuartileToggle = (quartile) => {
-    toggleParamValue('quartile', quartile);
-  };
+  const handleQuartileToggle = (q) => toggleParamValue('quartile', q);
+  const handleAccessToggle = (a) => toggleParamValue('access', a);
 
-  const handleAccessToggle = (accessType) => {
-    toggleParamValue('access', accessType);
-  };
-
+  /** Toggle a subject area; if toggled off, removes dependent categories. */
   const handleAreaToggle = (areaId) => {
-    // If area is toggled off, also clear any selected categories belonging to it
-    const nextParams = new URLSearchParams(searchParams);
-    const currentAreas = nextParams.getAll('area_id').map(id => String(id));
+    const next = new URLSearchParams(searchParams);
+    const currentAreas = next.getAll('area_id').map(String);
     const areaIdStr = String(areaId);
 
     if (currentAreas.includes(areaIdStr)) {
-      // Toggling off area
-      const remainingAreas = currentAreas.filter(id => id !== areaIdStr);
-      nextParams.delete('area_id');
-      remainingAreas.forEach(id => nextParams.append('area_id', id));
+      const remaining = currentAreas.filter(id => id !== areaIdStr);
+      next.delete('area_id');
+      remaining.forEach(id => next.append('area_id', id));
 
-      // Remove dependent categories
-      const currentCats = nextParams.getAll('cat_id').map(id => String(id));
-      const dependentCats = subjectCategories
+      const dependent = subjectCategories
         .filter(c => String(c.subject_area_id) === areaIdStr)
         .map(c => String(c.subject_category_id));
-
-      const remainingCats = currentCats.filter(id => !dependentCats.includes(id));
-      nextParams.delete('cat_id');
-      remainingCats.forEach(id => nextParams.append('cat_id', id));
+      const currentCats = next.getAll('cat_id').map(String);
+      const remainingCats = currentCats.filter(id => !dependent.includes(id));
+      next.delete('cat_id');
+      remainingCats.forEach(id => next.append('cat_id', id));
     } else {
-      // Toggling on area
-      nextParams.append('area_id', areaIdStr);
+      next.append('area_id', areaIdStr);
     }
-
-    nextParams.set('page', '1');
-    setSearchParams(nextParams);
+    next.set('page', '1');
+    setSearchParams(next);
   };
 
-  const handleCategoryToggle = (catId) => {
-    toggleParamValue('cat_id', catId);
+  const handleCategoryToggle = (catId) => toggleParamValue('cat_id', catId);
+
+  /** Single-select area from dropdown. Clears dependent categories. */
+  const onAreaSelect = (areaId) => {
+    const next = new URLSearchParams(searchParams);
+    next.delete('area_id');
+    next.delete('cat_id');
+    if (areaId && areaId !== 'all') next.set('area_id', String(areaId));
+    next.set('page', '1');
+    setSearchParams(next);
   };
 
-  // Reset all filters
+  const onCategorySelect = (catId) => {
+    const next = new URLSearchParams(searchParams);
+    next.delete('cat_id');
+    if (catId && catId !== 'all') next.set('cat_id', String(catId));
+    next.set('page', '1');
+    setSearchParams(next);
+  };
+
+  const onAccessSelect = (accessVal) => {
+    const next = new URLSearchParams(searchParams);
+    next.delete('access');
+    if (accessVal && accessVal !== 'all') next.set('access', accessVal);
+    next.set('page', '1');
+    setSearchParams(next);
+  };
+
+  const onQuartileSelect = (quartileVal) => {
+    const next = new URLSearchParams(searchParams);
+    next.delete('quartile');
+    if (quartileVal && quartileVal !== 'all') next.set('quartile', quartileVal);
+    next.set('page', '1');
+    setSearchParams(next);
+  };
+
+  const onYearSelect = (yearVal) => {
+    const next = new URLSearchParams(searchParams);
+    if (yearVal && yearVal !== 'all') {
+      next.set('ranking_year', String(yearVal));
+    } else {
+      next.delete('ranking_year');
+    }
+    next.set('page', '1');
+    setSearchParams(next);
+  };
+
+  /** Toggle is_oa_diamond filter. */
+  const handleOaDiamondToggle = (val) => {
+    const next = new URLSearchParams(searchParams);
+    if (val) {
+      next.set('is_oa_diamond', 'true');
+    } else {
+      next.delete('is_oa_diamond');
+    }
+    next.set('page', '1');
+    setSearchParams(next);
+  };
+
+  /** Reset all filters. Always resets sort back to default metric. */
   const handleClearAll = () => {
     setSearchInput('');
-    setSearchParams({ page: '1', limit: String(limit) });
+    setSearchParams({ page: '1', limit: String(limit), sort: 'metric' });
   };
 
-  // Change sorting method
+  /** Change sort, preserve other params, reset to page 1. */
   const handleSortChange = (newSort) => {
-    const nextParams = new URLSearchParams(searchParams);
-    nextParams.set('sort', newSort);
-    setSearchParams(nextParams);
+    const next = new URLSearchParams(searchParams);
+    next.set('sort', newSort);
+    next.set('page', '1');
+    setSearchParams(next);
   };
 
-  // Change page
+  /** Navigate to a different page. */
   const handlePageChange = (newPage) => {
     if (newPage < 1) return;
-    const nextParams = new URLSearchParams(searchParams);
-    nextParams.set('page', String(newPage));
-    setSearchParams(nextParams);
+    const next = new URLSearchParams(searchParams);
+    next.set('page', String(newPage));
+    setSearchParams(next);
   };
 
-  // Guest-aware follow toggle
+  /** Guest-aware follow toggle (shows login modal for unauthenticated). */
   const handleFollowJournal = async (journalId) => {
     if (!currentUser) {
       setShowAuthModal(true);
       return;
     }
-
-    setFollowedJournals(prev => ({
-      ...prev,
-      [journalId]: !prev[journalId]
-    }));
+    setFollowedJournals(prev => ({ ...prev, [journalId]: !prev[journalId] }));
   };
 
   return {
+    // Controlled input
     searchInput,
     setSearchInput,
+
+    // Filter data
     subjectAreas,
     subjectCategories,
     loadingFilters,
 
+    // Results
     journals,
     total,
     loadingJournals,
     error,
 
+    // Active URL params
     search,
     page,
     limit,
@@ -271,21 +337,35 @@ export function useCatalogSearch(currentUser) {
     selectedCategories,
     selectedAccess,
     selectedQuartiles,
+    selectedYear,
+    isOaDiamond,
 
+    // View mode
+    viewMode,
+    setViewMode,
+
+    // Auth modal
     followedJournals,
     showAuthModal,
     setShowAuthModal,
 
+    // Handlers
     handleSearchSubmit,
     searchForTag,
     handleQuartileToggle,
     handleAccessToggle,
     handleAreaToggle,
     handleCategoryToggle,
+    onAreaSelect,
+    onCategorySelect,
+    onAccessSelect,
+    onQuartileSelect,
+    onYearSelect,
+    handleOaDiamondToggle,
     handleClearAll,
     handleSortChange,
     handlePageChange,
     handleFollowJournal,
-    fetchJournals
+    fetchJournals,
   };
 }

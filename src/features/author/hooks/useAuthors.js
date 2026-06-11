@@ -1,3 +1,8 @@
+﻿/**
+ * File source thuộc hệ thống FE ResearchPulse.
+ *
+ * File: features\author\hooks\useAuthors.js
+ */
 import { useState, useCallback } from 'react';
 import {
   getAuthorAreasBreakdownApi,

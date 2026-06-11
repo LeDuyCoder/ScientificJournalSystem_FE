@@ -1,19 +1,24 @@
-import { useState, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Container, Row, Col } from 'react-bootstrap';
-import { Icon } from '@iconify/react';
+/**
+ * File source thuộc hệ thống FE ResearchPulse.
+ *
+ * File: features\dashboard\pages\DashboardPage.jsx
+ */
+import { useState, useCallback } from "react";
+import { useNavigate } from "react-router-dom";
+import { Container, Row, Col } from "react-bootstrap";
+import { Icon } from "@iconify/react";
 
-import Header from '../../landing/components/Header';
-import useAuth from '../../auth/hooks/useAuth';
-import useDashboard from '../hooks/useDashboard';
+import Header from "../../landing/components/Header";
+import { useUserStore } from "../../../app/store/userStore";
+import useDashboard from "../hooks/useDashboard";
 
-import DashboardStatCards     from '../components/DashboardStatCards';
-import PublicationTrendChart  from '../components/PublicationTrendChart';
-import RecentProjectsCard     from '../components/RecentProjectsCard';
-import TrendingKeywordsCard   from '../components/TrendingKeywordsCard';
-import QuickAccessGrid        from '../components/QuickAccessGrid';
-import TopAuthorsTable        from '../components/TopAuthorsTable';
-import AuthRequiredModal      from '../../journal/components/AuthRequiredModal';
+import DashboardStatCards from "../components/DashboardStatCards";
+import PublicationTrendChart from "../components/PublicationTrendChart";
+import RecentProjectsCard from "../components/RecentProjectsCard";
+import TrendingKeywordsCard from "../components/TrendingKeywordsCard";
+import QuickAccessGrid from "../components/QuickAccessGrid";
+import TopAuthorsTable from "../components/TopAuthorsTable";
+import AuthRequiredModal from "../../../shared/components/AuthRequiredModal";
 
 /**
  * DashboardPage — Trang Tổng quan / Dashboard
@@ -26,33 +31,46 @@ import AuthRequiredModal      from '../../journal/components/AuthRequiredModal';
  *  TopAuthorsTable
  */
 export default function DashboardPage() {
-  const navigate  = useNavigate();
-  const { user }  = useAuth?.() ?? { user: null };
+  const navigate = useNavigate();
+  const email = useUserStore((state) => state.email);
 
   const {
-    projects, analytics, trendingKeywords, topAuthors, summaryStats,
-    loadingProjects, loadingAnalytics, loadingKeywords, loadingAuthors,
-    errorProjects, errorAnalytics, errorKeywords, errorAuthors,
-    refetchAnalytics, refetchKeywords, refetchAll,
-  } = useDashboard(user);
+    projects,
+    analytics,
+    trendingKeywords,
+    topAuthors,
+    summaryStats,
+    loadingProjects,
+    loadingAnalytics,
+    loadingKeywords,
+    loadingAuthors,
+    errorProjects,
+    errorAnalytics,
+    errorKeywords,
+    errorAuthors,
+    refetchAnalytics,
+  } = useDashboard(email);
 
   // Quick search state
-  const [quickSearch, setQuickSearch] = useState('');
+  const [quickSearch, setQuickSearch] = useState("");
 
   // Auth modal (for "Tạo Project mới" when guest)
   const [showAuthModal, setShowAuthModal] = useState(false);
 
-  const handleQuickSearch = useCallback((e) => {
-    if (e.key === 'Enter' && quickSearch.trim()) {
-      navigate(`/catalog?search=${encodeURIComponent(quickSearch.trim())}`);
-    }
-  }, [quickSearch, navigate]);
+  const handleQuickSearch = useCallback(
+    (e) => {
+      if (e.key === "Enter" && quickSearch.trim()) {
+        navigate(`/catalog?search=${encodeURIComponent(quickSearch.trim())}`);
+      }
+    },
+    [quickSearch, navigate],
+  );
 
   const handleCreateProject = () => {
-    if (!user) {
+    if (!email) {
       setShowAuthModal(true);
     } else {
-      navigate('/projects/create');
+      navigate("/projects/create");
     }
   };
 
@@ -75,35 +93,46 @@ export default function DashboardPage() {
   return (
     <div
       className="min-vh-100"
-      style={{ backgroundColor: 'var(--bg-main)', color: 'var(--text-main)', paddingTop: '80px' }}
+      style={{
+        backgroundColor: "var(--bg-main)",
+        color: "var(--text-main)",
+        paddingTop: "80px",
+      }}
     >
       {/* Sticky Navbar */}
       <Header />
 
       <Container className="py-4">
-
         {/* ── Quick Search Bar ────────────────────────────────────── */}
         <div className="mb-4">
           <div
             className="d-flex align-items-center gap-2 px-3 py-2 rounded-3"
             style={{
-              backgroundColor: 'var(--bg-card)',
-              border: '1px solid var(--border)',
+              backgroundColor: "var(--bg-card)",
+              border: "1px solid var(--border)",
               maxWidth: 480,
-              transition: 'border-color 0.2s ease',
+              transition: "border-color 0.2s ease",
             }}
-            onFocusCapture={e => e.currentTarget.style.borderColor = 'var(--primary)'}
-            onBlurCapture={e  => e.currentTarget.style.borderColor = 'var(--border)'}
+            onFocusCapture={(e) =>
+              (e.currentTarget.style.borderColor = "var(--primary)")
+            }
+            onBlurCapture={(e) =>
+              (e.currentTarget.style.borderColor = "var(--border)")
+            }
           >
-            <Icon icon="lucide:search" width={16} style={{ color: 'var(--text-muted)', flexShrink: 0 }} />
+            <Icon
+              icon="lucide:search"
+              width={16}
+              style={{ color: "var(--text-muted)", flexShrink: 0 }}
+            />
             <input
               type="text"
               placeholder="Tìm kiếm nhanh..."
               value={quickSearch}
-              onChange={e => setQuickSearch(e.target.value)}
+              onChange={(e) => setQuickSearch(e.target.value)}
               onKeyDown={handleQuickSearch}
               className="border-0 bg-transparent text-main w-100"
-              style={{ outline: 'none', fontSize: '0.85rem' }}
+              style={{ outline: "none", fontSize: "0.85rem" }}
             />
           </div>
         </div>
@@ -111,17 +140,31 @@ export default function DashboardPage() {
         {/* ── Welcome Section ─────────────────────────────────────── */}
         <div className="d-flex flex-column flex-sm-row align-items-sm-center justify-content-between gap-3 mb-4">
           <div>
-            <h1 className="font-display fw-bold text-main mb-1" style={{ fontSize: 'calc(1.4rem + 0.8vw)', letterSpacing: '-0.02em' }}>
+            <h1
+              className="font-display fw-bold text-main mb-1"
+              style={{
+                fontSize: "calc(1.4rem + 0.8vw)",
+                letterSpacing: "-0.02em",
+              }}
+            >
               Chào mừng bạn đến với ResearchPulse! 👋
             </h1>
-            <p className="text-muted-custom mb-0" style={{ fontSize: '0.88rem' }}>
+            <p
+              className="text-muted-custom mb-0"
+              style={{ fontSize: "0.88rem" }}
+            >
               Khám phá xu hướng tạp chí và các bài báo khoa học mới nhất.
             </p>
           </div>
           <button
             className="btn btn-primary-glow d-flex align-items-center gap-2 px-4 py-2 border-0 flex-shrink-0"
             onClick={handleCreateProject}
-            style={{ borderRadius: 10, fontWeight: 600, fontSize: '0.85rem', whiteSpace: 'nowrap' }}
+            style={{
+              borderRadius: 10,
+              fontWeight: 600,
+              fontSize: "0.85rem",
+              whiteSpace: "nowrap",
+            }}
           >
             <Icon icon="lucide:plus" width={16} />
             Tạo Project mới
@@ -146,7 +189,7 @@ export default function DashboardPage() {
               projects={projects}
               loading={loadingProjects}
               error={errorProjects}
-              onViewAll={() => navigate('/projects')}
+              onViewAll={() => navigate("/projects")}
               onProjectClick={handleProjectClick}
             />
           </Col>
@@ -160,7 +203,7 @@ export default function DashboardPage() {
               loading={loadingKeywords}
               error={errorKeywords}
               onKeywordClick={handleKeywordClick}
-              onViewMore={() => navigate('/catalog')}
+              onViewMore={() => navigate("/catalog")}
             />
           </Col>
           <Col xs={12} md={6}>
@@ -174,9 +217,8 @@ export default function DashboardPage() {
           loading={loadingAuthors}
           error={errorAuthors}
           onAuthorClick={handleAuthorClick}
-          onViewAll={() => navigate('/authors')}
+          onViewAll={() => navigate("/authors")}
         />
-
       </Container>
 
       {/* Auth modal for guests clicking "Tạo Project mới" */}

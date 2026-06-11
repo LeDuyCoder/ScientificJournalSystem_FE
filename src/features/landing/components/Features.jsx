@@ -1,3 +1,8 @@
+﻿/**
+ * File source thuộc hệ thống FE ResearchPulse.
+ *
+ * File: features\landing\components\Features.jsx
+ */
 import { useTranslation } from 'react-i18next';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -8,7 +13,7 @@ import Icon from '../../../shared/components/Icon';
 /**
  * Reusable Feature Card Component
  */
-function FeatureCard({ icon, color, title, description }) {
+function FeatureCard({ icon, title, description }) {
   return (
     <Card 
       className="glass-card rounded-4 p-4 h-100 text-start position-relative overflow-hidden"
@@ -31,7 +36,7 @@ function FeatureCard({ icon, color, title, description }) {
           transition: 'all 0.3s ease'
         }}
       >
-        <Icon icon={icon} className="fs-4 text-primary" />
+        <Icon icon={icon} className="fs-4" />
       </div>
 
       {/* Card Content */}
@@ -134,7 +139,7 @@ export default function Features() {
         
         {/* Section Header */}
         <div className="text-center mb-5">
-          <div className="d-inline-flex align-items-center gap-2 mb-2 text-primary text-xs font-bold tracking-wider text-uppercase" style={{ fontSize: '0.75rem' }}>
+          <div className="d-inline-flex align-items-center gap-2 mb-2 text-xs font-bold tracking-wider text-uppercase" style={{ fontSize: '0.75rem', color: 'var(--primary)' }}>
             <span style={{ width: '24px', height: '1px', backgroundColor: 'var(--primary)' }} />
             <span>{t('featuresSubtitle')}</span>
           </div>
