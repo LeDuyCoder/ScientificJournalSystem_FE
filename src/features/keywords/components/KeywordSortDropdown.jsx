@@ -1,4 +1,4 @@
-﻿/**
+/**
  * File source thuộc hệ thống FE ResearchPulse.
  *
  * File: features\keywords\components\KeywordSortDropdown.jsx
@@ -37,12 +37,7 @@ export default function KeywordSortDropdown({ sortBy, sortOrder, onChange }) {
     <Dropdown align="end">
       <Dropdown.Toggle
         id="keyword-sort-dropdown"
-        style={{
-          backgroundColor: 'var(--bg-card)',
-          color: 'var(--text-main)',
-          border: '1px solid var(--border)',
-          fontWeight: 600,
-        }}
+        className="keyword-sort-toggle"
       >
         <span className="d-inline-flex align-items-center gap-2">
           <Icon icon="lucide:arrow-up-down" width="16" />
@@ -50,7 +45,7 @@ export default function KeywordSortDropdown({ sortBy, sortOrder, onChange }) {
         </span>
       </Dropdown.Toggle>
 
-      <Dropdown.Menu style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)' }}>
+      <Dropdown.Menu className="keyword-sort-menu">
         {keywordSortOptions.map((option) => (
           <Dropdown.Item
             key={option.value}
