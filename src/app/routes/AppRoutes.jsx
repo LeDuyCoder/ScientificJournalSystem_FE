@@ -33,6 +33,9 @@ import {
  * - Login/Register sử dụng PublicRoute.
  * - Dashboard yêu cầu đăng nhập.
  */
+import ForgotPasswordPage from '../../features/auth/pages/ForgotPasswordPage';
+import ResetPasswordPage from '../../features/auth/pages/ResetPasswordPage';
+
 export default function AppRoutes() {
   return (
     <Routes>
@@ -56,6 +59,9 @@ export default function AppRoutes() {
       <Route path="/articles/:id" element={<ArticleDetailPage />} />
       <Route path="/keywords" element={<KeywordListPage />} />
       <Route path="/keywords/:keywordId/articles" element={<KeywordArticlesPage />} />
+      <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+      <Route path="/reset-password" element={<ResetPasswordPage />} />
+
       <Route path="*" element={<LandingPage />} />
 
     </Routes>

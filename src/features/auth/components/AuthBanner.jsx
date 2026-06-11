@@ -1,4 +1,4 @@
-﻿/**
+/**
  * File source thuộc hệ thống FE ResearchPulse.
  *
  * File: features\auth\components\AuthBanner.jsx
@@ -88,7 +88,7 @@ export default function AuthBanner() {
         </p>
 
         {/* Feature List */}
-        <div className="d-flex flex-column gap-3.5">
+        <div className="d-flex flex-column" style={{ gap: '1.25rem' }}>
           {FEATURES.map((feat, index) => (
             <div key={index} className="d-flex align-items-center gap-3">
               <div 
