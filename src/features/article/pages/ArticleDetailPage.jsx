@@ -25,6 +25,7 @@ import ArticlesTabContent from '../../journal/components/ArticlesTabContent';
 import AuthRequiredModal from '../../../shared/components/AuthRequiredModal';
 import { toast } from '../../../shared/utils/toast';
 import { getDoiUrl, normalizeArticleDetail } from '../utils/articleFormatters';
+import './ArticleDetailPage.css';
 
 const formatAuthorsLine = (authors = [], limit = 5) => {
   if (!authors || authors.length === 0) return 'Đang cập nhật tác giả';
@@ -263,16 +264,8 @@ export default function ArticleDetailPage() {
   const articleDoiUrl = getDoiUrl(article?.doi);
 
   return (
-    <div
-      className="min-vh-100 text-main grid-bg"
-      style={{
-        backgroundColor: 'var(--bg-main)',
-        paddingTop: '82px',
-        paddingBottom: '60px',
-      }}
-    >
+    <div className="article-detail-page grid-bg">
       <Header />
-      <div className="radial-fade position-fixed w-100 h-100 top-0 start-0 z-0" style={{ pointerEvents: 'none' }} />
 
       <Container fluid className="position-relative z-1 px-3 px-xl-5">
         {isLoading ? (
@@ -282,41 +275,18 @@ export default function ArticleDetailPage() {
         ) : !article ? (
           <ArticleDetailEmpty articleId={id} />
         ) : (
-          <main
-            className="mx-auto"
-            style={{
-              maxWidth: '1320px',
-              backgroundColor: 'var(--bg-card)',
-              border: '1px solid var(--border)',
-              boxShadow: '0 18px 55px rgba(15, 23, 42, 0.06)',
-            }}
-          >
-            <div
-              className="d-grid article-detail-shell"
-              style={{
-                gridTemplateColumns: '280px minmax(0, 1fr)',
-                minHeight: 'calc(100vh - 150px)',
-              }}
-            >
-              <aside
-                className="d-none d-xl-block p-4"
-                style={{ borderRight: '1px solid var(--border)' }}
-              >
+          <main className="article-detail-container">
+            <div className="article-detail-shell">
+              <aside className="article-detail-sidebar d-none d-xl-block">
                 <h2
-                  className="font-display fw-bold mb-4"
+                  className={`article-detail-journal-title mb-4 ${article.journal_id ? 'is-clickable' : ''}`}
                   role={article.journal_id ? 'button' : undefined}
                   onClick={() => article.journal_id && navigate(`/journals/${article.journal_id}`)}
-                  style={{
-                    fontSize: '1.15rem',
-                    lineHeight: 1.35,
-                    cursor: article.journal_id ? 'pointer' : 'default',
-                    color: article.journal_id ? 'var(--text-main)' : 'var(--text-main)',
-                  }}
                 >
                   {article.journal_name || 'Scientific Journal'}
                 </h2>
 
-                <div className="d-flex flex-column gap-1 mb-4" style={{ fontSize: '0.9rem' }}>
+                <div className="article-detail-meta-list">
                   <span><strong>Date:</strong> {article.publication_year || 'Đang cập nhật'}</span>
                   <span><strong>Article:</strong> {article.article_id}</span>
                   <span>
@@ -325,8 +295,8 @@ export default function ArticleDetailPage() {
                       variant="link"
                       disabled={!article.volume_id}
                       onClick={() => article.volume_id && navigate(`/articles?volume_id=${article.volume_id}`)}
-                      className="p-0 align-baseline text-decoration-none fw-bold"
-                      style={{ color: 'var(--primary)', fontSize: '0.9rem' }}
+                      className="article-detail-meta-link"
+                      
                     >
                       {article.volume_number || '—'}
                     </Button>
@@ -337,8 +307,8 @@ export default function ArticleDetailPage() {
                       variant="link"
                       disabled={!article.issue_id}
                       onClick={() => article.issue_id && navigate(`/articles?issue_id=${article.issue_id}`)}
-                      className="p-0 align-baseline text-decoration-none fw-bold"
-                      style={{ color: 'var(--primary)', fontSize: '0.9rem' }}
+                      className="article-detail-meta-link"
+                      
                     >
                       {article.issue_number || '—'}
                     </Button>
@@ -346,7 +316,7 @@ export default function ArticleDetailPage() {
                   <span><strong>Access:</strong> {article.is_open_access ? 'Open access' : 'Restricted'}</span>
                 </div>
 
-                <div style={{ height: 1, backgroundColor: 'var(--border)' }} className="mb-4" />
+                <div className="article-detail-divider" />
 
                 <div className="text-muted-custom text-xs fw-bold text-uppercase mb-2">Published by</div>
                 <div className="text-xs text-muted-custom fw-semibold text-uppercase d-flex flex-column gap-1">
@@ -355,27 +325,19 @@ export default function ArticleDetailPage() {
                 </div>
               </aside>
 
-              <section className="p-3 p-md-5">
-                <div className="d-flex align-items-center gap-2 text-muted-custom mb-3 flex-wrap" style={{ fontSize: '0.78rem' }}>
-                  <span role="button" onClick={() => navigate('/articles')} className="text-decoration-none text-muted-custom hover-text-main" style={{ cursor: 'pointer', transition: 'color 0.2s' }}>Bài Báo</span>
+              <section className="article-detail-main">
+                <div className="article-detail-breadcrumb">
+                  <span role="button" onClick={() => navigate('/articles')} className="article-detail-breadcrumb-link">Bài báo</span>
                   <Icon icon="lucide:chevron-right" width="12" />
                   <span style={{ color: 'var(--text-main)' }}>Chi tiết bài báo</span>
                 </div>
 
 
-                <h1
-                  className="font-display fw-bold mb-4"
-                  style={{
-                    fontSize: 'clamp(2rem, 4vw, 3.45rem)',
-                    lineHeight: 1.08,
-                    letterSpacing: '-0.045em',
-                    maxWidth: '980px',
-                  }}
-                >
+                <h1 className="article-detail-title">
                   {article.title}
                 </h1>
 
-                <div className="d-flex align-items-center gap-2 flex-wrap mb-3" style={{ fontSize: '0.92rem' }}>
+                <div className="article-detail-authors">
                   {visibleAuthors.length > 0 ? (
                     visibleAuthors.map((author, index) => {
                       const authorLabel = author.display_name || author.name || author.author_name || 'Tác giả';
@@ -386,8 +348,7 @@ export default function ArticleDetailPage() {
                           variant="link"
                           disabled={!authorId}
                           onClick={() => authorId && navigate(`/authors/${authorId}`)}
-                          className="p-0 text-decoration-none fw-medium"
-                          style={{ color: 'var(--text-main)', fontSize: '0.92rem' }}
+                          className="article-detail-author-link"
                           title={authorId ? `Xem chi tiết ${authorLabel}` : authorLabel}
                         >
                           {authorLabel}{index < visibleAuthors.length - 1 ? ',' : ''}
@@ -401,8 +362,8 @@ export default function ArticleDetailPage() {
                     <Button
                       variant="link"
                       onClick={() => setShowAllAuthors(true)}
-                      className="p-0 text-decoration-none fw-semibold"
-                      style={{ color: 'var(--primary)', fontSize: '0.9rem' }}
+                      className="article-detail-author-toggle"
+                      
                     >
                       Show more +{hiddenAuthorCount}
                     </Button>
@@ -411,21 +372,21 @@ export default function ArticleDetailPage() {
                     <Button
                       variant="link"
                       onClick={() => setShowAllAuthors(false)}
-                      className="p-0 text-decoration-none fw-semibold"
-                      style={{ color: 'var(--primary)', fontSize: '0.9rem' }}
+                      className="article-detail-author-toggle"
+                      
                     >
                       Show less
                     </Button>
                   )}
                 </div>
 
-                <div style={{ borderTop: '1px solid var(--border)', borderBottom: '1px solid var(--border)' }}>
-                  <div className="d-flex align-items-center gap-4 flex-wrap py-3 text-muted-custom" style={{ fontSize: '0.88rem' }}>
+                <div className="article-detail-action-bar">
+                  <div className="article-detail-actions">
                     <Button
                       variant="link"
                       onClick={() => setShowCitationsModal(true)}
-                      className="p-0 text-decoration-none d-inline-flex align-items-center gap-1"
-                      style={{ color: 'var(--text-muted)', fontSize: '0.88rem' }}
+                      className="article-detail-action-btn"
+                      
                     >
                       <Icon icon="lucide:quote" width="15" />
                       Citations: {article.citations ?? 0}
@@ -434,8 +395,7 @@ export default function ArticleDetailPage() {
                       variant="link"
                       disabled={isBookmarkLoading}
                       onClick={handleBookmarkToggle}
-                      className="p-0 text-decoration-none d-inline-flex align-items-center gap-1"
-                      style={{ color: isBookmarked ? 'var(--primary)' : 'var(--text-muted)', fontSize: '0.88rem' }}
+                      className={`article-detail-action-btn ${isBookmarked ? 'is-active' : ''}`}
                     >
                       <Icon icon={isBookmarked ? 'lucide:bookmark-check' : 'lucide:bookmark-plus'} width="15" />
                       Add to Project
@@ -443,8 +403,8 @@ export default function ArticleDetailPage() {
                     <Button
                       variant="link"
                       onClick={handleShareArticle}
-                      className="p-0 text-decoration-none d-inline-flex align-items-center gap-1"
-                      style={{ color: 'var(--text-muted)', fontSize: '0.88rem' }}
+                      className="article-detail-action-btn"
+                      
                     >
                       <Icon icon="lucide:share-2" width="15" />
                       Share
@@ -453,93 +413,68 @@ export default function ArticleDetailPage() {
                   </div>
                 </div>
 
-                <div className="d-flex align-items-center justify-content-between gap-3 flex-wrap py-4">
+                <div className="article-detail-external-bar">
                   {articleDoiUrl && (
                     <a
                       href={articleDoiUrl}
                       target="_blank"
                       rel="noreferrer"
-                      className="text-decoration-none fw-semibold d-inline-flex align-items-center gap-1"
-                      style={{ color: 'var(--text-muted)' }}
+                      className="article-detail-doi-link"
                     >
                       {articleDoiUrl}
                       <Icon icon="lucide:external-link" width="14" />
                     </a>
                   )}
-                  <span className="d-inline-flex align-items-center gap-2 text-muted-custom fst-italic">
-                    <span
-                      style={{
-                        width: 10,
-                        height: 10,
-                        borderRadius: '50%',
-                        backgroundColor: article.is_open_access ? '#22c55e' : 'var(--text-muted)',
-                      }}
-                    />
+                  <span className="article-detail-access-badge">
+                    <span className={`article-detail-access-dot ${article.is_open_access ? 'is-open' : ''}`} />
                     {article.is_open_access ? 'Open access' : 'Restricted access'}
                   </span>
                 </div>
 
-                <div className="d-flex align-items-end gap-4 mb-4 flex-wrap" style={{ borderBottom: '1px solid var(--border)' }}>
+                <div className="article-detail-tabs">
                   <Button
                     variant="link"
                     onClick={() => setActiveTab('preview')}
-                    className="px-0 pb-3 text-decoration-none fw-bold"
-                    style={{
-                      color: activeTab === 'preview' ? 'var(--text-main)' : 'var(--text-muted)',
-                      borderBottom: activeTab === 'preview' ? '2px solid var(--primary)' : '2px solid transparent',
-                      borderRadius: 0,
-                    }}
+                    className={`article-detail-tab-btn ${activeTab === 'preview' ? 'is-active' : ''}`}
                   >
                     Article preview
                   </Button>
                   <Button
                     variant="link"
                     onClick={() => setActiveTab('recommended')}
-                    className="px-0 pb-3 text-decoration-none fw-bold"
-                    style={{
-                      color: activeTab === 'recommended' ? 'var(--text-main)' : 'var(--text-muted)',
-                      borderBottom: activeTab === 'recommended' ? '2px solid var(--primary)' : '2px solid transparent',
-                      borderRadius: 0,
-                    }}
+                    className={`article-detail-tab-btn ${activeTab === 'recommended' ? 'is-active' : ''}`}
                   >
                     Recommended articles
                   </Button>
                 </div>
 
                 {activeTab === 'preview' ? (
-                  <div
-                    className="d-grid gap-4 article-preview-grid"
-                    style={{ gridTemplateColumns: 'minmax(0, 740px) 220px', alignItems: 'start' }}
-                  >
+                  <div className="article-preview-grid">
                     <article>
-                      <section id="abstract" className="mb-5">
-                        <h2 className="font-display fw-bold mb-3" style={{ fontSize: '1.65rem' }}>Abstract</h2>
+                      <section id="abstract" className="article-section">
+                        <h2 className="article-section-title" style={{ fontSize: '1.65rem' }}>Abstract</h2>
                         {(article.abstract || 'No abstract is available for this article.')
                           .split('\n')
                           .filter(Boolean)
                           .map((paragraph, index) => (
-                            <p
-                              key={index}
-                              className="text-muted-custom mb-3"
-                              style={{ fontSize: '1rem', lineHeight: 1.75 }}
-                            >
+                            <p key={index} className="article-section-text">
                               {paragraph}
                             </p>
                           ))}
                       </section>
 
 
-                      <section id="section-snippets" className="mb-5">
-                        <h2 className="font-display fw-bold mb-3" style={{ fontSize: '1.5rem' }}>Section snippets</h2>
-                        <p className="text-muted-custom" style={{ fontSize: '0.98rem', lineHeight: 1.75 }}>
+                      <section id="section-snippets" className="article-section">
+                        <h2 className="article-section-title">Section snippets</h2>
+                        <p className="article-section-text" style={{ fontSize: '0.98rem' }}>
                           Tóm tắt nhanh: bài báo thuộc chủ đề <strong>{article.topic_name || 'Research'}</strong>,
                           công bố trong <strong>{article.journal_name || 'Scientific Journal'}</strong>
                           {article.publication_year ? ` năm ${article.publication_year}` : ''}.
                         </p>
                       </section>
 
-                      <section id="keywords" className="mb-5">
-                        <h2 className="font-display fw-bold mb-3" style={{ fontSize: '1.5rem' }}>Keywords</h2>
+                      <section id="keywords" className="article-section">
+                        <h2 className="article-section-title">Keywords</h2>
                         <div className="d-flex gap-2 flex-wrap">
                           {(article.keywords || []).length > 0 ? (
                             article.keywords.map((keyword) => {
@@ -549,7 +484,7 @@ export default function ArticleDetailPage() {
                                   key={keyword.keyword_id || label}
                                   variant="light"
                                   onClick={() => handleKeywordClick(keyword)}
-                                  className="px-3 py-2 fw-medium"
+                                  className="article-topic-chip"
                                   style={topicKeywordChipStyle}
                                 >
                                   {label}
@@ -557,16 +492,16 @@ export default function ArticleDetailPage() {
                               );
                             })
                           ) : (
-                            <p className="text-muted-custom mb-0" style={{ fontSize: '0.95rem', lineHeight: 1.8 }}>
+                            <p className="article-section-text mb-0" style={{ fontSize: '0.95rem', lineHeight: 1.8 }}>
                               {keywordsText}
                             </p>
                           )}
                         </div>
                       </section>
 
-                      <section id="references">
-                        <h2 className="font-display fw-bold mb-3" style={{ fontSize: '1.5rem' }}>References</h2>
-                        <p className="text-muted-custom mb-4" style={{ fontSize: '0.98rem', lineHeight: 1.75 }}>
+                      <section id="references" className="article-section">
+                        <h2 className="article-section-title">References</h2>
+                        <p className="article-section-text" style={{ fontSize: '0.98rem' }}>
                           Bài báo hiện có <strong>{article.reference_count ?? article.references?.length ?? 0}</strong> tài liệu tham khảo được đồng bộ trong hệ thống.
                           Số lượt trích dẫn của bài báo này là <strong>{article.citations ?? 0}</strong>.
                         </p>
@@ -576,42 +511,31 @@ export default function ArticleDetailPage() {
                             {paginatedReferences.map((referenceUrl, index) => {
                               const absoluteIndex = (referencePage - 1) * referencesPerPage + index;
                               return (
-                              <a
-                                key={`${referenceUrl}-${absoluteIndex}`}
-                                href={referenceUrl}
-                                target="_blank"
-                                rel="noreferrer"
-                                className="text-decoration-none"
-                                style={{ color: 'inherit' }}
-                              >
-                                <div
-                                  className="p-3 p-lg-4"
-                                  style={{
-                                    borderRadius: 18,
-                                    border: '1px solid var(--border)',
-                                    backgroundColor: 'var(--bg-card)',
-                                    transition: 'transform 0.18s ease, box-shadow 0.18s ease',
-                                  }}
+                                <a
+                                  key={`${referenceUrl}-${absoluteIndex}`}
+                                  href={referenceUrl}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  className="article-reference-card"
                                 >
                                   <div className="d-flex align-items-start justify-content-between gap-3 flex-wrap">
                                     <div className="min-w-0">
-                                      <div className="text-muted-custom text-xs fw-bold text-uppercase mb-2">
+                                      <div className="article-reference-label">
                                         Reference {absoluteIndex + 1}
                                       </div>
-                                      <div className="fw-semibold text-main mb-2" style={{ wordBreak: 'break-word' }}>
+                                      <div className="article-reference-title">
                                         {formatReferenceLabel(referenceUrl, absoluteIndex)}
                                       </div>
-                                      <div className="text-muted-custom" style={{ fontSize: '0.92rem', wordBreak: 'break-all' }}>
+                                      <div className="article-reference-url">
                                         {referenceUrl}
                                       </div>
                                     </div>
-                                    <span className="d-inline-flex align-items-center gap-2 text-muted-custom" style={{ fontSize: '0.88rem' }}>
+                                    <span className="article-reference-action">
                                       <Icon icon="lucide:external-link" width="16" />
                                       Mở nguồn
                                     </span>
                                   </div>
-                                </div>
-                              </a>
+                                </a>
                               );
                             })}
 
@@ -625,7 +549,7 @@ export default function ArticleDetailPage() {
                                     variant="light"
                                     disabled={referencePage <= 1}
                                     onClick={() => setReferencePage((page) => Math.max(1, page - 1))}
-                                    className="px-3 py-2 fw-medium"
+                                    className="article-topic-chip"
                                     style={topicKeywordChipStyle}
                                   >
                                     Trước
@@ -637,7 +561,7 @@ export default function ArticleDetailPage() {
                                     variant="light"
                                     disabled={referencePage >= referenceTotalPages}
                                     onClick={() => setReferencePage((page) => Math.min(referenceTotalPages, page + 1))}
-                                    className="px-3 py-2 fw-medium"
+                                    className="article-topic-chip"
                                     style={topicKeywordChipStyle}
                                   >
                                     Sau
@@ -647,14 +571,7 @@ export default function ArticleDetailPage() {
                             )}
                           </div>
                         ) : (
-                          <div
-                            className="p-3 p-lg-4 text-muted-custom"
-                            style={{
-                              borderRadius: 18,
-                              border: '1px dashed var(--border)',
-                              backgroundColor: 'var(--bg-card)',
-                            }}
-                          >
+                          <div className="article-reference-card-empty">
                             Chưa có danh sách reference chi tiết cho bài báo này.
                           </div>
                         )}
@@ -662,14 +579,14 @@ export default function ArticleDetailPage() {
 
                       {article.topics?.length > 0 && (
                         <section className="mt-4">
-                          <h2 className="font-display fw-bold mb-3" style={{ fontSize: '1.4rem' }}>Topics</h2>
+                          <h2 className="article-section-title" style={{ fontSize: '1.4rem' }}>Topics</h2>
                           <div className="d-flex gap-2 flex-wrap">
                             {article.topics.map((topic) => (
                               <Button
                                 key={topic.topic_id || topic.display_name}
                                 variant="light"
                                 onClick={() => handleTopicClick(topic)}
-                                className="px-3 py-2 fw-medium"
+                                className="article-topic-chip"
                                 style={topicKeywordChipStyle}
                               >
                                 {topic.display_name}
@@ -680,15 +597,12 @@ export default function ArticleDetailPage() {
                       )}
                     </article>
 
-                    <aside
-                      className="d-none d-lg-block p-3"
-                      style={{ backgroundColor: 'var(--bg-main)', borderLeft: '3px solid var(--border)' }}
-                    >
-                      <div className="text-muted-custom text-xs fw-bold text-uppercase mb-3">Article preview</div>
-                      <nav className="d-flex flex-column gap-2" style={{ fontSize: '0.88rem' }}>
-                        <Button variant="link" onClick={() => smoothScrollTo('abstract')} className="p-0 text-start text-decoration-none fw-bold" style={{ color: 'var(--text-main)' }}>Abstract</Button>
-                        <Button variant="link" onClick={() => smoothScrollTo('section-snippets')} className="p-0 text-start text-decoration-none" style={{ color: 'var(--text-muted)' }}>Section snippets</Button>
-                        <Button variant="link" onClick={() => smoothScrollTo('references')} className="p-0 text-start text-decoration-none" style={{ color: 'var(--text-muted)' }}>References ({article.reference_count ?? article.references?.length ?? 0})</Button>
+                    <aside className="article-toc-aside d-none d-lg-block">
+                      <div className="article-toc-title">Article preview</div>
+                      <nav className="d-flex flex-column gap-2">
+                        <Button variant="link" onClick={() => smoothScrollTo('abstract')} className="article-toc-link is-active">Abstract</Button>
+                        <Button variant="link" onClick={() => smoothScrollTo('section-snippets')} className="article-toc-link">Section snippets</Button>
+                        <Button variant="link" onClick={() => smoothScrollTo('references')} className="article-toc-link">References ({article.reference_count ?? article.references?.length ?? 0})</Button>
                       </nav>
                     </aside>
                   </div>
@@ -710,15 +624,7 @@ export default function ArticleDetailPage() {
           <Modal.Title className="font-display fw-bold">Citations / Cited by</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <div
-            className="p-3 mb-3"
-            style={{
-              borderRadius: 12,
-              backgroundColor: 'var(--bg-main)',
-              border: '1px solid var(--border)',
-              color: 'var(--text-main)',
-            }}
-          >
+          <div className="article-modal-stat-box">
             <div className="text-muted-custom text-xs fw-bold text-uppercase mb-1">Tổng lượt trích dẫn</div>
             <div className="font-display fw-bold" style={{ fontSize: '2rem', color: 'var(--text-main)' }}>
               {(article?.citations ?? 0).toLocaleString('en-US')}
