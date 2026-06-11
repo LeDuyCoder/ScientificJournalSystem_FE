@@ -1,5 +1,12 @@
-import React from 'react';
+﻿/**
+ * File source thuộc hệ thống FE ResearchPulse.
+ *
+ * File: features\auth\components\AuthBanner.jsx
+ */
 import Icon from '../../../shared/components/Icon';
+import { Navbar } from 'react-bootstrap';
+import { useNavigate } from "react-router-dom";
+
 
 const FEATURES = [
   'Miễn phí hoàn toàn, không cần thẻ',
@@ -9,6 +16,7 @@ const FEATURES = [
 ];
 
 export default function AuthBanner() {
+  const navigate = useNavigate();
   return (
     <div 
       className="h-100 w-100 d-flex flex-column justify-content-between p-5 position-relative overflow-hidden"
@@ -36,13 +44,30 @@ export default function AuthBanner() {
       />
 
       {/* Logo Brand */}
-
-      <div style={{ zIndex: 2 }}>
-        <img
-          src="/src/assets/images/researchpulse_logo_full.svg"
-          alt="ResearchPulse"
-          style={{ height: '36px' }}
-        />
+      <div className="d-flex align-items-center gap-2" style={{ zIndex: 2 }}>
+        <Navbar.Brand
+            onClick={() => navigate("/")}
+            className="d-flex align-items-center text-main font-weight-bold"
+            style={{
+              fontFamily: "var(--font-display)",
+              fontWeight: 800,
+              cursor: "pointer",
+            }}
+          >
+            <div
+              className="d-flex align-items-center justify-content-center me-2"
+              style={{
+                width: "40px",
+                height: "40px",
+                borderRadius: "8px",
+                background: "var(--btn-dark)",
+                boxShadow: "0 0 10px rgba(7, 26, 28, 0.15)",
+              }}
+            >
+              <Icon icon="lucide:activity" className="text-white text-sm" />
+            </div>
+            ResearchPulse
+          </Navbar.Brand>
       </div>
 
       {/* Content */}

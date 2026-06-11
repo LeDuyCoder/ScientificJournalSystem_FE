@@ -1,3 +1,8 @@
+﻿/**
+ * File source thuộc hệ thống FE ResearchPulse.
+ *
+ * File: features\dashboard\components\DashboardStatCards.jsx
+ */
 import { Row, Col } from 'react-bootstrap';
 import StatCard from './StatCard';
 

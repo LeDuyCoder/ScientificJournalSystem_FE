@@ -1,4 +1,8 @@
-import React from 'react';
+﻿/**
+ * File source thuộc hệ thống FE ResearchPulse.
+ *
+ * File: features\article\components\ArticleHeaderCard.jsx
+ */
 import { Card, Badge } from 'react-bootstrap';
 import { Icon } from '@iconify/react';
 import { useNavigate } from 'react-router-dom';
@@ -8,65 +12,25 @@ export default function ArticleHeaderCard({ article }) {
 
   if (!article) return null;
 
-  // Extract author info
+  // Extract author info from normalized array
   let authorText = '';
   let mainAuthorInitials = 'A';
   let hasMultipleAuthors = false;
   let additionalCount = 0;
 
-  if (article.authors) {
-    if (Array.isArray(article.authors)) {
-      if (article.authors.length > 0) {
-        const firstAuthor = article.authors[0];
-        authorText = typeof firstAuthor === 'string' ? firstAuthor.split(' (')[0] : firstAuthor.name || 'Tác giả';
-        mainAuthorInitials = authorText.charAt(0).toUpperCase();
-        if (article.authors.length > 1) {
-          hasMultipleAuthors = true;
-          additionalCount = article.authors.length - 1;
-        }
-      }
-    } else if (typeof article.authors === 'string') {
-      const splitAuthors = article.authors.split(',').map(s => s.trim());
-      if (splitAuthors.length > 0) {
-        authorText = splitAuthors[0].split(' (')[0];
-        mainAuthorInitials = authorText.charAt(0).toUpperCase();
-        if (splitAuthors.length > 1) {
-          hasMultipleAuthors = true;
-          additionalCount = splitAuthors.length - 1;
-        }
-      }
+  const authors = Array.isArray(article.authors) ? article.authors : [];
+  if (authors.length > 0) {
+    const firstAuthor = authors[0];
+    authorText = firstAuthor.display_name || firstAuthor.name || 'Tác giả';
+    mainAuthorInitials = authorText.charAt(0).toUpperCase();
+    if (authors.length > 1) {
+      hasMultipleAuthors = true;
+      additionalCount = authors.length - 1;
     }
   }
 
-  // Get Quartile styling from DESIGN_SYSTEM
-  const quartile = article.quartile || article.journal?.quartile || 'Q1';
-  const getQuartileStyle = (q) => {
-    const qUpper = String(q).toUpperCase();
-    if (qUpper === 'Q1') {
-      return {
-        bg: 'rgba(47, 198, 70, 0.12)',
-        color: 'var(--q1-color)',
-        border: '1px solid rgba(47, 198, 70, 0.3)'
-      };
-    }
-    if (qUpper === 'Q2') {
-      return {
-        bg: 'var(--primary-light)',
-        color: 'var(--primary)',
-        border: '1px solid rgba(255, 122, 51, 0.3)'
-      };
-    }
-    return {
-      bg: 'var(--bg-section)',
-      color: 'var(--text-muted)',
-      border: '1px solid var(--border)'
-    };
-  };
-
-  const qStyle = getQuartileStyle(quartile);
-
   const handleJournalClick = () => {
-    const journalId = article.journal?.journal_id || article.journal_id;
+    const journalId = article.journal_id;
     if (journalId) {
       navigate(`/journals/${journalId}`);
     }
@@ -84,18 +48,6 @@ export default function ArticleHeaderCard({ article }) {
     >
       {/* Badges row */}
       <div className="d-flex flex-wrap gap-2 mb-3">
-        <Badge 
-          className="py-1.5 px-2.5 text-xs font-semibold" 
-          style={{ 
-            borderRadius: '6px', 
-            fontSize: '0.75rem',
-            backgroundColor: qStyle.bg,
-            color: qStyle.color,
-            border: qStyle.border
-          }}
-        >
-          {quartile}
-        </Badge>
         {article.is_open_access && (
           <Badge 
             className="py-1.5 px-2.5 text-xs font-semibold" 
@@ -111,18 +63,12 @@ export default function ArticleHeaderCard({ article }) {
           </Badge>
         )}
         {article.publication_year && (
-          <Badge 
-            className="py-1.5 px-2.5 text-xs font-semibold" 
-            style={{ 
-              borderRadius: '6px', 
-              fontSize: '0.75rem',
-              backgroundColor: 'var(--bg-chip)',
-              color: 'var(--text-muted)',
-              border: '1px solid var(--border)'
-            }}
+          <span 
+            className="text-muted-custom border-top border-light" 
+          style={{ fontSize: '0.9rem' }}
           >
             Năm xuất bản: {article.publication_year}
-          </Badge>
+          </span>
         )}
       </div>
 
@@ -166,24 +112,24 @@ export default function ArticleHeaderCard({ article }) {
       )}
 
       {/* Journal Link */}
-      {(article.journal?.display_name || article.journal_name) && (
+      {article.journal_name && (
         <div 
           className="d-flex align-items-center gap-2 text-muted-custom pt-3 border-top border-light" 
           style={{ fontSize: '0.9rem' }}
         >
-          <Icon icon="lucide:book-open" className="text-primary" width="18" />
+          <Icon icon="lucide:book-open" style={{ color: 'var(--primary)' }} width="20" />
           <span>Xuất bản trong:</span>
-          {article.journal?.journal_id || article.journal_id ? (
+          {article.journal_id ? (
             <span 
               onClick={handleJournalClick}
-              className="text-primary font-weight-semibold hover:text-dark transition-colors"
+              className="text-main font-weight-semibold hover:text-dark transition-colors"
               style={{ cursor: 'pointer', fontWeight: 600, textDecoration: 'underline' }}
             >
-              {article.journal?.display_name || article.journal_name}
+              {article.journal_name}
             </span>
           ) : (
             <span className="text-main font-weight-semibold" style={{ fontWeight: 600 }}>
-              {article.journal?.display_name || article.journal_name}
+              {article.journal_name}
             </span>
           )}
         </div>

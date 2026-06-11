@@ -1,4 +1,9 @@
-import React, { useState, useEffect } from 'react';
+﻿/**
+ * File source thuộc hệ thống FE ResearchPulse.
+ *
+ * File: features\auth\components\LoginForm.jsx
+ */
+import { useState, useEffect } from 'react';
 import { Form } from 'react-bootstrap';
 import InputField from '../../../shared/components/InputField';
 import PasswordInput from './PasswordInput';
@@ -86,16 +91,10 @@ export default function LoginForm({ onSubmit, isLoading, apiError }) {
 
     if (!emailValid || !passwordValid) return;
 
-    // Handle remember login local storage persistence
-    if (formData.remember_login) {
-      localStorage.setItem('researchpulse_remembered_email', formData.email.trim());
-    } else {
-      localStorage.removeItem('researchpulse_remembered_email');
-    }
-
     onSubmit({
       email: formData.email.trim(),
-      password: formData.password
+      password: formData.password,
+      remember_login: formData.remember_login
     });
   };
 

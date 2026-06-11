@@ -1,6 +1,10 @@
-import React from 'react';
+﻿/**
+ * File source thuộc hệ thống FE ResearchPulse.
+ *
+ * File: features\catalog\components\JournalResultCard.jsx
+ */
 import { Card, Button, Badge } from 'react-bootstrap';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 
 export default function JournalResultCard({
@@ -9,8 +13,9 @@ export default function JournalResultCard({
   onFollow,
   onTagClick
 }) {
+  const navigate = useNavigate();
+  const id = journal.id || journal.journal_id;
   const {
-    id,
     display_name,
     publisher,
     country,
@@ -20,11 +25,13 @@ export default function JournalResultCard({
     subject_category_name,
     subject_area_name,
     metric_value,
-    metric_name
+    metric_name,
+    metric_year
   } = journal;
 
   return (
     <Card 
+      onClick={() => navigate(`/journals/${id}`)}
       className="journal-dark-card mb-3 text-start position-relative transition-all duration-300 card-hover-lift"
       style={{ 
         borderRadius: '16px',
@@ -41,6 +48,7 @@ export default function JournalResultCard({
           <div className="flex-grow-1">
             <Link 
               to={`/journals/${id}`} 
+              onClick={(e) => e.stopPropagation()}
               className="text-decoration-none text-main hover:text-primary d-block mb-2"
             >
               <h5 className="font-display fw-bold mb-1 fs-5" style={{ letterSpacing: '-0.02em', lineHeight: '1.3' }}>
@@ -60,19 +68,20 @@ export default function JournalResultCard({
             {/* Badges line */}
             <div className="d-flex flex-wrap align-items-center gap-2">
               
-              {/* Quartile Badge */}
-              <Badge 
-                className="font-display fw-bold px-2.5 py-1.5"
-                style={{ 
-                  borderRadius: '6px', 
-                  fontSize: '0.75rem',
-                  backgroundColor: quartile === 'Q1' ? 'var(--primary-light)' : 'var(--bg-main)',
-                  color: quartile === 'Q1' ? 'var(--primary)' : 'var(--text-muted)',
-                  border: '1px solid var(--border)'
-                }}
-              >
-                {quartile}
-              </Badge>
+              {quartile && (
+                <Badge 
+                  className="font-display fw-bold px-2.5 py-1.5"
+                  style={{ 
+                    borderRadius: '6px', 
+                    fontSize: '0.75rem',
+                    backgroundColor: quartile === 'Q1' ? 'var(--primary-light)' : 'var(--bg-main)',
+                    color: quartile === 'Q1' ? 'var(--primary)' : 'var(--text-muted)',
+                    border: '1px solid var(--border)'
+                  }}
+                >
+                  {quartile}
+                </Badge>
+              )}
 
               {/* Open Access / Subscription Badge */}
               {is_open_access ? (
@@ -149,7 +158,7 @@ export default function JournalResultCard({
                     {metric_value}
                   </div>
                   <div className="text-muted-custom text-uppercase tracking-wide mt-1" style={{ fontSize: '0.68rem', letterSpacing: '0.05em' }}>
-                    {metric_name || 'Impact Factor'}
+                    {metric_name || 'SJR'}{metric_year ? ` · ${metric_year}` : ''}
                   </div>
                 </>
               ) : (
@@ -157,34 +166,35 @@ export default function JournalResultCard({
               )}
             </div>
 
-            {/* Follow Action */}
-            <Button
-              size="sm"
-              variant={isFollowed ? 'outline-success' : 'outline-primary'}
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                onFollow(id);
-              }}
-              className={`d-flex align-items-center justify-content-center gap-1.5 px-3 py-1.5 fw-semibold ${isFollowed ? 'bg-success-10' : 'btn-outline-glow'}`}
-              style={{ 
-                borderRadius: '8px',
-                fontSize: '0.8rem',
-                transition: 'all 0.2s ease'
-              }}
-            >
-              {isFollowed ? (
-                <>
-                  <Icon icon="lucide:check" width="14" />
-                  <span>Đã theo dõi</span>
-                </>
-              ) : (
-                <>
-                  <Icon icon="lucide:plus" width="14" />
-                  <span>Theo dõi</span>
-                </>
-              )}
-            </Button>
+            <div className="d-flex flex-wrap align-items-center justify-content-end gap-2">
+              <Button
+                size="sm"
+                variant={isFollowed ? 'outline-success' : 'outline-primary'}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  onFollow(id);
+                }}
+                className={`d-flex align-items-center justify-content-center gap-1.5 px-3 py-1.5 fw-semibold ${isFollowed ? 'bg-success-10' : 'btn-outline-glow'}`}
+                style={{ 
+                  borderRadius: '8px',
+                  fontSize: '0.8rem',
+                  transition: 'all 0.2s ease'
+                }}
+              >
+                {isFollowed ? (
+                  <>
+                    <Icon icon="lucide:check" width="14" />
+                    <span>Đã theo dõi</span>
+                  </>
+                ) : (
+                  <>
+                    <Icon icon="lucide:plus" width="14" />
+                    <span>Theo dõi</span>
+                  </>
+                )}
+              </Button>
+            </div>
 
           </div>
 

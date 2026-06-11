@@ -1,3 +1,8 @@
+﻿/**
+ * File source thuộc hệ thống FE ResearchPulse.
+ *
+ * File: features\dashboard\hooks\useDashboard.js
+ */
 import { useState, useEffect, useCallback } from 'react';
 import {
   getDashboardProjectsApi,

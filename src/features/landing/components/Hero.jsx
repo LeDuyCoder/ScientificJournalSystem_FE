@@ -1,3 +1,8 @@
+﻿/**
+ * File source thuộc hệ thống FE ResearchPulse.
+ *
+ * File: features\landing\components\Hero.jsx
+ */
 import { useTranslation } from 'react-i18next';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -12,7 +17,7 @@ export default function Hero() {
     { valueKey: 'papersValue', labelKey: 'papersLabel', color: '#000000' },
     { valueKey: 'periodValue', labelKey: 'periodLabel', color: '#000000' },
     { valueKey: 'keywordsValue', labelKey: 'keywordsLabel', color: '#000000' },
-    { valueKey: 'freeValue', labelKey: 'freeLabel', color: '#000000' },
+    { valueKey: 'freeValue', labelKey: 'freeLabel', color: '#AB7E55' },
   ];
 
   return (

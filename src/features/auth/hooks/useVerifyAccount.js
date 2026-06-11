@@ -4,8 +4,8 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
-import { verifyAccountApi } from '../api/authApi';
 import ROUTES from '../../../app/routes/routePaths';
+import { verifyEmailApi } from '../api/auth.api';
 
 // Số giây đếm ngược trước khi tự redirect
 const COUNTDOWN_SECONDS = 5;
@@ -38,7 +38,7 @@ const useVerifyAccount = () => {
       return;
     }
 
-    verifyAccountApi(token)
+    verifyEmailApi(token)
       .then(() => {
         setStatus('success');
       })

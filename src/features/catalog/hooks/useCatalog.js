@@ -1,3 +1,8 @@
+﻿/**
+ * File source thuộc hệ thống FE ResearchPulse.
+ *
+ * File: features\catalog\hooks\useCatalog.js
+ */
 import { useState, useCallback } from 'react';
 import { getSubjectAreasApi, getSubjectCategoriesApi } from '../api/catalogApi';
 

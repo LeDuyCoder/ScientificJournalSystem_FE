@@ -1,4 +1,8 @@
-import React from 'react';
+/**
+ * File source thuộc hệ thống FE ResearchPulse.
+ *
+ * File: features\article\components\ArticleTable.jsx
+ */
 import { Table, Card, Button } from 'react-bootstrap';
 import { Icon } from '@iconify/react';
 import ArticleTableRow from './ArticleTableRow';
@@ -233,8 +237,8 @@ export default function ArticleTable({ articles, isLoading, onDetailClick, onCle
                       </div>
                     </div>
                     <span 
-                      className="text-primary hover:text-dark font-bold text-xs d-flex align-items-center gap-0.5"
-                      style={{ fontSize: '0.75rem' }}
+                      className="text-main hover:text-dark font-bold text-xs d-flex align-items-center gap-0.5"
+                      style={{ fontSize: '0.75rem', color: '#111' }}
                     >
                       Chi tiết
                       <Icon icon="lucide:arrow-right" width="12" />

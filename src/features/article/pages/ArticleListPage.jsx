@@ -1,6 +1,11 @@
-import React from 'react';
-import { Container, Pagination, Modal, Button } from 'react-bootstrap';
+/**
+ * File source thuộc hệ thống FE ResearchPulse.
+ *
+ * File: features\article\pages\ArticleListPage.jsx
+ */
+import { Container, Pagination, Modal, Button, Breadcrumb } from 'react-bootstrap';
 import { Icon } from '@iconify/react';
+import { useNavigate } from 'react-router-dom';
 import Header from '../../landing/components/Header';
 import useArticleList from '../hooks/useArticleList';
 import ArticleStatsCards from '../components/ArticleStatsCards';
@@ -8,6 +13,7 @@ import ArticleFilterBar from '../components/ArticleFilterBar';
 import ArticleTable from '../components/ArticleTable';
 
 export default function ArticleListPage() {
+  const navigate = useNavigate();
   const {
     articles,
     total,
@@ -134,10 +140,20 @@ export default function ArticleListPage() {
 
       <Container className="position-relative z-1">
         {/* Breadcrumb */}
-        <div className="d-flex align-items-center gap-2 mb-3 text-muted-custom text-xs font-display">
-          <span>Trang chủ</span>
-          <Icon icon="lucide:chevron-right" width="12" />
-          <span className="text-main">Bài báo</span>
+         <div aria-label="breadcrumb" className="mb-4">
+          <Breadcrumb className="mb-0 custom-breadcrumb d-flex align-items-center">
+            <Breadcrumb.Item
+              onClick={() => navigate('/')}
+              className="font-display d-flex align-items-center"
+              linkProps={{ style: { cursor: 'pointer', fontSize: '0.9rem', lineHeight: 1, color: 'var(--text-muted)', textDecoration: 'none' } }}
+            >
+              Trang chủ
+            </Breadcrumb.Item>
+            <Breadcrumb.Item
+            active className="font-display d-flex align-items-center" style={{fontSize: '0.9rem', lineHeight: 1, color: 'var(--text-muted)' }}>
+              Bài Báo
+            </Breadcrumb.Item>
+          </Breadcrumb>
         </div>
 
         {/* Page Header */}
@@ -148,6 +164,22 @@ export default function ArticleListPage() {
           <p className="text-muted-custom text-sm mb-0" style={{ maxWidth: '680px' }}>
             Duyệt qua, tìm kiếm và lọc hàng nghìn bài báo chất lượng cao được lưu trữ trong hệ thống ResearchPulse.
           </p>
+          {filters.selectedIssue && (
+            <div
+              className="d-inline-flex align-items-center gap-2 mt-3 px-3 py-2"
+              style={{
+                borderRadius: '999px',
+                backgroundColor: 'rgba(0,0,0,0.06)',
+                border: '1px solid rgba(0,0,0,0.10)',
+                color: 'var(--text-main)',
+                fontSize: '0.88rem',
+                fontWeight: 600
+              }}
+            >
+              <Icon icon="lucide:layers-3" width="15" />
+              <span>Đang xem bài báo thuộc Issue #{filters.selectedIssue}</span>
+            </div>
+          )}
         </div>
 
         {/* Thẻ thống kê */}
