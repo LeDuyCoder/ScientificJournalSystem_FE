@@ -7,7 +7,8 @@ import { useAuthStore } from '../../app/store/authStore';
  * Tự động gắn Bearer Token vào Header thay vì dùng Cookie.
  */
 const httpClient = axios.create({
-  baseURL: import.meta.env.VITE_API_URL,
+  baseURL: import.meta.env.VITE_API_URL || import.meta.env.VITE_API_BASE_URL,
+  timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -17,7 +18,7 @@ const httpClient = axios.create({
 // Interceptor xử lý Request: Tự động lấy token từ LocalStorage
 httpClient.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN);
+    const token = localStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN) || localStorage.getItem('accessToken');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }

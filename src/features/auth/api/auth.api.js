@@ -1,7 +1,7 @@
-﻿/**
+/**
  * File source thuộc hệ thống FE ResearchPulse.
  *
- * File: features\auth\api\auth.httpClient.js
+ * File: features\auth\api\auth.api.js
  */
 import httpClient from '../../../shared/services/httpClient';
 
@@ -35,12 +35,12 @@ export const loginApi = (data) => {
 };
 
 /**
- * Log in / Sign up via Google OAuth ID Token
- * @param {string} idToken - Google Credential ID Token
+ * Log in / Sign up via Google OAuth
+ * @param {string} code - Google OAuth authorization code
  * @returns {Promise} Axios promise
  */
 export const loginGoogleApi = (code) => {
-  return httpClient.post('/auth/google', { code: code });
+  return httpClient.post('/auth/google', { code });
 };
 
 /**
@@ -71,7 +71,7 @@ export const getProfileApi = () => {
 
 /**
  * Update current user profile details
- * @param {Object} data - Profile fields to update (first_name, last_name, date_of_birth, gender, url_image)
+ * @param {Object} data
  * @returns {Promise} Axios promise
  */
 export const updateProfileApi = (data) => {
@@ -85,4 +85,15 @@ export const updateProfileApi = (data) => {
 export const deleteAccountApi = () => {
   return httpClient.delete('/users/me');
 };
+
+const authApi = {
+  verifyAccount: verifyEmailApi,
+};
+
+
+export const logoutApi = () => {
+  return httpClient.post('/auth/logout');
+};
+
+export default authApi;
 

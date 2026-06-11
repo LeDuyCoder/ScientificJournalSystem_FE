@@ -1,11 +1,11 @@
-﻿/**
+/**
  * File source thuộc hệ thống FE ResearchPulse.
  *
  * File: shared\utils\auth.js
  */
 import { useAuthStore } from '../../app/store/authStore';
 import { useUserStore } from '../../app/store/userStore';
-import api from '../services/api';
+import httpClient from '../services/httpClient';
 import { jwtDecode } from 'jwt-decode';
 
 
@@ -35,11 +35,11 @@ export const isAuthenticated = async () => {
   try {
     const authStore = useAuthStore.getState();
 
-    if (authStore.token && useUserStore.email) {
+    if (authStore.token && useUserStore.getState().email) {
       return true;
     }
 
-    const res = await api.get("/auth/check-auth");
+    const res = await httpClient.get("/auth/check-auth");
 
     if (
       res.status === 200 &&

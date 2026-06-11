@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Trang đăng nhập người dùng.
  *
  * File: features/auth/pages/LoginPage.jsx
@@ -38,7 +38,7 @@ export default function LoginPage() {
       await login(payload.email, payload.password, payload.remember_login);
       navigate(from, { replace: true });
     } catch (err) {
-      console.error('Login failed:', err);
+      console.error('Login failed:', err.response?.data?.message || err.message);
       setError(
         err.response?.data?.message
         || err.message
