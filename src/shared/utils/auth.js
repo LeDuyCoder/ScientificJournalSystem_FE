@@ -48,10 +48,6 @@ export const isAuthenticated = async () => {
       const token = res.data.access_token;
       const decoded = jwtDecode(token);
 
-      console.log(token);
-      console.log("DCMM");
-      console.log(decoded);
-
       authStore.loginSuccess(token, {
         id: decoded.id,
         email: decoded.email,
@@ -59,8 +55,6 @@ export const isAuthenticated = async () => {
       });
 
       useUserStore.getState().setEmail(decoded.email);
-
-      console.log(useUserStore.getState());
       
       return true;
     }
