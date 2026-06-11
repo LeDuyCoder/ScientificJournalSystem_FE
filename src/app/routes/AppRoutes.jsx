@@ -24,6 +24,9 @@ import {
   KeywordListPage,
   KeywordArticlesPage,
 } from '../../features/keywords';
+import AuthorLeaderboardPage from '../../features/author/pages/AuthorLeaderboardPage';
+import AuthorDetailPage from '../../features/author/pages/AuthorDetailPage';
+import AuthorListPage from '../../features/author/pages/AuthorListPage';
 
 /**
  * Nơi khai báo route chính của ứng dụng.
@@ -43,6 +46,7 @@ export default function AppRoutes() {
 
       <Route element={<ProtectedRoute />}>
         <Route path="/dashboard" element={<DashboardPage />} />
+        <Route path="/authors/leaderboard" element={<AuthorLeaderboardPage />} />
       </Route>
 
       <Route element={<PublicRoute />}>
@@ -51,6 +55,8 @@ export default function AppRoutes() {
       </Route>
 
       <Route path="/verify-email" element={<VerifyEmailPage />} />
+      <Route path="/authors/:id"  element={<AuthorDetailPage />} />
+      <Route path="/authors"     element={<AuthorListPage />} />
       <Route path="/journals/:id" element={<JournalDetailPage />} />
       <Route path="/catalog" element={<CatalogSearchPage />} />
 

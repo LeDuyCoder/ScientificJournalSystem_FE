@@ -1,4 +1,4 @@
-﻿/**
+/**
  * File source thuộc hệ thống FE ResearchPulse.
  *
  * File: features/auth/api/auth.api.js
@@ -86,12 +86,14 @@ export const deleteAccountApi = () => {
   return api.delete('/users/me');
 };
 
-/**
- * Backward compatibility cho code cũ
- * (nếu useVerifyAccount vẫn đang dùng authApi.verifyAccount())
- */
 const authApi = {
   verifyAccount: verifyEmailApi,
 };
 
+
+export const logoutApi = () => {
+  return api.post('/auth/logout');
+};
+
 export default authApi;
+
