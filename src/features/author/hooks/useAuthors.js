@@ -199,6 +199,26 @@ const normalizeAuthorRecord = (author) => {
   };
 };
 
+const getAuthorMetric = (author, keys = []) => {
+  for (const key of keys) {
+    const value = Number(author?.[key]);
+    if (!Number.isNaN(value)) return value;
+  }
+  return 0;
+};
+
+const sortAuthorsByImpact = (list = []) => {
+  return [...list].sort((a, b) => {
+    const hIndexDiff = getAuthorMetric(b, ['h_index', 'hindex']) - getAuthorMetric(a, ['h_index', 'hindex']);
+    if (hIndexDiff !== 0) return hIndexDiff;
+
+    const citationDiff = getAuthorMetric(b, ['citation_count', 'cited_by_count', 'citations']) - getAuthorMetric(a, ['citation_count', 'cited_by_count', 'citations']);
+    if (citationDiff !== 0) return citationDiff;
+
+    return getAuthorMetric(b, ['article_count', 'works_count', 'papers']) - getAuthorMetric(a, ['article_count', 'works_count', 'papers']);
+  });
+};
+
 // Cơ sở dữ liệu giả định cho tỷ lệ phần trăm đóng góp của các lĩnh vực nghiên cứu.
 const MOCK_BREAKDOWNS_MAP = {
   '1': [
@@ -351,7 +371,18 @@ export default function useAuthors() {
         const total = pagination.total ?? payload?.total ?? normalizedItems.length;
         const limit = pagination.limit ?? (parseInt(params.limit || '1', 10) || normalizedItems.length || 1);
 
-        setAuthors(normalizedItems);
+        const sortedItems = (() => {
+          if (params.sort === 'impact' || params.sort === 'h_index') return sortAuthorsByImpact(normalizedItems);
+          if (params.sort === 'articles') {
+            return [...normalizedItems].sort((a, b) => getAuthorMetric(b, ['article_count', 'works_count', 'papers']) - getAuthorMetric(a, ['article_count', 'works_count', 'papers']));
+          }
+          if (params.sort === 'citations') {
+            return [...normalizedItems].sort((a, b) => getAuthorMetric(b, ['citation_count', 'cited_by_count', 'citations']) - getAuthorMetric(a, ['citation_count', 'cited_by_count', 'citations']));
+          }
+          return normalizedItems;
+        })();
+
+        setAuthors(sortedItems);
         setTotalAuthors(total);
         setTotalPages(Math.max(1, Math.ceil(total / limit)));
       } else {
@@ -378,11 +409,12 @@ export default function useAuthors() {
       if (area) {
         filtered = filtered.filter(a => a.subject_areas.includes(area));
       }
-      // Logic sắp xếp
-      if (sort === 'articles') {
-        filtered.sort((a, b) => b.article_count - a.article_count);
+      if (sort === 'impact' || sort === 'h_index') {
+        filtered = sortAuthorsByImpact(filtered);
+      } else if (sort === 'articles') {
+        filtered.sort((a, b) => getAuthorMetric(b, ['article_count', 'works_count', 'papers']) - getAuthorMetric(a, ['article_count', 'works_count', 'papers']));
       } else if (sort === 'citations') {
-        filtered.sort((a, b) => b.citation_count - a.citation_count);
+        filtered.sort((a, b) => getAuthorMetric(b, ['citation_count', 'cited_by_count', 'citations']) - getAuthorMetric(a, ['citation_count', 'cited_by_count', 'citations']));
       }
 
       // Phân trang dữ liệu

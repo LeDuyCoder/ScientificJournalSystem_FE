@@ -1,4 +1,4 @@
-﻿/**
+/**
  * File source thuộc hệ thống FE ResearchPulse.
  *
  * File: features/auth/api/auth.api.js
@@ -87,6 +87,7 @@ export const deleteAccountApi = () => {
 };
 
 /**
+<<<<<<< HEAD
  * Backward compatibility cho code cũ
  * (nếu useVerifyAccount vẫn đang dùng authApi.verifyAccount())
  */
@@ -95,3 +96,12 @@ const authApi = {
 };
 
 export default authApi;
+=======
+ * Log out current user and clear auth cookies on backend.
+ * @returns {Promise} Axios promise
+ */
+export const logoutApi = () => {
+  return api.post('/auth/logout');
+};
+
+>>>>>>> 8a0c644f8ef22c7cae38dc7e6041ae39adc1efc2

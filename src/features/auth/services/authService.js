@@ -11,6 +11,7 @@ import {
   updateProfileApi,
   deleteAccountApi,
   loginGoogleApi,
+  logoutApi,
 } from '../api/auth.api';
 import { removeToken } from '../../../shared/utils/auth';
 
@@ -120,7 +121,13 @@ export const deleteCurrentAccount = async () => {
 
 /**
  * Clear all auth tokens from browser storage.
+ *
+ * @returns {Promise<void>}
  */
-export const logoutSession = () => {
-  removeToken();
+export const logoutSession = async () => {
+  try {
+    await logoutApi();
+  } finally {
+    removeToken();
+  }
 };

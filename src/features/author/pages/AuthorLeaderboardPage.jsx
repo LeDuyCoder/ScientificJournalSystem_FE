@@ -90,15 +90,15 @@ export default function AuthorLeaderboardPage() {
               Các tác giả nổi bật nhất hệ thống được xếp hạng theo số bài báo, citations và tầm ảnh hưởng nghiên cứu.
             </p>
           </div>
-          <Button
-            variant="link"
-            onClick={() => navigate('/authors')}
-            className="text-primary text-decoration-none text-xs fw-semibold p-0 d-flex align-items-center gap-1.5 flex-shrink-0"
-            style={{ fontSize: '0.85rem' }}
-          >
-            <Icon icon="lucide:arrow-left" width="16" />
-            Quay lại danh sách
-          </Button>
+          <Button 
+                      variant="link" 
+                      onClick={() => navigate('/authors')}
+                      className="text-main hover:text-dark p-0 text-decoration-none d-flex align-items-center gap-2 mb-3 font-semibold"
+                      style={{ fontSize: '0.9rem', fontWeight: 600 }}
+                    >
+                      <Icon icon="lucide:arrow-left" width="18" />
+                      <span>Quay lại danh sách tác giả</span>
+                    </Button>
         </div>
 
         {/* Tab menu điều hướng phụ (Đặt activeTab="leaderboard") */}
