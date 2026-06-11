@@ -54,33 +54,6 @@ export default function FilterPanel({
     return isDuplicateName && areaLabel ? `${label} (${areaLabel})` : label;
   };
 
-  const pillSelectStyle = {
-    borderRadius: '999px',
-    backgroundColor: '#f3f4f6',
-    border: '1px solid #ececec',
-    color: '#374151',
-    fontSize: '0.92rem',
-    minHeight: '46px',
-    paddingLeft: '16px',
-    paddingRight: '36px',
-    boxShadow: 'none'
-  };
-
-  const toggleChipStyle = (active = false) => ({
-    borderRadius: '999px',
-    backgroundColor: active ? 'rgba(255, 106, 0, 0.10)' : '#ffffff',
-    border: active ? '1px solid rgba(255, 106, 0, 0.30)' : '1px solid #ececec',
-    color: active ? '#ea580c' : '#374151',
-    minHeight: '46px',
-    padding: '0 15px',
-    display: 'inline-flex',
-    alignItems: 'center',
-    gap: '10px',
-    cursor: 'pointer',
-    transition: 'all 0.2s ease',
-    fontWeight: active ? 600 : 500
-  });
-
   const accessValue = selectedAccess[0] || 'all';
 
   // Generate year options: current year down to 2015
@@ -88,15 +61,8 @@ export default function FilterPanel({
   const yearOptions = Array.from({ length: currentYear - 2014 }, (_, i) => currentYear - i);
 
   return (
-    <div className="mb-4 text-start d-flex flex-column gap-3">
-      <div
-        className="journal-dark-card p-3 p-lg-4"
-        style={{
-          borderRadius: '20px',
-          backgroundColor: 'var(--bg-card)',
-          border: '1px solid var(--border)'
-        }}
-      >
+    <div className="catalog-filter-panel text-start d-flex flex-column gap-3">
+      <section className="catalog-surface catalog-filter-surface">
         <div className="d-flex flex-column gap-3">
           <div className="d-flex flex-column flex-xl-row align-items-stretch align-items-xl-center justify-content-between gap-3">
             <div className="d-flex flex-wrap gap-3 flex-grow-1">
@@ -104,8 +70,8 @@ export default function FilterPanel({
                 value={selectedAreas[0] || 'all'}
                 onChange={(e) => onAreaSelect(e.target.value)}
                 disabled={loading}
-                className="border-0"
-                style={{ ...pillSelectStyle, width: '260px', maxWidth: '100%' }}
+                className="catalog-filter-select"
+                style={{ '--catalog-select-width': '260px' }}
               >
                 <option value="all">All subject areas</option>
                 {subjectAreas.map((area) => (
@@ -119,8 +85,8 @@ export default function FilterPanel({
                 value={selectedCategories[0] || 'all'}
                 onChange={(e) => onCategorySelect(e.target.value)}
                 disabled={loading || !hasSelectedArea}
-                className="border-0"
-                style={{ ...pillSelectStyle, width: '300px', maxWidth: '100%', opacity: hasSelectedArea ? 1 : 0.72 }}
+                className="catalog-filter-select"
+                style={{ '--catalog-select-width': '300px', opacity: hasSelectedArea ? 1 : 0.72 }}
               >
                 <option value="all">
                   {hasSelectedArea ? 'All subject categories' : 'Select subject area first'}
@@ -136,8 +102,8 @@ export default function FilterPanel({
                 value={selectedZone || 'all'}
                 onChange={(e) => onZoneSelect?.(e.target.value)}
                 disabled={loading}
-                className="border-0"
-                style={{ ...pillSelectStyle, width: '170px', maxWidth: '100%' }}
+                className="catalog-filter-select"
+                style={{ '--catalog-select-width': '170px' }}
               >
                 <option value="all">Zone</option>
                 {zones.map((zone) => (
@@ -150,8 +116,8 @@ export default function FilterPanel({
               <Form.Select
                 value={selectedQuartiles[0] || 'all'}
                 onChange={(e) => onQuartileSelect(e.target.value)}
-                className="border-0"
-                style={{ ...pillSelectStyle, width: '150px', maxWidth: '100%' }}
+                className="catalog-filter-select"
+                style={{ '--catalog-select-width': '150px' }}
               >
                 <option value="all">All quartiles</option>
                 <option value="Q1">Q1</option>
@@ -163,8 +129,8 @@ export default function FilterPanel({
               <Form.Select
                 value={selectedYear || 'all'}
                 onChange={(e) => onYearSelect(e.target.value)}
-                className="border-0"
-                style={{ ...pillSelectStyle, width: '120px', maxWidth: '100%' }}
+                className="catalog-filter-select"
+                style={{ '--catalog-select-width': '120px' }}
               >
                 <option value="all">All years</option>
                 {yearOptions.map((y) => (
@@ -176,8 +142,7 @@ export default function FilterPanel({
             <Button
               variant="link"
               onClick={onClearAll}
-              className="text-decoration-none fw-semibold px-2 align-self-start align-self-xl-center"
-              style={{ color: '#f97316', fontSize: '0.95rem' }}
+              className="catalog-clear-btn text-decoration-none px-2 align-self-start align-self-xl-center"
             >
               Clear filters
             </Button>
@@ -187,7 +152,7 @@ export default function FilterPanel({
             <button
               type="button"
               onClick={() => onAccessSelect(accessValue === 'open_access' ? 'all' : 'open_access')}
-              style={toggleChipStyle(accessValue === 'open_access')}
+              className={`catalog-toggle-chip ${accessValue === 'open_access' ? 'is-active' : ''}`}
             >
               <Form.Check
                 type="switch"
@@ -201,7 +166,7 @@ export default function FilterPanel({
             <button
               type="button"
               onClick={() => onOaDiamondToggle && onOaDiamondToggle(!isOaDiamond)}
-              style={toggleChipStyle(isOaDiamond)}
+              className={`catalog-toggle-chip ${isOaDiamond ? 'is-active' : ''}`}
             >
               <Form.Check
                 type="switch"
@@ -213,7 +178,7 @@ export default function FilterPanel({
             </button>
           </div>
         </div>
-      </div>
+      </section>
     </div>
   );
 }
