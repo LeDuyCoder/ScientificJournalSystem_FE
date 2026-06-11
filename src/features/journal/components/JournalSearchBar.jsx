@@ -1,4 +1,4 @@
-﻿/**
+/**
  * File source thuộc hệ thống FE ResearchPulse.
  *
  * File: features\journal\components\JournalSearchBar.jsx
@@ -17,19 +17,12 @@ export default function JournalSearchBar({
   onClear
 }) {
   return (
-    <Form onSubmit={onSubmit} className="mb-4">
+    <Form onSubmit={onSubmit} className="journal-search-panel">
       <Row className="g-3 align-items-center">
         {/* Search Input Box */}
         <Col lg={6} md={12}>
-          <InputGroup 
-            style={{ 
-              borderRadius: '10px', 
-              overflow: 'hidden', 
-              border: '1px solid var(--border)',
-              backgroundColor: 'var(--bg-card)' 
-            }}
-          >
-            <InputGroup.Text className="bg-transparent border-0 text-muted-custom">
+          <InputGroup className="journal-search-group">
+            <InputGroup.Text className="journal-search-addon">
               <Icon icon="lucide:search" width="18" />
             </InputGroup.Text>
             <Form.Control
@@ -37,13 +30,12 @@ export default function JournalSearchBar({
               placeholder="Tìm journal..."
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
-              className="border-0 bg-transparent text-main py-2.5 shadow-none"
-              style={{ fontSize: '0.9rem' }}
+              className="journal-search-input"
             />
             {searchInput && (
               <Button 
                 variant="link" 
-                className="text-muted-custom hover:text-main p-2"
+                className="journal-search-clear p-2"
                 onClick={() => setSearchInput('')}
               >
                 <Icon icon="lucide:x" width="16" />
@@ -51,8 +43,7 @@ export default function JournalSearchBar({
             )}
             <Button 
               type="submit" 
-              className="btn-dark-solid px-4 font-semibold text-xs border-0"
-              style={{ backgroundColor: 'var(--btn-dark)', color: '#FFFFFF' }}
+              className="journal-search-submit px-4 border-0"
             >
               Tìm kiếm
             </Button>
@@ -64,13 +55,7 @@ export default function JournalSearchBar({
           <Form.Select
             value={quartile}
             onChange={(e) => setQuartile(e.target.value)}
-            className="text-main shadow-none py-2.5"
-            style={{ 
-              borderRadius: '10px', 
-              border: '1px solid var(--border)', 
-              backgroundColor: 'var(--bg-card)',
-              fontSize: '0.9rem'
-            }}
+            className="journal-filter-select text-main py-2.5"
           >
             <option value="all">Tất cả quartile</option>
             <option value="Q1">Q1</option>
@@ -85,13 +70,7 @@ export default function JournalSearchBar({
           <Form.Select
             value={isOpenAccess}
             onChange={(e) => setIsOpenAccess(e.target.value)}
-            className="text-main shadow-none py-2.5"
-            style={{ 
-              borderRadius: '10px', 
-              border: '1px solid var(--border)', 
-              backgroundColor: 'var(--bg-card)',
-              fontSize: '0.9rem'
-            }}
+            className="journal-filter-select text-main py-2.5"
           >
             <option value="all">Tất cả truy cập</option>
             <option value="oa">Open Access (OA)</option>
@@ -103,9 +82,8 @@ export default function JournalSearchBar({
         <Col lg={1} md={4} sm={12} xs={12} className="text-md-end text-center">
           <Button
             variant="link"
-            className="text-muted-custom hover:text-danger text-decoration-none font-semibold text-xs py-2"
+            className="journal-reset-btn py-2"
             onClick={onClear}
-            style={{ minWidth: '80px' }}
           >
             <Icon icon="lucide:refresh-cw" className="me-1" />
             Reset
