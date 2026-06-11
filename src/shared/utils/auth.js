@@ -35,7 +35,7 @@ export const isAuthenticated = async () => {
   try {
     const authStore = useAuthStore.getState();
 
-    if (authStore.token && useUserStore.email) {
+    if (authStore.token && useUserStore.getState().email) {
       return true;
     }
 
