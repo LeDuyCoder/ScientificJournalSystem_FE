@@ -1,4 +1,4 @@
-﻿/**
+/**
  * File source thuộc hệ thống FE ResearchPulse.
  *
  * File: features\zone\api\zone.api.js
@@ -9,8 +9,8 @@ import api from '../../../shared/services/api';
  * Get publication volume stats by country
  * @returns {Promise} Axios promise
  */
-export const getCountryStatsApi = () => {
-  return api.get('/zones/countries/stats');
+export const getCountryStatsApi = (params) => {
+  return api.get('/zones/countries/stats', { params });
 };
 
 /**

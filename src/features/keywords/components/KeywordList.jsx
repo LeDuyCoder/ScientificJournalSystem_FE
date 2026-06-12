@@ -1,4 +1,4 @@
-﻿/**
+/**
  * File source thuộc hệ thống FE ResearchPulse.
  *
  * File: features\keywords\components\KeywordList.jsx
@@ -43,7 +43,7 @@ export default function KeywordList({ keywords, loading, error, pagination, onPa
     }
     items.push(<Pagination.Next key="next" disabled={currentPage === totalPages} onClick={() => onPageChange(currentPage + 1)} />);
 
-    return <Pagination className="justify-content-center mt-4 mb-0">{items}</Pagination>;
+    return <Pagination className="keyword-pagination justify-content-center mt-4 mb-0">{items}</Pagination>;
   };
 
   if (loading) {
@@ -51,7 +51,7 @@ export default function KeywordList({ keywords, loading, error, pagination, onPa
       <Row className="g-3">
         {[1, 2, 3, 4, 5, 6].map((item) => (
           <Col md={6} xl={4} key={item}>
-            <div className="journal-dark-card p-4" style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '16px' }}>
+            <div className="keyword-skeleton-card">
               <LoadingSkeleton width="120px" height="14px" className="mb-3" />
               <LoadingSkeleton width="80%" height="28px" className="mb-3" />
               <LoadingSkeleton width="140px" height="22px" className="mb-4" />
@@ -65,20 +65,20 @@ export default function KeywordList({ keywords, loading, error, pagination, onPa
 
   if (error) {
     return (
-      <div className="journal-dark-card p-5 text-center" style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '16px' }}>
-        <Icon icon="lucide:alert-triangle" width="42" className="text-danger mb-3" />
-        <h3 className="font-display text-main fw-bold mb-2" style={{ fontSize: '1.25rem' }}>Không thể tải danh sách keywords</h3>
+      <div className="keyword-state-card">
+        <Icon icon="lucide:alert-triangle" width="42" className="keyword-state-icon mb-3" />
+        <h3 className="keyword-state-title mb-2">Không thể tải danh sách keywords</h3>
         <p className="text-muted-custom mb-4">{error}</p>
-        <button type="button" onClick={onRetry} className="btn btn-dark px-4">Thử lại</button>
+        <button type="button" onClick={onRetry} className="btn keyword-retry-btn px-4">Thử lại</button>
       </div>
     );
   }
 
   if (!keywords || keywords.length === 0) {
     return (
-      <div className="journal-dark-card p-5 text-center" style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '16px' }}>
+      <div className="keyword-state-card">
         <Icon icon="lucide:inbox" width="42" className="text-muted-custom mb-3" />
-        <h3 className="font-display text-main fw-bold mb-2" style={{ fontSize: '1.25rem' }}>Không tìm thấy keyword phù hợp</h3>
+        <h3 className="keyword-state-title mb-2">Không tìm thấy keyword phù hợp</h3>
         <p className="text-muted-custom mb-0">Thử đổi từ khóa tìm kiếm hoặc reset bộ lọc.</p>
       </div>
     );

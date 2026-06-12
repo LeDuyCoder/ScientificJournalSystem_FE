@@ -1,4 +1,4 @@
-﻿/**
+/**
  * File source thuộc hệ thống FE ResearchPulse.
  *
  * File: features\journal\pages\JournalListPage.jsx
@@ -10,6 +10,7 @@ import JournalStatsCards from '../components/JournalStatsCards';
 import JournalSearchBar from '../components/JournalSearchBar';
 import JournalTable from '../components/JournalTable';
 import useJournalList from '../hooks/useJournalList';
+import './JournalListPage.css';
 
 export default function JournalListPage() {
   const {
@@ -67,25 +68,15 @@ export default function JournalListPage() {
   };
 
   return (
-    <div 
-      className="min-vh-100 text-main" 
-      style={{ 
-        backgroundColor: 'var(--bg-main)', 
-        paddingTop: '100px', 
-        paddingBottom: '80px' 
-      }}
-    >
-      {/* Top Navigation */}
+    <div className="journal-list-page text-main">
       <Header />
 
       <Container>
-        {/* Breadcrumbs */}
-        <nav aria-label="breadcrumb" className="mb-4">
-          <ol className="breadcrumb mb-0" style={{ fontSize: '0.8rem' }}>
+        <nav aria-label="breadcrumb" className="journal-list-breadcrumb mb-4">
+          <ol className="breadcrumb">
             <li className="breadcrumb-item">
-              <span 
-                className="text-muted-custom" 
-                style={{ cursor: 'pointer' }} 
+              <span
+                className="journal-list-breadcrumb__link"
                 onClick={() => window.location.href = '/'}
               >
                 Home
@@ -97,15 +88,20 @@ export default function JournalListPage() {
           </ol>
         </nav>
 
-        {/* Page Header */}
-        <div className="text-start mb-4">
-          <h1 className="font-display fw-bold mb-2 text-main" style={{ fontSize: '2.2rem', letterSpacing: '-0.02em' }}>
-            Tạp chí
-          </h1>
-          <p className="text-muted-custom fs-6 mb-0">
-            Danh sách tạp chí khoa học trong hệ thống
-          </p>
-        </div>
+        <section className="journal-list-hero">
+          <div className="journal-list-hero__content">
+            <div className="journal-list-eyebrow">
+              <Icon icon="lucide:library" width="17" />
+              <span>Journal catalog</span>
+            </div>
+            <h1 className="journal-list-title">
+              Tạp chí
+            </h1>
+            <p className="journal-list-description">
+              Danh sách tạp chí khoa học trong hệ thống ResearchPulse, hỗ trợ lọc theo quartile và trạng thái truy cập mở.
+            </p>
+          </div>
+        </section>
 
         {/* Statistic Cards */}
         <JournalStatsCards stats={stats} loading={loadingStats} />
@@ -124,7 +120,7 @@ export default function JournalListPage() {
 
         {/* Error State */}
         {error && (
-          <div className="alert alert-danger d-flex align-items-center gap-2 mb-4" role="alert">
+          <div className="journal-alert alert d-flex align-items-center gap-2 mb-4" role="alert">
             <Icon icon="lucide:alert-circle" width="18" />
             <div>{error}</div>
           </div>
@@ -132,16 +128,10 @@ export default function JournalListPage() {
 
         {/* Table & Loading Skeleton wrapper */}
         {isLoading ? (
-          <div 
-            className="p-4 border border-light" 
-            style={{ 
-              backgroundColor: 'var(--bg-card)', 
-              borderRadius: '16px' 
-            }}
-          >
-            <div className="skeleton-shimmer mb-3" style={{ width: '100%', height: '40px', borderRadius: '8px' }} />
+          <div className="journal-loading-panel">
+            <div className="skeleton-shimmer journal-skeleton-line mb-3" />
             {[1, 2, 3, 4, 5].map((i) => (
-              <div key={i} className="skeleton-shimmer mb-2" style={{ width: '100%', height: '60px', borderRadius: '8px' }} />
+              <div key={i} className="skeleton-shimmer journal-skeleton-row mb-2" />
             ))}
           </div>
         ) : (
@@ -156,7 +146,7 @@ export default function JournalListPage() {
             {/* Pagination Controls */}
             {journals.length > 0 && totalPages > 1 && (
               <div className="d-flex justify-content-center mt-4">
-                <Pagination className="mb-0 custom-pagination gap-1">
+                <Pagination className="journal-pagination mb-0 gap-1">
                   <Pagination.Prev 
                     disabled={pagination.page === 1}
                     onClick={() => handlePageChange(pagination.page - 1)}

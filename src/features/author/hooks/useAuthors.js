@@ -95,6 +95,24 @@ const MOCK_LEADERBOARD = [
   { id: '4', author_id: '4', name: 'Dr. Michael Jordan', subject_area: 'Machine Learning', article_count: 650, citation_count: 215000, papers: 650, citations: 215000 }
 ];
 
+const createUnknownAuthorFallback = (authorId) => ({
+  id: String(authorId),
+  author_id: String(authorId),
+  name: `Tác giả #${authorId}`,
+  full_name: `Tác giả #${authorId}`,
+  institution_1: 'Chưa có dữ liệu từ API tác giả',
+  institution_2: '',
+  email: '',
+  h_index: 0,
+  citation_count: 0,
+  article_count: 0,
+  orcid: '',
+  avatar_color: '#6366F1',
+  bio: 'Hiện chưa tải được hồ sơ chi tiết của tác giả này từ backend.',
+  homepage: '',
+  subject_areas: []
+});
+
 // Cơ sở dữ liệu giả định cho danh sách bài báo của từng tác giả.
 const MOCK_ARTICLES_MAP = {
   '1': [
@@ -262,7 +280,7 @@ const normalizeAreasBreakdown = (data) => {
         const value = data[key];
         if (typeof value === 'object' && value !== null) {
           return {
-            subject_area: value.subject_area ?? key,
+            subject_area: value.category_name ?? value.subject_area_name ?? value.subject_area ?? value.display_name ?? value.name ?? key,
             percentage: value.percentage ?? value.percent ?? 0,
             count: value.count ?? value.article_count ?? 0,
             ...value,
@@ -452,8 +470,8 @@ export default function useAuthors() {
       }
     } catch (err) {
       console.warn(`API error fetching author detail (id: ${authorId}), using mock fallback:`, err?.message || String(err));
-      const matched = MOCK_AUTHORS.find(a => String(a.id) === String(authorId)) || MOCK_AUTHORS[0];
-      setCurrentAuthor(matched);
+      const matched = MOCK_AUTHORS.find(a => String(a.id) === String(authorId));
+      setCurrentAuthor(matched || createUnknownAuthorFallback(authorId));
     } finally {
       setLoadingAuthorDetail(false);
     }
@@ -479,7 +497,7 @@ export default function useAuthors() {
       }
     } catch (err) {
       console.warn(`API error fetching author articles (id: ${authorId}), using mock fallback:`, err?.message || String(err));
-      const matched = MOCK_ARTICLES_MAP[String(authorId)] || MOCK_ARTICLES_MAP['1'];
+      const matched = MOCK_ARTICLES_MAP[String(authorId)] || [];
       setAuthorArticles(matched);
     } finally {
       setLoadingArticles(false);
@@ -506,7 +524,7 @@ export default function useAuthors() {
       }
     } catch (err) {
       console.warn(`API error fetching areas breakdown (id: ${authorId}), using mock fallback:`, err?.message || String(err));
-      const matched = MOCK_BREAKDOWNS_MAP[String(authorId)] || MOCK_BREAKDOWNS_MAP['1'];
+      const matched = MOCK_BREAKDOWNS_MAP[String(authorId)] || [];
       setAuthorBreakdown(matched);
     } finally {
       setLoadingAreas(false);

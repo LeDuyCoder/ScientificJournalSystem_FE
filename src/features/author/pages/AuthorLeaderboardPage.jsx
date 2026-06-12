@@ -1,14 +1,6 @@
 /**
  * @file AuthorLeaderboardPage.jsx
  * @description Trang hiển thị Bảng xếp hạng Tác giả.
- * Hỗ trợ lọc các tác giả hàng đầu theo lĩnh vực nghiên cứu hoặc khoảng thời gian (tất cả, tuần này, tháng này).
- * 
- * Bố cục giao diện:
- * - Component Header điều hướng phía trên.
- * - Thanh breadcrumb dẫn đường.
- * - Menu điều hướng phụ dạng tab (`AuthorNavigationTabs`) ở trạng thái hoạt động "leaderboard".
- * - Bộ điều khiển bộ lọc (hộp chọn lĩnh vực nghiên cứu, hộp chọn khoảng thời gian).
- * - Bảng hiển thị danh sách xếp hạng tác giả (`AuthorLeaderboardTable`).
  */
 
 import { useEffect, useState } from 'react';
@@ -19,16 +11,11 @@ import Header from '../../landing/components/Header';
 import useAuthors from '../hooks/useAuthors';
 import AuthorLeaderboardTable from '../components/AuthorLeaderboardTable';
 import AuthorNavigationTabs from '../components/AuthorNavigationTabs';
+import './AuthorLeaderboardPage.css';
 
-/**
- * Hiển thị trang Bảng xếp hạng tác giả tại tuyến đường `/authors/leaderboard`.
- * 
- * @returns {JSX.Element} Giao diện trang Bảng xếp hạng tác giả.
- */
 export default function AuthorLeaderboardPage() {
   const navigate = useNavigate();
 
-  // Trích xuất các trạng thái và trigger bảng xếp hạng từ hook useAuthors
   const {
     leaderboard,
     loadingLeaderboard,
@@ -36,12 +23,9 @@ export default function AuthorLeaderboardPage() {
     fetchLeaderboard
   } = useAuthors();
 
-  // ── CÁC TRẠNG THÁI BỘ LỌC CỤC BỘ ───────────────────────────────────────────
   const [selectedArea, setSelectedArea] = useState('');
-  const [selectedPeriod, setSelectedPeriod] = useState('all'); // Time range filter: 'week', 'month', 'all'
+  const [selectedPeriod, setSelectedPeriod] = useState('all');
 
-  // ── SIDE EFFECT: KÍCH HOẠT KHI THAY ĐỔI BỘ LỌC ──────────────────────────────
-  // Gọi lại API lấy dữ liệu bảng xếp hạng mỗi khi lĩnh vực nghiên cứu hoặc khoảng thời gian được chọn thay đổi.
   useEffect(() => {
     fetchLeaderboard({
       subject_area: selectedArea,
@@ -50,80 +34,63 @@ export default function AuthorLeaderboardPage() {
   }, [selectedArea, selectedPeriod, fetchLeaderboard]);
 
   return (
-    <div
-      className="min-vh-100"
-      style={{ backgroundColor: 'var(--bg-main)', color: 'var(--text-main)', paddingTop: '80px' }}
-    >
-      {/* Thanh Header điều hướng */}
+    <div className="author-leaderboard-page">
       <Header />
 
-      <Container className="py-4">
-        {/* Đường dẫn Breadcrumb */}
-        <nav className="mb-3" aria-label="breadcrumb">
-          <ol className="breadcrumb m-0" style={{ fontSize: '0.8rem' }}>
+      <Container>
+        <nav className="author-leaderboard-breadcrumb mb-4" aria-label="breadcrumb">
+          <ol className="breadcrumb">
             <li className="breadcrumb-item">
-              <span onClick={() => navigate('/')} style={{ cursor: 'pointer', color: 'var(--text-muted)' }}>
+              <span className="author-leaderboard-breadcrumb__link" onClick={() => navigate('/')}>
                 Tổng quan
               </span>
             </li>
             <li className="breadcrumb-item">
-              <span onClick={() => navigate('/authors')} style={{ cursor: 'pointer', color: 'var(--text-muted)' }}>
+              <span className="author-leaderboard-breadcrumb__link" onClick={() => navigate('/authors')}>
                 Tác giả nổi bật
               </span>
             </li>
-            <li className="breadcrumb-item active" aria-current="page" style={{ color: 'var(--text-muted)' }}>
+            <li className="breadcrumb-item active text-primary" aria-current="page">
               Bảng xếp hạng
             </li>
           </ol>
         </nav>
 
-        {/* Tiêu đề Trang & Liên kết quay lại */}
-        <div className="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3 mb-4">
-          <div>
-            <h1 
-              className="font-display fw-bold text-main mb-2" 
-              style={{ fontSize: '2.1rem', letterSpacing: '-0.02em' }}
+        <section className="author-leaderboard-hero">
+          <div className="author-leaderboard-hero__content d-flex flex-column flex-md-row justify-content-between align-items-start gap-3">
+            <div>
+              <div className="author-leaderboard-eyebrow">
+                <Icon icon="lucide:trophy" width="17" />
+                <span>Author leaderboard</span>
+              </div>
+              <h1 className="author-leaderboard-title">Bảng xếp hạng tác giả</h1>
+              <p className="author-leaderboard-description">
+                Các tác giả nổi bật nhất hệ thống được xếp hạng theo số bài báo, citations và tầm ảnh hưởng nghiên cứu.
+              </p>
+            </div>
+            <Button
+              variant="link"
+              onClick={() => navigate('/authors')}
+              className="author-leaderboard-back p-0 d-flex align-items-center gap-2"
             >
-              🏆 Bảng xếp hạng tác giả
-            </h1>
-            <p className="text-muted-custom mb-0" style={{ fontSize: '0.88rem' }}>
-              Các tác giả nổi bật nhất hệ thống được xếp hạng theo số bài báo, citations và tầm ảnh hưởng nghiên cứu.
-            </p>
+              <Icon icon="lucide:arrow-left" width="18" />
+              <span>Quay lại danh sách tác giả</span>
+            </Button>
           </div>
-          <Button 
-                      variant="link" 
-                      onClick={() => navigate('/authors')}
-                      className="text-main hover:text-dark p-0 text-decoration-none d-flex align-items-center gap-2 mb-3 font-semibold"
-                      style={{ fontSize: '0.9rem', fontWeight: 600 }}
-                    >
-                      <Icon icon="lucide:arrow-left" width="18" />
-                      <span>Quay lại danh sách tác giả</span>
-                    </Button>
-        </div>
+        </section>
 
-        {/* Tab menu điều hướng phụ (Đặt activeTab="leaderboard") */}
         <AuthorNavigationTabs activeTab="leaderboard" />
 
-        {/* Bảng điều khiển bộ lọc */}
-        <Card 
-          className="p-3 mb-4" 
-          style={{ 
-            backgroundColor: 'var(--bg-card)', 
-            borderColor: 'var(--border)', 
-            borderRadius: '12px' 
-          }}
-        >
+        <Card className="author-leaderboard-filter-card">
           <Row className="g-3 align-items-center">
-            {/* Hộp chọn bộ lọc Lĩnh vực nghiên cứu */}
             <Col xs={12} sm={6} md={4}>
               <Form.Group className="d-flex align-items-center gap-2">
-                <Form.Label className="text-muted-custom m-0 text-sm flex-shrink-0" style={{ fontSize: '0.8rem' }}>Lĩnh vực:</Form.Label>
+                <Form.Label className="author-leaderboard-label m-0 flex-shrink-0">Lĩnh vực:</Form.Label>
                 <Form.Select
                   size="sm"
                   value={selectedArea}
                   onChange={e => setSelectedArea(e.target.value)}
-                  className="text-muted-custom"
-                  style={{ borderColor: 'var(--border)', fontSize: '0.82rem' }}
+                  className="author-leaderboard-select"
                 >
                   <option value="">Tất cả lĩnh vực</option>
                   <option value="Machine Learning">Machine Learning</option>
@@ -134,16 +101,14 @@ export default function AuthorLeaderboardPage() {
               </Form.Group>
             </Col>
 
-            {/* Hộp chọn bộ lọc Khoảng thời gian */}
             <Col xs={12} sm={6} md={4}>
               <Form.Group className="d-flex align-items-center gap-2">
-                <Form.Label className="text-muted-custom m-0 text-sm flex-shrink-0" style={{ fontSize: '0.8rem' }}>Thời gian:</Form.Label>
+                <Form.Label className="author-leaderboard-label m-0 flex-shrink-0">Thời gian:</Form.Label>
                 <Form.Select
                   size="sm"
                   value={selectedPeriod}
                   onChange={e => setSelectedPeriod(e.target.value)}
-                  className="text-muted-custom"
-                  style={{ borderColor: 'var(--border)', fontSize: '0.82rem' }}
+                  className="author-leaderboard-select"
                 >
                   <option value="all">Tất cả thời gian</option>
                   <option value="week">Tuần này</option>
@@ -154,7 +119,6 @@ export default function AuthorLeaderboardPage() {
           </Row>
         </Card>
 
-        {/* Bảng xếp hạng tác giả */}
         <AuthorLeaderboardTable
           authors={leaderboard}
           loading={loadingLeaderboard}

@@ -1,4 +1,4 @@
-﻿/**
+/**
  * File source thuộc hệ thống FE ResearchPulse.
  *
  * File: features\keywords\components\KeywordSearchBar.jsx
@@ -35,15 +35,8 @@ export default function KeywordSearchBar({ value = '', onSearch, onClear }) {
 
   return (
     <Form onSubmit={handleSubmit}>
-      <InputGroup>
-        <InputGroup.Text
-          style={{
-            backgroundColor: 'var(--bg-card)',
-            border: '1px solid var(--border)',
-            borderRight: 'none',
-            color: 'var(--text-muted)',
-          }}
-        >
+      <InputGroup className="keyword-search-group">
+        <InputGroup.Text className="keyword-search-addon">
           <Icon icon="lucide:search" width="18" />
         </InputGroup.Text>
         <Form.Control
@@ -51,34 +44,20 @@ export default function KeywordSearchBar({ value = '', onSearch, onClear }) {
           placeholder="Tìm keyword..."
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          style={{
-            backgroundColor: 'var(--bg-card)',
-            border: '1px solid var(--border)',
-            borderLeft: 'none',
-            borderRight: 'none',
-            color: 'var(--text-main)',
-            fontSize: '0.95rem',
-          }}
+          className="keyword-search-input"
         />
         {input && (
           <Button
             variant="link"
             onClick={handleClear}
-            style={{ color: 'var(--text-muted)', textDecoration: 'none', border: '1px solid var(--border)', borderLeft: 'none', borderRight: 'none', backgroundColor: 'var(--bg-card)' }}
+            className="keyword-search-clear"
           >
             <Icon icon="lucide:x" width="16" />
           </Button>
         )}
         <Button
           type="submit"
-          style={{
-            backgroundColor: '#111',
-            color: '#fff',
-            border: '1px solid #111',
-            fontWeight: 600,
-            fontSize: '0.9rem',
-            padding: '0 20px',
-          }}
+          className="keyword-search-submit"
         >
           Tìm kiếm
         </Button>

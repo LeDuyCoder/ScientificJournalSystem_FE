@@ -1,4 +1,4 @@
-﻿/**
+/**
  * File source thuộc hệ thống FE ResearchPulse.
  *
  * File: features\catalog\hooks\useCatalogSearch.js
@@ -7,6 +7,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { searchJournalsApi } from '../../journal/api/journalApi';
 import { getSubjectAreasApi, getSubjectCategoriesApi } from '../api/catalogApi';
+import { getCountryStatsApi } from '../../zone/api/zone.api';
 import { normalizeSearchResponse } from '../services/catalogSearchService';
 import { useCatalogSearchStore } from '../store/catalogSearchStore';
 
@@ -24,6 +25,7 @@ export function useCatalogSearch(currentUser) {
   /* ----- Filter data lists ----- */
   const [subjectAreas, setSubjectAreas] = useState([]);
   const [subjectCategories, setSubjectCategories] = useState([]);
+  const [zones, setZones] = useState([]);
   const [loadingFilters, setLoadingFilters] = useState(false);
 
   /* ----- Result state ----- */
@@ -53,6 +55,7 @@ export function useCatalogSearch(currentUser) {
   const selectedAccess = searchParams.getAll('access');
   const selectedQuartiles = searchParams.getAll('quartile');
   const selectedYear = searchParams.get('ranking_year') || '';
+  const selectedZone = searchParams.get('country_id') || '';
   const isOaDiamond = searchParams.get('is_oa_diamond') === 'true';
 
   const selectedAreasStr = selectedAreas.join(',');
@@ -71,6 +74,7 @@ export function useCatalogSearch(currentUser) {
       selectedAccess,
       selectedQuartiles,
       selectedYear,
+      selectedZone,
       isOaDiamond,
       viewMode,
     });
@@ -81,16 +85,19 @@ export function useCatalogSearch(currentUser) {
     async function loadFilters() {
       setLoadingFilters(true);
       try {
-        const [areasRes, catsRes] = await Promise.all([
+        const [areasRes, catsRes, zonesRes] = await Promise.all([
           getSubjectAreasApi(),
           getSubjectCategoriesApi(),
+          getCountryStatsApi({ page: 1, limit: 300 }),
         ]);
         setSubjectAreas(areasRes.data?.data?.items || areasRes.data?.data || []);
         setSubjectCategories(catsRes.data?.data?.items || catsRes.data?.data || []);
+        setZones(zonesRes.data?.data?.items || zonesRes.data?.data?.countries || zonesRes.data?.data || []);
       } catch (err) {
         console.error('Failed to load catalog filter lists:', err);
         setSubjectAreas([]);
         setSubjectCategories([]);
+        setZones([]);
       } finally {
         setLoadingFilters(false);
       }
@@ -119,6 +126,7 @@ export function useCatalogSearch(currentUser) {
             : undefined,
         quartiles: selectedQuartiles.join(',') || undefined,
         ranking_year: selectedYear || undefined,
+        country_ids: selectedZone || undefined,
         is_oa_diamond: isOaDiamond ? true : undefined,
       };
 
@@ -143,7 +151,7 @@ export function useCatalogSearch(currentUser) {
     } finally {
       setLoadingJournals(false);
     }
-  }, [search, page, limit, sort, selectedAreasStr, selectedCategoriesStr, selectedAccessStr, selectedQuartilesStr, selectedYear, isOaDiamond]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [search, page, limit, sort, selectedAreasStr, selectedCategoriesStr, selectedAccessStr, selectedQuartilesStr, selectedYear, selectedZone, isOaDiamond]); // eslint-disable-line react-hooks/exhaustive-deps
   useEffect(() => { fetchJournals(); }, [fetchJournals]);
 
   /* ----- Ensure default sort is reflected in URL on first load ----- */
@@ -269,6 +277,17 @@ export function useCatalogSearch(currentUser) {
     setSearchParams(next);
   };
 
+  const onZoneSelect = (zoneId) => {
+    const next = new URLSearchParams(searchParams);
+    if (zoneId && zoneId !== 'all') {
+      next.set('country_id', String(zoneId));
+    } else {
+      next.delete('country_id');
+    }
+    next.set('page', '1');
+    setSearchParams(next);
+  };
+
   /** Toggle is_oa_diamond filter. */
   const handleOaDiamondToggle = (val) => {
     const next = new URLSearchParams(searchParams);
@@ -320,6 +339,7 @@ export function useCatalogSearch(currentUser) {
     // Filter data
     subjectAreas,
     subjectCategories,
+    zones,
     loadingFilters,
 
     // Results
@@ -338,6 +358,7 @@ export function useCatalogSearch(currentUser) {
     selectedAccess,
     selectedQuartiles,
     selectedYear,
+    selectedZone,
     isOaDiamond,
 
     // View mode
@@ -361,6 +382,7 @@ export function useCatalogSearch(currentUser) {
     onAccessSelect,
     onQuartileSelect,
     onYearSelect,
+    onZoneSelect,
     handleOaDiamondToggle,
     handleClearAll,
     handleSortChange,

@@ -48,10 +48,13 @@ api.interceptors.response.use(
           const newToken = res.data?.token || res.data?.data?.token || null;
           
           if (newToken) {
-            const { loginSuccess } = useAuthStore.getState(); 
-            loginSuccess(newToken); 
+            const { loginSuccess } = useAuthStore.getState();
+            localStorage.setItem(STORAGE_KEYS.ACCESS_TOKEN, newToken);
+            loginSuccess(newToken);
             
+            // Gán token mới vào header của request bị lỗi trước đó
             originalRequest.headers['Authorization'] = `Bearer ${newToken}`;
+
           }
           
           return api(originalRequest);

@@ -1,124 +1,60 @@
 /**
  * @file AuthorArticleRow.jsx
  * @description Hiển thị một thẻ bài báo nghiên cứu khoa học của tác giả.
- * 
- * Bố cục tuân theo cấu trúc xuất bản khoa học:
- * - Dòng 1: Tên tạp chí (in nghiêng/màu nhạt) và năm xuất bản.
- * - Dòng 2: Tiêu đề bài báo in đậm, hoạt động như một liên kết điều hướng đến `/articles/:id`.
- * - Dòng 3: Siêu dữ liệu chứa tổng số lượt trích dẫn, nút nhấp để sao chép DOI và liên kết xem chi tiết.
  */
 
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Icon from '../../../shared/components/Icon';
 
-/**
- * Thành phần hiển thị một mục bài báo cụ thể trong danh mục xuất bản.
- * 
- * @param {Object} props - Thuộc tính truyền vào component.
- * @param {Object} props.article - Thông tin chi tiết bài báo (tiêu đề, tên tạp chí, mã DOI, v.v.).
- * @param {boolean} [props.isLast=false] - Cờ ẩn đường viền dưới nếu đây là mục cuối cùng trong danh sách.
- * @returns {JSX.Element} Giao diện dòng bài báo của tác giả.
- */
 export default function AuthorArticleRow({ article, isLast = false }) {
   const navigate = useNavigate();
-  const [copied, setCopied] = useState(false); // Điều khiển trạng thái icon phản hồi sao chép vào clipboard
+  const [copied, setCopied] = useState(false);
 
-  // Safely extract properties
   const id = article.article_id ?? article.id;
   const title = article.title ?? 'Bài báo nghiên cứu';
   const journal = article.journal_name ?? article.journal ?? 'Tạp chí khoa học';
   const year = article.publication_year ?? article.year ?? '—';
-  const citations = article.citation_count ?? article.citations ?? 0;
+  const citations = article.citation_count ?? article.cited_by_count ?? article.citations ?? 0;
   const doi = article.doi ?? '';
 
-  /**
-   * Điều hướng người dùng sang trang xem chi tiết bài báo tương ứng.
-   * 
-   * @returns {void}
-   */
   const handleTitleClick = () => {
-    if (id) {
-      navigate(`/articles/${id}`);
-    }
+    if (id) navigate(`/articles/${id}`);
   };
 
-  /**
-   * Sao chép chuỗi DOI vào bộ nhớ tạm (clipboard) của hệ điều hành và hiển thị tạm thời biểu tượng tích xanh.
-   * 
-   * @param {React.MouseEvent} e - Sự kiện click chuột.
-   * @returns {void}
-   */
   const handleCopyDoi = (e) => {
-    e.stopPropagation(); // Ngăn sự kiện click vào nhãn DOI kích hoạt sự kiện điều hướng của thẻ bài báo
+    e.stopPropagation();
     if (!doi) return;
     navigator.clipboard.writeText(doi);
     setCopied(true);
-    setTimeout(() => setCopied(false), 2000); // Đặt lại trạng thái sau 2 giây
+    setTimeout(() => setCopied(false), 2000);
   };
 
   return (
-    <div 
-      className="py-3"
-      style={{
-        borderBottom: isLast ? 'none' : '1px solid var(--border)',
-        transition: 'background-color 0.15s ease'
-      }}
-    >
-      {/* Dòng 1: Tên Tạp chí & Năm Xuất bản */}
-      <div className="d-flex justify-content-between align-items-baseline gap-3 mb-1.5">
-        <span 
-          className="text-muted-custom font-medium text-truncate"
-          style={{ fontSize: '0.8rem', opacity: 0.9 }}
-        >
-          {journal}
-        </span>
-        <span 
-          className="text-muted-custom flex-shrink-0 fw-semibold"
-          style={{ fontSize: '0.8rem' }}
-        >
-          {year}
-        </span>
+    <div className={`author-article-row${isLast ? ' author-article-row--last' : ''}`}>
+      <div className="author-article-meta">
+        <span className="author-article-journal text-truncate">{journal}</span>
+        <span className="author-article-year flex-shrink-0">{year}</span>
       </div>
 
-      {/* Dòng 2: Tiêu đề Bài báo */}
-      <h4 
-        onClick={handleTitleClick}
-        className="text-main fw-bold mb-2 hover:text-primary cursor-pointer transition-colors"
-        style={{ 
-          fontSize: '0.92rem', 
-          fontFamily: 'var(--font-sans)', 
-          lineHeight: '1.4',
-          cursor: 'pointer'
-        }}npm
-      >
+      <h4 onClick={handleTitleClick} className="author-article-title">
         {title}
       </h4>
 
-      {/* Dòng 3: Số lượt Trích dẫn, Nhãn sao chép DOI & Liên kết Xem Chi tiết */}
-      <div className="d-flex justify-content-between align-items-center flex-wrap gap-2" style={{ fontSize: '0.78rem' }}>
-        <div className="d-flex align-items-center gap-3">
-          <span className="text-muted-custom">
-            Được trích dẫn: <strong className="text-main fw-semibold">{citations} lần</strong>
+      <div className="author-article-footer">
+        <div className="d-flex align-items-center gap-3 flex-wrap">
+          <span className="author-article-citation">
+            Được trích dẫn: <strong>{citations} lần</strong>
           </span>
           {doi && (
-            <div 
-              onClick={handleCopyDoi}
-              className="d-flex align-items-center gap-1 text-muted-custom hover:text-primary cursor-pointer border rounded px-2 py-0.5"
-              style={{ fontSize: '0.7rem', backgroundColor: 'var(--bg-chip)', borderColor: 'var(--border)' }}
-              title="Click để sao chép mã DOI"
-            >
+            <div onClick={handleCopyDoi} className="author-article-doi" title="Click để sao chép mã DOI">
               <Icon icon={copied ? 'lucide:check' : 'lucide:copy'} width="10" className={copied ? 'text-success' : ''} />
               <span>DOI: {doi}</span>
             </div>
           )}
         </div>
-        
-        <span 
-          onClick={handleTitleClick}
-          className="text-primary hover:underline fw-semibold cursor-pointer d-flex align-items-center gap-0.5"
-          style={{ cursor: 'pointer' }}
-        >
+
+        <span onClick={handleTitleClick} className="author-article-detail">
           Chi tiết <Icon icon="lucide:chevron-right" width="12" />
         </span>
       </div>
