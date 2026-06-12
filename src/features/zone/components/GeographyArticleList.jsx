@@ -21,6 +21,25 @@ export default function GeographyArticleList({
     alert('Đã sao chép mã DOI vào bộ nhớ tạm: ' + doi);
   };
 
+  // Assign colors to topics from dev branch
+  const getTopicStyle = (topic) => {
+    if (!topic) return { bg: 'var(--bg-main)', color: 'var(--text-muted)' };
+    const name = String(topic).toLowerCase();
+    if (name.includes('machine learning') || name.includes('ml')) {
+      return { bg: 'var(--primary-light)', color: 'var(--primary)' };
+    }
+    if (name.includes('computer science') || name.includes('cs')) {
+      return { bg: 'rgba(6, 182, 212, 0.1)', color: '#0891b2' };
+    }
+    if (name.includes('medicine') || name.includes('bio')) {
+      return { bg: 'rgba(16, 185, 129, 0.1)', color: '#059669' };
+    }
+    if (name.includes('physic')) {
+      return { bg: 'rgba(245, 158, 11, 0.1)', color: '#d97706' };
+    }
+    return { bg: 'rgba(139, 92, 246, 0.1)', color: '#7c3aed' };
+  };
+
   // Render skeletons for loading state
   const renderSkeletons = () => (
     <tbody>
@@ -228,74 +247,84 @@ export default function GeographyArticleList({
                 </tr>
               </thead>
               <tbody>
-                {articles.map((article, index) => (
-                  <tr 
-                    key={article.article_id}
-                    onClick={() => onDetailClick(article.article_id)}
-                    className="align-middle geography-article-row"
-                  >
-                    <td className="text-muted-custom ps-3 font-sans" style={{ fontSize: '0.8rem' }}>
-                      {(page - 1) * 10 + index + 1}
-                    </td>
-                    <td style={{ maxWidth: '380px' }} className="py-3">
-                      <div className="geography-article-title line-clamp-2">
-                        {article.title}
-                      </div>
-                      {article.abstract && (
-                        <div className="text-muted-custom mt-1 text-xs text-truncate font-sans">
-                          {article.abstract}
+                {articles.map((article, index) => {
+                  const topicStyle = getTopicStyle(article.topic_name);
+                  return (
+                    <tr 
+                      key={article.article_id}
+                      onClick={() => onDetailClick(article.article_id)}
+                      className="align-middle geography-article-row"
+                    >
+                      <td className="text-muted-custom ps-3 font-sans" style={{ fontSize: '0.8rem' }}>
+                        {(page - 1) * 10 + index + 1}
+                      </td>
+                      <td style={{ maxWidth: '380px' }} className="py-3">
+                        <div className="geography-article-title line-clamp-2">
+                          {article.title}
                         </div>
-                      )}
-                    </td>
-                    <td style={{ maxWidth: '180px' }}>
-                      <div className="text-main text-sm text-truncate font-sans" style={{ fontWeight: 500 }}>
-                        {article.journal_name}
-                      </div>
-                    </td>
-                    <td className="text-center font-sans" style={{ color: 'var(--text-muted)' }}>
-                      {article.publication_year}
-                    </td>
-                    <td style={{ maxWidth: '140px' }}>
-                      {article.doi ? (
-                        <div className="d-flex align-items-center gap-1 font-sans">
-                          <span className="text-muted-custom text-xs text-truncate" style={{ fontSize: '0.75rem' }}>
-                            {article.doi}
-                          </span>
-                          <Button 
-                            variant="link" 
-                            className="p-0 text-muted-custom hover:text-dark d-flex align-items-center"
-                            onClick={(e) => handleCopyDoi(e, article.doi)}
-                            title="Copy DOI"
-                          >
-                            <Icon icon="lucide:copy" width="12" />
-                          </Button>
+                        {article.abstract && (
+                          <div className="text-muted-custom mt-1 text-xs text-truncate font-sans">
+                            {article.abstract}
+                          </div>
+                        )}
+                      </td>
+                      <td style={{ maxWidth: '180px' }}>
+                        <div className="text-main text-sm text-truncate font-sans" style={{ fontWeight: 500 }}>
+                          {article.journal_name}
                         </div>
-                      ) : (
-                        <span className="text-muted text-xs font-sans">—</span>
-                      )}
-                    </td>
-                    <td>
-                      <span className="geography-topic-badge">
-                        {article.topic_name || 'Chưa phân loại'}
-                      </span>
-                    </td>
-                    <td className="text-center">
-                      {article.is_open_access ? (
-                        <span className="geography-oa-badge">
-                          OA
+                      </td>
+                      <td className="text-center font-sans" style={{ color: 'var(--text-muted)' }}>
+                        {article.publication_year}
+                      </td>
+                      <td style={{ maxWidth: '140px' }}>
+                        {article.doi ? (
+                          <div className="d-flex align-items-center gap-1 font-sans">
+                            <span className="text-muted-custom text-xs text-truncate" style={{ fontSize: '0.75rem' }}>
+                              {article.doi}
+                            </span>
+                            <Button 
+                              variant="link" 
+                              className="p-0 text-muted-custom hover:text-dark d-flex align-items-center"
+                              onClick={(e) => handleCopyDoi(e, article.doi)}
+                              title="Copy DOI"
+                            >
+                              <Icon icon="lucide:copy" width="12" />
+                            </Button>
+                          </div>
+                        ) : (
+                          <span className="text-muted text-xs font-sans">—</span>
+                        )}
+                      </td>
+                      <td>
+                        <span 
+                          className="geography-topic-badge"
+                          style={{
+                            backgroundColor: topicStyle.bg,
+                            color: topicStyle.color,
+                            border: 'none'
+                          }}
+                        >
+                          {article.topic_name || 'Chưa phân loại'}
                         </span>
-                      ) : (
-                        <span className="text-muted-custom text-xs">—</span>
-                      )}
-                    </td>
-                    <td className="text-end pe-3">
-                      <span className="geography-link-accent">
-                        Chi tiết
-                        <Icon icon="lucide:arrow-right" width="12" />
-                      </span>
-                    </td>
-                  </tr>
-                ))}
+                      </td>
+                      <td className="text-center">
+                        {article.is_open_access ? (
+                          <span className="geography-oa-badge">
+                            OA
+                          </span>
+                        ) : (
+                          <span className="text-muted-custom text-xs">—</span>
+                        )}
+                      </td>
+                      <td className="text-end pe-3">
+                        <span className="geography-link-accent">
+                          Chi tiết
+                          <Icon icon="lucide:arrow-right" width="12" />
+                        </span>
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </Table>
           </div>
@@ -303,48 +332,60 @@ export default function GeographyArticleList({
           {/* Cards list for Mobile */}
           <div className="d-block d-md-none">
             <div className="d-flex flex-column gap-3">
-              {articles.map((article, index) => (
-                <Card 
-                  key={article.article_id}
-                  onClick={() => onDetailClick(article.article_id)}
-                  className="journal-dark-card shadow-sm geography-article-row border-0"
-                >
-                  <Card.Body className="p-3">
-                    <div className="d-flex align-items-center justify-content-between mb-2">
-                      <span className="text-muted-custom text-xs font-sans">#{(page - 1) * 10 + index + 1}</span>
-                      <div className="d-flex gap-1.5 align-items-center">
-                        <span className="geography-topic-badge" style={{ fontSize: '0.65rem', padding: '0.15rem 0.45rem' }}>
-                          {article.topic_name || 'Chưa phân loại'}
-                        </span>
-                        {article.is_open_access && (
-                          <span className="geography-oa-badge" style={{ fontSize: '0.65rem', padding: '0.15rem 0.45rem' }}>
-                            OA
+              {articles.map((article, index) => {
+                const topicStyle = getTopicStyle(article.topic_name);
+                return (
+                  <Card 
+                    key={article.article_id}
+                    onClick={() => onDetailClick(article.article_id)}
+                    className="journal-dark-card shadow-sm geography-article-row border-0"
+                  >
+                    <Card.Body className="p-3">
+                      <div className="d-flex align-items-center justify-content-between mb-2">
+                        <span className="text-muted-custom text-xs font-sans">#{(page - 1) * 10 + index + 1}</span>
+                        <div className="d-flex gap-1.5 align-items-center">
+                          <span 
+                            className="geography-topic-badge" 
+                            style={{ 
+                              fontSize: '0.65rem', 
+                              padding: '0.15rem 0.45rem',
+                              backgroundColor: topicStyle.bg,
+                              color: topicStyle.color,
+                              border: 'none'
+                            }}
+                          >
+                            {article.topic_name || 'Chưa phân loại'}
                           </span>
-                        )}
-                      </div>
-                    </div>
-
-                    <h6 className="geography-article-title mb-2" style={{ lineHeight: '1.4', fontSize: '0.9rem' }}>
-                      {article.title}
-                    </h6>
-
-                    <div className="pt-2 border-top border-light d-flex align-items-center justify-content-between flex-wrap gap-2">
-                      <div>
-                        <div className="text-primary text-xs font-weight-semibold font-sans" style={{ fontSize: '0.75rem' }}>
-                          {article.journal_name}
-                        </div>
-                        <div className="text-muted-custom text-xs font-sans mt-0.5" style={{ fontSize: '0.7rem' }}>
-                          Năm: {article.publication_year} {article.doi ? ` · DOI: ${article.doi}` : ''}
+                          {article.is_open_access && (
+                            <span className="geography-oa-badge" style={{ fontSize: '0.65rem', padding: '0.15rem 0.45rem' }}>
+                              OA
+                            </span>
+                          )}
                         </div>
                       </div>
-                      <span className="geography-link-accent" style={{ fontSize: '0.75rem' }}>
-                        Chi tiết
-                        <Icon icon="lucide:arrow-right" width="12" />
-                      </span>
-                    </div>
-                  </Card.Body>
-                </Card>
-              ))}
+
+                      <h6 className="geography-article-title mb-2" style={{ lineHeight: '1.4', fontSize: '0.9rem' }}>
+                        {article.title}
+                      </h6>
+
+                      <div className="pt-2 border-top border-light d-flex align-items-center justify-content-between flex-wrap gap-2">
+                        <div>
+                          <div className="text-primary text-xs font-weight-semibold font-sans" style={{ fontSize: '0.75rem' }}>
+                            {article.journal_name}
+                          </div>
+                          <div className="text-muted-custom text-xs font-sans mt-0.5" style={{ fontSize: '0.7rem' }}>
+                            Năm: {article.publication_year} {article.doi ? ` · DOI: ${article.doi}` : ''}
+                          </div>
+                        </div>
+                        <span className="geography-link-accent" style={{ fontSize: '0.75rem' }}>
+                          Chi tiết
+                          <Icon icon="lucide:arrow-right" width="12" />
+                        </span>
+                      </div>
+                    </Card.Body>
+                  </Card>
+                );
+              })}
             </div>
           </div>
 

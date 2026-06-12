@@ -1,7 +1,7 @@
 /**
  * File source thuộc hệ thống FE ResearchPulse.
  *
- * File: features/auth/api/auth.api.js
+ * File: features\auth\api\auth.api.js
  */
 import api from '../../../shared/services/api';
 

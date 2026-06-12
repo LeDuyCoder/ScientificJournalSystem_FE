@@ -19,6 +19,10 @@ import ProfilePage from "../../features/profile/pages/ProfilePage";
 import VerifyEmailPage from '../../features/auth/pages/VerifyEmailPage';
 
 import ProtectedRoute from './ProtectedRoute';
+import ProjectListPage from '../../features/project/pages/ProjectListPage';
+import CreateProjectPage from '../../features/project/pages/CreateProjectPage';
+import EditProjectPage from '../../features/project/pages/EditProjectPage';
+import ProjectDetailPage from '../../features/project/pages/ProjectDetailPage';
 import PublicRoute from './PublicRoute';
 
 import {
@@ -42,6 +46,8 @@ import TopicDetailPage from '../../features/topic/pages/TopicDetailPage';
 import ForgotPasswordPage from '../../features/auth/pages/ForgotPasswordPage';
 import ResetPasswordPage from '../../features/auth/pages/ResetPasswordPage';
 
+import GeographyPage from '../../features/zone/pages/GeographyPage';
+
 export default function AppRoutes() {
   return (
     <Routes>
@@ -49,6 +55,10 @@ export default function AppRoutes() {
 
       <Route element={<ProtectedRoute />}>
         <Route path="/dashboard" element={<DashboardPage />} />
+        <Route path="/projects" element={<ProjectListPage />} />
+        <Route path="/projects/create" element={<CreateProjectPage />} />
+        <Route path="/projects/:id/edit" element={<EditProjectPage />} />
+        <Route path="/projects/:id" element={<ProjectDetailPage />} />
         <Route path="/authors/leaderboard" element={<AuthorLeaderboardPage />} />
       </Route>
 
@@ -58,8 +68,8 @@ export default function AppRoutes() {
       </Route>
 
       <Route path="/verify-email" element={<VerifyEmailPage />} />
-      <Route path="/authors/:id"  element={<AuthorDetailPage />} />
-      <Route path="/authors"     element={<AuthorListPage />} />
+      <Route path="/authors/:id" element={<AuthorDetailPage />} />
+      <Route path="/authors" element={<AuthorListPage />} />
       <Route path="/journals/:id" element={<JournalDetailPage />} />
       <Route path="/catalog" element={<CatalogSearchPage />} />
 
@@ -72,6 +82,7 @@ export default function AppRoutes() {
       <Route path="/keywords/:keywordId/articles" element={<KeywordArticlesPage />} />
       <Route path="/forgot-password" element={<ForgotPasswordPage />} />
       <Route path="/reset-password" element={<ResetPasswordPage />} />
+      <Route path="/geography" element={<GeographyPage />} />
 
       <Route path="/topics/:topicId" element={<TopicDetailPage />} />
       <Route path="*" element={<LandingPage />} />
