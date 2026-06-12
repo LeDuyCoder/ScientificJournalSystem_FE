@@ -1,4 +1,4 @@
-﻿/**
+/**
  * File source thuộc hệ thống FE ResearchPulse.
  *
  * File: features\article\hooks\useArticleList.js
@@ -25,6 +25,7 @@ export default function useArticleList() {
   const selectedJournal = searchParams.get('journal') || searchParams.get('journal_id') || 'all';
   const selectedTopic = searchParams.get('topic') || 'all';
   const selectedAccess = searchParams.get('access') || 'all';
+  const selectedVolume = searchParams.get('volume_id') || '';
   const selectedIssue = searchParams.get('issue_id') || '';
 
   // === Data state ===
@@ -65,6 +66,7 @@ export default function useArticleList() {
       if (selectedJournal && selectedJournal !== 'all') apiParams.journal_id = selectedJournal;
       if (selectedTopic && selectedTopic !== 'all') apiParams.topic_id = selectedTopic;
       if (selectedAccess && selectedAccess !== 'all') apiParams.access = selectedAccess;
+      if (selectedVolume) apiParams.volume_id = selectedVolume;
       if (selectedIssue) apiParams.issue_id = selectedIssue;
 
       const response = await getArticlesListApi(apiParams);
@@ -104,15 +106,14 @@ export default function useArticleList() {
         setArticles(mappedArticles);
         setTotal(totalCount);
 
-        // Cập nhật stats từ dữ liệu thật
-        const oaCount = mappedArticles.filter((a) => a.is_open_access).length;
+        const apiStats = resData.stats || null;
         setStats({
-          totalArticles: totalCount,
-          openAccessCount: oaCount,
-          authorsCount: 0, // Không có trong list API, cần endpoint riêng
-          topicsCount: new Set(
-            mappedArticles.map((a) => a.topic_id).filter(Boolean)
-          ).size,
+          totalArticles: Number(apiStats?.totalArticles ?? totalCount),
+          openAccessCount: Number(apiStats?.openAccessCount ?? mappedArticles.filter((a) => a.is_open_access).length),
+          authorsCount: Number(apiStats?.authorsCount ?? 0),
+          topicsCount: Number(
+            apiStats?.topicsCount ?? new Set(mappedArticles.map((a) => a.topic_id).filter(Boolean)).size
+          ),
         });
       } else {
         throw new Error(response?.data?.message || 'Không thể tải danh sách bài báo');
@@ -126,7 +127,7 @@ export default function useArticleList() {
     } finally {
       setIsLoading(false);
     }
-  }, [page, limit, search, sortBy, sortOrder, selectedYear, selectedJournal, selectedTopic, selectedAccess, selectedIssue]);
+  }, [page, limit, search, sortBy, sortOrder, selectedYear, selectedJournal, selectedTopic, selectedAccess, selectedVolume, selectedIssue]);
 
   // Fetch khi dependency thay đổi
   useEffect(() => {
@@ -205,6 +206,7 @@ export default function useArticleList() {
       selectedJournal,
       selectedTopic,
       selectedAccess,
+      selectedVolume,
       selectedIssue,
     },
     updateFilters,

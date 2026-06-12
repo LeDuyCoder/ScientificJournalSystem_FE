@@ -28,6 +28,7 @@ import {
 import AuthorLeaderboardPage from '../../features/author/pages/AuthorLeaderboardPage';
 import AuthorDetailPage from '../../features/author/pages/AuthorDetailPage';
 import AuthorListPage from '../../features/author/pages/AuthorListPage';
+import TopicDetailPage from '../../features/topic/pages/TopicDetailPage';
 
 /**
  * Nơi khai báo route chính của ứng dụng.
@@ -72,6 +73,7 @@ export default function AppRoutes() {
       <Route path="/forgot-password" element={<ForgotPasswordPage />} />
       <Route path="/reset-password" element={<ResetPasswordPage />} />
 
+      <Route path="/topics/:topicId" element={<TopicDetailPage />} />
       <Route path="*" element={<LandingPage />} />
 
 

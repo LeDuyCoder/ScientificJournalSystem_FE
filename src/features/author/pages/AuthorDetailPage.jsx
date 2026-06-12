@@ -1,14 +1,6 @@
 /**
  * @file AuthorDetailPage.jsx
  * @description Trang chi tiết hiển thị toàn bộ hồ sơ học thuật của một tác giả cụ thể.
- * Khớp với bố cục giao diện trong Ảnh thiết kế 1.
- * 
- * Cấu trúc bố cục:
- * - Trên cùng: Thanh Breadcrumb (`Tổng quan > Tác giả nổi bật > [Tên Tác giả]`) và nút quay lại.
- * - Cột Trái lưới Grid (lg={4}): Component `AuthorProfileHeader` chứa thông tin cá nhân, tiểu sử và các chỉ số thống kê.
- * - Cột Phải lưới Grid (lg={8}):
- *     - Phía trên: Component `AuthorAreasBreakdown` hiển thị biểu đồ phân bổ lĩnh vực nghiên cứu.
- *     - Phía dưới: Component `AuthorArticlesSection` danh sách các công trình bài báo đã xuất bản.
  */
 
 import { useEffect } from 'react';
@@ -20,17 +12,12 @@ import useAuthors from '../hooks/useAuthors';
 import AuthorProfileHeader from '../components/AuthorProfileHeader';
 import AuthorAreasBreakdown from '../components/AuthorAreasBreakdown';
 import AuthorArticlesSection from '../components/AuthorArticlesSection';
+import './AuthorDetailPage.css';
 
-/**
- * Trang điều khiển chính cho tuyến đường chi tiết tác giả `/authors/:id`.
- * 
- * @returns {JSX.Element} Giao diện trang chi tiết tác giả.
- */
 export default function AuthorDetailPage() {
-  const { id } = useParams(); // Lấy mã author_id từ tham số URL của React Router
+  const { id } = useParams();
   const navigate = useNavigate();
 
-  // Trích xuất các hàm quản lý trạng thái cốt lõi từ hook useAuthors
   const {
     currentAuthor,
     authorArticles,
@@ -47,8 +34,6 @@ export default function AuthorDetailPage() {
     fetchAuthorAreasBreakdown
   } = useAuthors();
 
-  // ── SIDE EFFECT: TẢI DỮ LIỆU BAN ĐẦU ────────────────────────────────────────
-  // Thực hiện đồng thời các lệnh gọi API song song để lấy thông tin hồ sơ, phân bổ lĩnh vực và danh sách bài báo khi ID thay đổi.
   useEffect(() => {
     if (id) {
       fetchAuthorDetailsFull(id);
@@ -58,49 +43,52 @@ export default function AuthorDetailPage() {
   const authorName = currentAuthor?.full_name ?? currentAuthor?.display_name ?? currentAuthor?.name ?? 'Tác giả';
 
   return (
-    <div
-      className="min-vh-100"
-      style={{ backgroundColor: 'var(--bg-main)', color: 'var(--text-main)', paddingTop: '80px' }}
-    >
-      {/* Thanh Header điều hướng */}
+    <div className="author-detail-page">
       <Header />
 
-      <Container className="py-4">
-        {/* 1. Breadcrumb điều hướng khớp với thiết kế */}
-        <nav className="mb-4" aria-label="breadcrumb">
-          <ol className="breadcrumb m-0" style={{ fontSize: '0.8rem' }}>
+      <Container>
+        <nav className="author-detail-breadcrumb mb-4" aria-label="breadcrumb">
+          <ol className="breadcrumb">
             <li className="breadcrumb-item">
-              <span onClick={() => navigate('/')} style={{ cursor: 'pointer', color: 'var(--text-muted)' }}>
+              <span className="author-detail-breadcrumb__link" onClick={() => navigate('/')}>
                 Tổng quan
               </span>
             </li>
             <li className="breadcrumb-item">
-              <span onClick={() => navigate('/authors')} style={{ cursor: 'pointer', color: 'var(--text-muted)' }}>
+              <span className="author-detail-breadcrumb__link" onClick={() => navigate('/authors')}>
                 Tác giả nổi bật
               </span>
             </li>
-            <li className="breadcrumb-item active" aria-current="page" style={{ color: 'var(--primary)', fontWeight: 600 }}>
+            <li className="breadcrumb-item active author-detail-breadcrumb__current" aria-current="page">
               {loadingAuthorDetail ? 'Đang tải...' : authorName}
             </li>
           </ol>
         </nav>
 
-        {/* Nút quay lại danh sách */}
-        <div className="mb-3 d-flex justify-content-start">
-          <Button
-            variant="link"
-            onClick={() => navigate('/authors')}
-            className="text-primary text-decoration-none text-xs fw-semibold p-0 d-flex align-items-center gap-1.5"
-            style={{ fontSize: '0.85rem' }}
-          >
-            <Icon icon="lucide:arrow-left" width="16" />
-            Quay lại danh sách tác giả
-          </Button>
-        </div>
+        <section className="author-detail-hero">
+          <div className="author-detail-hero__content d-flex flex-column flex-md-row justify-content-between align-items-start gap-3">
+            <div>
+              <div className="author-detail-eyebrow">
+                <Icon icon="lucide:user-round-search" width="17" />
+                <span>Author profile</span>
+              </div>
+              <h1 className="author-detail-title">{loadingAuthorDetail ? 'Hồ sơ tác giả' : authorName}</h1>
+              <p className="author-detail-description">
+                Hồ sơ học thuật, phân bổ lĩnh vực nghiên cứu và danh sách công trình công bố của tác giả.
+              </p>
+            </div>
+            <Button
+              variant="link"
+              onClick={() => navigate('/authors')}
+              className="author-detail-back p-0 d-flex align-items-center gap-2"
+            >
+              <Icon icon="lucide:arrow-left" width="16" />
+              Quay lại danh sách tác giả
+            </Button>
+          </div>
+        </section>
 
-        {/* 2. Lưới Grid Chi tiết Chính (Khớp với bố cục Ảnh 1) */}
         <Row className="g-4">
-          {/* Cột trái (Độ rộng: 33.33% trên màn hình máy tính lớn) */}
           <Col xs={12} lg={4}>
             <AuthorProfileHeader
               author={currentAuthor}
@@ -110,10 +98,8 @@ export default function AuthorDetailPage() {
             />
           </Col>
 
-          {/* Cột phải (Độ rộng: 66.67% trên màn hình máy tính lớn) */}
           <Col xs={12} lg={8}>
             <div className="d-flex flex-column gap-4">
-              {/* Phía trên: Phân bổ lĩnh vực nghiên cứu (Biểu đồ Donut SVG + thanh tiến trình) */}
               <AuthorAreasBreakdown
                 breakdown={authorBreakdown}
                 loading={loadingAreas}
@@ -121,7 +107,6 @@ export default function AuthorDetailPage() {
                 onRetry={() => id && fetchAuthorAreasBreakdown(id)}
               />
 
-              {/* Phía dưới: Danh sách các bài báo đã công bố */}
               <AuthorArticlesSection
                 articles={authorArticles}
                 loading={loadingArticles}

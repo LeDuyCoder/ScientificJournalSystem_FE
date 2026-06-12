@@ -1,4 +1,4 @@
-﻿/**
+/**
  * File source thuộc hệ thống FE ResearchPulse.
  *
  * File: features\keywords\pages\KeywordListPage.jsx
@@ -11,6 +11,7 @@ import KeywordSearchBar from '../components/KeywordSearchBar';
 import KeywordSortDropdown from '../components/KeywordSortDropdown';
 import KeywordList from '../components/KeywordList';
 import { useKeywords } from '../hooks/useKeywords';
+import './KeywordListPage.css';
 
 /**
  * Trang danh sách Keywords.
@@ -42,49 +43,41 @@ export default function KeywordListPage() {
   };
 
   return (
-    <div className="grid-bg min-vh-100 d-flex flex-column" style={{ backgroundColor: 'var(--bg-main)' }}>
+    <div className="grid-bg keyword-list-page d-flex flex-column">
       <Header />
 
-      <Container className="py-5 flex-grow-1">
-        {/* Breadcrumb */}
-        <nav aria-label="breadcrumb" className="mb-4">
-          <ol className="breadcrumb" style={{ fontSize: '0.88rem' }}>
-            <li className="breadcrumb-item">
-              <span
-                role="button"
-                tabIndex={0}
-                onClick={() => navigate('/dashboard')}
-                onKeyDown={(e) => e.key === 'Enter' && navigate('/dashboard')}
-                style={{ color: 'var(--text-muted)', cursor: 'pointer' }}
-              >
-                Dashboard
-              </span>
-            </li>
+      <Container className="pb-5 flex-grow-1">
+        <nav aria-label="breadcrumb" className="keyword-list-breadcrumb mb-4">
+          <ol className="breadcrumb">
             <li className="breadcrumb-item active text-main fw-semibold" aria-current="page">Keywords</li>
           </ol>
         </nav>
 
-        {/* Page header */}
-        <div className="mb-5">
-          <div className="d-flex align-items-center gap-3 mb-2">
-            <Icon icon="lucide:tag" width="28" style={{ color: 'var(--text-muted)' }} />
-            <h1 className="font-display fw-bold text-main mb-0" style={{ fontSize: '2rem' }}>
+        <section className="keyword-list-hero">
+          <div className="keyword-list-hero__content">
+            <div className="keyword-list-eyebrow">
+              <Icon icon="lucide:tags" width="18" />
+              <span>Research Keywords</span>
+            </div>
+            <h1 className="keyword-list-title">
               Khám phá Keywords
             </h1>
-          </div>
-          <p className="text-muted-custom" style={{ fontSize: '1.05rem', maxWidth: '600px' }}>
-            Tìm kiếm và khám phá từ khóa nghiên cứu. Mỗi keyword liên kết đến các bài báo khoa học liên quan.
-          </p>
-          <p className="text-muted-custom" style={{ fontSize: '0.88rem' }}>
+            <p className="keyword-list-description">
+              Tìm kiếm các từ khóa nghiên cứu và mở nhanh danh sách bài báo liên quan trong hệ thống ResearchPulse.
+            </p>
             {pagination.total > 0 && (
-              <span>Tổng cộng <strong className="text-main">{pagination.total.toLocaleString()}</strong> keyword trong hệ thống</span>
+              <div className="keyword-list-total-pill">
+                <Icon icon="lucide:database" width="16" />
+                <span>
+                  Tổng cộng <strong>{pagination.total.toLocaleString()}</strong> keyword trong hệ thống
+                </span>
+              </div>
             )}
-          </p>
-        </div>
+          </div>
+        </section>
 
-        {/* Search & Sort bar */}
-        <div className="d-flex align-items-start gap-3 flex-wrap mb-4">
-          <div className="flex-grow-1">
+        <div className="keyword-toolbar">
+          <div className="keyword-toolbar__search">
             <KeywordSearchBar
               value={filters.keyword}
               onSearch={handleSearch}
@@ -100,19 +93,15 @@ export default function KeywordListPage() {
 
         {/* Active filter context */}
         {filters.keyword && (
-          <div className="mb-3 d-flex align-items-center gap-2" style={{ fontSize: '0.9rem' }}>
-            <span className="text-muted-custom">Kết quả tìm kiếm cho:</span>
-            <span
-              className="px-3 py-1 rounded-pill text-main fw-semibold"
-              style={{ backgroundColor: 'rgba(0,0,0,0.07)', border: '1px solid rgba(0,0,0,0.10)' }}
-            >
+          <div className="keyword-active-filter">
+            <span>Kết quả tìm kiếm cho:</span>
+            <span className="keyword-active-filter__term">
               "{filters.keyword}"
             </span>
             <button
               type="button"
-              className="btn btn-link btn-sm p-0 text-muted-custom"
+              className="btn btn-link btn-sm p-0 keyword-active-filter__clear"
               onClick={handleClearSearch}
-              style={{ textDecoration: 'none', fontSize: '0.85rem' }}
             >
               <Icon icon="lucide:x" width="14" className="me-1" />
               Xóa
