@@ -99,21 +99,34 @@ export const registerUser = async (payload) => {
  * @returns {Promise<Object>} User profile object.
  */
 export const fetchCurrentProfile = async () => {
+  // Bổ sung cache-control để tránh trường hợp browser/cache trả dữ liệu rỗng
   const response = await getProfileApi();
-  console.log('[fetchCurrentProfile] Response:', response.data);
-  
-  // Backend có thể trả success=false nhưng code=SUCCESS_GET_USER, nên check status và data trước
-  if (response.status === 200 && response.data?.data) {
-    return response.data.data;
+  console.log('[fetchCurrentProfile] Response:', response?.data);
+
+  // Backend có thể trả nhiều dạng payload:
+  // - { data: { ...user } }
+  // - { success: true, data: { ...user } }
+  // - hoặc trực tiếp { ...user }
+  const payload = response?.data;
+
+  // Chuẩn form: response.data.data là user
+  if (response?.status === 200 && payload?.data) {
+    return payload.data;
   }
-  
-  // Fallback: nếu response.data.success là true
-  if (response.data?.success) {
-    return response.data.data;
+
+  // success form: response.data.success === true và có data
+  if (payload?.success === true && payload?.data) {
+    return payload.data;
   }
-  
-  throw new Error(response.data?.message || 'Failed to fetch profile');
+
+  // Fallback: nếu BE trả thẳng object user
+  if (response?.status === 200 && payload && typeof payload === 'object' && !payload?.data && !payload?.success) {
+    return payload;
+  }
+
+  throw new Error(payload?.message || 'Failed to fetch profile');
 };
+
 
 /**
  * Update current authenticated user's profile.

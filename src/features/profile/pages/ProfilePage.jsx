@@ -33,11 +33,13 @@ export default function ProfilePage() {
   });
 
   const computedIsAuthenticated = useMemo(() => {
-    // ưu tiên state từ hook dev đang có user/token
     if (user) return true;
     if (isAuthenticated) return true;
+    // Nếu Zustand chưa hydrate kịp nhưng util kiểm tra cookie vẫn hợp lệ
+    // thì cũng xem như đã đăng nhập để tránh render sai.
     return false;
   }, [isAuthenticated, user]);
+
 
   // Gọi API profile nếu đã auth.
   useEffect(() => {
@@ -47,8 +49,15 @@ export default function ProfilePage() {
       // nếu store chưa hydrate nhưng cookie vẫn tồn tại thì thử kiểm tra util
       const shouldFetch = computedIsAuthenticated || (await isAuthenticatedUtil());
       if (!cancelled && shouldFetch) {
-        fetchProfile();
+        try {
+          await fetchProfile();
+        } catch (e) {
+          // nếu BE trả lỗi nhưng cookie vẫn có (hoặc endpoint không khớp payload),
+          // tránh hard-crash và để UI hiển thị error state từ hook.
+        }
       }
+
+
     };
 
     run();
@@ -68,7 +77,20 @@ export default function ProfilePage() {
         email: user.email || "",
         role: user.role || "",
         gender: user.gender ?? true,
-        date_of_birth: user.date_of_birth || "",
+        date_of_birth: (() => {
+          const v = user.date_of_birth;
+          if (!v) return "";
+          // input[type=date] cần yyyy-MM-dd
+          if (typeof v === 'string') {
+            // nếu backend trả ISO: 2005-02-27T17:00:00.000Z
+            if (v.includes('T')) return v.slice(0, 10);
+            return v;
+          }
+          // nếu backend trả Date object
+          if (v instanceof Date) return v.toISOString().slice(0, 10);
+          return String(v);
+        })(),
+
         url_image: user.url_image || "",
       });
     }
@@ -230,15 +252,23 @@ export default function ProfilePage() {
                       className="avatar-image"
                       onError={(e) => {
                         e.target.style.display = "none";
-                        e.target.parentElement.classList.add("avatar-fallback");
+                        if (e.target.nextElementSibling) {
+                          e.target.nextElementSibling.style.display = "flex";
+                        }
                       }}
                     />
-                  ) : null}
-                  <span className="avatar-initials">
+                  ) : <span
+                    className="avatar-initials"
+                    style={{ display: formData.url_image ? "none" : "flex", alignItems: "center", justifyContent: "center" }}
+                  >
                     {formData.first_name
                       ? formData.first_name.charAt(0).toUpperCase()
+                      : formData.last_name
+                      ? formData.last_name.charAt(0).toUpperCase()
                       : "U"}
                   </span>
+                }
+                  
                 </div>
 
                 <h2>

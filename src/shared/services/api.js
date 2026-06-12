@@ -23,17 +23,15 @@ const api = axios.create({
   withCredentials: true
 });
 
-// Request interceptor: thêm token từ localStorage vào header Authorization
+// Request interceptor: ưu tiên cookie HTTP-only (withCredentials: true)
+// Không đọc token từ localStorage/sessionStorage để tránh lệch trạng thái.
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('token') || sessionStorage.getItem('token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
     return config;
   },
   (error) => Promise.reject(error),
 );
+
 
 // Interceptor xử lý response và tự động refresh token khi gặp lỗi 401
 
