@@ -1,10 +1,9 @@
-/**
+﻿/**
  * File source thuộc hệ thống FE ResearchPulse.
  *
  * File: app\store\authStore.js
  */
 import { create } from 'zustand';
-import { STORAGE_KEYS } from '../../shared/constants/storageKeys';
 
 /**
  * Store quản lý trạng thái xác thực toàn cục.
@@ -16,47 +15,40 @@ import { STORAGE_KEYS } from '../../shared/constants/storageKeys';
  */
 export const useAuthStore = create((set) => {
   return {
-    token: localStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN),
-    isAuthenticated: !!localStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN),
+    token: null,
+    isAuthenticated: false,
     user: null,
     isLoading: false,
     error: null,
 
     /**
      * Đánh dấu phiên đăng nhập là hợp lệ.
-     * Lưu token vào localStorage theo chuẩn mới.
      *
-     * @param {string|null} token - Token xác thực được trả về từ backend.
-     * @param {Object|null} user - Thông tin người dùng.
+     * Hỗ trợ 2 trường hợp:
+     * - Login/refresh token: `loginSuccess(token)`
+     * - Khôi phục session bằng cookie: `loginSuccess(null, user)`
      */
-    loginSuccess: (token = null, user = null) => {
-      if (token) {
-        localStorage.setItem(STORAGE_KEYS.ACCESS_TOKEN, token);
-      }
-      set((state) => ({
-        token: token ?? state.token,
-        user: user ?? state.user,
-        isAuthenticated: Boolean(token ?? state.token ?? user ?? state.user),
-        error: null,
-      }));
-    },
+    loginSuccess: (token = null, user = null) => set((state) => ({
+      token: token ?? state.token,
+      user: user ?? state.user,
+      isAuthenticated: Boolean(token ?? state.token ?? user ?? state.user),
+      error: null,
+    })),
 
     setUser: (user) => set({ user }),
     setLoading: (isLoading) => set({ isLoading }),
     setError: (error) => set({ error }),
 
     /**
-     * Xóa trạng thái auth và xóa token khỏi localStorage.
+     * Xóa trạng thái auth trong memory.
+     * Việc xóa token trong localStorage/sessionStorage nằm ở `removeToken`.
      */
-    logout: () => {
-      localStorage.removeItem(STORAGE_KEYS.ACCESS_TOKEN);
-      set({
-        token: null,
-        isAuthenticated: false,
-        user: null,
-        error: null,
-        isLoading: false,
-      });
-    },
+    logout: () => set({
+      token: null,
+      isAuthenticated: false,
+      user: null,
+      error: null,
+      isLoading: false,
+    }),
   };
 });

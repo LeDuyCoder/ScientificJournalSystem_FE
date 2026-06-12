@@ -1,18 +1,26 @@
+/**
+ * File source thuộc hệ thống FE ResearchPulse.
+ *
+ * File: shared\services\api.js
+ */
 import axios from 'axios';
-import { STORAGE_KEYS } from '../constants/storageKeys';
 import { useAuthStore } from '../../app/store/authStore';
 
 /**
  * Axios instance dùng chung cho toàn bộ FE.
- * Tự động gắn Bearer Token vào Header thay vì dùng Cookie.
+ *
+ * Luồng auth hiện tại sau khi merge nhánh Duy:
+ * - BE lưu access token/refresh token trong HTTP-only cookie.
+ * - `withCredentials: true` giúp browser gửi cookie kèm request.
+ * - Nếu API trả 401, interceptor sẽ thử gọi `/auth/refresh` đúng 1 lần
+ * để lấy access token mới rồi gọi lại request ban đầu.
  */
 const api = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || import.meta.env.VITE_API_BASE_URL,
-  timeout: 10000,
+  baseURL: import.meta.env.VITE_API_URL,
   headers: {
     'Content-Type': 'application/json',
   },
-  // Đã bỏ withCredentials: true để tuân thủ chuẩn mới (dùng Token từ LocalStorage)
+  withCredentials: true
 });
 
 // Axios instance for public endpoints (does not send cookies or tokens)
@@ -23,7 +31,9 @@ export const publicApi = axios.create({
   },
 });
 
-// Interceptor xử lý Response: Tự động refresh token khi lỗi 401
+
+// Interceptor xử lý response và tự động refresh token khi gặp lỗi 401
+
 api.interceptors.response.use(
   (response) => {
     return response;
@@ -42,13 +52,14 @@ api.interceptors.response.use(
         );
 
         if (res.status === 200) {
+          // 🔥 HỢP NHẤT: Hỗ trợ cả 2 format response từ BE của nhánh Duy
           const newToken = res.data?.token || res.data?.data?.token || null;
 
           if (newToken) {
             // 🔥 Giữ thay đổi: Lấy hàm loginSuccess trực tiếp từ kho Zustand mà không dùng Hook
             const { loginSuccess } = useAuthStore.getState();
             loginSuccess(newToken);
-            
+
             // Gán token mới vào header của request bị lỗi trước đó
             originalRequest.headers['Authorization'] = `Bearer ${newToken}`;
 

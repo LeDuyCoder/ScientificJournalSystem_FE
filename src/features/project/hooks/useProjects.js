@@ -1,25 +1,26 @@
-/**
+﻿/**
  * File source thuộc hệ thống FE ResearchPulse.
  *
  * File: features\project\hooks\useProjects.js
  */
 import { useState, useCallback } from 'react';
-import projectService from '../services/projectService';
+import { getProjectsApi, createProjectApi, deleteProjectApi } from '../api/project.api';
 
 export default function useProjects() {
   const [projects, setProjects] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  /**
-   * Fetch tất cả project của người dùng
-   */
   const fetchProjects = useCallback(async () => {
     setIsLoading(true);
     setError(null);
     try {
-      const data = await projectService.getAllProjects();
-      setProjects(data || []);
+      const response = await getProjectsApi();
+      if (response.data && response.data.success !== false) {
+        setProjects(response.data.data || []);
+      } else {
+        throw new Error(response.data?.message || 'Failed to fetch projects');
+      }
     } catch (err) {
       setError(err.response?.data?.message || err.message);
     } finally {
@@ -27,21 +28,16 @@ export default function useProjects() {
     }
   }, []);
 
-  /**
-   * Tạo project mới
-   * @param {Object} projectData 
-   * @returns {Object} Project vừa tạo
-   */
   const createProject = useCallback(async (projectData) => {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await projectService.createProject(projectData);
-      if (response && response.success !== false) {
+      const response = await createProjectApi(projectData);
+      if (response.data && response.data.success !== false) {
         await fetchProjects();
-        return response.data;
+        return response.data.data;
       } else {
-        throw new Error(response?.message || 'Failed to create project');
+        throw new Error(response.data?.message || 'Failed to create project');
       }
     } catch (err) {
       setError(err.response?.data?.message || err.message);
@@ -51,20 +47,16 @@ export default function useProjects() {
     }
   }, [fetchProjects]);
 
-  /**
-   * Xóa project
-   * @param {number|string} id 
-   */
   const deleteProject = useCallback(async (id) => {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await projectService.deleteProject(id);
-      if (response && response.success !== false) {
+      const response = await deleteProjectApi(id);
+      if (response.data && response.data.success !== false) {
         setProjects((prev) => prev.filter((p) => String(p.project_id) !== String(id)));
-        return response;
+        return response.data;
       } else {
-        throw new Error(response?.message || 'Failed to delete project');
+        throw new Error(response.data?.message || 'Failed to delete project');
       }
     } catch (err) {
       setError(err.response?.data?.message || err.message);
