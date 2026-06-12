@@ -11,6 +11,7 @@ import JournalDetailPage from '../../features/journal/pages/JournalDetailPage';
 import CatalogSearchPage from '../../features/catalog/pages/CatalogSearchPage';
 import ArticleListPage from '../../features/article/pages/ArticleListPage';
 import ArticleDetailPage from '../../features/article/pages/ArticleDetailPage';
+import ArticleVisualDetailPage from '../../features/article/pages/ArticleVisualDetailPage';
 import DashboardPage from '../../features/dashboard/pages/DashboardPage';
 
 import RegisterPage from '../../features/auth/pages/RegisterPage';
@@ -76,6 +77,7 @@ export default function AppRoutes() {
       <Route path="/search" element={<CatalogSearchPage />} />
       <Route path="/articles" element={<ArticleListPage />} />
       <Route path="/articles/:id" element={<ArticleDetailPage />} />
+      <Route path="/articles/:id/visual" element={<ArticleVisualDetailPage />} />
       <Route path="/profile" element={<ProfilePage />} />
 
       <Route path="/keywords" element={<KeywordListPage />} />
