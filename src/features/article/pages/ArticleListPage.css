@@ -218,7 +218,7 @@
   max-width: 100%;
   padding: 0.24rem 0.55rem;
   border: 1px solid var(--border);
-  border-radius: 999px;
+  border-radius: 10px;
   background: var(--bg-chip);
   color: var(--text-muted);
   font-size: 0.68rem;
