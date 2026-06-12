@@ -27,13 +27,14 @@ import { toast } from '../../../shared/utils/toast';
 import { getDoiUrl, normalizeArticleDetail } from '../utils/articleFormatters';
 import './ArticleDetailPage.css';
 
-const formatAuthorsLine = (authors = [], limit = 5) => {
+const formatAuthorsLine = (authors = [], limit = 3) => {
   if (!authors || authors.length === 0) return 'Đang cập nhật tác giả';
 
-  return authors
+  const names = authors
     .slice(0, limit)
     .map((author) => author.display_name || author.name || author.author_name || 'Tác giả')
     .join(', ');
+  return authors.length > limit ? `${names}...` : names;
 };
 
 const normalizeRecommendedArticle = (item = {}) => ({
@@ -44,7 +45,7 @@ const normalizeRecommendedArticle = (item = {}) => ({
   doi: item.doi || '',
   abstract: item.abstract || item.description || 'No abstract is available for this article.',
   authors: Array.isArray(item.authors)
-    ? formatAuthorsLine(item.authors, 4)
+    ? formatAuthorsLine(item.authors, 3)
     : item.authors || item.authors_text || '',
 });
 
@@ -92,10 +93,10 @@ export default function ArticleDetailPage() {
   const visibleAuthors = useMemo(() => {
     const authors = article?.authors || [];
     if (showAllAuthors) return authors;
-    return authors.slice(0, 6);
+    return authors.slice(0, 3);
   }, [article?.authors, showAllAuthors]);
 
-  const hiddenAuthorCount = Math.max((article?.authors?.length || 0) - 6, 0);
+  const hiddenAuthorCount = Math.max((article?.authors?.length || 0) - 3, 0);
   const references = article?.references || [];
   const referenceTotalPages = Math.max(1, Math.ceil(references.length / referencesPerPage));
   const paginatedReferences = references.slice(
@@ -368,7 +369,7 @@ export default function ArticleDetailPage() {
                       Show more +{hiddenAuthorCount}
                     </Button>
                   )}
-                  {showAllAuthors && (article?.authors?.length || 0) > 6 && (
+                  {showAllAuthors && (article?.authors?.length || 0) > 3 && (
                     <Button
                       variant="link"
                       onClick={() => setShowAllAuthors(false)}
