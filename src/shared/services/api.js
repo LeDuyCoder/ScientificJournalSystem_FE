@@ -23,6 +23,15 @@ const api = axios.create({
   withCredentials: true
 });
 
+// Axios instance for public endpoints (does not send cookies or tokens)
+export const publicApi = axios.create({
+  baseURL: import.meta.env.VITE_API_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
+
 // Interceptor xử lý response và tự động refresh token khi gặp lỗi 401
 
 api.interceptors.response.use(
