@@ -20,6 +20,8 @@ import VerifyEmailPage from '../../features/auth/pages/VerifyEmailPage';
 
 import ProtectedRoute from './ProtectedRoute';
 import PublicRoute from './PublicRoute';
+import AuthLayoutWithUser from '../layouts/AuthLayoutWithUser';
+
 
 import {
   KeywordListPage,
@@ -49,36 +51,39 @@ export default function AppRoutes() {
     <Routes>
       <Route path="/" element={<LandingPage />} />
 
-      <Route element={<ProtectedRoute />}>
-        <Route path="/dashboard" element={<DashboardPage />} />
-        <Route path="/authors/leaderboard" element={<AuthorLeaderboardPage />} />
-      </Route>
-
       <Route element={<PublicRoute />}>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
       </Route>
 
-      <Route path="/verify-email" element={<VerifyEmailPage />} />
-      <Route path="/authors/:id" element={<AuthorDetailPage />} />
-      <Route path="/authors" element={<AuthorListPage />} />
-      <Route path="/journals/:id" element={<JournalDetailPage />} />
-      <Route path="/catalog" element={<CatalogSearchPage />} />
+      <Route element={<AuthLayoutWithUser />}>
+        <Route element={<ProtectedRoute />}>
+          <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/authors/leaderboard" element={<AuthorLeaderboardPage />} />
+          
+        </Route>
 
-      <Route path="/search" element={<CatalogSearchPage />} />
-      <Route path="/articles" element={<ArticleListPage />} />
-      <Route path="/articles/:id" element={<ArticleDetailPage />} />
-      <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/verify-email" element={<VerifyEmailPage />} />
+        <Route path="/authors/:id" element={<AuthorDetailPage />} />
+        <Route path="/authors" element={<AuthorListPage />} />
+        <Route path="/journals/:id" element={<JournalDetailPage />} />
+        <Route path="/catalog" element={<CatalogSearchPage />} />
 
-      <Route path="/keywords" element={<KeywordListPage />} />
-      <Route path="/keywords/:keywordId/articles" element={<KeywordArticlesPage />} />
-      <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-      <Route path="/reset-password" element={<ResetPasswordPage />} />
-      <Route path="/geography" element={<GeographyPage />} />
+        <Route path="/search" element={<CatalogSearchPage />} />
+        <Route path="/articles" element={<ArticleListPage />} />
+        <Route path="/articles/:id" element={<ArticleDetailPage />} />
+        <Route path="/profile" element={<ProfilePage />} />
 
-      <Route path="/topics/:topicId" element={<TopicDetailPage />} />
+        <Route path="/keywords" element={<KeywordListPage />} />
+        <Route path="/keywords/:keywordId/articles" element={<KeywordArticlesPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="/reset-password" element={<ResetPasswordPage />} />
+        <Route path="/geography" element={<GeographyPage />} />
+
+        <Route path="/topics/:topicId" element={<TopicDetailPage />} />
+      </Route>
+      
       <Route path="*" element={<LandingPage />} />
-
 
     </Routes>
   );
