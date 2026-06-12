@@ -5,7 +5,7 @@
  */
 import { useAuthStore } from '../../app/store/authStore';
 import { useUserStore } from '../../app/store/userStore';
-import httpClient from '../services/httpClient';
+import api from '../services/api';
 import { jwtDecode } from 'jwt-decode';
 
 
