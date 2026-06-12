@@ -134,6 +134,33 @@ export default function Header() {
                 <Icon icon="lucide:layout-dashboard" width="14" />
                 Tổng quan
               </Nav.Link>
+
+              {/* Dự án */}
+              <Nav.Link
+                onClick={() => navigate("/projects")}
+                className="px-3 py-1 text-sm font-semibold d-flex align-items-center gap-1"
+                style={{
+                  borderRadius: "6px",
+                  backgroundColor:
+                    pathname.startsWith("/projects")
+                      ? "var(--primary-light)"
+                      : "transparent",
+                  color:
+                    pathname.startsWith("/projects")
+                      ? "var(--primary)"
+                      : "var(--text-muted)",
+                  border:
+                    pathname.startsWith("/projects")
+                      ? "1px solid var(--border)"
+                      : "1px solid transparent",
+                  transition: "all 0.2s",
+                  fontWeight: pathname.startsWith("/projects") ? 700 : 500,
+                }}
+              >
+                <Icon icon="lucide:folder" width="14" />
+                Dự án
+              </Nav.Link>
+              
               {/* Tìm kiếm */}
               <Nav.Link
                 onClick={() => navigate("/catalog")}
@@ -415,6 +442,21 @@ export default function Header() {
               className="text-muted-custom hover:text-main py-2 text-sm font-semibold border-bottom border-light"
             >
               Tổng quan
+            </Nav.Link>
+            <Nav.Link
+              onClick={() => {
+                setShowMobileMenu(false);
+                navigate("/projects");
+              }}
+              className="text-muted-custom hover:text-main py-2 text-sm font-semibold border-bottom border-light"
+              style={{
+                color: pathname.startsWith("/projects")
+                  ? "var(--primary)"
+                  : "var(--text-muted)",
+                fontWeight: pathname.startsWith("/projects") ? 700 : 600,
+              }}
+            >
+              Dự án
             </Nav.Link>
             <Nav.Link
               onClick={() => {

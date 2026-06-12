@@ -1,4 +1,4 @@
-﻿/**
+/**
  * File source thuộc hệ thống FE ResearchPulse.
  *
  * File: features\catalog\api\catalogApi.js
@@ -17,8 +17,8 @@ export const getSubjectAreasApi = () => {
  * Get catalog academic subject categories list
  * @returns {Promise} Axios promise
  */
-export const getSubjectCategoriesApi = () => {
-  return httpClient.get('/subject-categories');
+export const getSubjectCategoriesApi = (params) => {
+  return httpClient.get('/subject-categories', { params });
 };
 
 /**

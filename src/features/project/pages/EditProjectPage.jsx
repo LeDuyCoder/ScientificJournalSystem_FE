@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import useProjects from '../hooks/useProjects';
+import { useNavigate, Link, useParams } from 'react-router-dom';
+import projectService from '../services/projectService';
 import { Icon } from '@iconify/react';
 import { getSubjectAreasApi, getSubjectCategoriesApi } from '../../catalog/api/catalogApi';
 import { searchJournalsApi } from '../../journal/api/journalApi';
 import MultiSelectDropdown from '../../../shared/components/Select/MultiSelectDropdown';
 
-const CreateProjectPage = () => {
+const EditProjectPage = () => {
+  const { id } = useParams();
   const navigate = useNavigate();
-  const { createProject } = useProjects();
   
   // Form State
   const [title, setTitle] = useState('');
@@ -23,33 +23,44 @@ const CreateProjectPage = () => {
   
   // Loading States
   const [loading, setLoading] = useState(false);
-  const [loadingCatalogs, setLoadingCatalogs] = useState(true);
-  const [loadingJournals, setLoadingJournals] = useState(false);
+  const [loadingData, setLoadingData] = useState(true);
   const [error, setError] = useState(null);
 
   // Initial Data Fetch
   useEffect(() => {
-    const fetchCatalogs = async () => {
-      setLoadingCatalogs(true);
+    const fetchData = async () => {
+      setLoadingData(true);
       try {
-        const [areasRes, catsRes, journalsRes] = await Promise.all([
+        const [areasRes, catsRes, journalsRes, projectRes] = await Promise.all([
           getSubjectAreasApi(),
           getSubjectCategoriesApi(),
-          searchJournalsApi({ limit: 200 }) // Load initial batch of journals
+          searchJournalsApi({ limit: 500 }),
+          projectService.getProjectById(id)
         ]);
         
         if (areasRes?.data) setAreas(areasRes.data.data || areasRes.data);
         if (catsRes?.data) setCategories(catsRes.data.data || catsRes.data);
         if (journalsRes?.data) setJournals(journalsRes.data.data || journalsRes.data);
+
+        // Pre-fill
+        if (projectRes?.data) {
+          const p = projectRes.data;
+          setTitle(p.title || '');
+          setSubjectAreaId(p.subject_area?.subject_area_id || p.subject_area || '');
+          setSubjectCategoryIds(p.subject_categories?.map(c => c.subject_category_id || c.id) || []);
+          setJournalIds(p.journals?.map(j => j.journal_id || j.id) || p.journal_ids || []);
+        }
       } catch (err) {
-        console.error('Lỗi tải danh mục:', err);
-        setError('Không thể tải dữ liệu danh mục. Vui lòng tải lại trang.');
+        console.error('Lỗi tải dữ liệu dự án:', err);
+        setError('Không thể tải dữ liệu dự án. Vui lòng tải lại trang.');
       } finally {
-        setLoadingCatalogs(false);
+        setLoadingData(false);
       }
     };
-    fetchCatalogs();
-  }, []);
+    if (id) {
+      fetchData();
+    }
+  }, [id]);
 
   // Format data for MultiSelect
   const categoryOptions = categories
@@ -85,20 +96,27 @@ const CreateProjectPage = () => {
         journal_ids: journalIds.map(id => parseInt(id, 10))
       };
       
-      const response = await createProject(payload);
+      const response = await projectService.updateProject(id, payload);
       if (response && response.success !== false) {
-        const projectId = response.data?.project_id || response.data?.id || response.project_id;
-        navigate(projectId ? `/projects/${projectId}` : '/projects');
+        navigate(`/projects/${id}`);
       } else {
-        setError(response?.message || 'Tạo dự án thất bại');
+        setError(response?.message || 'Cập nhật dự án thất bại');
       }
     } catch (err) {
-      console.error('Error creating project:', err);
-      setError(err.response?.data?.message || err.message || 'Đã có lỗi xảy ra khi tạo dự án');
+      console.error('Error updating project:', err);
+      setError(err.response?.data?.message || err.message || 'Đã có lỗi xảy ra khi cập nhật dự án');
     } finally {
       setLoading(false);
     }
   };
+
+  if (loadingData) {
+    return (
+      <div className="container-fluid py-4 grid-bg min-vh-100 d-flex justify-content-center align-items-center">
+        <div className="spinner-border text-primary" role="status"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="container-fluid py-4 grid-bg min-vh-100">
@@ -107,14 +125,15 @@ const CreateProjectPage = () => {
           <ol className="breadcrumb mb-2 text-muted-custom small">
             <li className="breadcrumb-item"><Link to="/dashboard" className="text-decoration-none text-muted-custom hover-primary">Tổng quan</Link></li>
             <li className="breadcrumb-item"><Link to="/projects" className="text-decoration-none text-muted-custom hover-primary">Dự án theo dõi</Link></li>
-            <li className="breadcrumb-item active" aria-current="page">Tạo dự án mới</li>
+            <li className="breadcrumb-item"><Link to={`/projects/${id}`} className="text-decoration-none text-muted-custom hover-primary">{title || 'Dự án'}</Link></li>
+            <li className="breadcrumb-item active" aria-current="page">Chỉnh sửa</li>
           </ol>
         </nav>
 
         <div className="glass-card p-4 p-md-5 rounded-4 shadow-sm border">
           <div className="mb-4 text-center">
-            <h2 className="font-display fw-bold text-main mb-2">Khởi tạo dự án nghiên cứu mới</h2>
-            <p className="text-muted-custom small mb-0">Thiết lập không gian làm việc để tự động theo dõi xu hướng, nhận cảnh báo bài viết khoa học và giám sát từ khóa.</p>
+            <h2 className="font-display fw-bold text-main mb-2">Chỉnh sửa dự án</h2>
+            <p className="text-muted-custom small mb-0">Cập nhật thông tin và lĩnh vực theo dõi của dự án nghiên cứu.</p>
           </div>
 
           {error && (
@@ -137,7 +156,6 @@ const CreateProjectPage = () => {
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 disabled={loading}
-                autoFocus
                 required
                 style={{ backgroundColor: 'var(--bg-main)', color: 'var(--text-main)', borderColor: 'var(--border)' }}
               />
@@ -152,7 +170,7 @@ const CreateProjectPage = () => {
                 id="subjectArea"
                 value={subjectAreaId}
                 onChange={handleAreaChange}
-                disabled={loadingCatalogs || loading}
+                disabled={loading}
                 required
                 style={{ backgroundColor: 'var(--bg-main)', color: 'var(--text-main)', borderColor: 'var(--border)' }}
               >
@@ -163,7 +181,6 @@ const CreateProjectPage = () => {
                   </option>
                 ))}
               </select>
-              {loadingCatalogs && <div className="form-text mt-2"><span className="spinner-border spinner-border-sm me-2"></span> Đang tải danh mục...</div>}
             </div>
 
             <div className="mb-4">
@@ -175,7 +192,7 @@ const CreateProjectPage = () => {
                 value={subjectCategoryIds}
                 onChange={setSubjectCategoryIds}
                 placeholder={!subjectAreaId ? "Vui lòng chọn lĩnh vực trước..." : "Chọn chuyên ngành..."}
-                disabled={!subjectAreaId || loadingCatalogs || loading}
+                disabled={!subjectAreaId || loading}
               />
             </div>
 
@@ -188,11 +205,8 @@ const CreateProjectPage = () => {
                 value={journalIds}
                 onChange={setJournalIds}
                 placeholder={!subjectAreaId ? "Vui lòng chọn lĩnh vực trước..." : "Chọn tạp chí..."}
-                disabled={!subjectAreaId || loadingCatalogs || loading}
+                disabled={!subjectAreaId || loading}
               />
-              <div className="form-text mt-2 small text-muted-custom">
-                Bạn có thể thêm từ khóa theo dõi sau khi tạo dự án xong.
-              </div>
             </div>
 
             <div className="d-flex gap-3 justify-content-end pt-3 border-top">
@@ -213,12 +227,12 @@ const CreateProjectPage = () => {
                 {loading ? (
                   <>
                     <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-                    Đang tạo...
+                    Đang lưu...
                   </>
                 ) : (
                   <>
-                    <Icon icon="lucide:check" width="18" />
-                    Tạo dự án
+                    <Icon icon="lucide:save" width="18" />
+                    Lưu thay đổi
                   </>
                 )}
               </button>
@@ -230,4 +244,4 @@ const CreateProjectPage = () => {
   );
 };
 
-export default CreateProjectPage;
+export default EditProjectPage;
