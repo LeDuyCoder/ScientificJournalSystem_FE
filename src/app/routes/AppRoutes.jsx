@@ -28,16 +28,10 @@ import AuthorLeaderboardPage from '../../features/author/pages/AuthorLeaderboard
 import AuthorDetailPage from '../../features/author/pages/AuthorDetailPage';
 import AuthorListPage from '../../features/author/pages/AuthorListPage';
 
-/**
- * Nơi khai báo route chính của ứng dụng.
- *
- * Chính sách hiện tại:
- * - Các trang khám phá dữ liệu/bài báo cho phép guest truy cập công khai.
- * - Login/Register sử dụng PublicRoute.
- * - Dashboard yêu cầu đăng nhập.
- */
 import ForgotPasswordPage from '../../features/auth/pages/ForgotPasswordPage';
 import ResetPasswordPage from '../../features/auth/pages/ResetPasswordPage';
+
+import GeographyPage from '../../features/zone/pages/GeographyPage';
 
 export default function AppRoutes() {
   return (
@@ -67,9 +61,9 @@ export default function AppRoutes() {
       <Route path="/keywords/:keywordId/articles" element={<KeywordArticlesPage />} />
       <Route path="/forgot-password" element={<ForgotPasswordPage />} />
       <Route path="/reset-password" element={<ResetPasswordPage />} />
+      <Route path="/geography" element={<GeographyPage />} />
 
       <Route path="*" element={<LandingPage />} />
-
     </Routes>
   );
 }

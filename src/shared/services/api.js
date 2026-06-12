@@ -1,4 +1,4 @@
-﻿/**
+/**
  * File source thuộc hệ thống FE ResearchPulse.
  *
  * File: shared\services\api.js
@@ -22,6 +22,26 @@ const api = axios.create({
   },
   withCredentials: true
 });
+
+// Axios instance for public endpoints (does not send cookies or tokens)
+export const publicApi = axios.create({
+  baseURL: import.meta.env.VITE_API_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
+api.interceptors.request.use(
+  (config) => {
+    // Attempt to get token from Zustand store directly
+    const token = useAuthStore.getState().token || localStorage.getItem('researchpulse_token');
+    if (token) {
+      config.headers['Authorization'] = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => Promise.reject(error)
+);
 
 // Interceptor xử lý response và tự động refresh token khi gặp lỗi 401
 api.interceptors.response.use(
@@ -49,6 +69,7 @@ api.interceptors.response.use(
             // 🔥 Giữ thay đổi: Lấy hàm loginSuccess trực tiếp từ kho Zustand mà không dùng Hook
             const { loginSuccess } = useAuthStore.getState(); 
             loginSuccess(newToken); 
+            localStorage.setItem('researchpulse_token', newToken); // Ensure it's saved
             
             // Gán token mới vào header của request bị lỗi trước đó
             originalRequest.headers['Authorization'] = `Bearer ${newToken}`;
@@ -58,9 +79,19 @@ api.interceptors.response.use(
           return api(originalRequest);
         }
       } catch (refreshError) {
-        // Nếu refresh token cũng hết hạn hoặc lỗi, reject để đẩy user ra trang login (hoặc xử lý logout)
+        // Refresh failed, clear everything
+        const { logout } = useAuthStore.getState();
+        logout();
+        localStorage.removeItem('researchpulse_token');
         return Promise.reject(refreshError);
       }
+    }
+    
+    // If it's 401 and we already retried, clear token
+    if (error.response && error.response.status === 401) {
+      const { logout } = useAuthStore.getState();
+      logout();
+      localStorage.removeItem('researchpulse_token');
     }
     
     return Promise.reject(error);

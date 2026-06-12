@@ -1,16 +1,16 @@
-﻿/**
+/**
  * File source thuộc hệ thống FE ResearchPulse.
  *
  * File: features\zone\api\zone.api.js
  */
-import api from '../../../shared/services/api';
+import api, { publicApi } from '../../../shared/services/api';
 
 /**
  * Get publication volume stats by country
  * @returns {Promise} Axios promise
  */
-export const getCountryStatsApi = () => {
-  return api.get('/zones/countries/stats');
+export const getCountryStatsApi = (params) => {
+  return publicApi.get('/zones/countries/stats', { params });
 };
 
 /**
@@ -19,7 +19,7 @@ export const getCountryStatsApi = () => {
  * @returns {Promise} Axios promise
  */
 export const getRegionStatsApi = (params) => {
-  return api.get('/zones/regions/stats', { params });
+  return publicApi.get('/zones/regions/stats', { params });
 };
 
 /**
@@ -28,5 +28,9 @@ export const getRegionStatsApi = (params) => {
  * @returns {Promise} Axios promise
  */
 export const getCountryRegionStatsApi = (code) => {
-  return api.get(`/zones/countries/${code}/regions/stats`);
+  return publicApi.get(`/zones/countries/${code}/regions/stats`);
+};
+
+export const getCountryArticlesApi = (countryId, params) => {
+  return publicApi.get('/articles', { params: { ...params, country_id: countryId } });
 };
