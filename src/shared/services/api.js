@@ -1,4 +1,4 @@
-﻿/**
+/**
  * File source thuộc hệ thống FE ResearchPulse.
  *
  * File: shared\services\api.js
@@ -23,14 +23,13 @@ const api = axios.create({
   withCredentials: true
 });
 
-// Request interceptor: ưu tiên cookie HTTP-only (withCredentials: true)
-// Không đọc token từ localStorage/sessionStorage để tránh lệch trạng thái.
-api.interceptors.request.use(
-  (config) => {
-    return config;
+// Axios instance for public endpoints (does not send cookies or tokens)
+export const publicApi = axios.create({
+  baseURL: import.meta.env.VITE_API_URL,
+  headers: {
+    'Content-Type': 'application/json',
   },
-  (error) => Promise.reject(error),
-);
+});
 
 
 // Interceptor xử lý response và tự động refresh token khi gặp lỗi 401
@@ -41,41 +40,50 @@ api.interceptors.response.use(
   },
   async (error) => {
     const originalRequest = error.config;
-    
+
     // Mỗi request chỉ được refresh một lần để tránh vòng lặp vô hạn khi token lỗi
     if (error.response && error.response.status === 401 && originalRequest && !originalRequest._retry) {
       originalRequest._retry = true;
-      
+
       try {
         const res = await axios.get(
           `${import.meta.env.VITE_API_URL}/auth/refresh`,
-          { withCredentials: true } 
+          { withCredentials: true }
         );
 
         if (res.status === 200) {
           // 🔥 HỢP NHẤT: Hỗ trợ cả 2 format response từ BE của nhánh Duy
           const newToken = res.data?.token || res.data?.data?.token || null;
-          
+
           if (newToken) {
-            // ✅ ưu tiên nhánh dev: dùng loginSuccess lấy từ store state
+            // 🔥 Giữ thay đổi: Lấy hàm loginSuccess trực tiếp từ kho Zustand mà không dùng Hook
             const { loginSuccess } = useAuthStore.getState();
-            localStorage.setItem('token', newToken);
             loginSuccess(newToken);
 
             // Gán token mới vào header của request bị lỗi trước đó
             originalRequest.headers['Authorization'] = `Bearer ${newToken}`;
 
           }
-          
+
           // Thực hiện lại request ban đầu với token mới
           return api(originalRequest);
         }
       } catch (refreshError) {
-        // Nếu refresh token cũng hết hạn hoặc lỗi, reject để đẩy user ra trang login (hoặc xử lý logout)
+        // Refresh failed, clear everything
+        const { logout } = useAuthStore.getState();
+        logout();
+        localStorage.removeItem('researchpulse_token');
         return Promise.reject(refreshError);
       }
     }
-    
+
+    // If it's 401 and we already retried, clear token
+    if (error.response && error.response.status === 401) {
+      const { logout } = useAuthStore.getState();
+      logout();
+      localStorage.removeItem('researchpulse_token');
+    }
+
     return Promise.reject(error);
   }
 );

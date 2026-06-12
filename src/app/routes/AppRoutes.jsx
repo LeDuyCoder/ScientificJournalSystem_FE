@@ -42,6 +42,8 @@ import TopicDetailPage from '../../features/topic/pages/TopicDetailPage';
 import ForgotPasswordPage from '../../features/auth/pages/ForgotPasswordPage';
 import ResetPasswordPage from '../../features/auth/pages/ResetPasswordPage';
 
+import GeographyPage from '../../features/zone/pages/GeographyPage';
+
 export default function AppRoutes() {
   return (
     <Routes>
@@ -58,8 +60,8 @@ export default function AppRoutes() {
       </Route>
 
       <Route path="/verify-email" element={<VerifyEmailPage />} />
-      <Route path="/authors/:id"  element={<AuthorDetailPage />} />
-      <Route path="/authors"     element={<AuthorListPage />} />
+      <Route path="/authors/:id" element={<AuthorDetailPage />} />
+      <Route path="/authors" element={<AuthorListPage />} />
       <Route path="/journals/:id" element={<JournalDetailPage />} />
       <Route path="/catalog" element={<CatalogSearchPage />} />
 
@@ -72,6 +74,7 @@ export default function AppRoutes() {
       <Route path="/keywords/:keywordId/articles" element={<KeywordArticlesPage />} />
       <Route path="/forgot-password" element={<ForgotPasswordPage />} />
       <Route path="/reset-password" element={<ResetPasswordPage />} />
+      <Route path="/geography" element={<GeographyPage />} />
 
       <Route path="/topics/:topicId" element={<TopicDetailPage />} />
       <Route path="*" element={<LandingPage />} />
