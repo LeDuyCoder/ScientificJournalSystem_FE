@@ -6,7 +6,7 @@ import { useAuthStore } from '../../app/store/authStore';
  * Axios instance dùng chung cho toàn bộ FE.
  * Tự động gắn Bearer Token vào Header thay vì dùng Cookie.
  */
-const httpClient = axios.create({
+const api = axios.create({
   baseURL: import.meta.env.VITE_API_URL || import.meta.env.VITE_API_BASE_URL,
   timeout: 10000,
   headers: {
@@ -16,7 +16,7 @@ const httpClient = axios.create({
 });
 
 // Interceptor xử lý Request: Tự động lấy token từ LocalStorage
-httpClient.interceptors.request.use(
+api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN) || localStorage.getItem('accessToken');
     if (token) {
@@ -28,7 +28,7 @@ httpClient.interceptors.request.use(
 );
 
 // Interceptor xử lý Response: Tự động refresh token khi lỗi 401
-httpClient.interceptors.response.use(
+api.interceptors.response.use(
   (response) => {
     return response;
   },
@@ -54,7 +54,7 @@ httpClient.interceptors.response.use(
             originalRequest.headers['Authorization'] = `Bearer ${newToken}`;
           }
           
-          return httpClient(originalRequest);
+          return api(originalRequest);
         }
       } catch (refreshError) {
         // Đăng xuất nếu refresh cũng thất bại
@@ -68,4 +68,4 @@ httpClient.interceptors.response.use(
   }
 );
 
-export default httpClient;
+export default api;

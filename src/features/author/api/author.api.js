@@ -1,16 +1,16 @@
 /**
  * File source thuộc hệ thống FE ResearchPulse.
  *
- * File: features\author\api\author.httpClient.js
+ * File: features\author\api\author.api.js
  */
-import httpClient from '../../../shared/services/httpClient';
+import api from '../../../shared/services/api';
 
 /**
  * Gọi API lấy danh sách các subject area học thuật.
  * @returns {Promise} Axios promise
  */
 export const getSubjectAreasApi = () => {
-  return httpClient.get('/subject-areas');
+  return api.get('/subject-areas');
 };
 
 /**
@@ -19,7 +19,7 @@ export const getSubjectAreasApi = () => {
  * @returns {Promise} Axios promise
  */
 export const getAuthorAreasBreakdownApi = (id) => {
-  return httpClient.get(`/author/${id}/areas-breakdown`);
+  return api.get(`/author/${id}/areas-breakdown`);
 };
 
 /**
@@ -28,7 +28,7 @@ export const getAuthorAreasBreakdownApi = (id) => {
  * @returns {Promise} Axios promise
  */
 export const getAuthorArticlesApi = (id) => {
-  return httpClient.get(`/author/${id}/articles`);
+  return api.get(`/author/${id}/articles`);
 };
 
 /**
@@ -36,7 +36,7 @@ export const getAuthorArticlesApi = (id) => {
  * @returns {Promise} Axios promise
  */
 export const getAuthorLeaderboardApi = (params = {}) => {
-  return httpClient.get('/author/leaderboard', { params });
+  return api.get('/author/leaderboard', { params });
 };
 
 /**
@@ -45,7 +45,7 @@ export const getAuthorLeaderboardApi = (params = {}) => {
  * @returns {Promise} Axios promise
  */
 export const getAuthorsApi = (params) => {
-  return httpClient.get('/author', { params });
+  return api.get('/author', { params });
 };
 
 /**
@@ -54,5 +54,5 @@ export const getAuthorsApi = (params) => {
  * @returns {Promise} Axios promise
  */
 export const getAuthorDetailApi = (id) => {
-  return httpClient.get(`/author/${id}`);
+  return api.get(`/author/${id}`);
 };

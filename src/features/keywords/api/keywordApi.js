@@ -3,7 +3,7 @@
  *
  * File: features\keywords\api\keywordApi.js
  */
-import httpClient from '../../../shared/services/httpClient';
+import api from '../../../shared/services/api';
 
 /**
  * API làm việc với Keyword.
@@ -17,7 +17,7 @@ const keywordApi = {
    * @returns {Promise} Axios response từ backend.
    */
   getKeywords(params) {
-    return httpClient.get('/keywords', { params });
+    return api.get('/keywords', { params });
   },
 
   /**
@@ -27,7 +27,7 @@ const keywordApi = {
    * @returns {Promise} Axios response từ backend.
    */
   getKeywordById(keywordId) {
-    return httpClient.get(`/keywords/${keywordId}`);
+    return api.get(`/keywords/${keywordId}`);
   },
 
   /**
@@ -38,7 +38,7 @@ const keywordApi = {
    * @returns {Promise} Axios response từ backend.
    */
   getArticlesByKeyword(keywordId, params) {
-    return httpClient.get(`/keywords/${keywordId}/articles`, { params });
+    return api.get(`/keywords/${keywordId}/articles`, { params });
   },
 };
 

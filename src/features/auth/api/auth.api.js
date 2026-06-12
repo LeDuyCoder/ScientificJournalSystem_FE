@@ -3,7 +3,7 @@
  *
  * File: features\auth\api\auth.api.js
  */
-import httpClient from '../../../shared/services/httpClient';
+import api from '../../../shared/services/api';
 
 /**
  * Register a new user account
@@ -11,7 +11,7 @@ import httpClient from '../../../shared/services/httpClient';
  * @returns {Promise} Axios promise
  */
 export const registerApi = (data) => {
-  return httpClient.post('/auth/register', data);
+  return api.post('/auth/register', data);
 };
 
 /**
@@ -20,7 +20,7 @@ export const registerApi = (data) => {
  * @returns {Promise} Axios promise
  */
 export const verifyEmailApi = (token) => {
-  return httpClient.get('/auth/verify', {
+  return api.get('/auth/verify', {
     params: { token },
   });
 };
@@ -31,7 +31,7 @@ export const verifyEmailApi = (token) => {
  * @returns {Promise} Axios promise
  */
 export const loginApi = (data) => {
-  return httpClient.post('/auth/login', data);
+  return api.post('/auth/login', data);
 };
 
 /**
@@ -40,7 +40,7 @@ export const loginApi = (data) => {
  * @returns {Promise} Axios promise
  */
 export const loginGoogleApi = (code) => {
-  return httpClient.post('/auth/google', { code });
+  return api.post('/auth/google', { code });
 };
 
 /**
@@ -49,7 +49,7 @@ export const loginGoogleApi = (code) => {
  * @returns {Promise} Axios promise
  */
 export const forgotPasswordApi = (email) => {
-  return httpClient.post('/auth/forgot-password', { email });
+  return api.post('/auth/forgot-password', { email });
 };
 
 /**
@@ -58,7 +58,7 @@ export const forgotPasswordApi = (email) => {
  * @returns {Promise} Axios promise
  */
 export const resetPasswordApi = (data) => {
-  return httpClient.post('/auth/reset-password', data);
+  return api.post('/auth/reset-password', data);
 };
 
 /**
@@ -66,7 +66,7 @@ export const resetPasswordApi = (data) => {
  * @returns {Promise} Axios promise
  */
 export const getProfileApi = () => {
-  return httpClient.get('/users/profile');
+  return api.get('/users/profile');
 };
 
 /**
@@ -75,7 +75,7 @@ export const getProfileApi = () => {
  * @returns {Promise} Axios promise
  */
 export const updateProfileApi = (data) => {
-  return httpClient.put('/users/me', data);
+  return api.put('/users/me', data);
 };
 
 /**
@@ -83,7 +83,7 @@ export const updateProfileApi = (data) => {
  * @returns {Promise} Axios promise
  */
 export const deleteAccountApi = () => {
-  return httpClient.delete('/users/me');
+  return api.delete('/users/me');
 };
 
 const authApi = {
@@ -92,7 +92,7 @@ const authApi = {
 
 
 export const logoutApi = () => {
-  return httpClient.post('/auth/logout');
+  return api.post('/auth/logout');
 };
 
 export default authApi;

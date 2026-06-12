@@ -3,7 +3,7 @@
  *
  * File: features\landing\api\landingApi.js
  */
-import httpClient from '../../../shared/services/httpClient';
+import api from '../../../shared/services/api';
 
 /**
  * Calls backend GET /search/:keyword endpoint to query global catalog.
@@ -12,5 +12,5 @@ import httpClient from '../../../shared/services/httpClient';
  * @returns {Promise<Object>} Axios response promise
  */
 export const searchGlobalApi = (keyword) => {
-  return httpClient.get(`/search/${encodeURIComponent(keyword)}`);
+  return api.get(`/search/${encodeURIComponent(keyword)}`);
 };

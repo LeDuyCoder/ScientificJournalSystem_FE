@@ -3,14 +3,14 @@
  *
  * File: features\catalog\api\catalogApi.js
  */
-import httpClient from '../../../shared/services/httpClient';
+import api from '../../../shared/services/api';
 
 /**
  * Get catalog academic subject areas list
  * @returns {Promise} Axios promise
  */
 export const getSubjectAreasApi = () => {
-  return httpClient.get('/subject-areas');
+  return api.get('/subject-areas');
 };
 
 /**
@@ -18,7 +18,7 @@ export const getSubjectAreasApi = () => {
  * @returns {Promise} Axios promise
  */
 export const getSubjectCategoriesApi = (params) => {
-  return httpClient.get('/subject-categories', { params });
+  return api.get('/subject-categories', { params });
 };
 
 /**
@@ -27,7 +27,7 @@ export const getSubjectCategoriesApi = (params) => {
  * @returns {Promise} Axios promise
  */
 export const getJournalRankingsApi = (id) => {
-  return httpClient.get(`/catalog/journals/${id}/rankings`);
+  return api.get(`/catalog/journals/${id}/rankings`);
 };
 
 /**
@@ -36,7 +36,7 @@ export const getJournalRankingsApi = (id) => {
  * @returns {Promise} Axios promise
  */
 export const getCatalogVolumesApi = (params) => {
-  return httpClient.get('/catalog/volumes', { params });
+  return api.get('/catalog/volumes', { params });
 };
 
 /**
@@ -45,5 +45,5 @@ export const getCatalogVolumesApi = (params) => {
  * @returns {Promise} Axios promise
  */
 export const getCatalogIssuesApi = (params) => {
-  return httpClient.get('/catalog/issues', { params });
+  return api.get('/catalog/issues', { params });
 };

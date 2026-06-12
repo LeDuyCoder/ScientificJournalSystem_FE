@@ -1,9 +1,9 @@
 ﻿/**
  * File source thuộc hệ thống FE ResearchPulse.
  *
- * File: features\topic\api\topic.httpClient.js
+ * File: features\topic\api\topic.api.js
  */
-import httpClient from '../../../shared/services/httpClient';
+import api from '../../../shared/services/api';
 
 /**
  * Get articles belonging to a specific topic ID
@@ -11,7 +11,7 @@ import httpClient from '../../../shared/services/httpClient';
  * @returns {Promise} Axios promise
  */
 export const getTopicArticlesApi = (id) => {
-  return httpClient.get(`/topics/${id}/articles`);
+  return api.get(`/topics/${id}/articles`);
 };
 
 /**
@@ -21,5 +21,5 @@ export const getTopicArticlesApi = (id) => {
  * @returns {Promise} Axios response chứa danh sách topics.
  */
 export const getTopicsApi = (params = {}) => {
-  return httpClient.get('/topics', { params });
+  return api.get('/topics', { params });
 };

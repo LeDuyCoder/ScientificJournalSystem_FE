@@ -39,7 +39,7 @@ export const isAuthenticated = async () => {
       return true;
     }
 
-    const res = await httpClient.get("/auth/check-auth");
+    const res = await api.get("/auth/check-auth");
 
     if (
       res.status === 200 &&
