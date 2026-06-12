@@ -1,4 +1,4 @@
-﻿/**
+/**
  * File source thuộc hệ thống FE ResearchPulse.
  *
  * File: features\article\components\ArticleSearchBar.jsx
@@ -36,22 +36,7 @@ export default function ArticleSearchBar({ initialValue = '', onSearchChange }) 
 
   return (
     <Form.Group className="flex-grow-1">
-      <InputGroup 
-        className="rounded-3 overflow-hidden shadow-sm"
-        style={{
-          border: '1px solid var(--border)',
-          backgroundColor: '#ffffff',
-          transition: 'all 0.2s'
-        }}
-        onFocus={(e) => {
-          e.currentTarget.style.borderColor = 'var(--primary)';
-          e.currentTarget.style.boxShadow = '0 0 10px rgba(255, 122, 51, 0.12)';
-        }}
-        onBlur={(e) => {
-          e.currentTarget.style.borderColor = 'var(--border)';
-          e.currentTarget.style.boxShadow = 'none';
-        }}
-      >
+      <InputGroup className="article-search-group">
         <InputGroup.Text 
           className="bg-transparent border-0 pe-2 ps-3 text-muted-custom"
           style={{ color: 'var(--text-muted)' }}

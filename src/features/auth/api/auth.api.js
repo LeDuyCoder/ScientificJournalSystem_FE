@@ -65,8 +65,15 @@ export const resetPasswordApi = (data) => {
  * Get profile details of currently logged-in user
  * @returns {Promise} Axios promise
  */
-export const getProfileApi = () => {
-  return api.get('/users/profile');
+export const getProfileApi = async () => {
+  try {
+    return await api.get('/users/me');
+  } catch (error) {
+    if (error.response?.status === 404) {
+      return api.get('/users/profile');
+    }
+    throw error;
+  }
 };
 
 /**

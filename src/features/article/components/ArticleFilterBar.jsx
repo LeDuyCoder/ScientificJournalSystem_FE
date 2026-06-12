@@ -1,4 +1,4 @@
-﻿/**
+/**
  * File source thuộc hệ thống FE ResearchPulse.
  *
  * File: features\article\components\ArticleFilterBar.jsx
@@ -110,13 +110,7 @@ export default function ArticleFilterBar({ filters, updateFilters, clearFilters 
   const currentSortValue = `${filters.sortBy}-${filters.sortOrder}`;
 
   return (
-    <div 
-      className="p-3 mb-4 rounded-3"
-      style={{
-        backgroundColor: 'var(--bg-card)',
-        border: '1px solid var(--border)'
-      }}
-    >
+    <div className="article-filter-panel">
       <Row className="g-3 align-items-center">
         {/* Search Bar */}
         <Col xs={12} lg={4}>
@@ -134,7 +128,7 @@ export default function ArticleFilterBar({ filters, updateFilters, clearFilters 
             <Form.Select
               value={filters.selectedYear}
               onChange={handleSelectChange('year')}
-              className="bg-white text-main border-light py-2 text-xs rounded-2 shadow-none"
+              className="article-form-control py-2 text-xs"
               style={{
                 width: '130px',
                 borderColor: 'var(--border)',
@@ -151,7 +145,7 @@ export default function ArticleFilterBar({ filters, updateFilters, clearFilters 
             <Form.Select
               value={filters.selectedJournal}
               onChange={handleSelectChange('journal')}
-              className="bg-white text-main border-light py-2 text-xs rounded-2 shadow-none"
+              className="article-form-control py-2 text-xs"
               style={{
                 width: '200px',
                 borderColor: 'var(--border)',
@@ -169,7 +163,7 @@ export default function ArticleFilterBar({ filters, updateFilters, clearFilters 
               value={filters.selectedTopic}
               onChange={handleSelectChange('topic')}
               disabled={loadingFilters}
-              className="bg-white text-main border-light py-2 text-xs rounded-2 shadow-none"
+              className="article-form-control py-2 text-xs"
               style={{
                 width: '160px',
                 borderColor: 'var(--border)',
@@ -186,7 +180,7 @@ export default function ArticleFilterBar({ filters, updateFilters, clearFilters 
             <Form.Select
               value={filters.selectedAccess}
               onChange={handleSelectChange('access')}
-              className="bg-white text-main border-light py-2 text-xs rounded-2 shadow-none"
+              className="article-form-control py-2 text-xs"
               style={{
                 width: '140px',
                 borderColor: 'var(--border)',
@@ -207,7 +201,7 @@ export default function ArticleFilterBar({ filters, updateFilters, clearFilters 
               <Form.Select
                 value={currentSortValue}
                 onChange={handleSortChange}
-                className="bg-white text-main border-light py-2 text-xs rounded-2 shadow-none"
+                className="article-form-control py-2 text-xs"
                 style={{
                   width: '160px',
                   borderColor: 'var(--border)',
@@ -224,10 +218,12 @@ export default function ArticleFilterBar({ filters, updateFilters, clearFilters 
             {/* Nút Clear Filters */}
             {hasActiveFilters && (
               <Button
-                variant="outline-danger"
+                variant="outline-primary"
                 onClick={clearFilters}
-                className="d-flex align-items-center gap-1 py-2 px-3 text-xs rounded-2"
+                className="d-flex align-items-center gap-1 py-2 px-3 text-xs rounded-pill"
                 style={{
+                  borderColor: 'var(--primary)',
+                  color: 'var(--primary)',
                   fontSize: '0.8rem',
                   fontWeight: 600,
                   transition: 'all 0.2s'

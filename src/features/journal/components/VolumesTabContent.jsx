@@ -65,82 +65,58 @@ export default function VolumesTabContent({
     if (endPage < totalPages - 1) pages.push('ellipsis-end');
     if (endPage < totalPages) pages.push(totalPages);
 
-    const buttonStyle = (active = false) => ({
-      minWidth: '32px',
-      height: '32px',
-      borderRadius: '8px',
-      border: active ? '1px solid #111' : '1px solid rgba(0,0,0,0.10)',
-      backgroundColor: active ? '#111' : 'var(--bg-card)',
-      color: active ? '#fff' : 'var(--text-muted)',
-      fontSize: '0.82rem',
-      fontWeight: 600,
-      cursor: active ? 'default' : 'pointer',
-    });
-
     return (
       <div className="d-flex align-items-center justify-content-center gap-1 flex-wrap mt-3">
-        <button type="button" disabled={currentPage <= 1} onClick={() => onPageChange(currentPage - 1)} style={buttonStyle(false)}>
+        <button className="journal-page-btn" type="button" disabled={currentPage <= 1} onClick={() => onPageChange(currentPage - 1)}>
           <Icon icon="lucide:chevron-left" width="14" />
         </button>
         {pages.map((page) => page.toString().startsWith('ellipsis') ? (
-          <span key={`${prefix}-${page}`} className="px-1 text-muted-custom">…</span>
+          <span key={`${prefix}-${page}`} className="px-1 text-muted-custom">...</span>
         ) : (
-          <button key={`${prefix}-${page}`} type="button" onClick={() => onPageChange(page)} style={buttonStyle(page === currentPage)}>
+          <button key={`${prefix}-${page}`} className={`journal-page-btn ${page === currentPage ? 'is-active' : ''}`} type="button" onClick={() => onPageChange(page)}>
             {page}
           </button>
         ))}
-        <button type="button" disabled={currentPage >= totalPages} onClick={() => onPageChange(currentPage + 1)} style={buttonStyle(false)}>
+        <button className="journal-page-btn" type="button" disabled={currentPage >= totalPages} onClick={() => onPageChange(currentPage + 1)}>
           <Icon icon="lucide:chevron-right" width="14" />
         </button>
       </div>
     );
   };
 
-  // ─── Loading volumes ──────────────────────────────────────────────────
   if (loading) {
     return (
-      <div
-        className="journal-dark-card p-4"
-        style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '12px' }}
-      >
+      <section className="journal-surface p-4">
         {[1, 2, 3].map(i => (
-          <div key={i} className="mb-3 p-3" style={{ borderBottom: '1px solid var(--border)' }}>
+          <div key={i} className="mb-3 p-3 border-bottom">
             <LoadingSkeleton width="200px" height="24px" className="mb-2" />
             <LoadingSkeleton width="120px" height="16px" />
           </div>
         ))}
-      </div>
+      </section>
     );
   }
 
-  // ─── Error volumes ─────────────────────────────────────────────────────
   if (error) {
     return (
-      <div
-        className="journal-dark-card p-5 text-center"
-        style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '12px' }}
-      >
-        <Icon icon="lucide:alert-triangle" width="40" className="mb-3 text-danger" />
-        <p className="mb-0 text-muted-custom">Không thể tải danh sách volumes. Vui lòng thử lại.</p>
-      </div>
+      <section className="journal-surface journal-empty-state">
+        <Icon icon="lucide:alert-triangle" width="36" className="text-danger" />
+        <p className="mb-0">Không thể tải danh sách volumes. Vui lòng thử lại.</p>
+      </section>
     );
   }
 
-  // ─── Empty volumes ────────────────────────────────────────────────────
   if (!volumes || volumes.length === 0) {
     return (
-      <div
-        className="journal-dark-card p-5 text-center text-muted-custom"
-        style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '12px' }}
-      >
-        <Icon icon="lucide:folder-x" width="40" className="mb-3 text-muted-custom" />
+      <section className="journal-surface journal-empty-state">
+        <Icon icon="lucide:folder-x" width="36" />
         <p className="mb-0">Journal này chưa có dữ liệu volume.</p>
-      </div>
+      </section>
     );
   }
 
   return (
-    <div className="d-flex flex-column gap-3">
+    <div className="journal-volume-list">
       {volumes.map((vol) => {
         const volumeId = vol.volume_id || vol.id;
         const volumeYear = vol.publication_year || vol.year;
@@ -150,47 +126,15 @@ export default function VolumesTabContent({
         const issuePagination = issuePaginationByVolume[volumeId];
 
         return (
-          <div
-            key={volumeId}
-            className="journal-dark-card overflow-hidden"
-            style={{
-              borderRadius: '12px',
-              backgroundColor: 'var(--bg-card)',
-              transition: 'all 0.2s ease',
-              border: isExpanded ? '1.5px solid rgba(0,0,0,0.18)' : '1px solid var(--border)'
-            }}
-          >
-            {/* Volume Header */}
-            <div
-              className="p-3 d-flex align-items-center justify-content-between"
-              style={{ cursor: 'pointer', userSelect: 'none' }}
-              onClick={() => toggleVolume(volumeId)}
-            >
-              <div className="d-flex align-items-center gap-3">
-                <Icon
-                  icon={isExpanded ? 'lucide:folder-open' : 'lucide:folder'}
-                  style={{ color: 'var(--text-muted)' }}
-                  width="20"
-                />
+          <article key={volumeId} className={`journal-volume-card ${isExpanded ? 'is-expanded' : ''}`}>
+            <div className="journal-volume-header" onClick={() => toggleVolume(volumeId)}>
+              <div className="d-flex align-items-center gap-3 flex-wrap">
+                <Icon icon={isExpanded ? 'lucide:folder-open' : 'lucide:folder'} style={{ color: 'var(--text-muted)' }} width="20" />
                 <div>
-                  <span className="text-main fw-bold font-display" style={{ fontSize: '1.02rem' }}>
-                    Volume {vol.volume_number || 'N/A'}
-                  </span>
-                  <span className="text-muted-custom fw-normal ms-2" style={{ fontSize: '0.9rem' }}>
-                    · {volumeYear || 'Chưa cập nhật'}
-                  </span>
+                  <span className="journal-volume-title">Volume {vol.volume_number || 'N/A'}</span>
+                  <span className="journal-volume-meta">{volumeYear || 'Chưa cập nhật'}</span>
                   {vol.issue_count !== undefined && vol.issue_count > 0 && (
-                    <span
-                      className="ms-2 px-2 py-1"
-                      style={{
-                        fontSize: '0.72rem',
-                        fontWeight: 600,
-                        borderRadius: '6px',
-                        backgroundColor: 'rgba(0,0,0,0.07)',
-                        color: 'var(--text-muted)',
-                        border: '1px solid rgba(0,0,0,0.08)'
-                      }}
-                    >
+                    <span className="journal-badge journal-badge--neutral ms-2">
                       {vol.issue_count} issue
                     </span>
                   )}
@@ -201,36 +145,23 @@ export default function VolumesTabContent({
               </span>
             </div>
 
-            {/* Issues Panel */}
             {isExpanded && (
-              <div
-                className="px-4 pb-3 pt-1"
-                style={{
-                  borderTop: '1px solid var(--border)',
-                  backgroundColor: 'var(--bg-main)'
-                }}
-              >
-                {/* Loading issues */}
+              <div className="journal-issue-panel">
                 {issues === undefined && !issueError ? (
-                  <div className="d-flex align-items-center gap-2 py-3 text-muted-custom" style={{ fontSize: '0.9rem' }}>
+                  <div className="d-flex align-items-center gap-2 py-3 text-muted-custom">
                     <Spinner animation="border" size="sm" />
                     Đang tải danh sách issue...
                   </div>
-
                 ) : issueError ? (
-                  /* Error loading issues */
-                  <div className="d-flex align-items-center gap-2 py-3 text-danger" style={{ fontSize: '0.88rem' }}>
+                  <div className="d-flex align-items-center gap-2 py-3 text-danger">
                     <Icon icon="lucide:alert-triangle" width="16" />
                     Không thể tải danh sách issues. Vui lòng thử lại.
                   </div>
-
                 ) : !issues || issues.length === 0 ? (
-                  /* Empty issues */
-                  <div className="text-muted-custom py-3 text-start" style={{ fontSize: '0.9rem' }}>
+                  <div className="text-muted-custom py-3 text-start">
                     <Icon icon="lucide:inbox" width="14" className="me-1" />
                     Volume này chưa có issue.
                   </div>
-
                 ) : (
                   <div className="d-flex flex-column gap-2 py-2">
                     {issues.map((issue) => {
@@ -239,57 +170,23 @@ export default function VolumesTabContent({
                       const issueMonth = issue.month ? MONTH_NAMES[issue.month] || `Tháng ${issue.month}` : null;
 
                       return (
-                        <div
-                          key={issueId}
-                          className="d-flex align-items-center justify-content-between rounded"
-                          style={{
-                            padding: '10px 14px',
-                            borderLeft: '2px solid rgba(0,0,0,0.12)',
-                            backgroundColor: 'var(--bg-card)',
-                          }}
-                        >
-                          {/* Issue Info */}
+                        <div key={issueId} className="journal-issue-row">
                           <div className="d-flex align-items-center gap-2 flex-wrap">
                             <Icon icon="lucide:file-stack" style={{ color: 'var(--text-muted)' }} width="15" />
-                            <span className="text-main fw-semibold font-display" style={{ fontSize: '0.93rem' }}>
-                              Issue {issue.issue_number || 'N/A'}
-                            </span>
+                            <span className="journal-issue-title">Issue {issue.issue_number || 'N/A'}</span>
                             {(issueMonth || issueYear) && (
-                              <span className="text-muted-custom" style={{ fontSize: '0.83rem' }}>
-                                · {[issueMonth, issueYear].filter(Boolean).join(' ')}
+                              <span className="text-muted-custom small">
+                                {[issueMonth, issueYear].filter(Boolean).join(' ')}
                               </span>
                             )}
                             {issue.article_count !== undefined && (
-                              <span
-                                style={{
-                                  fontSize: '0.72rem',
-                                  fontWeight: 600,
-                                  borderRadius: '6px',
-                                  backgroundColor: 'rgba(0,0,0,0.06)',
-                                  color: 'var(--text-muted)',
-                                  border: '1px solid rgba(0,0,0,0.08)'
-                                }}
-                              >
+                              <span className="journal-badge journal-badge--neutral">
                                 {issue.article_count} bài báo
                               </span>
                             )}
                           </div>
 
-                          {/* CTA Button */}
-                          <Button
-                            variant="outline-light"
-                            onClick={(e) => handleViewArticles(e, issueId)}
-                            className="d-flex align-items-center gap-2 px-3 py-1.5"
-                            style={{
-                              borderRadius: '6px',
-                              border: '1px solid #111',
-                              color: '#111',
-                              fontSize: '0.85rem',
-                              fontWeight: 600,
-                              whiteSpace: 'nowrap',
-                              flexShrink: 0,
-                            }}
-                          >
+                          <Button onClick={(e) => handleViewArticles(e, issueId)} className="journal-text-btn px-3 py-1">
                             Xem bài báo
                             <Icon icon="lucide:arrow-right" width="14" />
                           </Button>
@@ -305,7 +202,7 @@ export default function VolumesTabContent({
                 )}
               </div>
             )}
-          </div>
+          </article>
         );
       })}
       {renderPagination(

@@ -16,6 +16,7 @@ const PublicRoute = () => {
   }, []);
 
   if (loading) return <div>Đang tải...</div>;
+  
 
   // 🔥 Nếu đã đăng nhập thành công -> Đá ngược về dashboard, không cho xem trang login nữa
   return isAuth ? <Navigate to="/dashboard" replace /> : <Outlet />;

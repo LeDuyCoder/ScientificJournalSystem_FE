@@ -19,34 +19,31 @@ export default function JournalHero({
 
   if (loading || !journal) {
     return (
-      <div 
-        className="journal-dark-card p-4 p-md-5 mb-4 position-relative overflow-hidden"
-        style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '16px' }}
-      >
-        <Row className="gy-4">
+      <section className="journal-surface journal-hero-card mb-4" aria-label="Đang tải thông tin tạp chí">
+        <Row className="gy-4 journal-hero-content">
           <Col lg={8}>
             <div className="d-flex gap-2 mb-3">
-              <div className="skeleton-shimmer" style={{ width: '60px', height: '24px', borderRadius: '12px' }} />
-              <div className="skeleton-shimmer" style={{ width: '100px', height: '24px', borderRadius: '12px' }} />
+              <div className="skeleton-shimmer" style={{ width: '60px', height: '24px', borderRadius: '6px' }} />
+              <div className="skeleton-shimmer" style={{ width: '100px', height: '24px', borderRadius: '6px' }} />
             </div>
-            <div className="skeleton-shimmer mb-3" style={{ width: '80%', height: '40px', borderRadius: '4px' }} />
-            <div className="skeleton-shimmer mb-4" style={{ width: '95%', height: '60px', borderRadius: '4px' }} />
-            <div className="d-flex gap-2">
+            <div className="skeleton-shimmer mb-3" style={{ width: '80%', height: '44px' }} />
+            <div className="skeleton-shimmer mb-4" style={{ width: '95%', height: '64px' }} />
+            <div className="d-flex gap-2 flex-wrap">
               {[1, 2, 3].map(i => (
-                <div key={i} className="skeleton-shimmer" style={{ width: '80px', height: '32px', borderRadius: '16px' }} />
+                <div key={i} className="skeleton-shimmer" style={{ width: '92px', height: '32px', borderRadius: '999px' }} />
               ))}
             </div>
           </Col>
           <Col lg={4} className="text-lg-end">
-            <div className="skeleton-shimmer mb-2 ms-lg-auto" style={{ width: '120px', height: '48px', borderRadius: '4px' }} />
-            <div className="skeleton-shimmer mb-3 ms-lg-auto" style={{ width: '160px', height: '20px', borderRadius: '4px' }} />
-            <div className="d-flex gap-2 justify-content-lg-end">
+            <div className="skeleton-shimmer mb-2 ms-lg-auto" style={{ width: '150px', height: '72px' }} />
+            <div className="skeleton-shimmer mb-3 ms-lg-auto" style={{ width: '160px', height: '20px' }} />
+            <div className="d-flex gap-2 justify-content-lg-end flex-wrap">
               <div className="skeleton-shimmer" style={{ width: '110px', height: '38px', borderRadius: '6px' }} />
               <div className="skeleton-shimmer" style={{ width: '140px', height: '38px', borderRadius: '6px' }} />
             </div>
           </Col>
         </Row>
-      </div>
+      </section>
     );
   }
 
@@ -68,132 +65,81 @@ export default function JournalHero({
     navigate(`/keywords?keyword=${encodeURIComponent(categoryName)}`);
   };
 
-  return (
-    <div className="journal-dark-card p-4 p-md-5 mb-4 position-relative overflow-hidden" 
-         style={{ 
-           borderRadius: '16px',
-           backgroundColor: 'var(--bg-card)',
-           border: '1px solid var(--border)',
-           borderTop: '3px solid var(--primary)', 
-           boxShadow: '0 8px 30px rgba(0, 0, 0, 0.04)' 
-         }}>
-      {/* Decorative background glow */}
-      <div className="position-absolute" style={{
-        top: '-150px',
-        right: '-150px',
-        width: '400px',
-        height: '400px',
-        background: 'radial-gradient(circle, var(--primary-light) 0%, transparent 70%)',
-        zIndex: 0,
-        pointerEvents: 'none'
-      }} />
+  const quartileClass = quartile === 'Q1' ? 'journal-badge--q1' : quartile === 'Q2' ? 'journal-badge--accent' : 'journal-badge--neutral';
 
-      <Row className="gy-4 align-items-start position-relative" style={{ zIndex: 1 }}>
+  return (
+    <section className="journal-surface journal-hero-card mb-4" aria-labelledby="journal-detail-title">
+      <Row className="gy-4 align-items-start journal-hero-content">
         <Col lg={8} md={7}>
-          {/* Badges */}
-          <div className="d-flex flex-wrap gap-2 mb-3">
+          <div className="journal-badge-row">
             {quartile && (
-              <span 
-                className="px-3 py-2 font-display text-main border-secondary"
-                style={{ 
-                  fontWeight: 700, 
-                  borderRadius: '6px',
-                }}
-              >
+              <span className={`journal-badge ${quartileClass}`}>
                 {quartile}
               </span>
             )}
             {is_open_access && (
-              <badge 
-                className="px-3 py-2" 
-                style={{ 
-                  backgroundColor: 'rgba(25, 135, 84, 0.08)', 
-                  color: '#198754', 
-                  border: '1px solid rgba(25, 135, 84, 0.2)', 
-                  borderRadius: '6px' 
-                }}
-              >
+              <span className="journal-badge journal-badge--accent">
                 Open Access
-              </badge>
+              </span>
             )}
             {publisher_name && (
-              <span 
-className="px-3 py-2 font-display text-main border-secondary"
-                style={{ 
-                  fontWeight: 700, 
-                  borderRadius: '6px',
-                }}
-              >
+              <span className="journal-badge journal-badge--neutral">
                 {publisher_name}
               </span>
             )}
           </div>
 
-          {/* Title */}
-          <h1 className="font-display fw-bold text-main mb-3" style={{ fontSize: '2.5rem', letterSpacing: '-0.5px' }}>
+          <h1 id="journal-detail-title" className="journal-title">
             {display_name}
           </h1>
 
-          {/* Description */}
-          <p className="text-muted-custom mb-4 leading-relaxed" style={{ fontSize: '1.05rem', maxWidth: '750px' }}>
+          <p className="journal-description">
             {description || 'Chưa có mô tả chi tiết phạm vi nghiên cứu cho tạp chí này.'}
           </p>
 
-          {/* Subject Category tags */}
-          <div className="d-flex flex-wrap gap-2">
-            {subject_categories.map((cat, idx) => (
-              <span 
-                key={cat.id || idx} 
-                className="px-3 py-1 rounded-pill font-display text-main fw-semibold"
-                role="button"
-                tabIndex={0}
-                onClick={() => handleCategoryClick(cat.display_name)}
-                onKeyDown={(e) => e.key === 'Enter' && handleCategoryClick(cat.display_name)}
-                title={`Tìm keyword ${cat.display_name}`}
-                
-              style={{ backgroundColor: 'rgba(0,0,0,0.07)', border: '1px solid rgba(0,0,0,0.10)' }}
-              >
-                {cat.display_name}
-              </span>
-            ))}
-          </div>
+          {subject_categories.length > 0 && (
+            <div className="journal-category-list" aria-label="Chủ đề nghiên cứu">
+              {subject_categories.map((cat, idx) => (
+                <span
+                  key={cat.id || idx}
+                  className="journal-category-chip"
+                  role="button"
+                  tabIndex={0}
+                  onClick={() => handleCategoryClick(cat.display_name)}
+                  onKeyDown={(e) => e.key === 'Enter' && handleCategoryClick(cat.display_name)}
+                  title={`Tìm keyword ${cat.display_name}`}
+                >
+                  {cat.display_name}
+                </span>
+              ))}
+            </div>
+          )}
         </Col>
 
-        {/* Metric and Action Buttons */}
         <Col lg={4} md={5} className="text-md-end text-start mt-lg-2">
           {metric_value ? (
-            <div className="mb-4">
-              <div className="font-display fw-bold text-main d-inline-block" style={{ fontSize: '4rem', lineHeight: '1' }}>
+            <div className="journal-metric-panel ms-md-auto mb-3">
+              <div className="journal-metric-value">
                 {metric_value}
               </div>
-              <div className="font-display text-muted-custom text-uppercase fw-semibold" style={{ fontSize: '1rem', letterSpacing: '1px' }}>
+              <div className="journal-metric-label">
                 {metric_name} {metric_year}
               </div>
             </div>
           ) : (
-            <div className="mb-4 text-muted-custom italic">
-              Chưa có dữ liệu ranking
+            <div className="journal-metric-panel ms-md-auto mb-3">
+              <span className="text-muted-custom">Chưa có dữ liệu ranking</span>
             </div>
           )}
 
-          {/* Buttons */}
-          <div className="d-flex flex-wrap gap-2 justify-content-md-end align-items-center">
+          <div className="journal-action-row">
             <Button
-              variant={is_following ? 'outline-success' : 'outline-primary'}
               onClick={onFollow}
               disabled={isFollowing}
-              className="d-flex align-items-center gap-2 px-3 py-2"
-              style={{
-                borderRadius: '8px',
-                border: is_following ? '1px solid rgba(25, 135, 84, 0.3)' : '1px solid var(--primary)',
-                backgroundColor: is_following ? 'rgba(25, 135, 84, 0.05)' : 'var(--bg-main)',
-                color: is_following ? '#198754' : 'var(--primary)',
-                fontSize: '0.9rem',
-                fontWeight: 600
-              }}
+              className={`journal-outline-btn px-3 py-2 ${is_following ? 'is-active' : ''}`}
             >
               {isFollowing ? (
-                <Spinner animation="border" size="sm" variant={is_following ? 'success' : 'primary'} />
+                <Spinner animation="border" size="sm" />
               ) : is_following ? (
                 <>
                   <Icon icon="lucide:check" width="16" />
@@ -211,11 +157,7 @@ className="px-3 py-2 font-display text-main border-secondary"
               onClick={onAddToProject}
               disabled={isAddingToProject}
               className="btn-primary-glow d-flex align-items-center gap-2 px-3 py-2 text-white border-0"
-              style={{
-                borderRadius: '8px',
-                fontSize: '0.9rem',
-                fontWeight: 600
-              }}
+              style={{ borderRadius: '6px' }}
             >
               {isAddingToProject ? (
                 <Spinner animation="border" size="sm" variant="light" />
@@ -229,6 +171,6 @@ className="px-3 py-2 font-display text-main border-secondary"
           </div>
         </Col>
       </Row>
-    </div>
+    </section>
   );
 }

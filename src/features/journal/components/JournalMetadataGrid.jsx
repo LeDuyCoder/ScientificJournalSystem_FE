@@ -1,4 +1,4 @@
-﻿/**
+/**
  * File source thuộc hệ thống FE ResearchPulse.
  *
  * File: features\journal\components\JournalMetadataGrid.jsx
@@ -8,14 +8,7 @@ import { Row, Col } from 'react-bootstrap';
 export default function JournalMetadataGrid({ journal, loading }) {
   if (loading || !journal) {
     return (
-      <div 
-        className="journal-dark-card p-4 mb-4"
-        style={{
-          backgroundColor: 'var(--bg-card)',
-          border: '1px solid var(--border)',
-          borderRadius: '12px'
-        }}
-      >
+      <section className="journal-surface journal-meta-grid mb-4" aria-label="Đang tải metadata tạp chí">
         <Row className="gy-4">
           {[1, 2, 3, 4, 5, 6].map(i => (
             <Col lg={2} md={4} sm={6} key={i}>
@@ -24,7 +17,7 @@ export default function JournalMetadataGrid({ journal, loading }) {
             </Col>
           ))}
         </Row>
-      </div>
+      </section>
     );
   }
 
@@ -50,26 +43,19 @@ export default function JournalMetadataGrid({ journal, loading }) {
   ];
 
   return (
-    <div 
-      className="journal-dark-card p-4 mb-4" 
-      style={{ 
-        backgroundColor: 'var(--bg-card)',
-        border: '1px solid var(--border)',
-        borderRadius: '12px'
-      }}
-    >
+    <section className="journal-surface journal-meta-grid mb-4" aria-label="Thông tin cơ bản tạp chí">
       <Row className="gy-4 text-start">
         {metadataItems.map((item, idx) => (
           <Col lg={2} md={4} xs={6} key={idx}>
-            <div className="text-muted-custom text-uppercase fw-semibold mb-1" style={{ fontSize: '0.75rem', letterSpacing: '0.5px' }}>
+            <div className="journal-meta-label">
               {item.label}
             </div>
-            <div className="text-main fw-bold font-display" style={{ fontSize: '1.1rem' }}>
+            <div className="journal-meta-value">
               {item.value !== undefined && item.value !== null && item.value !== '' ? item.value : 'Chưa cập nhật'}
             </div>
           </Col>
         ))}
       </Row>
-    </div>
+    </section>
   );
 }
