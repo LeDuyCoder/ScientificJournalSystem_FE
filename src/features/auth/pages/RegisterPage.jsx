@@ -34,7 +34,7 @@ export default function RegisterPage() {
       await register(payload);
       setIsSuccess(true);
     } catch (err) {
-      console.error('Registration failed:', err);
+      console.error('Registration failed:', err.response?.data?.message || err.message);
       setError(
         err.response?.data?.message
         || err.message

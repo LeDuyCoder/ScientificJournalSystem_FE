@@ -1,7 +1,7 @@
 /**
  * File source thuộc hệ thống FE ResearchPulse.
  *
- * File: features\auth\api\auth.api.js
+ * File: features/auth/api/auth.api.js
  */
 import api from '../../../shared/services/api';
 
@@ -35,12 +35,12 @@ export const loginApi = (data) => {
 };
 
 /**
- * Log in / Sign up via Google OAuth ID Token
- * @param {string} idToken - Google Credential ID Token
+ * Log in / Sign up via Google OAuth
+ * @param {string} code - Google OAuth authorization code
  * @returns {Promise} Axios promise
  */
 export const loginGoogleApi = (code) => {
-  return api.post('/auth/google', { code: code });
+  return api.post('/auth/google', { code });
 };
 
 /**
@@ -65,13 +65,20 @@ export const resetPasswordApi = (data) => {
  * Get profile details of currently logged-in user
  * @returns {Promise} Axios promise
  */
-export const getProfileApi = () => {
-  return api.get('/users/profile');
+export const getProfileApi = async () => {
+  try {
+    return await api.get('/users/me');
+  } catch (error) {
+    if (error.response?.status === 404) {
+      return api.get('/users/profile');
+    }
+    throw error;
+  }
 };
 
 /**
  * Update current user profile details
- * @param {Object} data - Profile fields to update (first_name, last_name, date_of_birth, gender, url_image)
+ * @param {Object} data
  * @returns {Promise} Axios promise
  */
 export const updateProfileApi = (data) => {
@@ -86,11 +93,14 @@ export const deleteAccountApi = () => {
   return api.delete('/users/me');
 };
 
-/**
- * Log out current user and clear auth cookies on backend.
- * @returns {Promise} Axios promise
- */
+const authApi = {
+  verifyAccount: verifyEmailApi,
+};
+
+
 export const logoutApi = () => {
   return api.post('/auth/logout');
 };
+
+export default authApi;
 
