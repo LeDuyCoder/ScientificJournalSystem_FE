@@ -15,17 +15,13 @@ const api = axios.create({
   // Đã bỏ withCredentials: true để tuân thủ chuẩn mới (dùng Token từ LocalStorage)
 });
 
-// Interceptor xử lý Request: Tự động lấy token từ LocalStorage
-api.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem(STORAGE_KEYS.ACCESS_TOKEN) || localStorage.getItem('accessToken');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
+// Axios instance for public endpoints (does not send cookies or tokens)
+export const publicApi = axios.create({
+  baseURL: import.meta.env.VITE_API_URL,
+  headers: {
+    'Content-Type': 'application/json',
   },
-  (error) => Promise.reject(error)
-);
+});
 
 // Interceptor xử lý Response: Tự động refresh token khi lỗi 401
 api.interceptors.response.use(
@@ -34,39 +30,49 @@ api.interceptors.response.use(
   },
   async (error) => {
     const originalRequest = error.config;
-    
+
+    // Mỗi request chỉ được refresh một lần để tránh vòng lặp vô hạn khi token lỗi
     if (error.response && error.response.status === 401 && originalRequest && !originalRequest._retry) {
       originalRequest._retry = true;
-      
+
       try {
         const res = await axios.get(
           `${import.meta.env.VITE_API_URL}/auth/refresh`,
-          { withCredentials: true } // Giữ withCredentials: true duy nhất ở endpoint refresh nếu BE vẫn còn xài refresh token HTTP-Only
+          { withCredentials: true }
         );
 
         if (res.status === 200) {
           const newToken = res.data?.token || res.data?.data?.token || null;
-          
+
           if (newToken) {
+            // 🔥 Giữ thay đổi: Lấy hàm loginSuccess trực tiếp từ kho Zustand mà không dùng Hook
             const { loginSuccess } = useAuthStore.getState();
-            localStorage.setItem(STORAGE_KEYS.ACCESS_TOKEN, newToken);
             loginSuccess(newToken);
             
             // Gán token mới vào header của request bị lỗi trước đó
             originalRequest.headers['Authorization'] = `Bearer ${newToken}`;
 
           }
-          
+
+          // Thực hiện lại request ban đầu với token mới
           return api(originalRequest);
         }
       } catch (refreshError) {
-        // Đăng xuất nếu refresh cũng thất bại
+        // Refresh failed, clear everything
         const { logout } = useAuthStore.getState();
         logout();
+        localStorage.removeItem('researchpulse_token');
         return Promise.reject(refreshError);
       }
     }
-    
+
+    // If it's 401 and we already retried, clear token
+    if (error.response && error.response.status === 401) {
+      const { logout } = useAuthStore.getState();
+      logout();
+      localStorage.removeItem('researchpulse_token');
+    }
+
     return Promise.reject(error);
   }
 );
