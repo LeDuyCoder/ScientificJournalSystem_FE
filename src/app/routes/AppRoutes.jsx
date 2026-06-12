@@ -15,6 +15,7 @@ import DashboardPage from '../../features/dashboard/pages/DashboardPage';
 
 import RegisterPage from '../../features/auth/pages/RegisterPage';
 import LoginPage from '../../features/auth/pages/LoginPage';
+import ProfilePage from "../../features/profile/pages/ProfilePage";
 import VerifyEmailPage from '../../features/auth/pages/VerifyEmailPage';
 
 import ProtectedRoute from './ProtectedRoute';
@@ -30,6 +31,7 @@ import AuthorListPage from '../../features/author/pages/AuthorListPage';
 
 /**
  * Nơi khai báo route chính của ứng dụng.
+
  *
  * Chính sách hiện tại:
  * - Các trang khám phá dữ liệu/bài báo cho phép guest truy cập công khai.
@@ -63,12 +65,15 @@ export default function AppRoutes() {
       <Route path="/search" element={<CatalogSearchPage />} />
       <Route path="/articles" element={<ArticleListPage />} />
       <Route path="/articles/:id" element={<ArticleDetailPage />} />
+      <Route path="/profile" element={<ProfilePage />} />
+
       <Route path="/keywords" element={<KeywordListPage />} />
       <Route path="/keywords/:keywordId/articles" element={<KeywordArticlesPage />} />
       <Route path="/forgot-password" element={<ForgotPasswordPage />} />
       <Route path="/reset-password" element={<ResetPasswordPage />} />
 
       <Route path="*" element={<LandingPage />} />
+
 
     </Routes>
   );

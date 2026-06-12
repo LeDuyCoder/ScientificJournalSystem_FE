@@ -23,7 +23,18 @@ const api = axios.create({
   withCredentials: true
 });
 
+// Request interceptor: ưu tiên cookie HTTP-only (withCredentials: true)
+// Không đọc token từ localStorage/sessionStorage để tránh lệch trạng thái.
+api.interceptors.request.use(
+  (config) => {
+    return config;
+  },
+  (error) => Promise.reject(error),
+);
+
+
 // Interceptor xử lý response và tự động refresh token khi gặp lỗi 401
+
 api.interceptors.response.use(
   (response) => {
     return response;
@@ -46,12 +57,14 @@ api.interceptors.response.use(
           const newToken = res.data?.token || res.data?.data?.token || null;
           
           if (newToken) {
-            // 🔥 Giữ thay đổi: Lấy hàm loginSuccess trực tiếp từ kho Zustand mà không dùng Hook
-            const { loginSuccess } = useAuthStore.getState(); 
-            loginSuccess(newToken); 
-            
+            // ✅ ưu tiên nhánh dev: dùng loginSuccess lấy từ store state
+            const { loginSuccess } = useAuthStore.getState();
+            localStorage.setItem('token', newToken);
+            loginSuccess(newToken);
+
             // Gán token mới vào header của request bị lỗi trước đó
             originalRequest.headers['Authorization'] = `Bearer ${newToken}`;
+
           }
           
           // Thực hiện lại request ban đầu với token mới

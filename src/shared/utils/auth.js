@@ -35,22 +35,32 @@ export const isAuthenticated = async () => {
   try {
     const authStore = useAuthStore.getState();
 
+    // ưu tiên dev: nếu Zustand đã đủ token + email thì trả true ngay
     if (authStore.token && useUserStore.getState().email) {
       return true;
     }
 
-    const res = await api.get("/auth/check-auth");
+    // còn thiếu dữ liệu: gọi BE để xác thực theo luồng HEAD (users/me + fallback)
+    let res;
+    try {
+      res = await api.get('/users/me');
+    } catch (error) {
+      if (error.response?.status === 404) {
+        res = await api.get('/users/profile');
+      } else {
+        throw error;
+      }
+    }
 
-    if (
-      res.status === 200 &&
-      res.data?.authenticated === true
-    ) {
-      const token = res.data.access_token;
+
+
+    // Dev nhánh có thêm /auth/check-auth để hydrate user state từ access token
+    // Giữ logic này để không mất chức năng.
+    const checkRes = await api.get("/auth/check-auth");
+
+    if (checkRes.status === 200 && checkRes.data?.authenticated === true) {
+      const token = checkRes.data.access_token;
       const decoded = jwtDecode(token);
-
-      console.log(token);
-      console.log("DCMM");
-      console.log(decoded);
 
       authStore.loginSuccess(token, {
         id: decoded.id,
@@ -59,13 +69,12 @@ export const isAuthenticated = async () => {
       });
 
       useUserStore.getState().setEmail(decoded.email);
-
-      console.log(useUserStore.getState());
-      
       return true;
     }
 
+    // Nếu check-auth không authenticated thì coi như không đăng nhập
     return false;
+
   } catch (error) {
     useAuthStore.getState().logout();
     return false;
