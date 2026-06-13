@@ -1,25 +1,26 @@
-import { useEffect, useState } from "react";
-import { Navigate, Outlet } from "react-router-dom";
-import { isAuthenticated } from "../../shared/utils/auth";
-import { useUserStore } from "../store/userStore";
 import { useAuthStore } from "../store/authStore";
+import { Navigate, Outlet } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { isAuthenticated as checkAuthStatus } from "../../shared/utils/auth";
 
 const ProtectedRoute = () => {
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const [loading, setLoading] = useState(true);
-  const [isAuth, setIsAuth] = useState(false);
 
   useEffect(() => {
     const checkAuth = async () => {
-      const result = await isAuthenticated();
-      setIsAuth(result);
-      setLoading(false);
+      try {
+        await checkAuthStatus();
+      } finally {
+        setLoading(false);
+      }
     };
     checkAuth();
   }, []);
 
   if (loading) return <div>Đang kiểm tra quyền truy cập...</div>;
-
-  return isAuth ? <Outlet /> : <Navigate to="/login" replace />;
+  return isAuthenticated ? <Outlet /> : <Navigate to="/login" replace />;
 };
 
 export default ProtectedRoute;
+
