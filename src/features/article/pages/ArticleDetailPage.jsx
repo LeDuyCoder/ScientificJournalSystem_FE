@@ -439,14 +439,28 @@ export default function ArticleDetailPage() {
                     onClick={() => setActiveTab('preview')}
                     className={`article-detail-tab-btn ${activeTab === 'preview' ? 'is-active' : ''}`}
                   >
-                    Article preview
+                    Article Preview
+                  </Button>
+                  <Button
+                    variant="link"
+                    onClick={() => setActiveTab('keywords_topics')}
+                    className={`article-detail-tab-btn ${activeTab === 'keywords_topics' ? 'is-active' : ''}`}
+                  >
+                    Keywords & Topics
+                  </Button>
+                  <Button
+                    variant="link"
+                    onClick={() => setActiveTab('references')}
+                    className={`article-detail-tab-btn ${activeTab === 'references' ? 'is-active' : ''}`}
+                  >
+                    References ({(article.references || []).length})
                   </Button>
                   <Button
                     variant="link"
                     onClick={() => setActiveTab('recommended')}
                     className={`article-detail-tab-btn ${activeTab === 'recommended' ? 'is-active' : ''}`}
                   >
-                    Recommended articles
+                    Recommended Articles
                   </Button>
                   <Button
                     variant="link"
@@ -502,128 +516,6 @@ export default function ArticleDetailPage() {
                           {article.publication_year ? ` năm ${article.publication_year}` : ''}.
                         </p>
                       </section>
-
-                      <section id="keywords" className="article-section">
-                        <h2 className="article-section-title">Keywords</h2>
-                        <div className="article-keyword-tabs">
-                          {(article.keywords || []).length > 0 ? (
-                            article.keywords.map((keyword) => {
-                              const label = keyword.display_name || keyword.name || keyword.keyword;
-                              return (
-                                <Button
-                                  key={keyword.keyword_id || label}
-                                  variant="link"
-                                  onClick={() => handleKeywordClick(keyword)}
-                                  className="article-keyword-tab-btn"
-                                >
-                                  {label}
-                                </Button>
-                              );
-                            })
-                          ) : (
-                            <p className="article-section-text mb-0" style={{ fontSize: '0.95rem', lineHeight: 1.8, borderBottom: 'none' }}>
-                              {keywordsText}
-                            </p>
-                          )}
-                        </div>
-                      </section>
-
-                      <section id="references" className="article-section">
-                        <h2 className="article-section-title">References</h2>
-                        <p className="article-section-text" style={{ fontSize: '0.98rem' }}>
-                          Bài báo hiện có <strong>{article.reference_count ?? article.references?.length ?? 0}</strong> tài liệu tham khảo được đồng bộ trong hệ thống.
-                          Số lượt trích dẫn của bài báo này là <strong>{article.semantic_citation_count ?? article.citations ?? 0}</strong>.
-                        </p>
-
-                        {(article.references || []).length > 0 ? (
-                          <div className="d-grid gap-3">
-                            {paginatedReferences.map((referenceUrl, index) => {
-                              const absoluteIndex = (referencePage - 1) * referencesPerPage + index;
-                              return (
-                                <a
-                                  key={`${referenceUrl}-${absoluteIndex}`}
-                                  href={referenceUrl}
-                                  target="_blank"
-                                  rel="noreferrer"
-                                  className="article-reference-card"
-                                >
-                                  <div className="d-flex align-items-start justify-content-between gap-3 flex-wrap">
-                                    <div className="min-w-0">
-                                      <div className="article-reference-label">
-                                        Reference {absoluteIndex + 1}
-                                      </div>
-                                      <div className="article-reference-title">
-                                        {formatReferenceLabel(referenceUrl, absoluteIndex)}
-                                      </div>
-                                      <div className="article-reference-url">
-                                        {referenceUrl}
-                                      </div>
-                                    </div>
-                                    <span className="article-reference-action">
-                                      <Icon icon="lucide:external-link" width="16" />
-                                      Mở nguồn
-                                    </span>
-                                  </div>
-                                </a>
-                              );
-                            })}
-
-                            {references.length > referencesPerPage && (
-                              <div className="d-flex align-items-center justify-content-between gap-3 flex-wrap pt-2">
-                                <div className="text-muted-custom" style={{ fontSize: '0.9rem' }}>
-                                  Hiển thị {(referencePage - 1) * referencesPerPage + 1}–{Math.min(referencePage * referencesPerPage, references.length)} / {references.length} references
-                                </div>
-                                <div className="d-flex align-items-center gap-2">
-                                  <Button
-                                    variant="light"
-                                    disabled={referencePage <= 1}
-                                    onClick={() => setReferencePage((page) => Math.max(1, page - 1))}
-                                    className="article-topic-chip"
-                                    style={topicKeywordChipStyle}
-                                  >
-                                    Trước
-                                  </Button>
-                                  <span className="text-muted-custom" style={{ fontSize: '0.9rem' }}>
-                                    Trang {referencePage}/{referenceTotalPages}
-                                  </span>
-                                  <Button
-                                    variant="light"
-                                    disabled={referencePage >= referenceTotalPages}
-                                    onClick={() => setReferencePage((page) => Math.min(referenceTotalPages, page + 1))}
-                                    className="article-topic-chip"
-                                    style={topicKeywordChipStyle}
-                                  >
-                                    Sau
-                                  </Button>
-                                </div>
-                              </div>
-                            )}
-                          </div>
-                        ) : (
-                          <div className="article-reference-card-empty">
-                            Chưa có danh sách reference chi tiết cho bài báo này.
-                          </div>
-                        )}
-                      </section>
-
-                      {article.topics?.length > 0 && (
-                        <section className="mt-4">
-                          <h2 className="article-section-title" style={{ fontSize: '1.4rem' }}>Topics</h2>
-                          <div className="d-flex gap-2 flex-wrap">
-                            {article.topics.map((topic) => (
-                              <Button
-                                key={topic.topic_id || topic.display_name}
-                                variant="light"
-                                onClick={() => handleTopicClick(topic)}
-                                className="article-topic-chip"
-                                style={topicKeywordChipStyle}
-                              >
-                                {topic.display_name}
-                              </Button>
-                            ))}
-                          </div>
-                        </section>
-                      )}
                     </article>
 
                     <aside className="article-toc-aside d-none d-lg-block">
@@ -634,9 +526,115 @@ export default function ArticleDetailPage() {
                         )}
                         <Button variant="link" onClick={() => smoothScrollTo('abstract')} className="article-toc-link is-active">Abstract</Button>
                         <Button variant="link" onClick={() => smoothScrollTo('section-snippets')} className="article-toc-link">Section snippets</Button>
-                        <Button variant="link" onClick={() => smoothScrollTo('references')} className="article-toc-link">References ({article.reference_count ?? article.references?.length ?? 0})</Button>
                       </nav>
                     </aside>
+                  </div>
+                ) : activeTab === 'keywords_topics' ? (
+                  <div className="keywords-topics-tab-panel">
+                    <section className="mb-5">
+                      <h2 className="article-section-title mb-4">Keywords</h2>
+                      {(article.keywords || []).length > 0 ? (
+                        <div className="row g-4">
+                          {article.keywords.map((keyword, index) => {
+                            const label = keyword.display_name || keyword.name || keyword.keyword;
+                            const keywordId = keyword.keyword_id || keyword.id;
+                            return (
+                              <div key={keywordId || `${label}-${index}`} className="col-12 col-md-6 col-lg-4">
+                                <div className="keyword-card d-flex flex-column justify-content-between h-100">
+                                  <div className="d-flex align-items-start justify-content-between gap-3 mb-3">
+                                    <div>
+                                      <div className="keyword-card-label">Research keyword</div>
+                                      <h3 className="keyword-card-title">{label}</h3>
+                                    </div>
+                                    <Icon icon="lucide:tags" width="18" className="keyword-card-icon" />
+                                  </div>
+                                  <Button
+                                    id={`keyword-view-${keywordId || label}`}
+                                    type="button"
+                                    onClick={() => handleKeywordClick(keyword)}
+                                    className="keyword-card-action d-inline-flex align-items-center gap-2 mt-3"
+                                    style={{ width: 'fit-content' }}
+                                  >
+                                    <span>Xem bài báo liên quan</span>
+                                    <Icon icon="lucide:arrow-up-right" width="16" />
+                                  </Button>
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      ) : (
+                        <div className="article-reference-card-empty text-center py-5">
+                          <Icon icon="lucide:tags" width="48" className="text-muted mb-3" />
+                          <p className="mb-0">{keywordsText}</p>
+                        </div>
+                      )}
+                    </section>
+
+                    {article.topics?.length > 0 && (
+                      <section className="mt-5">
+                        <h2 className="article-section-title mb-3">Topics</h2>
+                        <div className="d-flex gap-2 flex-wrap">
+                          {article.topics.map((topic) => (
+                            <Button
+                              key={topic.topic_id || topic.display_name}
+                              variant="light"
+                              onClick={() => handleTopicClick(topic)}
+                              className="article-topic-chip"
+                              style={topicKeywordChipStyle}
+                            >
+                              {topic.display_name}
+                            </Button>
+                          ))}
+                        </div>
+                      </section>
+                    )}
+                  </div>
+                ) : activeTab === 'references' ? (
+                  <div className="references-tab-panel">
+                    <h2 className="article-section-title mb-4">References</h2>
+                    <p className="article-section-text mb-4" style={{ fontSize: '0.98rem' }}>
+                      Bài báo hiện có <strong>{(article.references || []).length}</strong> tài liệu tham khảo được đồng bộ trong hệ thống.
+                      Số lượt trích dẫn của bài báo này là <strong>{article.semantic_citation_count ?? article.citations ?? 0}</strong>.
+                    </p>
+
+                    {(article.references || []).length > 0 ? (
+                      <div className="d-grid gap-3">
+                        {(article.references || []).map((referenceUrl, index) => {
+                          return (
+                            <a
+                              key={`${referenceUrl}-${index}`}
+                              href={referenceUrl}
+                              target="_blank"
+                              rel="noreferrer"
+                              className="article-reference-card"
+                            >
+                              <div className="d-flex align-items-start justify-content-between gap-3 flex-wrap">
+                                <div className="min-w-0">
+                                  <div className="article-reference-label">
+                                    Reference {index + 1}
+                                  </div>
+                                  <div className="article-reference-title">
+                                    {formatReferenceLabel(referenceUrl, index)}
+                                  </div>
+                                  <div className="article-reference-url">
+                                    {referenceUrl}
+                                  </div>
+                                </div>
+                                <span className="article-reference-action">
+                                  <Icon icon="lucide:external-link" width="16" />
+                                  Mở nguồn
+                                </span>
+                              </div>
+                            </a>
+                          );
+                        })}
+                      </div>
+                    ) : (
+                      <div className="article-reference-card-empty text-center py-5">
+                        Chưa có danh sách reference chi tiết cho bài báo này.
+                      </div>
+                    )}
                   </div>
                 ) : (
                   <ArticlesTabContent

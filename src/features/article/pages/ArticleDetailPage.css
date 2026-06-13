@@ -217,12 +217,20 @@
   display: flex;
   align-items: flex-end;
   gap: 1.5rem;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  overflow-x: auto;
   border-bottom: 1px solid var(--border);
   margin-bottom: 1.5rem;
+  scrollbar-width: none; /* Hide scrollbar Firefox */
+  -ms-overflow-style: none;  /* Hide scrollbar IE/Edge */
+}
+
+.article-detail-tabs::-webkit-scrollbar {
+  display: none; /* Hide scrollbar Webkit */
 }
 
 .article-detail-tab-btn {
+  white-space: nowrap;
   padding: 0;
   padding-bottom: 0.75rem;
   text-decoration: none;
@@ -417,3 +425,57 @@
   color: var(--text-main) !important;
   border-bottom-color: var(--primary) !important;
 }
+
+/* Keyword Card layout in Keywords tab */
+.keyword-card {
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--bg-card);
+  height: 100%;
+  padding: 1.5rem;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.keyword-card:hover {
+  border-color: var(--primary);
+  transform: translateY(-2px);
+}
+
+.keyword-card-label {
+  margin-bottom: 0.55rem;
+  color: var(--text-muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.keyword-card-title {
+  margin: 0;
+  color: var(--text-main);
+  font-family: var(--font-display);
+  font-size: 1.16rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+
+.keyword-card-icon {
+  color: var(--text-muted);
+}
+
+.keyword-card-action {
+  border: 1px solid var(--btn-dark) !important;
+  background: var(--btn-dark) !important;
+  color: var(--bg-card) !important;
+  font-weight: 650 !important;
+  border-radius: 10px !important;
+  padding: 0.62rem 1rem !important;
+  font-size: 0.9rem !important;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.keyword-card-action:hover {
+  opacity: 0.92;
+  transform: translateY(-1px);
+}
+
