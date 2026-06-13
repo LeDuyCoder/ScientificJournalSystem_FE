@@ -505,24 +505,23 @@ export default function ArticleDetailPage() {
 
                       <section id="keywords" className="article-section">
                         <h2 className="article-section-title">Keywords</h2>
-                        <div className="d-flex gap-2 flex-wrap">
+                        <div className="article-keyword-tabs">
                           {(article.keywords || []).length > 0 ? (
                             article.keywords.map((keyword) => {
                               const label = keyword.display_name || keyword.name || keyword.keyword;
                               return (
                                 <Button
                                   key={keyword.keyword_id || label}
-                                  variant="light"
+                                  variant="link"
                                   onClick={() => handleKeywordClick(keyword)}
-                                  className="article-topic-chip"
-                                  style={topicKeywordChipStyle}
+                                  className="article-keyword-tab-btn"
                                 >
                                   {label}
                                 </Button>
                               );
                             })
                           ) : (
-                            <p className="article-section-text mb-0" style={{ fontSize: '0.95rem', lineHeight: 1.8 }}>
+                            <p className="article-section-text mb-0" style={{ fontSize: '0.95rem', lineHeight: 1.8, borderBottom: 'none' }}>
                               {keywordsText}
                             </p>
                           )}

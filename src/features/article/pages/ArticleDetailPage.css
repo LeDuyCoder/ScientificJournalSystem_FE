@@ -388,3 +388,32 @@
   border: 1px solid var(--border);
   color: var(--text-main);
 }
+
+/* Keyword Tabs layout */
+.article-keyword-tabs {
+  display: flex;
+  align-items: flex-end;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 1.5rem;
+}
+
+.article-keyword-tab-btn {
+  background: transparent !important;
+  border: none !important;
+  border-bottom: 2px solid transparent !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  padding-bottom: 0.75rem !important;
+  font-weight: 700;
+  color: var(--text-muted) !important;
+  transition: color 0.2s, border-color 0.2s;
+  font-size: 0.95rem;
+  text-decoration: none !important;
+}
+
+.article-keyword-tab-btn:hover {
+  color: var(--text-main) !important;
+  border-bottom-color: var(--primary) !important;
+}
