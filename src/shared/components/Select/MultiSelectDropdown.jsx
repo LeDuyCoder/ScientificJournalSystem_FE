@@ -29,7 +29,7 @@ export default function MultiSelectDropdown({
   }, [wrapperRef]);
 
   const filteredOptions = options.filter(opt => 
-    opt.label.toLowerCase().includes(searchTerm.toLowerCase())
+    (opt.label || '').toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const toggleSelection = (optionValue) => {
@@ -65,7 +65,7 @@ export default function MultiSelectDropdown({
             className="badge rounded-pill d-flex align-items-center gap-1 px-2 py-1 fw-normal"
             style={{ backgroundColor: 'var(--bg-section)', color: 'var(--text-main)', border: '1px solid var(--border)' }}
           >
-            <span className="text-truncate" style={{ maxWidth: '150px' }}>{opt.label}</span>
+            <span className="text-truncate" style={{ maxWidth: '150px' }}>{opt.label || ''}</span>
             {!disabled && (
               <Icon 
                 icon="lucide:x" 
@@ -114,7 +114,7 @@ export default function MultiSelectDropdown({
                     checked={value.includes(opt.value)}
                     readOnly
                   />
-                  <span className="text-truncate" title={opt.label}>{opt.label}</span>
+                  <span className="text-truncate" title={opt.label || ''}>{opt.label || ''}</span>
                 </div>
               ))
             )}

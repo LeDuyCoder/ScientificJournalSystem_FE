@@ -5,6 +5,7 @@ import KeywordWatchList from '../../keyword/components/KeywordWatchList';
 import AddKeywordModal from '../../keyword/components/AddKeywordModal';
 import ManageKeywordsModal from '../../keyword/components/ManageKeywordsModal';
 import { Icon } from '@iconify/react';
+import Header from '../../landing/components/Header';
 
 
 const ProjectDetailPage = () => {
@@ -51,14 +52,16 @@ const ProjectDetailPage = () => {
   }
 
   const title = project.title || 'Untitled Project';
-  const areaName = project.subject_area?.name || project.subject_area || 'Chưa xác định lĩnh vực';
+  const areaName = project.subject_area?.display_name || project.subject_area?.name || (typeof project.subject_area === 'string' ? project.subject_area : 'Chưa xác định lĩnh vực');
   const createdAt = project.created_at ? new Date(project.created_at).toLocaleDateString('vi-VN') : 'N/A';
   const keywordCount = watchedKeywords?.length || 0;
   const articleCount = watchArticles?.length || 0;
 
   return (
-    <div className="container-fluid py-4 grid-bg min-vh-100">
-      <div className="container mx-auto" style={{ maxWidth: '1200px' }}>
+    <div className="container-fluid pb-4 grid-bg min-vh-100 position-relative overflow-hidden" style={{ paddingTop: '80px' }}>
+      <div className="position-absolute w-100 h-100 radial-fade pe-none" style={{ top: 0, left: 0, zIndex: 0 }} />
+      <Header />
+      <div className="container mx-auto position-relative z-1" style={{ maxWidth: '1200px', marginTop: '40px' }}>
         {/* Breadcrumb */}
         <nav aria-label="breadcrumb" className="mb-4">
           <ol className="breadcrumb mb-2 text-muted-custom small">

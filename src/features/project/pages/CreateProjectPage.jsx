@@ -2,9 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import useProjects from '../hooks/useProjects';
 import { Icon } from '@iconify/react';
-import { getSubjectAreasApi, getSubjectCategoriesApi } from '../../catalog/api/catalogApi';
-import { searchJournalsApi } from '../../journal/api/journalApi';
-import MultiSelectDropdown from '../../../shared/components/Select/MultiSelectDropdown';
+import { getSubjectAreasApi } from '../../catalog/api/catalogApi';
+import Header from '../../landing/components/Header';
 
 const CreateProjectPage = () => {
   const navigate = useNavigate();
@@ -13,18 +12,15 @@ const CreateProjectPage = () => {
   // Form State
   const [title, setTitle] = useState('');
   const [subjectAreaId, setSubjectAreaId] = useState('');
-  const [subjectCategoryIds, setSubjectCategoryIds] = useState([]);
-  const [journalIds, setJournalIds] = useState([]);
+  const [keywords, setKeywords] = useState([]);
+  const [keywordInput, setKeywordInput] = useState('');
   
   // API Data State
   const [areas, setAreas] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [journals, setJournals] = useState([]);
   
   // Loading States
   const [loading, setLoading] = useState(false);
   const [loadingCatalogs, setLoadingCatalogs] = useState(true);
-  const [loadingJournals, setLoadingJournals] = useState(false);
   const [error, setError] = useState(null);
 
   // Initial Data Fetch
@@ -32,15 +28,8 @@ const CreateProjectPage = () => {
     const fetchCatalogs = async () => {
       setLoadingCatalogs(true);
       try {
-        const [areasRes, catsRes, journalsRes] = await Promise.all([
-          getSubjectAreasApi(),
-          getSubjectCategoriesApi(),
-          searchJournalsApi({ limit: 200 }) // Load initial batch of journals
-        ]);
-        
-        if (areasRes?.data) setAreas(areasRes.data.data || areasRes.data);
-        if (catsRes?.data) setCategories(catsRes.data.data || catsRes.data);
-        if (journalsRes?.data) setJournals(journalsRes.data.data || journalsRes.data);
+        const areasRes = await getSubjectAreasApi();
+        if (areasRes?.data) setAreas(areasRes.data?.data?.items || areasRes.data?.data || areasRes.data || []);
       } catch (err) {
         console.error('Lỗi tải danh mục:', err);
         setError('Không thể tải dữ liệu danh mục. Vui lòng tải lại trang.');
@@ -51,20 +40,44 @@ const CreateProjectPage = () => {
     fetchCatalogs();
   }, []);
 
-  // Format data for MultiSelect
-  const categoryOptions = categories
-    .filter(c => !subjectAreaId || String(c.subject_area_id) === String(subjectAreaId))
-    .map(c => ({ value: c.id || c.subject_category_id, label: c.name || c.category_name }));
-    
-  const journalOptions = journals
-    .filter(j => !subjectAreaId || String(j.subject_area_id) === String(subjectAreaId))
-    .map(j => ({ value: j.id || j.journal_id, label: j.name || j.title }));
+  const selectedAreaObj = areas.find(a => String(a.id || a.subject_area_id) === String(subjectAreaId));
+  const selectedAreaName = selectedAreaObj ? (selectedAreaObj.display_name || selectedAreaObj.name || selectedAreaObj.area_name) : '';
+
+  const getSuggestions = (areaName) => {
+    if (!areaName) return [];
+    if (areaName.toLowerCase().includes('computer science')) {
+      return ["Machine Learning", "Artificial Intelligence", "Cybersecurity", "Blockchain", "Cloud Computing", "Computer Vision", "NLP"];
+    }
+    if (areaName.toLowerCase().includes('medicine') || areaName.toLowerCase().includes('health')) {
+      return ["Clinical Trials", "Public Health", "Genetics", "Immunology", "Neuroscience"];
+    }
+    return ["Data Analysis", "Methodology", "Research Design", "Literature Review"];
+  };
+
+  const handleKeywordKeyDown = (e) => {
+    if (e.key === 'Enter' || e.key === ',') {
+      e.preventDefault();
+      const val = keywordInput.trim();
+      if (val && !keywords.includes(val)) {
+        setKeywords([...keywords, val]);
+      }
+      setKeywordInput('');
+    }
+  };
+
+  const removeKeyword = (kw) => {
+    setKeywords(keywords.filter(k => k !== kw));
+  };
+  
+  const addSuggestedKeyword = (kw) => {
+    if (!keywords.includes(kw)) {
+      setKeywords([...keywords, kw]);
+    }
+  };
 
   // Handle Area Change
   const handleAreaChange = (e) => {
     setSubjectAreaId(e.target.value);
-    setSubjectCategoryIds([]);
-    setJournalIds([]);
   };
 
   const handleSubmit = async (e) => {
@@ -81,8 +94,7 @@ const CreateProjectPage = () => {
       const payload = {
         title: title.trim(),
         subject_area_id: parseInt(subjectAreaId, 10),
-        subject_category_ids: subjectCategoryIds.map(id => parseInt(id, 10)),
-        journal_ids: journalIds.map(id => parseInt(id, 10))
+        keywords: keywords
       };
       
       const response = await createProject(payload);
@@ -101,8 +113,10 @@ const CreateProjectPage = () => {
   };
 
   return (
-    <div className="container-fluid py-4 grid-bg min-vh-100">
-      <div className="container mx-auto" style={{ maxWidth: '650px', marginTop: '20px' }}>
+    <div className="container-fluid pb-4 grid-bg min-vh-100 position-relative overflow-hidden" style={{ paddingTop: '80px' }}>
+      <div className="position-absolute w-100 h-100 radial-fade pe-none" style={{ top: 0, left: 0, zIndex: 0 }} />
+      <Header />
+      <div className="container mx-auto position-relative z-1" style={{ maxWidth: '650px', marginTop: '40px' }}>
         <nav aria-label="breadcrumb" className="mb-4">
           <ol className="breadcrumb mb-2 text-muted-custom small">
             <li className="breadcrumb-item"><Link to="/dashboard" className="text-decoration-none text-muted-custom hover-primary">Tổng quan</Link></li>
@@ -157,42 +171,56 @@ const CreateProjectPage = () => {
                 style={{ backgroundColor: 'var(--bg-main)', color: 'var(--text-main)', borderColor: 'var(--border)' }}
               >
                 <option value="">-- Chọn lĩnh vực nghiên cứu --</option>
-                {areas.map(area => (
+                {Array.isArray(areas) && areas.map(area => (
                   <option key={area.id || area.subject_area_id} value={area.id || area.subject_area_id}>
-                    {area.name || area.area_name}
+                    {area.display_name || area.name || area.area_name}
                   </option>
                 ))}
               </select>
               {loadingCatalogs && <div className="form-text mt-2"><span className="spinner-border spinner-border-sm me-2"></span> Đang tải danh mục...</div>}
             </div>
 
-            <div className="mb-4">
-              <label className="form-label fw-semibold text-main mb-2 small text-uppercase tracking-wider">
-                Chuyên ngành (Subject Categories)
-              </label>
-              <MultiSelectDropdown
-                options={categoryOptions}
-                value={subjectCategoryIds}
-                onChange={setSubjectCategoryIds}
-                placeholder={!subjectAreaId ? "Vui lòng chọn lĩnh vực trước..." : "Chọn chuyên ngành..."}
-                disabled={!subjectAreaId || loadingCatalogs || loading}
-              />
-            </div>
-
             <div className="mb-5">
               <label className="form-label fw-semibold text-main mb-2 small text-uppercase tracking-wider">
-                Tạp chí theo dõi (Journals)
+                Từ khóa muốn theo dõi
               </label>
-              <MultiSelectDropdown
-                options={journalOptions}
-                value={journalIds}
-                onChange={setJournalIds}
-                placeholder={!subjectAreaId ? "Vui lòng chọn lĩnh vực trước..." : "Chọn tạp chí..."}
-                disabled={!subjectAreaId || loadingCatalogs || loading}
-              />
-              <div className="form-text mt-2 small text-muted-custom">
-                Bạn có thể thêm từ khóa theo dõi sau khi tạo dự án xong.
+              <p className="text-muted-custom small mb-2">Nhấn Enter hoặc gõ dấu phẩy để thêm từ khóa. Hệ thống sẽ quét các bài báo mới dựa trên các từ khóa này.</p>
+              
+              <div className="form-control form-control-lg journal-dark-input d-flex flex-wrap gap-2 align-items-center" style={{ minHeight: '50px', backgroundColor: 'var(--bg-main)', borderColor: 'var(--border)' }}>
+                {keywords.map(kw => (
+                  <span key={kw} className="badge rounded-pill d-flex align-items-center gap-1 px-2 py-1 fw-normal" style={{ backgroundColor: 'var(--bg-section)', color: 'var(--text-main)', border: '1px solid var(--border)' }}>
+                    {kw}
+                    <Icon icon="lucide:x" width="14" className="cursor-pointer hover-danger" onClick={() => removeKeyword(kw)} />
+                  </span>
+                ))}
+                <input
+                  type="text"
+                  className="border-0 bg-transparent text-main flex-grow-1"
+                  style={{ outline: 'none', minWidth: '150px' }}
+                  placeholder="Thêm từ khóa và nhấn Enter..."
+                  value={keywordInput}
+                  onChange={(e) => setKeywordInput(e.target.value)}
+                  onKeyDown={handleKeywordKeyDown}
+                  disabled={loading}
+                />
               </div>
+
+              {subjectAreaId && (
+                <div className="mt-3 small">
+                  <span className="text-muted-custom">Gợi ý từ khóa cho {selectedAreaName}: </span>
+                  <div className="d-flex flex-wrap gap-2 mt-1">
+                    {getSuggestions(selectedAreaName).map(sugg => (
+                      <span 
+                        key={sugg} 
+                        className="text-muted-custom cursor-pointer hover-primary"
+                        onClick={() => addSuggestedKeyword(sugg)}
+                      >
+                        + {sugg}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
 
             <div className="d-flex gap-3 justify-content-end pt-3 border-top">
