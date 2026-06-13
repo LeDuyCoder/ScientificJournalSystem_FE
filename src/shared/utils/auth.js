@@ -35,45 +35,37 @@ export const isAuthenticated = async () => {
   try {
     const authStore = useAuthStore.getState();
 
-    // ưu tiên dev: nếu Zustand đã đủ token + email thì trả true ngay
-    if (authStore.token && useUserStore.getState().email) {
+    // ưu tiên dev: nếu Zustand đã có trạng thái isAuthenticated hợp lệ thì trả true ngay
+    if (authStore.isAuthenticated && useUserStore.getState().email) {
       return true;
     }
 
     // còn thiếu dữ liệu: gọi BE để xác thực theo luồng HEAD (users/me + fallback)
-    let res;
+    let meResponse;
     try {
-      res = await api.get('/users/me');
+      meResponse = await api.get('/users/me');
     } catch (error) {
       if (error.response?.status === 404) {
-        res = await api.get('/users/profile');
+        meResponse = await api.get('/users/profile');
       } else {
         throw error;
       }
     }
 
+    // BE có thể trả payload nhiều format
+    const meData = meResponse?.data?.data ?? meResponse?.data;
 
-
-    // Dev nhánh có thêm /auth/check-auth để hydrate user state từ access token
-    // Giữ logic này để không mất chức năng.
-    const checkRes = await api.get("/auth/check-auth");
-
-    if (checkRes.status === 200 && checkRes.data?.authenticated === true) {
-      const token = checkRes.data.access_token;
-      const decoded = jwtDecode(token);
-
-      authStore.loginSuccess(token, {
-        id: decoded.id,
-        email: decoded.email,
-        role: decoded.role,
-      });
-
-      useUserStore.getState().setEmail(decoded.email);
+    // Chỉ cần lấy được user payload là coi như authenticated
+    if (meData) {
+      useUserStore.getState().setUser?.(meData);
+      useUserStore.getState().setEmail?.(meData?.email);
+      authStore.loginSuccess(null, meData);
       return true;
     }
 
-    // Nếu check-auth không authenticated thì coi như không đăng nhập
+
     return false;
+
 
   } catch (error) {
     // Nếu dính lỗi 401 triệt để (kể cả sau khi Axios Interceptor đã cố Refresh thất bại)
