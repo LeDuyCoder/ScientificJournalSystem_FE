@@ -28,7 +28,7 @@ export const removeToken = () => {
  * Kiểm tra người dùng hiện tại còn phiên đăng nhập hợp lệ hay không.
  *
  * Trường hợp nhanh: Zustand đã có user nên không cần gọi API.
- * Trường hợp F5/reload: Zustand mất dữ liệu, gọi `/users/me` để BE xác thực
+ * Trường hợp F5/reload: Zustand mất dữ liệu, gọi `/auth/check-auth` để BE xác thực
  * bằng cookie HTTP-only và trả lại thông tin user.
  */
 export const isAuthenticated = async () => {
@@ -76,7 +76,9 @@ export const isAuthenticated = async () => {
     return false;
 
   } catch (error) {
-    useAuthStore.getState().logout();
+    // Nếu dính lỗi 401 triệt để (kể cả sau khi Axios Interceptor đã cố Refresh thất bại)
+    useAuthStore.getState().logout(); // Đảm bảo clear sạch Zustand cũ nếu có
+    localStorage.removeItem('researchpulse_token');
     return false;
   }
 };

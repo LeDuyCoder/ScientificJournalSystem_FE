@@ -3,7 +3,7 @@
  *
  * File: features\zone\api\zone.api.js
  */
-import api from '../../../shared/services/api';
+import api, { publicApi } from '../../../shared/services/api';
 
 /**
  * Get publication volume stats by country
@@ -19,7 +19,7 @@ export const getCountryStatsApi = (params) => {
  * @returns {Promise} Axios promise
  */
 export const getRegionStatsApi = (params) => {
-  return api.get('/zones/regions/stats', { params });
+  return publicApi.get('/zones/regions/stats', { params });
 };
 
 /**
@@ -28,5 +28,15 @@ export const getRegionStatsApi = (params) => {
  * @returns {Promise} Axios promise
  */
 export const getCountryRegionStatsApi = (code) => {
-  return api.get(`/zones/countries/${code}/regions/stats`);
+  return publicApi.get(`/zones/countries/${code}/regions/stats`);
+};
+
+/**
+ * Get list of articles by country id
+ * @param {string} countryId
+ * @param {Object} params
+ * @returns {Promise} Axios promise
+ */
+export const getCountryArticlesApi = (countryId, params) => {
+  return publicApi.get('/articles', { params: { ...params, country_id: countryId } });
 };
