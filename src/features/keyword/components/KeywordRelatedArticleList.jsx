@@ -41,7 +41,7 @@ const KeywordRelatedArticleList = ({ articles, loading }) => {
             </span>
           </div>
           <h5 className="font-display fw-bold mb-2">
-            <Link to={`/articles/${article.id}`} className="text-main text-decoration-none">
+            <Link to={`/articles/${article.id}/visual`} className="text-main text-decoration-none">
               {article.title}
             </Link>
           </h5>

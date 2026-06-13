@@ -115,7 +115,7 @@ export default function GeographyPage() {
     if (!isAuthenticatedState) {
       setShowAuthModal(true);
     } else {
-      navigate(`/articles/${id}`);
+      navigate(`/articles/${id}/visual`);
     }
   };
 

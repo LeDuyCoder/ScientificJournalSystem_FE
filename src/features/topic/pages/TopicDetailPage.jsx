@@ -241,7 +241,7 @@ export default function TopicDetailPage() {
                         <button
                           type="button"
                           className="btn btn-link topic-detail-article-title mb-2"
-                          onClick={() => navigate(`/articles/${article.id}`)}
+                          onClick={() => navigate(`/articles/${article.id}/visual`)}
                         >
                           {article.title}
                         </button>

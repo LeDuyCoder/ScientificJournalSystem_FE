@@ -643,7 +643,7 @@ export default function ArticleDetailPage() {
                   <ArticlesTabContent
                     recentArticles={recommendedArticles}
                     loading={isRecommendedLoading}
-                    onArticleClick={(articleId) => navigate(`/articles/${articleId}`)}
+                    onArticleClick={(articleId) => navigate(`/articles/${articleId}/visual`)}
                   />
                 )}
               </section>

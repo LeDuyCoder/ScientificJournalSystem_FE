@@ -180,7 +180,7 @@ export default function useArticleList() {
    * (Article List là public, guest được xem detail)
    */
   const handleDetailClick = useCallback((id) => {
-    navigate(`/articles/${id}`);
+    navigate(`/articles/${id}/visual`);
   }, [navigate]);
 
   /** Legacy: giữ để không break modal nếu dùng nơi khác */

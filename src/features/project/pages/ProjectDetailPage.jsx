@@ -178,7 +178,7 @@ const ProjectDetailPage = () => {
                         <span className="text-muted-custom small">{article.journal_name || article.journal?.title || 'Tạp chí khoa học'}</span>
                         <span className="text-muted-custom small">{article.publication_year || new Date(article.publication_date).getFullYear()}</span>
                       </div>
-                      <Link to={`/articles/${article.article_id || article.id}`} className="text-decoration-none">
+                      <Link to={`/articles/${article.article_id || article.id}/visual`} className="text-decoration-none">
                         <h6 className="fw-bold text-main mb-2 hover-primary lh-base">{article.title}</h6>
                       </Link>
                       <p className="text-muted-custom small mb-2 text-truncate">{article.abstract || 'Không có tóm tắt.'}</p>
