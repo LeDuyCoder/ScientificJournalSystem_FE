@@ -292,7 +292,7 @@ export default function ArticleDetailPage() {
                   <span className="origin-badge">Active</span>
                   <span className="paper-year font-sans">{article.publication_year || '—'}</span>
                 </div>
-                <h3 className="paper-title font-sans" onClick={handleTitleClick} title="Open in new tab">
+                <h3 className="paper-title font-sans">
                   {article.title}
                 </h3>
                 <div className="paper-authors font-sans mt-2">
@@ -519,10 +519,6 @@ export default function ArticleDetailPage() {
                     <Icon icon="lucide:building" width="14" />
                     <strong>Publisher:</strong> {article.publisher_name || '—'}
                   </span>
-                  <span className="meta-item">
-                    <Icon icon="lucide:globe" width="14" />
-                    <strong>Vị trí (Venue):</strong> {article.journal_name || '—'}
-                  </span>
                   {article.volume_number && (
                     <span className="meta-item">
                       <Icon icon="lucide:book" width="14" />
@@ -535,7 +531,7 @@ export default function ArticleDetailPage() {
                 <div className="article-detail-actions-connected mb-4">
                   <div className="citations-chip" onClick={() => setShowCitationsModal(true)}>
                     <Icon icon="lucide:quote" width="13" />
-                    <span>{article.citations ?? 0} Citations</span>
+                    <span>{article.semantic_citation_count ?? article.citations ?? 0} Citations</span>
                   </div>
                   
                   <button 
@@ -567,7 +563,7 @@ export default function ArticleDetailPage() {
                       </a>
                     )}
                     <a 
-                      href={article.source_url || `https://www.semanticscholar.org/search?q=${encodeURIComponent(article.title)}`} 
+                      href={article.semantic_scholar_url || `https://www.semanticscholar.org/paper/${article.semantic_scholar_id}`} 
                       target="_blank" 
                       rel="noreferrer" 
                       className="open-in-btn"
@@ -592,7 +588,7 @@ export default function ArticleDetailPage() {
                 {/* Abstract */}
                 <section className="article-section-connected">
                   <h3 className="section-title-connected mb-2 font-display">Abstract</h3>
-                  {(article.abstract || 'No abstract is available for this article.')
+                  {(article.abstract || article.semantic_tldr || 'No abstract is available for this article.')
                     .split('\n')
                     .filter(Boolean)
                     .map((paragraph, index) => (
@@ -602,81 +598,6 @@ export default function ArticleDetailPage() {
                     ))}
                 </section>
 
-                {/* Keywords (Optionally show at bottom for richness) */}
-                {(article.keywords || []).length > 0 && (
-                  <section className="article-section-connected mt-4">
-                    <h3 className="section-title-connected mb-2 font-display">Keywords</h3>
-                    <div className="d-flex gap-1.5 flex-wrap">
-                      {article.keywords.map((keyword) => {
-                        const label = keyword.display_name || keyword.name || keyword.keyword;
-                        return (
-                          <span
-                            key={keyword.keyword_id || label}
-                            onClick={() => handleKeywordClick(keyword)}
-                            className="geography-topic-badge"
-                            style={{ cursor: 'pointer' }}
-                          >
-                            {label}
-                          </span>
-                        );
-                      })}
-                    </div>
-                  </section>
-                )}
-
-                {/* References at bottom */}
-                <section className="article-connected-references mt-4">
-                  <h3 className="section-title-connected mb-2 font-display">References ({references.length})</h3>
-                  {references.length > 0 ? (
-                    <div className="d-flex flex-column gap-2">
-                      {paginatedReferences.map((referenceUrl, index) => {
-                        const absoluteIndex = (referencePage - 1) * referencesPerPage + index;
-                        return (
-                          <a
-                            key={`${referenceUrl}-${absoluteIndex}`}
-                            href={referenceUrl}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="reference-link-item p-2 rounded"
-                          >
-                            <div className="reference-item-index text-xs text-muted-custom">Reference {absoluteIndex + 1}</div>
-                            <div className="reference-item-label text-sm text-truncate text-main font-sans">
-                              {formatReferenceLabel(referenceUrl, absoluteIndex)}
-                            </div>
-                          </a>
-                        );
-                      })}
-                      
-                      {references.length > referencesPerPage && (
-                        <div className="d-flex align-items-center justify-content-between mt-2 pt-2 border-top">
-                          <span className="text-xs text-muted-custom">
-                            Trang {referencePage}/{referenceTotalPages}
-                          </span>
-                          <div className="d-flex gap-1">
-                            <button
-                              disabled={referencePage <= 1}
-                              onClick={() => setReferencePage((page) => Math.max(1, page - 1))}
-                              className="btn btn-xs btn-outline-secondary py-0 px-2 font-sans"
-                              style={{ fontSize: '0.7rem' }}
-                            >
-                              Trước
-                            </button>
-                            <button
-                              disabled={referencePage >= referenceTotalPages}
-                              onClick={() => setReferencePage((page) => Math.min(referenceTotalPages, page + 1))}
-                              className="btn btn-xs btn-outline-secondary py-0 px-2 font-sans"
-                              style={{ fontSize: '0.7rem' }}
-                            >
-                              Sau
-                            </button>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  ) : (
-                    <span className="text-xs text-muted-custom font-sans">Không có tài liệu tham khảo chi tiết.</span>
-                  )}
-                </section>
               </div>
             </aside>
           </main>

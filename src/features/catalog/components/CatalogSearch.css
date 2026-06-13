@@ -275,16 +275,6 @@
   white-space: nowrap;
 }
 
-.catalog-badge--q1 {
-  background: rgba(47, 198, 70, 0.12);
-  border-color: rgba(47, 198, 70, 0.3);
-  color: var(--q1-color);
-}
-
-.catalog-badge--q2 {
-  background: var(--primary-light);
-  color: var(--primary);
-}
 
 .catalog-access-badge {
   min-width: 86px;

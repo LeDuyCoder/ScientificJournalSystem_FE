@@ -100,6 +100,7 @@ export default function useArticleList() {
             ? { journal_id: item.journal_id, display_name: item.journal_name }
             : null,
           is_open_access: Boolean(item.is_open_access),
+          semantic_citation_count: item.semantic_citation_count !== undefined ? Number(item.semantic_citation_count) : null,
           created_at: item.created_at || null,
         }));
 
