@@ -1,8 +1,3 @@
-/**
- * File source thuộc hệ thống FE ResearchPulse.
- *
- * File: app/routes/AppRoutes.jsx
- */
 
 import { Routes, Route } from 'react-router-dom';
 
@@ -29,6 +24,7 @@ import AuthorLeaderboardPage from '../../features/author/pages/AuthorLeaderboard
 import AuthorDetailPage from '../../features/author/pages/AuthorDetailPage';
 import AuthorListPage from '../../features/author/pages/AuthorListPage';
 import TopicDetailPage from '../../features/topic/pages/TopicDetailPage';
+import AdminDashboardPage from '../../features/admin/pages/AdminDashboardPage';
 
 /**
  * Nơi khai báo route chính của ứng dụng.
@@ -52,6 +48,7 @@ export default function AppRoutes() {
       <Route element={<ProtectedRoute />}>
         <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/authors/leaderboard" element={<AuthorLeaderboardPage />} />
+        <Route path="/admin/dashboard" element={<AdminDashboardPage />} />
       </Route>
 
       <Route element={<PublicRoute />}>
@@ -77,6 +74,12 @@ export default function AppRoutes() {
       <Route path="/geography" element={<GeographyPage />} />
 
       <Route path="/topics/:topicId" element={<TopicDetailPage />} />
+      <Route path="*" element={<LandingPage />} />
+
+ {/* TODO: route tạm để preview UI Admin Dashboard không cần login.
+          Xóa route này khi vấn đề đăng nhập đã được xử lý xong. */}
+      <Route path="/admin-preview" element={<AdminDashboardPage />} />
+
       <Route path="*" element={<LandingPage />} />
 
 
