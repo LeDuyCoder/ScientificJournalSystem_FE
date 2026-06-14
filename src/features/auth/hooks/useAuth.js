@@ -158,8 +158,8 @@ export default function useAuth() {
   /**
    * Đăng xuất: gọi BE clear session/cookie, sau đó xóa state FE.
    */
-  const logout = useCallback(() => {
-    logoutSession();
+  const logout = useCallback(async () => {
+    await logoutSession();
     clearAuthState();
     clearEmail();
     navigate('/login', { replace: true });

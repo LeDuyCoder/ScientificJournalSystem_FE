@@ -1,4 +1,4 @@
-﻿/**
+/**
  * File source thuộc hệ thống FE ResearchPulse.
  *
  * File: features/auth/api/auth.api.js
@@ -65,8 +65,15 @@ export const resetPasswordApi = (data) => {
  * Get profile details of currently logged-in user
  * @returns {Promise} Axios promise
  */
-export const getProfileApi = () => {
-  return api.get('/users/profile');
+export const getProfileApi = async () => {
+  try {
+    return await api.get('/users/me');
+  } catch (error) {
+    if (error.response?.status === 404) {
+      return api.get('/users/profile');
+    }
+    throw error;
+  }
 };
 
 /**
@@ -86,12 +93,14 @@ export const deleteAccountApi = () => {
   return api.delete('/users/me');
 };
 
-/**
- * Backward compatibility cho code cũ
- * (nếu useVerifyAccount vẫn đang dùng authApi.verifyAccount())
- */
 const authApi = {
   verifyAccount: verifyEmailApi,
 };
 
+
+export const logoutApi = () => {
+  return api.post('/auth/logout');
+};
+
 export default authApi;
+

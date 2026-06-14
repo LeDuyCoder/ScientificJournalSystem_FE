@@ -10,6 +10,29 @@ import {
   getTrendingKeywordsApi,
   getTopAuthorsApi,
 } from '../api/dashboardApi';
+import { getAuthorAreasBreakdownApi } from '../../author/api/author.api';
+
+const normalizeAuthorBreakdown = (response) => {
+  if (!response?.data || typeof response.data !== 'object') return [];
+  const payload = response.data.data;
+  if (Array.isArray(payload)) return payload;
+  if (Array.isArray(payload?.breakdown)) return payload.breakdown;
+  if (Array.isArray(payload?.data)) return payload.data;
+  return [];
+};
+
+const getPrimarySubjectAreaFromBreakdown = (breakdown = []) => {
+  if (!Array.isArray(breakdown) || breakdown.length === 0) return '';
+  const primary = [...breakdown].sort((a, b) => (Number(b.percentage) || 0) - (Number(a.percentage) || 0))[0];
+  return primary.category_name ?? primary.subject_area ?? primary.subject_area_name ?? primary.name ?? primary.display_name ?? '';
+};
+
+const normalizeTopAuthor = (author) => ({
+  ...author,
+  full_name: author.display_name ?? author.full_name ?? author.author_name ?? author.name ?? 'Unknown',
+  article_count: author.article_count ?? author.papers ?? author.works_count ?? 0,
+  citation_count: author.citation_count ?? author.citations ?? author.cited_by_count ?? 0,
+});
 
 /**
  * useDashboard — central data hook for the Dashboard/Tổng quan page.
@@ -90,7 +113,41 @@ export default function useDashboard(currentUser) {
     try {
       const res  = await getTopAuthorsApi(5);
       const data = res.data?.data ?? res.data ?? [];
-      setTopAuthors(Array.isArray(data) ? data.slice(0, 5) : []);
+      const topAuthors = Array.isArray(data) ? data.slice(0, 5) : [];
+
+      const breakdownResults = await Promise.allSettled(
+        topAuthors.map(async (author) => {
+          const id = author.author_id ?? author.id;
+          if (!id) return { id: null, breakdown: [] };
+          try {
+            const breakdownResponse = await getAuthorAreasBreakdownApi(id);
+            return { id, breakdown: normalizeAuthorBreakdown(breakdownResponse) };
+          } catch (error) {
+            return { id, breakdown: [] };
+          }
+        })
+      );
+
+      const breakdownMap = breakdownResults.reduce((acc, result, index) => {
+        const author = topAuthors[index];
+        const id = author?.author_id ?? author?.id;
+        if (!id) return acc;
+        acc[id] = result.status === 'fulfilled' ? result.value.breakdown : [];
+        return acc;
+      }, {});
+
+      const enrichedAuthors = topAuthors.map((author) => {
+        const normalized = normalizeTopAuthor(author);
+        const id = normalized.author_id ?? normalized.id;
+        const breakdown = id ? breakdownMap[id] || [] : [];
+        const primary_subject_area = normalized.subject_area ?? normalized.field ?? normalized.area ?? getPrimarySubjectAreaFromBreakdown(breakdown);
+        return {
+          ...normalized,
+          primary_subject_area,
+        };
+      });
+
+      setTopAuthors(enrichedAuthors);
     } catch (err) {
       setErrorAuthors(err.response?.data?.message || err.message || 'Không thể tải top authors.');
     } finally {

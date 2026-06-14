@@ -1,4 +1,4 @@
-﻿/**
+/**
  * File source thuộc hệ thống FE ResearchPulse.
  *
  * File: features\auth\components\RoleSelect.jsx
@@ -69,18 +69,17 @@ export default function RoleSelect({
             <Col key={role.key} xs={4}>
               <div
                 onClick={() => handleSelect(role.key)}
-                className="w-100 p-3 rounded-3 text-center transition-all d-flex flex-column align-items-center justify-content-center gap-2 select-none"
+                className={`role-card-item ${isSelected ? 'selected' : ''} ${disabled ? 'disabled' : ''} w-100 p-3 rounded-3 text-center d-flex flex-column align-items-center justify-content-center gap-2 select-none`}
                 style={{
                   cursor: disabled ? 'not-allowed' : 'pointer',
                   background: '#ffffff',
                   border: isSelected ? '1px solid var(--primary)' : '1px solid var(--border)',
-                  boxShadow: isSelected ? '0 4px 12px rgba(255, 122, 51, 0.08)' : '0 1px 3px rgba(0, 0, 0, 0.02)',
                   opacity: disabled ? 0.6 : 1,
                   minHeight: '110px'
                 }}
               >
                 <div
-                  className="d-flex align-items-center justify-content-center rounded-circle"
+                  className="d-flex align-items-center justify-content-center rounded-circle icon-container"
                   style={{
                     width: '32px',
                     height: '32px',
@@ -92,7 +91,7 @@ export default function RoleSelect({
                 </div>
                 <div>
                   <div 
-                    className="font-semibold"
+                    className="font-semibold title"
                     style={{ 
                       fontSize: '13px', 
                       color: isSelected ? 'var(--text-main)' : 'var(--text-main)',
@@ -126,6 +125,27 @@ export default function RoleSelect({
           <span>{error}</span>
         </div>
       )}
+
+      {/* Scoped hover and selection styles */}
+      <style>{`
+        .role-card-item {
+          transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .role-card-item:hover:not(.disabled):not(.selected) {
+          border-color: var(--primary) !important;
+          transform: translateY(-2px);
+          box-shadow: 0 6px 16px rgba(255, 122, 51, 0.08) !important;
+        }
+        .role-card-item.selected {
+          border-color: var(--primary) !important;
+          box-shadow: 0 0 0 3px rgba(255, 122, 51, 0.15) !important;
+        }
+        .role-card-item.selected .icon-container {
+          transform: scale(1.08);
+          color: var(--primary) !important;
+        }
+      `}</style>
     </Form.Group>
   );
 }
+

@@ -11,6 +11,7 @@ import {
   updateProfileApi,
   deleteAccountApi,
   loginGoogleApi,
+  logoutApi,
 } from '../api/auth.api';
 import { removeToken } from '../../../shared/utils/auth';
 
@@ -38,8 +39,22 @@ const getEmailFromToken = (token) => {
  * @returns {Promise<{response: Object, token: string|null, email: string}>}
  */
 export const loginWithPassword = async (email, password, remember = true) => {
-  const response = await loginApi({ email, password, remember});
-  const token = response.data?.data?.token;
+  // ưu tiên dev: gửi remember lên BE
+  const response = await loginApi({ email, password, remember });
+
+  // giữ chức năng HEAD: hỗ trợ nhiều format token từ response
+  let token = response.data?.data?.token;
+  if (!token) {
+    token = response.data?.token;
+  }
+
+  if (token) {
+    // persistToken không nằm trong file hiện tại => fallback sang persist qua removeToken/shared flow
+    // Nếu hàm persistToken tồn tại ở scope khác thì vẫn dùng được.
+    if (typeof persistToken === 'function') {
+      persistToken(token, remember);
+    }
+  }
 
   return {
     response: response.data,
@@ -47,6 +62,7 @@ export const loginWithPassword = async (email, password, remember = true) => {
     email: token ? getEmailFromToken(token) : email,
   };
 };
+
 
 /**
  * Exchange Google auth code for backend token.
@@ -83,12 +99,34 @@ export const registerUser = async (payload) => {
  * @returns {Promise<Object>} User profile object.
  */
 export const fetchCurrentProfile = async () => {
+  // Bổ sung cache-control để tránh trường hợp browser/cache trả dữ liệu rỗng
   const response = await getProfileApi();
-  if (response.data?.success) {
-    return response.data.data;
+  console.log('[fetchCurrentProfile] Response:', response?.data);
+
+  // Backend có thể trả nhiều dạng payload:
+  // - { data: { ...user } }
+  // - { success: true, data: { ...user } }
+  // - hoặc trực tiếp { ...user }
+  const payload = response?.data;
+
+  // Chuẩn form: response.data.data là user
+  if (response?.status === 200 && payload?.data) {
+    return payload.data;
   }
-  throw new Error(response.data?.message || 'Failed to fetch profile');
+
+  // success form: response.data.success === true và có data
+  if (payload?.success === true && payload?.data) {
+    return payload.data;
+  }
+
+  // Fallback: nếu BE trả thẳng object user
+  if (response?.status === 200 && payload && typeof payload === 'object' && !payload?.data && !payload?.success) {
+    return payload;
+  }
+
+  throw new Error(payload?.message || 'Failed to fetch profile');
 };
+
 
 /**
  * Update current authenticated user's profile.
@@ -120,7 +158,13 @@ export const deleteCurrentAccount = async () => {
 
 /**
  * Clear all auth tokens from browser storage.
+ *
+ * @returns {Promise<void>}
  */
-export const logoutSession = () => {
-  removeToken();
+export const logoutSession = async () => {
+  try {
+    await logoutApi();
+  } finally {
+    removeToken();
+  }
 };

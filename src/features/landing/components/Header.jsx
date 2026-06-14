@@ -114,26 +114,18 @@ export default function Header() {
                 onClick={() => navigate("/dashboard")}
                 className="px-3 py-1 text-sm font-semibold d-flex align-items-center gap-1"
                 style={{
-                  borderRadius: "6px",
-                  backgroundColor:
-                    pathname === "/dashboard"
-                      ? "var(--primary-light)"
-                      : "transparent",
-                  color:
-                    pathname === "/dashboard"
-                      ? "var(--primary)"
-                      : "var(--text-muted)",
-                  border:
-                    pathname === "/dashboard"
-                      ? "1px solid var(--border)"
-                      : "1px solid transparent",
-                  transition: "all 0.2s",
-                  fontWeight: pathname === "/dashboard" ? 700 : 500,
+                  borderRadius: '6px',
+                  backgroundColor: (pathname === '/dashboard' || pathname === '/geography') ? 'var(--primary-light)' : 'transparent',
+                  color: (pathname === '/dashboard' || pathname === '/geography') ? 'var(--primary)' : 'var(--text-muted)',
+                  border: (pathname === '/dashboard' || pathname === '/geography') ? '1px solid var(--border)' : '1px solid transparent',
+                  transition: 'all 0.2s',
+                  fontWeight: (pathname === '/dashboard' || pathname === '/geography') ? 700 : 500,
                 }}
               >
                 <Icon icon="lucide:layout-dashboard" width="14" />
                 Tổng quan
               </Nav.Link>
+
               {/* Tìm kiếm */}
               <Nav.Link
                 onClick={() => navigate("/catalog")}
@@ -189,6 +181,28 @@ export default function Header() {
                 <Icon icon="lucide:file-text" width="14" />
                 Bài báo
               </Nav.Link>
+
+              {/* Tác Giả */}
+              <Nav.Link
+                onClick={() => navigate("/authors")}
+                className="px-3 py-1 text-sm font-semibold d-flex align-items-center gap-1"
+                style={{
+                  borderRadius: "6px",
+                  backgroundColor:
+                    pathname.startsWith("/authors") ? "var(--primary-light)" : "transparent",
+                  color:
+                    pathname.startsWith("/authors") ? "var(--primary)" : "var(--text-muted)",
+                  border: pathname.startsWith("/authors")
+                    ? "1px solid var(--border)"
+                    : "1px solid transparent",
+                  transition: "all 0.2s",
+                  fontWeight: pathname.startsWith("/authors") ? 700 : 500,
+                }}
+              >
+                <Icon icon="lucide:file-text" width="14" />
+                Tác Giả
+              </Nav.Link>
+
             </Nav>
 
             <div className="d-flex align-items-center gap-3">
