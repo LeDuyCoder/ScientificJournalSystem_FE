@@ -1,4 +1,3 @@
-
 import { Routes, Route } from 'react-router-dom';
 
 import LandingPage from '../../features/landing/pages/LandingPage';
@@ -25,6 +24,7 @@ import AuthorDetailPage from '../../features/author/pages/AuthorDetailPage';
 import AuthorListPage from '../../features/author/pages/AuthorListPage';
 import TopicDetailPage from '../../features/topic/pages/TopicDetailPage';
 import AdminDashboardPage from '../../features/admin/pages/AdminDashboardPage';
+import UpdateArticlePage from '../../features/admin/pages/UpdateArticlePage';
 
 /**
  * Nơi khai báo route chính của ứng dụng.
@@ -49,6 +49,7 @@ export default function AppRoutes() {
         <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/authors/leaderboard" element={<AuthorLeaderboardPage />} />
         <Route path="/admin/dashboard" element={<AdminDashboardPage />} />
+        <Route path="/admin/articles/:id" element={<UpdateArticlePage />} />
       </Route>
 
       <Route element={<PublicRoute />}>
@@ -74,11 +75,11 @@ export default function AppRoutes() {
       <Route path="/geography" element={<GeographyPage />} />
 
       <Route path="/topics/:topicId" element={<TopicDetailPage />} />
-      <Route path="*" element={<LandingPage />} />
 
- {/* TODO: route tạm để preview UI Admin Dashboard không cần login.
+      {/* TODO: route tạm để preview UI Admin Dashboard không cần login.
           Xóa route này khi vấn đề đăng nhập đã được xử lý xong. */}
       <Route path="/admin-preview" element={<AdminDashboardPage />} />
+      <Route path="/admin-preview/articles/:id" element={<UpdateArticlePage />} />
 
       <Route path="*" element={<LandingPage />} />
 

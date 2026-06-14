@@ -9,7 +9,7 @@ export default function AdminSidebar() {
       <div>
         <div className="admin-sidebar__brand">
           <span className="admin-sidebar__brand-icon">
-            <Icon icon="lucide:atom" />
+            <Icon icon="lucide:activity" />
           </span>
           <span>ResearchPulse</span>
         </div>
