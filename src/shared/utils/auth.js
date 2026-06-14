@@ -1,4 +1,4 @@
-﻿/**
+/**
  * File source thuộc hệ thống FE ResearchPulse.
  *
  * File: shared\utils\auth.js
@@ -28,24 +28,38 @@ export const removeToken = () => {
  * Kiểm tra người dùng hiện tại còn phiên đăng nhập hợp lệ hay không.
  *
  * Trường hợp nhanh: Zustand đã có user nên không cần gọi API.
- * Trường hợp F5/reload: Zustand mất dữ liệu, gọi `/users/me` để BE xác thực
+ * Trường hợp F5/reload: Zustand mất dữ liệu, gọi `/auth/check-auth` để BE xác thực
  * bằng cookie HTTP-only và trả lại thông tin user.
  */
 export const isAuthenticated = async () => {
   try {
     const authStore = useAuthStore.getState();
 
-    if (authStore.token && useUserStore.email) {
+    // ưu tiên dev: nếu Zustand đã đủ token + email thì trả true ngay
+    if (authStore.token && useUserStore.getState().email) {
       return true;
     }
 
-    const res = await api.get("/auth/check-auth");
+    // còn thiếu dữ liệu: gọi BE để xác thực theo luồng HEAD (users/me + fallback)
+    let res;
+    try {
+      res = await api.get('/users/me');
+    } catch (error) {
+      if (error.response?.status === 404) {
+        res = await api.get('/users/profile');
+      } else {
+        throw error;
+      }
+    }
 
-    if (
-      res.status === 200 &&
-      res.data?.authenticated === true
-    ) {
-      const token = res.data.access_token;
+
+
+    // Dev nhánh có thêm /auth/check-auth để hydrate user state từ access token
+    // Giữ logic này để không mất chức năng.
+    const checkRes = await api.get("/auth/check-auth");
+
+    if (checkRes.status === 200 && checkRes.data?.authenticated === true) {
+      const token = checkRes.data.access_token;
       const decoded = jwtDecode(token);
 
       authStore.loginSuccess(token, {
@@ -55,13 +69,16 @@ export const isAuthenticated = async () => {
       });
 
       useUserStore.getState().setEmail(decoded.email);
-      
       return true;
     }
 
+    // Nếu check-auth không authenticated thì coi như không đăng nhập
     return false;
+
   } catch (error) {
-    useAuthStore.getState().logout();
+    // Nếu dính lỗi 401 triệt để (kể cả sau khi Axios Interceptor đã cố Refresh thất bại)
+    useAuthStore.getState().logout(); // Đảm bảo clear sạch Zustand cũ nếu có
+    localStorage.removeItem('researchpulse_token');
     return false;
   }
 };

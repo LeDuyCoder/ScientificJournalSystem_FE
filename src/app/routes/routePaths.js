@@ -13,6 +13,11 @@ const ROUTES = {
   LOGIN:        "/login",
   REGISTER:     "/register",
   VERIFY_EMAIL: "/verify-email",   // ← route mới cho trang kích hoạt tài khoản
+
+  // ─── Admin routes ───
+  ADMIN_DASHBOARD:    "/admin/dashboard",
+  ADMIN_ARTICLES:     "/admin/articles",
+  ADMIN_ARTICLE_EDIT: "/admin/articles/:id",
 };
 
 export default ROUTES;

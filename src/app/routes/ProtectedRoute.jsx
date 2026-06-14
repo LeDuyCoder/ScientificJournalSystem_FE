@@ -17,13 +17,8 @@ const ProtectedRoute = () => {
     checkAuth();
   }, []);
 
-  console.log(useAuthStore.getState());
-  console.log(useUserStore.getState());
-
   if (loading) return <div>Đang kiểm tra quyền truy cập...</div>;
 
-  // 🔥 THAY CHILDREN THÀNH OUTLET: 
-  // Nếu hợp lệ thì cho phép hiển thị các Route con nằm trong Layout này
   return isAuth ? <Outlet /> : <Navigate to="/login" replace />;
 };
 

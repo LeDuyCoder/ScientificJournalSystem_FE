@@ -1,4 +1,4 @@
-﻿/**
+/**
  * File source thuộc hệ thống FE ResearchPulse.
  *
  * File: features\article\components\ArticleActionCard.jsx
@@ -48,18 +48,20 @@ export default function ArticleActionCard({
       {/* Floating Copied Message */}
       {showCopiedToast && (
         <div 
-          className="position-absolute start-50 translate-middle-x px-3 py-1.5 rounded text-white text-xs d-flex align-items-center gap-1.5 shadow"
+          className="position-absolute start-50 translate-middle-x d-flex align-items-center gap-2 px-3 py-2 shadow"
           style={{
-            top: '-20px',
-            backgroundColor: 'var(--btn-dark)',
-            border: '1px solid var(--primary)',
+            top: '-24px',
             zIndex: 100,
             whiteSpace: 'nowrap',
-            animation: 'fadeInUp 0.2s ease-out'
+            animation: 'fadeInUp 0.2s ease-out',
+            background: '#f0fdf4',
+            borderLeft: '4px solid #22c55e',
+            borderRadius: '14px',
+            color: '#166534'
           }}
         >
-          <Icon icon="lucide:check-circle" className="text-success" />
-          <span>Đã sao chép mã DOI!</span>
+          <Icon icon="solar:check-circle-bold" width="18" style={{ color: '#22c55e', flexShrink: 0 }} />
+          <span style={{ fontWeight: 500 }}>Đã sao chép mã DOI!</span>
         </div>
       )}
 
