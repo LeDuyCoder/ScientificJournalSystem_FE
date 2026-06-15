@@ -82,10 +82,6 @@ export default function AppRoutes() {
         {/* 🔐 Tuyến đường yêu cầu bảo mật (Đã đăng nhập) */}
         <Route element={<ProtectedRoute />}>
           <Route path="/dashboard" element={<DashboardPage />} />
-          
-          {/* 🚀 Các tuyến đường quản lý cấu trúc tạp chí dành cho Admin (Issue #76) */}
-          <Route path="/admin/journals" element={<JournalDirectoryPage />} />
-          <Route path="/admin/journals/repository" element={<RepositoryManagementPage />} />
 
           <Route path="/projects" element={<ProjectListPage />} />
           <Route path="/projects/create" element={<CreateProjectPage />} />
@@ -103,6 +99,10 @@ export default function AppRoutes() {
             <Route path="/admin/users/create" element={<AddNewAccountPage />} />
             <Route path="/admin/users/:id/edit" element={<UpdateUserAccountPage />} />
             <Route path="/articles/submit" element={<SubmitArticlePage />} />
+
+            {/* 🚀 Các tuyến đường quản lý cấu trúc tạp chí dành cho Admin (Issue #76) */}
+            <Route path="/admin/journals" element={<JournalDirectoryPage />} />
+            <Route path="/admin/journals/repository" element={<RepositoryManagementPage />} />
           </Route>
         </Route>
 
