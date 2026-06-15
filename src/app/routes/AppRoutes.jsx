@@ -71,6 +71,7 @@ export default function AppRoutes() {
         <Route path={ROUTES.AUTHORS_LEADERBOARD} element={<AuthorLeaderboardPage />} />
         <Route path={ROUTES.ADMIN_DASHBOARD} element={<AdminDashboardPage />} />
         <Route path={ROUTES.ADMIN_ARTICLE_EDIT} element={<UpdateArticlePage />} />
+        <Route path={ROUTES.ADMIN_ARTICLES} element={<AdminDashboardPage />} />
       </Route>
 
       {/* Public routes (Đăng nhập / Đăng ký) */}

@@ -20,7 +20,8 @@ export default function AdminSidebar() {
   const menuItems = [
     { label: 'Dashboard', path: ROUTES.ADMIN_DASHBOARD, icon: 'lucide:layout-dashboard' },
     { label: 'Journals', path: ROUTES.ADMIN_JOURNALS, icon: 'lucide:book-open' },
-    { label: 'Repository', path: ROUTES.ADMIN_REPOSITORY, icon: 'lucide:database' },
+    { label: 'Articles', path: ROUTES.ADMIN_ARTICLES, icon: 'lucide:file-text' },
+    { label: 'Volumes', path: ROUTES.ADMIN_REPOSITORY, icon: 'lucide:layers' },
     { label: 'Account', path: ROUTES.ADMIN_USERS, icon: 'lucide:user' },
   ];
 
