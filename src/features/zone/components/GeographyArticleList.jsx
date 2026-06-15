@@ -21,7 +21,7 @@ export default function GeographyArticleList({
     alert('Đã sao chép mã DOI vào bộ nhớ tạm: ' + doi);
   };
 
-  // Assign colors to topics
+  // Assign colors to topics from dev branch
   const getTopicStyle = (topic) => {
     if (!topic) return { bg: 'var(--bg-main)', color: 'var(--text-muted)' };
     const name = String(topic).toLowerCase();
@@ -164,7 +164,7 @@ export default function GeographyArticleList({
   };
 
   return (
-    <div className="mt-4 p-4 bg-white rounded-3" style={{ border: '1px solid var(--border)', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
+    <div className="mt-4 p-4 journal-dark-card">
       {/* Title */}
       <div className="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
         <div>
@@ -172,7 +172,7 @@ export default function GeographyArticleList({
             Danh sách bài báo khoa học tại {countryName}
           </h3>
           {!loading && articles.length > 0 && (
-            <p className="text-muted-custom mb-0 text-xs">
+            <p className="text-muted-custom mb-0 text-xs font-sans">
               Hiển thị bài báo thứ <span className="fw-semibold text-main">{(page - 1) * 10 + 1}</span> - <span className="fw-semibold text-main">{Math.min(page * 10, total)}</span> trong tổng số <span className="fw-semibold text-main">{total}</span> bài báo.
             </p>
           )}
@@ -181,7 +181,7 @@ export default function GeographyArticleList({
 
       {loading && articles.length === 0 ? (
         <div className="w-100 rounded-3 overflow-hidden" style={{ border: '1px solid var(--border)' }}>
-          <Table responsive hover className="m-0 bg-transparent text-main border-0" style={{ fontSize: '0.85rem' }}>
+          <Table responsive hover className="m-0 bg-transparent text-main border-0 geography-table" style={{ fontSize: '0.85rem' }}>
             <thead>
               <tr style={{ borderBottom: '1px solid var(--border)' }}>
                 <th className="bg-transparent text-muted-custom py-3 ps-3 text-xs" style={{ width: '40px' }}>#</th>
@@ -219,7 +219,7 @@ export default function GeographyArticleList({
             <Icon icon="lucide:file-x" width="24" height="24" />
           </div>
           <h5 className="text-main font-weight-bold mb-1 font-display" style={{ fontSize: '1rem' }}>Không có bài báo nào</h5>
-          <p className="text-muted-custom mb-0 text-xs max-w-md">
+          <p className="text-muted-custom mb-0 text-xs max-w-md font-sans">
             Hiện tại chưa có bài báo khoa học nào thuộc các tạp chí tại quốc gia này được lưu trữ trong hệ thống.
           </p>
         </div>
@@ -233,7 +233,7 @@ export default function GeographyArticleList({
               border: '1px solid var(--border)'
             }}
           >
-            <Table responsive hover className="m-0 bg-transparent text-main border-0" style={{ fontSize: '0.85rem' }}>
+            <Table responsive hover className="m-0 bg-transparent text-main border-0 geography-table" style={{ fontSize: '0.85rem' }}>
               <thead>
                 <tr style={{ borderBottom: '1px solid var(--border)' }}>
                   <th className="bg-transparent text-muted-custom py-3 ps-3 text-xs" style={{ width: '40px', letterSpacing: '0.05em' }}>#</th>
@@ -253,34 +253,33 @@ export default function GeographyArticleList({
                     <tr 
                       key={article.article_id}
                       onClick={() => onDetailClick(article.article_id)}
-                      style={{ cursor: 'pointer', borderBottom: '1px solid var(--border)' }}
-                      className="align-middle"
+                      className="align-middle geography-article-row"
                     >
-                      <td className="text-muted-custom ps-3 font-display" style={{ fontSize: '0.8rem' }}>
+                      <td className="text-muted-custom ps-3 font-sans" style={{ fontSize: '0.8rem' }}>
                         {(page - 1) * 10 + index + 1}
                       </td>
                       <td style={{ maxWidth: '380px' }} className="py-3">
-                        <div className="text-main fw-semibold hover:text-primary transition-colors duration-150 text-sm line-clamp-2" style={{ fontWeight: 600 }}>
+                        <div className="geography-article-title line-clamp-2">
                           {article.title}
                         </div>
                         {article.abstract && (
-                          <div className="text-muted-custom mt-1 text-xs text-truncate">
+                          <div className="text-muted-custom mt-1 text-xs text-truncate font-sans">
                             {article.abstract}
                           </div>
                         )}
                       </td>
                       <td style={{ maxWidth: '180px' }}>
-                        <div className="text-main text-sm text-truncate" style={{ fontWeight: 500 }}>
+                        <div className="text-main text-sm text-truncate font-sans" style={{ fontWeight: 500 }}>
                           {article.journal_name}
                         </div>
                       </td>
-                      <td className="text-center font-display" style={{ color: 'var(--text-muted)' }}>
+                      <td className="text-center font-sans" style={{ color: 'var(--text-muted)' }}>
                         {article.publication_year}
                       </td>
                       <td style={{ maxWidth: '140px' }}>
                         {article.doi ? (
-                          <div className="d-flex align-items-center gap-1">
-                            <span className="text-muted-custom text-xs text-truncate font-display" style={{ fontSize: '0.75rem' }}>
+                          <div className="d-flex align-items-center gap-1 font-sans">
+                            <span className="text-muted-custom text-xs text-truncate" style={{ fontSize: '0.75rem' }}>
                               {article.doi}
                             </span>
                             <Button 
@@ -293,16 +292,16 @@ export default function GeographyArticleList({
                             </Button>
                           </div>
                         ) : (
-                          <span className="text-muted text-xs">—</span>
+                          <span className="text-muted text-xs font-sans">—</span>
                         )}
                       </td>
                       <td>
                         <span 
-                          className="px-2 py-1 rounded text-xs font-weight-bold"
+                          className="geography-topic-badge"
                           style={{
                             backgroundColor: topicStyle.bg,
                             color: topicStyle.color,
-                            fontSize: '0.7rem'
+                            border: 'none'
                           }}
                         >
                           {article.topic_name || 'Chưa phân loại'}
@@ -310,14 +309,7 @@ export default function GeographyArticleList({
                       </td>
                       <td className="text-center">
                         {article.is_open_access ? (
-                          <span 
-                            className="px-2 py-0.5 rounded text-xs font-weight-bold"
-                            style={{
-                              backgroundColor: 'rgba(16, 185, 129, 0.1)',
-                              color: '#059669',
-                              fontSize: '0.7rem'
-                            }}
-                          >
+                          <span className="geography-oa-badge">
                             OA
                           </span>
                         ) : (
@@ -325,7 +317,7 @@ export default function GeographyArticleList({
                         )}
                       </td>
                       <td className="text-end pe-3">
-                        <span className="text-primary hover:text-dark font-semibold text-xs d-flex align-items-center justify-content-end gap-0.5">
+                        <span className="geography-link-accent">
                           Chi tiết
                           <Icon icon="lucide:arrow-right" width="12" />
                         </span>
@@ -346,60 +338,46 @@ export default function GeographyArticleList({
                   <Card 
                     key={article.article_id}
                     onClick={() => onDetailClick(article.article_id)}
-                    style={{
-                      backgroundColor: 'var(--bg-card)',
-                      border: '1px solid var(--border)',
-                      borderRadius: '12px',
-                      cursor: 'pointer'
-                    }}
-                    className="border-0 shadow-sm"
+                    className="journal-dark-card shadow-sm geography-article-row border-0"
                   >
                     <Card.Body className="p-3">
                       <div className="d-flex align-items-center justify-content-between mb-2">
-                        <span className="text-muted-custom text-xs font-display">#{(page - 1) * 10 + index + 1}</span>
+                        <span className="text-muted-custom text-xs font-sans">#{(page - 1) * 10 + index + 1}</span>
                         <div className="d-flex gap-1.5 align-items-center">
                           <span 
-                            className="px-2 py-0.5 rounded text-xs font-weight-bold"
-                            style={{
+                            className="geography-topic-badge" 
+                            style={{ 
+                              fontSize: '0.65rem', 
+                              padding: '0.15rem 0.45rem',
                               backgroundColor: topicStyle.bg,
                               color: topicStyle.color,
-                              fontSize: '0.65rem'
+                              border: 'none'
                             }}
                           >
                             {article.topic_name || 'Chưa phân loại'}
                           </span>
                           {article.is_open_access && (
-                            <span 
-                              className="px-2 py-0.5 rounded text-xs font-weight-bold"
-                              style={{
-                                backgroundColor: 'rgba(16, 185, 129, 0.1)',
-                                color: '#059669',
-                                fontSize: '0.65rem'
-                              }}
-                            >
+                            <span className="geography-oa-badge" style={{ fontSize: '0.65rem', padding: '0.15rem 0.45rem' }}>
                               OA
                             </span>
                           )}
                         </div>
                       </div>
 
-                      <h6 className="text-main font-weight-semibold mb-2" style={{ lineHeight: '1.4', fontSize: '0.9rem' }}>
+                      <h6 className="geography-article-title mb-2" style={{ lineHeight: '1.4', fontSize: '0.9rem' }}>
                         {article.title}
                       </h6>
 
                       <div className="pt-2 border-top border-light d-flex align-items-center justify-content-between flex-wrap gap-2">
                         <div>
-                          <div className="text-primary text-xs font-weight-semibold" style={{ fontSize: '0.75rem' }}>
+                          <div className="text-primary text-xs font-weight-semibold font-sans" style={{ fontSize: '0.75rem' }}>
                             {article.journal_name}
                           </div>
-                          <div className="text-muted-custom text-xs font-display mt-0.5" style={{ fontSize: '0.7rem' }}>
-                            Năm: {article.publication_year} {article.doi ? `· DOI: ${article.doi}` : ''}
+                          <div className="text-muted-custom text-xs font-sans mt-0.5" style={{ fontSize: '0.7rem' }}>
+                            Năm: {article.publication_year} {article.doi ? ` · DOI: ${article.doi}` : ''}
                           </div>
                         </div>
-                        <span 
-                          className="text-primary hover:text-dark font-bold text-xs d-flex align-items-center gap-0.5"
-                          style={{ fontSize: '0.75rem' }}
-                        >
+                        <span className="geography-link-accent" style={{ fontSize: '0.75rem' }}>
                           Chi tiết
                           <Icon icon="lucide:arrow-right" width="12" />
                         </span>

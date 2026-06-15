@@ -32,7 +32,7 @@ export default function KeywordArticlesPage() {
   } = useKeywordArticles(keywordId);
 
   const handleViewDetail = (articleId) => {
-    navigate(`/articles/${articleId}`);
+    navigate(`/articles/${articleId}/visual`);
   };
 
   const handleRetry = () => {

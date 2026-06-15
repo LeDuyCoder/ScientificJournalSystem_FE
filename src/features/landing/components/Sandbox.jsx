@@ -341,7 +341,7 @@ export default function Sandbox() {
                               navigate(`/authors/${item.id}`);
                             }
                             if (item.type === "ARTICLE") {
-                              navigate(`/articles/${item.id}`);
+                              navigate(`/articles/${item.id}/visual`);
                             }
                             if (item.type === "KEYWORD") {
                               navigate(`/keywords/${item.id}`);

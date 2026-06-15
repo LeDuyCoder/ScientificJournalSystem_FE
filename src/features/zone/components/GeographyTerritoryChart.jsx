@@ -15,15 +15,6 @@ export default function GeographyTerritoryChart({ data = [], loading = false, se
     return max > 0 ? max : 1;
   }, [top5]);
 
-  // Colors/Gradients for the top 5 bars
-  const barGradients = [
-    'linear-gradient(180deg, #ff7a33 0%, #ffb088 100%)', // Orange/Warm
-    'linear-gradient(180deg, #6366f1 0%, #a5b4fc 100%)', // Indigo
-    'linear-gradient(180deg, #0ea5e9 0%, #7dd3fc 100%)', // Sky Blue
-    'linear-gradient(180deg, #f59e0b 0%, #fde047 100%)', // Amber
-    'linear-gradient(180deg, #10b981 0%, #6ee7b7 100%)'  // Emerald
-  ];
-
   const gridTicks = useMemo(() => {
     if (maxVal === 1) return [1, 0];
     return [
@@ -36,18 +27,7 @@ export default function GeographyTerritoryChart({ data = [], loading = false, se
   }, [maxVal]);
 
   return (
-    <div className="p-4 bg-white rounded-3 h-100 d-flex flex-column" style={{ border: '1px solid var(--border)', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
-      <style>{`
-        .bar-container:hover .bar-tooltip {
-          opacity: 1 !important;
-          transform: translateY(0px) !important;
-        }
-        .bar-container:hover .bar-element {
-          filter: brightness(1.08);
-          box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1) !important;
-        }
-      `}</style>
-
+    <div className="p-4 journal-dark-card h-100 d-flex flex-column">
       {/* Header */}
       <div className="d-flex align-items-center justify-content-between mb-4">
         <div>
@@ -55,7 +35,7 @@ export default function GeographyTerritoryChart({ data = [], loading = false, se
             Top 5 Quốc gia có sản lượng Article cao nhất
           </h3>
           <p className="text-muted-custom mb-0 mt-1" style={{ fontSize: '0.8rem' }}>
-            Phân bộ số lượng bài báo khoa học xuất bản theo lãnh thổ
+            Phân bố số lượng bài báo khoa học xuất bản theo lãnh thổ
           </p>
         </div>
         <span 
@@ -107,7 +87,7 @@ export default function GeographyTerritoryChart({ data = [], loading = false, se
                       transform: 'translateY(-50%)', 
                       fontSize: '0.75rem',
                       fontWeight: 500,
-                      backgroundColor: 'white',
+                      backgroundColor: 'var(--bg-card)',
                       paddingRight: '6px',
                       zIndex: 1
                     }}
@@ -126,7 +106,6 @@ export default function GeographyTerritoryChart({ data = [], loading = false, se
               {top5.map((item, index) => {
                 const val = Number(item.article_count) || 0;
                 const heightPercent = maxVal > 0 ? (val / maxVal) * 100 : 0;
-                const gradient = barGradients[index % barGradients.length];
 
                 return (
                   <div 
@@ -136,30 +115,15 @@ export default function GeographyTerritoryChart({ data = [], loading = false, se
                   >
                     {/* Tooltip on hover */}
                     <div 
-                      className="bar-tooltip position-absolute"
-                      style={{
-                        bottom: `calc(${heightPercent}% + 12px)`,
-                        backgroundColor: '#1e293b',
-                        color: 'white',
-                        padding: '4px 8px',
-                        borderRadius: '4px',
-                        fontSize: '0.75rem',
-                        fontWeight: 600,
-                        whiteSpace: 'nowrap',
-                        boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
-                        pointerEvents: 'none',
-                        transition: 'opacity 0.2s, transform 0.2s',
-                        zIndex: 10,
-                        transform: 'translateY(4px)',
-                        opacity: 0
-                      }}
+                      className="geography-chart-tooltip position-absolute text-center"
+                      style={{ bottom: `calc(${heightPercent}% + 12px)` }}
                     >
                       {val.toLocaleString()} articles
                     </div>
 
                     {/* Value label directly above the bar */}
                     <span 
-                      className="text-main fw-bold mb-1"
+                      className="text-main fw-bold mb-1 geography-chart-value-label"
                       style={{ fontSize: '0.75rem', opacity: 0.95 }}
                     >
                       {val > 0 ? val.toLocaleString() : '0'}
@@ -170,19 +134,10 @@ export default function GeographyTerritoryChart({ data = [], loading = false, se
                       onClick={() => onSelectCountry?.(item)}
                       style={{ 
                         width: '100%', 
-                        height: `${Math.max(heightPercent, 2)}%`, 
-                        background: gradient, 
-                        borderRadius: '6px 6px 0 0',
-                        transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
-                        cursor: 'pointer',
-                        boxShadow: selectedCountry?.zone_id === item.zone_id 
-                          ? '0 0 0 3px var(--primary), 0 8px 16px rgba(0,0,0,0.15)' 
-                          : '0 4px 12px rgba(0,0,0,0.04)',
-                        position: 'relative',
-                        transform: selectedCountry?.zone_id === item.zone_id ? 'scale(1.03)' : 'none',
+                        height: `${Math.max(heightPercent, 2)}%`,
                         zIndex: selectedCountry?.zone_id === item.zone_id ? 3 : 1
                       }}
-                      className="bar-element"
+                      className={`geography-chart-bar color-${index % 5} ${selectedCountry?.zone_id === item.zone_id ? 'is-active' : ''}`}
                     />
                   </div>
                 );
@@ -201,7 +156,7 @@ export default function GeographyTerritoryChart({ data = [], loading = false, se
               >
                 {/* Short country code (e.g., GB, US) */}
                 <span 
-                  className="text-main fw-bold" 
+                  className="text-main fw-bold font-sans" 
                   style={{ fontSize: '0.8rem', display: 'block', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap', width: '100%' }}
                   title={item.name}
                 >
@@ -210,7 +165,7 @@ export default function GeographyTerritoryChart({ data = [], loading = false, se
                 
                 {/* Full country name */}
                 <span 
-                  className="text-muted-custom" 
+                  className="text-muted-custom font-sans" 
                   style={{ fontSize: '0.65rem', display: 'block', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap', width: '100%', maxWidth: '70px' }}
                   title={item.name}
                 >

@@ -5,41 +5,53 @@ import JournalDetailPage from '../../features/journal/pages/JournalDetailPage';
 import CatalogSearchPage from '../../features/catalog/pages/CatalogSearchPage';
 import ArticleListPage from '../../features/article/pages/ArticleListPage';
 import ArticleDetailPage from '../../features/article/pages/ArticleDetailPage';
+import ArticleVisualDetailPage from '../../features/article/pages/ArticleVisualDetailPage';
 import DashboardPage from '../../features/dashboard/pages/DashboardPage';
 
 import RegisterPage from '../../features/auth/pages/RegisterPage';
 import LoginPage from '../../features/auth/pages/LoginPage';
-import ProfilePage from "../../features/profile/pages/ProfilePage";
+import ProfilePage from '../../features/profile/pages/ProfilePage';
 import VerifyEmailPage from '../../features/auth/pages/VerifyEmailPage';
 
 import ProtectedRoute from './ProtectedRoute';
 import PublicRoute from './PublicRoute';
+import AuthLayoutWithUser from '../layouts/AuthLayoutWithUser';
+
+import ProjectListPage from '../../features/project/pages/ProjectListPage';
+import CreateProjectPage from '../../features/project/pages/CreateProjectPage';
+import EditProjectPage from '../../features/project/pages/EditProjectPage';
+import ProjectDetailPage from '../../features/project/pages/ProjectDetailPage';
 
 import {
   KeywordListPage,
   KeywordArticlesPage,
 } from '../../features/keywords';
+
 import AuthorLeaderboardPage from '../../features/author/pages/AuthorLeaderboardPage';
 import AuthorDetailPage from '../../features/author/pages/AuthorDetailPage';
 import AuthorListPage from '../../features/author/pages/AuthorListPage';
+
 import TopicDetailPage from '../../features/topic/pages/TopicDetailPage';
 import AdminDashboardPage from '../../features/admin/pages/AdminDashboardPage';
 import UpdateArticlePage from '../../features/admin/pages/UpdateArticlePage';
 
+import ForgotPasswordPage from '../../features/auth/pages/ForgotPasswordPage';
+import ResetPasswordPage from '../../features/auth/pages/ResetPasswordPage';
+
+import GeographyPage from '../../features/zone/pages/GeographyPage';
+
+// --- ĐỒNG BỘ ĐƯỜNG DẪN IMPORT THEO CHUẨN CỦA NHÓM ---
+import JournalDirectoryPage from '../../features/journal/pages/JournalDirectoryPage';
+import RepositoryManagementPage from '../../features/journal/pages/RepositoryManagementPage';
+
 /**
  * Nơi khai báo route chính của ứng dụng.
-
  *
  * Chính sách hiện tại:
  * - Các trang khám phá dữ liệu/bài báo cho phép guest truy cập công khai.
  * - Login/Register sử dụng PublicRoute.
  * - Dashboard yêu cầu đăng nhập.
  */
-import ForgotPasswordPage from '../../features/auth/pages/ForgotPasswordPage';
-import ResetPasswordPage from '../../features/auth/pages/ResetPasswordPage';
-
-import GeographyPage from '../../features/zone/pages/GeographyPage';
-
 export default function AppRoutes() {
   return (
     <Routes>
@@ -57,22 +69,60 @@ export default function AppRoutes() {
         <Route path="/register" element={<RegisterPage />} />
       </Route>
 
-      <Route path="/verify-email" element={<VerifyEmailPage />} />
-      <Route path="/authors/:id" element={<AuthorDetailPage />} />
-      <Route path="/authors" element={<AuthorListPage />} />
-      <Route path="/journals/:id" element={<JournalDetailPage />} />
-      <Route path="/catalog" element={<CatalogSearchPage />} />
+      {/* Routes sử dụng layout chung */}
+      <Route element={<AuthLayoutWithUser />}>
+        
+        {/* 🔐 Tuyến đường yêu cầu bảo mật (Đã đăng nhập) */}
+        <Route element={<ProtectedRoute />}>
+          <Route path="/dashboard" element={<DashboardPage />} />
+          
+          {/* 🚀 Các tuyến đường quản lý cấu trúc tạp chí dành cho Admin (Issue #76) */}
+          <Route path="/admin/journals" element={<JournalDirectoryPage />} />
+          <Route path="/admin/journals/repository" element={<RepositoryManagementPage />} />
 
-      <Route path="/search" element={<CatalogSearchPage />} />
-      <Route path="/articles" element={<ArticleListPage />} />
-      <Route path="/articles/:id" element={<ArticleDetailPage />} />
-      <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/projects" element={<ProjectListPage />} />
+          <Route path="/projects/create" element={<CreateProjectPage />} />
+          <Route path="/projects/:id/edit" element={<EditProjectPage />} />
+          <Route path="/projects/:id" element={<ProjectDetailPage />} />
 
-      <Route path="/keywords" element={<KeywordListPage />} />
-      <Route path="/keywords/:keywordId/articles" element={<KeywordArticlesPage />} />
-      <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-      <Route path="/reset-password" element={<ResetPasswordPage />} />
-      <Route path="/geography" element={<GeographyPage />} />
+          <Route
+            path="/authors/leaderboard"
+            element={<AuthorLeaderboardPage />}
+          />
+        </Route>
+
+        {/* Public pages inside layout */}
+        <Route path="/search" element={<CatalogSearchPage />} />
+        <Route path="/catalog" element={<CatalogSearchPage />} />
+
+        <Route path="/articles" element={<ArticleListPage />} />
+        <Route path="/articles/:id" element={<ArticleDetailPage />} />
+        <Route
+          path="/articles/:id/visual"
+          element={<ArticleVisualDetailPage />}
+        />
+
+        <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/verify-email" element={<VerifyEmailPage />} />
+
+        <Route path="/authors" element={<AuthorListPage />} />
+        <Route path="/authors/:id" element={<AuthorDetailPage />} />
+
+        <Route path="/journals/:id" element={<JournalDetailPage />} />
+
+        <Route path="/keywords" element={<KeywordListPage />} />
+        <Route
+          path="/keywords/:keywordId/articles"
+          element={<KeywordArticlesPage />}
+        />
+
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="/reset-password" element={<ResetPasswordPage />} />
+
+        <Route path="/geography" element={<GeographyPage />} />
+
+        <Route path="/topics/:topicId" element={<TopicDetailPage />} />
+      </Route>
 
       <Route path="/topics/:topicId" element={<TopicDetailPage />} />
 
@@ -82,8 +132,6 @@ export default function AppRoutes() {
       <Route path="/admin-preview/articles/:id" element={<UpdateArticlePage />} />
 
       <Route path="*" element={<LandingPage />} />
-
-
     </Routes>
   );
 }

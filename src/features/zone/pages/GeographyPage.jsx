@@ -10,6 +10,7 @@ import Header from '../../landing/components/Header';
 import AuthRequiredModal from '../../../shared/components/AuthRequiredModal';
 import { useAuthStore } from '../../../app/store/authStore';
 import { isAuthenticated as checkAuthSession } from '../../../shared/utils/auth';
+import './GeographyPage.css';
 
 export default function GeographyPage() {
   const navigate = useNavigate();
@@ -114,52 +115,43 @@ export default function GeographyPage() {
     if (!isAuthenticatedState) {
       setShowAuthModal(true);
     } else {
-      navigate(`/articles/${id}`);
+      navigate(`/articles/${id}/visual`);
     }
   };
 
   return (
-    <div className="min-vh-100" style={{ backgroundColor: '#fafafa', paddingTop: '80px', paddingBottom: '80px' }}>
+    <div className="geography-page-wrapper grid-bg">
+      <div className="radial-fade position-absolute inset-0" style={{ pointerEvents: 'none', zIndex: 0 }} />
       <Header />
-      <Container fluid className="px-4 py-4">
+      <Container fluid className="px-4 py-4 position-relative" style={{ zIndex: 1 }}>
         {/* Breadcrumb */}
-        <div className="mb-2">
-          <span className="text-muted-custom" style={{ fontSize: '0.85rem' }}>
-            Tổng quan <span className="mx-1">&rsaquo;</span> <span className="text-primary fw-medium">Phân bố Địa lý</span>
+        <div className="geography-breadcrumb mb-2">
+          <span>
+            Tổng quan <span className="mx-1">&rsaquo;</span> <span className="geography-breadcrumb-active">Phân bố Địa lý</span>
           </span>
         </div>
 
         {/* Header */}
         <div className="mb-4 pb-2 d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-3">
           <div>
-            <h1 className="font-display fw-bold text-main mb-2" style={{ fontSize: '2rem' }}>
-              Phân bộ Tạp chí theo Quốc gia
+            <h1 className="geography-title">
+              Phân bố Tạp chí theo Quốc gia
             </h1>
-            <p className="text-muted-custom mb-0" style={{ fontSize: '0.9rem' }}>
+            <p className="geography-subtitle">
               Xem thống kê số lượng ấn phẩm khoa học và nhà xuất bản phân bố trên toàn thế giới.
             </p>
           </div>
           
           {/* Year Filter Dropdown */}
           <div className="d-flex align-items-center gap-2" style={{ minWidth: '220px' }}>
-            <span className="text-muted-custom fw-semibold text-nowrap" style={{ fontSize: '0.85rem' }}>Năm xuất bản:</span>
+            <span className="text-muted-custom fw-semibold text-nowrap" style={{ fontSize: '0.82rem' }}>Năm xuất bản:</span>
             <Form.Select 
               value={selectedYear} 
               onChange={(e) => {
                 setSelectedYear(e.target.value);
                 setArticlesPage(1);
               }}
-              className="shadow-sm border-custom bg-white"
-              style={{
-                borderRadius: '8px',
-                borderColor: 'var(--border)',
-                fontSize: '0.85rem',
-                color: 'var(--text-main)',
-                fontWeight: 600,
-                cursor: 'pointer',
-                paddingTop: '6px',
-                paddingBottom: '6px'
-              }}
+              className="geography-select shadow-sm"
             >
               <option value="All">Tất cả các năm</option>
               {['2026', '2025', '2024', '2023', '2022', '2021', '2020', '2019', '2018', '2017', '2016', '2015'].map(yr => (

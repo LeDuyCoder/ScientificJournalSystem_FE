@@ -106,7 +106,7 @@ export function AuthProvider({ children }) {
    * @returns {Promise<Object>} Trả về object dữ liệu từ response của API (nếu thành công).
    * @throws {Error} Ném lỗi nếu quá trình đăng nhập thất bại (sai thông tin, lỗi mạng, v.v.).
    */
-  const login = useCallback(async (email, password, remember, loginSuccess) => {
+  const login = useCallback(async (email, password, remember) => {
     setIsLoading(true);
     setError(null);
     try {
@@ -127,7 +127,7 @@ export function AuthProvider({ children }) {
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [loginSuccess]);
 
     /**
    * Khởi chạy luồng đăng nhập bằng tài khoản Google (OAuth 2.0).

@@ -1,7 +1,21 @@
-// routePaths.js
-// Tập trung tất cả đường dẫn route vào một chỗ.
-// Tránh hardcode string rải rác trong nhiều file — dễ sửa, dễ tìm.
 
+//viết jsdoc cho tôi 
+
+/**
+ * Centralized object for defining all application route paths.
+ *
+ * @constant {Object}
+ * @property {string} HOME - The landing/home page path ("/").
+ * @property {string} DASHBOARD - The dashboard page path ("/dashboard").
+ * @property {string} CATALOG - The catalog search page path ("/catalog").
+ * @property {string} SEARCH - The general search page path ("/search").
+ * @property {string} ARTICLES - The list of articles page path ("/articles").
+ * @property {string} ARTICLE_DETAIL - The article detail page path template ("/articles/:id").
+ * @property {string} JOURNAL_DETAIL - The journal detail page path template ("/journals/:id").
+ * @property {string} LOGIN - The login page path ("/login").
+ * @property {string} REGISTER - The registration page path ("/register").
+ * @property {string} VERIFY_EMAIL - The email verification page path ("/verify-email").
+ */
 const ROUTES = {
   HOME:         "/",
   DASHBOARD:    "/dashboard",

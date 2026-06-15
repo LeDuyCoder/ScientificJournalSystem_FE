@@ -19,7 +19,7 @@ export default function AuthorArticleRow({ article, isLast = false }) {
   const doi = article.doi ?? '';
 
   const handleTitleClick = () => {
-    if (id) navigate(`/articles/${id}`);
+    if (id) navigate(`/articles/${id}/visual`);
   };
 
   const handleCopyDoi = (e) => {
