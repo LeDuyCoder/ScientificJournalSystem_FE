@@ -18,10 +18,9 @@ export default function AdminSidebar() {
 
   // Danh sách các mục menu trên sidebar - Sử dụng ROUTES thay vì hardcode
   const menuItems = [
-    { label: 'Dashboard', path: ROUTES.DASHBOARD, icon: 'lucide:layout-dashboard' },
-    { label: 'Journals', path: ROUTES.CATALOG, icon: 'lucide:book-open' },
-    { label: 'Articles', path: ROUTES.ARTICLE_SUBMIT, icon: 'lucide:file-text' },
-    { label: 'Volumes', path: ROUTES.DASHBOARD, icon: 'lucide:layers' },
+    { label: 'Dashboard', path: ROUTES.ADMIN_DASHBOARD, icon: 'lucide:layout-dashboard' },
+    { label: 'Journals', path: ROUTES.ADMIN_JOURNALS, icon: 'lucide:book-open' },
+    { label: 'Repository', path: ROUTES.ADMIN_REPOSITORY, icon: 'lucide:database' },
     { label: 'Account', path: ROUTES.ADMIN_USERS, icon: 'lucide:user' },
   ];
 
@@ -29,8 +28,8 @@ export default function AdminSidebar() {
    * Kiểm tra xem mục menu hiện tại có đang active (được chọn) hay không.
    */
   const isActive = (itemPath) => {
-    if (itemPath === ROUTES.DASHBOARD) {
-      return pathname === ROUTES.DASHBOARD;
+    if (itemPath === ROUTES.ADMIN_DASHBOARD) {
+      return pathname === ROUTES.ADMIN_DASHBOARD;
     }
     return pathname.startsWith(itemPath);
   };
