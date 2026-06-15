@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import AdminLayout from '../../../app/layouts/AdminLayout';
-import DashboardStatCard from '../components/DashboardStatCard';
-import PublicationTrendsChart from '../components/PublicationTrendsChart';
-import ActivityTimeline from '../components/ActivityTimeline';
-import VolumeIssueTable from '../components/VolumeIssueTable';
+import {
+  DashboardStatCard,
+  PublicationTrendsChart,
+  ActivityTimeline,
+  VolumeIssueTable,
+} from '../components/dashboard';
 import {
   mockDashboardSummary,
   buildStatCards,
@@ -25,7 +26,7 @@ export default function AdminDashboardPage() {
   const trendsData = mockPublicationTrends[selectedYear]?.items || [];
 
   return (
-    <AdminLayout>
+    <>
       {/* Tiêu đề trang - h2 tự động áp dụng font-display theo index.css */}
       <h2 className="mb-3">Dashboard</h2>
 
@@ -57,6 +58,6 @@ export default function AdminDashboardPage() {
 
       {/* Volume & Issue Status table + Export CSV */}
       <VolumeIssueTable items={mockVolumeStatus} />
-    </AdminLayout>
+    </>
   );
 }

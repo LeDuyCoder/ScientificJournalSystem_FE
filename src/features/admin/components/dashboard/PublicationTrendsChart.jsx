@@ -1,5 +1,5 @@
-import Icon from '../../../shared/components/Icon';
-import { MONTH_LABELS } from '../data/mockDashboard';
+import Icon from '../../../../shared/components/Icon';
+import { MONTH_LABELS } from '../../data/mockDashboard';
 
 // Kích thước & padding của vùng vẽ SVG - cố định để tính toán toạ độ cột
 const CHART_WIDTH = 600;

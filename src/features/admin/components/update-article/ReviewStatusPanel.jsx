@@ -7,7 +7,7 @@
  * - onCancel:        handler nút "Cancel Changes".
  * - onDelete:        handler nút "Delete Article" (mở confirm modal ở page cha).
  */
-import { ARTICLE_REVIEW_STATUS_STYLE, ARTICLE_STATUS_OPTIONS } from '../constants/articleStatus';
+import { ARTICLE_REVIEW_STATUS_STYLE, ARTICLE_STATUS_OPTIONS } from '../../constants/articleStatus';
 
 export default function ReviewStatusPanel({ status, onChangeStatus, stats, onUpdate, onCancel, onDelete }) {
   // Tra label hiển thị cho badge "Current Status" theo status hiện tại

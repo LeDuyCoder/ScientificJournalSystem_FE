@@ -4,20 +4,15 @@
  * - startIndex:  index (1-indexed) của item đầu tiên trong trang hiện tại.
  * - endIndex:    index (1-indexed) của item cuối cùng trong trang hiện tại.
  */
-import { useNavigate, useLocation } from 'react-router-dom';
-import Icon from '../../../shared/components/Icon';
-import StatusBadge from './StatusBadge';
+import { useNavigate } from 'react-router-dom';
+import Icon from '../../../../shared/components/Icon';
+import StatusBadge from '../StatusBadge';
 
 export default function ArticleTable({ items, totalItems, startIndex, endIndex }) {
   const navigate = useNavigate();
-  const location = useLocation();
-
-  // Xác định base path hiện tại (/admin hoặc /admin-preview) để Edit
-  // điều hướng đúng môi trường (route thật cần login, route preview không cần).
-  const basePath = location.pathname.startsWith('/admin-preview') ? '/admin-preview' : '/admin';
 
   const handleEdit = (articleId) => {
-    navigate(`${basePath}/articles/${articleId}`);
+    navigate(`/admin/articles/${articleId}`);
   };
 
   return (

@@ -6,7 +6,7 @@
  *                  admin chắc chắn đang xóa đúng bài.
  */
 import { Modal } from 'react-bootstrap';
-import Icon from '../../../shared/components/Icon';
+import Icon from '../../../../shared/components/Icon';
 
 export default function DeleteArticleModal({ show, onClose, onConfirm, articleTitle }) {
   return (

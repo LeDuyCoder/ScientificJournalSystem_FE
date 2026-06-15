@@ -27,78 +27,42 @@ export default function AdminHeader() {
   }
 
   return (
-    <div 
-      className="d-flex align-items-center justify-content-between px-4 py-3 border-bottom bg-white"
-      style={{ height: '70px', position: 'sticky', top: 0, zIndex: 99 }}
-    >
+    <header className="admin-header">
       {/* Search Bar matching Page 3: "Search manuscripts, authors, or IDs..." */}
-      <div 
-        className="d-flex align-items-center gap-2 px-3 py-1.5 rounded-pill"
-        style={{
-          backgroundColor: '#f1f5f9',
-          border: 'none',
-          width: '380px',
-        }}
-      >
-        <Icon icon="lucide:search" width="16" style={{ color: 'var(--text-muted)' }} />
-        <input 
-          type="text" 
-          placeholder="Search manuscripts, authors, or IDs..." 
-          className="border-0 bg-transparent text-main w-100"
-          style={{ outline: 'none', fontSize: '0.85rem' }}
+      <label className="admin-header__search" htmlFor="admin-global-search">
+        <Icon icon="lucide:search" width="16" />
+        <input
+          id="admin-global-search"
+          type="text"
+          placeholder="Search manuscripts, authors, or IDs..."
         />
-      </div>
+      </label>
 
       {/* Right control utilities and profile section */}
-      <div className="d-flex align-items-center gap-3">
+      <div className="admin-header__actions">
         {/* Notification Icon */}
-        <div className="text-muted-custom position-relative" style={{ cursor: 'pointer' }}>
+        <button type="button" className="admin-header__icon-btn" aria-label="Notifications">
           <Icon icon="lucide:bell" width="20" />
-          <span 
-            className="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-white rounded-circle"
-            style={{ width: '8px', height: '8px' }}
-          />
-        </div>
+          <span className="admin-header__icon-badge" />
+        </button>
 
         {/* Settings Icon */}
-        <div className="text-muted-custom me-2" style={{ cursor: 'pointer' }}>
+        <button type="button" className="admin-header__icon-btn" aria-label="Settings">
           <Icon icon="lucide:settings" width="20" />
-        </div>
-
-        {/* Vertical Divider */}
-        <div style={{ width: '1px', height: '24px', backgroundColor: '#e2e8f0' }}></div>
+        </button>
 
         {/* User profile section matching mockup format */}
-        <div className="d-flex align-items-center gap-3 ms-2">
-          <div className="text-end">
-            <div className="text-sm fw-bold text-main" style={{ fontSize: '0.9rem', lineHeight: '1.2' }}>
-              {displayName}
-            </div>
-            <div className="text-muted-custom" style={{ fontSize: '0.75rem', lineHeight: '1' }}>
-              {displayRole}
-            </div>
+        <div className="admin-header__profile">
+          <div className="admin-header__profile-info">
+            <span className="admin-header__profile-name">{displayName}</span>
+            <span className="admin-header__profile-role">{displayRole}</span>
           </div>
-          {/* Avatar image */}
-          <div 
-            className="rounded-circle overflow-hidden d-flex align-items-center justify-content-center"
-            style={{
-              width: '40px',
-              height: '40px',
-              border: '2px solid var(--primary)',
-              backgroundColor: 'var(--bg-section)'
-            }}
-          >
-            <img 
-              src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=100" 
-              alt="User Avatar"
-              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-              onError={(e) => {
-                e.target.style.display = 'none'; // Fallback if image fails to load
-              }}
-            />
+          {/* Avatar fallback initials */}
+          <div className="admin-header__avatar" aria-label={displayName}>
+            {displayName.charAt(0).toUpperCase()}
           </div>
         </div>
       </div>
-    </div>
+    </header>
   );
 }

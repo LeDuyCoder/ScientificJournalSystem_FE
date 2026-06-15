@@ -1,4 +1,4 @@
-import KeywordInput from './KeywordInput';
+import KeywordInput from '../KeywordInput';
 
 export default function MetadataSection({
   abstract,

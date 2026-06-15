@@ -1,4 +1,4 @@
-import Icon from '../../../shared/components/Icon';
+import Icon from '../../../../shared/components/Icon';
 
 // Map noteType -> CSS variable màu chữ, tránh if/else lặp trong JSX
 const NOTE_COLOR_MAP = {

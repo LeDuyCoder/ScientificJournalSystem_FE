@@ -1,4 +1,4 @@
-import ManuscriptFileItem from './ManuscriptFileItem';
+import ManuscriptFileItem from '../ManuscriptFileItem';
 
 export default function ManuscriptFilesSection({ files }) {
   return (

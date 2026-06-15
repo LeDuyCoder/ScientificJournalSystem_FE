@@ -1,10 +1,11 @@
 import { useState } from 'react';
-import AdminLayout from '../../../app/layouts/AdminLayout';
-import PrimaryInformationSection from '../components/PrimaryInformationSection';
-import MetadataSection from '../components/MetadataSection';
-import ManuscriptFilesSection from '../components/ManuscriptFilesSection';
-import ReviewStatusPanel from '../components/ReviewStatusPanel';
-import DeleteArticleModal from '../components/DeleteArticleModal';
+import {
+  PrimaryInformationSection,
+  MetadataSection,
+  ManuscriptFilesSection,
+  ReviewStatusPanel,
+  DeleteArticleModal,
+} from '../components/update-article';
 import {
   mockArticleDetail,
   mockJournalOptions,
@@ -60,7 +61,7 @@ export default function UpdateArticlePage() {
   };
 
   return (
-    <AdminLayout>
+    <>
       {/* Breadcrumb - chỉ UI, chưa gắn link điều hướng thật */}
       <p className="admin-breadcrumb">
         Management / Articles / <span className="admin-breadcrumb__current">Update Article</span>
@@ -118,6 +119,6 @@ export default function UpdateArticlePage() {
         onConfirm={handleConfirmDelete}
         articleTitle={title}
       />
-    </AdminLayout>
+    </>
   );
 }

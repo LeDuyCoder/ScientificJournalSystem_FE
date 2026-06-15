@@ -40,36 +40,24 @@ export default function AdminSidebar() {
   };
 
   return (
-    <div 
-      className="d-flex flex-column justify-content-between p-3 border-end bg-white"
-      style={{ width: '260px', height: '100vh', position: 'sticky', top: 0, zIndex: 100 }}
-    >
+    <aside className="admin-sidebar" aria-label="Admin navigation">
       <div>
         {/* Brand Logo header */}
-        <div className="py-3 px-2 mb-4 border-bottom">
+        <div className="admin-sidebar__brand-wrap">
           <Logo onClick={() => navigate('/')} />
         </div>
 
         {/* Navigation Link Items */}
-        <Nav className="flex-column gap-2">
+        <Nav className="admin-sidebar__menu">
           {menuItems.map((item, idx) => {
             const active = isActive(item.path);
             return (
               <Nav.Link
                 key={idx}
                 onClick={() => navigate(item.path)}
-                className="d-flex align-items-center gap-3 px-3 py-2.5 rounded-3 sidebar-link text-decoration-none"
-                style={{
-                  fontSize: '0.9rem',
-                  fontWeight: active ? '600' : '500',
-                  color: active ? 'var(--primary)' : 'var(--text-muted)',
-                  backgroundColor: active ? 'var(--primary-light)' : 'transparent',
-                  border: active ? '1px solid var(--border)' : '1px solid transparent',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s ease',
-                }}
+                className={`admin-sidebar__item sidebar-link ${active ? 'admin-sidebar__item--active' : ''}`}
               >
-                <Icon icon={item.icon} width="18" style={{ color: active ? 'var(--primary)' : 'var(--text-muted)' }} />
+                <Icon icon={item.icon} width="18" className="admin-sidebar__item-icon" />
                 <span>{item.label}</span>
               </Nav.Link>
             );
@@ -78,29 +66,25 @@ export default function AdminSidebar() {
       </div>
 
       {/* Footer-aligned items inside the sidebar */}
-      <div>
-        <Nav className="flex-column gap-2">
-          {/* Support Link */}
-          <Nav.Link
-            onClick={() => navigate(ROUTES.DASHBOARD)}
-            className="d-flex align-items-center gap-3 px-3 py-2.5 rounded-3 text-muted-custom text-decoration-none"
-            style={{ fontSize: '0.9rem', fontWeight: '500', cursor: 'pointer' }}
-          >
-            <Icon icon="lucide:help-circle" width="18" />
-            <span>Support</span>
-          </Nav.Link>
+      <Nav className="admin-sidebar__footer">
+        {/* Support Link */}
+        <Nav.Link
+          onClick={() => navigate(ROUTES.DASHBOARD)}
+          className="admin-sidebar__item"
+        >
+          <Icon icon="lucide:help-circle" width="18" className="admin-sidebar__item-icon" />
+          <span>Support</span>
+        </Nav.Link>
 
-          {/* Sign Out Button */}
-          <Nav.Link
-            onClick={() => auth.logout()}
-            className="d-flex align-items-center gap-3 px-3 py-2.5 rounded-3 text-danger text-decoration-none"
-            style={{ fontSize: '0.9rem', fontWeight: '500', cursor: 'pointer' }}
-          >
-            <Icon icon="lucide:log-out" width="18" />
-            <span>Sign Out</span>
-          </Nav.Link>
-        </Nav>
-      </div>
-    </div>
+        {/* Sign Out Button */}
+        <Nav.Link
+          onClick={() => auth.logout()}
+          className="admin-sidebar__item admin-sidebar__item--danger"
+        >
+          <Icon icon="lucide:log-out" width="18" className="admin-sidebar__item-icon" />
+          <span>Sign Out</span>
+        </Nav.Link>
+      </Nav>
+    </aside>
   );
 }

@@ -18,8 +18,8 @@
 
   --primary: #ff7a33; /* Accent / link cam */
   --primary-light: #fff0e8; /* Light tint của cam */
-  --btn-dark: #071a1c; /* Button đen xanh */
-  --q1-color: #2fc646; /* Q1 badge xanh lá */
+  --btn-dark: #071a1c; /* Button đen đậm */
+  --q1-color: #ff7a33; /* Q1 badge dùng accent cam */
 
   /* Compatibility aliases */
   --dark-bg: var(--bg-main);

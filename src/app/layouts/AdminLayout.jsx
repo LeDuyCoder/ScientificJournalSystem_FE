@@ -12,19 +12,19 @@ import '../../features/admin/admin.css';
  */
 export default function AdminLayout({ children }) {
   return (
-    <div className="d-flex min-vh-100" style={{ backgroundColor: '#f8fafc' }}>
+    <div className="admin-layout">
       {/* Sidebar điều hướng cố định bên trái */}
       <AdminSidebar />
 
       {/* Vùng nội dung chính bên phải */}
-      <div className="d-flex flex-column flex-grow-1" style={{ minWidth: 0 }}>
+      <div className="admin-main">
         {/* Header trên cùng */}
         <AdminHeader />
 
         {/* Nội dung trang hiển thị ở giữa */}
-        <div className="p-4 flex-grow-1 d-flex flex-column" style={{ minHeight: 'calc(100vh - 140px)' }}>
+        <main className="admin-content">
           {children || <Outlet />}
-        </div>
+        </main>
 
         {/* Footer dưới cùng */}
         <AdminFooter />

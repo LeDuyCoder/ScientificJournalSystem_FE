@@ -1,12 +1,15 @@
 import { useState, useMemo } from 'react';
-import AdminLayout from '../../../app/layouts/AdminLayout';
-import ArticleFilterBar from '../components/ArticleFilterBar';
-import ArticleTable from '../components/ArticleTable';
-import Pagination from '../components/Pagination';
-import EditorInsightsCard from '../components/EditorInsightsCard';
-import PeerMatchingPromoCard from '../components/PeerMatchingPromoCard';
+import { useNavigate } from 'react-router-dom';
+import {
+  ArticleFilterBar,
+  ArticleTable,
+  Pagination,
+  EditorInsightsCard,
+  PeerMatchingPromoCard,
+} from '../components/article-repository';
 import { mockArticleList, mockEditorInsights } from '../data/mockArticleRepository';
 import { JOURNAL_FILTER_OPTIONS, STATUS_FILTER_OPTIONS } from '../constants/articleListFilters';
+import ROUTES from '../../../app/routes/routePaths';
 
 // Số article hiển thị mỗi trang
 const PAGE_SIZE = 4;
@@ -19,6 +22,8 @@ const DEFAULT_FILTERS = {
 };
 
 export default function ArticleRepositoryPage() {
+  const navigate = useNavigate();
+
   // Draft filters - giá trị đang chọn trên filter bar
   const [journalFilter, setJournalFilter] = useState(DEFAULT_FILTERS.journal);
   const [statusFilter, setStatusFilter] = useState(DEFAULT_FILTERS.status);
@@ -79,7 +84,7 @@ export default function ArticleRepositoryPage() {
   const pageItems = filteredArticles.slice(startIndex, startIndex + PAGE_SIZE);
 
   return (
-    <AdminLayout>
+    <>
       {/* Breadcrumb */}
       <p className="admin-breadcrumb">
         Management / <span className="admin-breadcrumb__current">Manuscripts</span>
@@ -88,7 +93,11 @@ export default function ArticleRepositoryPage() {
       {/* Header: title + nút "Submit New Article" */}
       <div className="admin-page-header">
         <h2 className="mb-0">Article Repository</h2>
-        <button type="button" className="admin-btn admin-btn--primary admin-btn--auto">
+        <button
+          type="button"
+          className="admin-btn admin-btn--primary admin-btn--auto"
+          onClick={() => navigate(ROUTES.ADMIN_ARTICLE_CREATE)}
+        >
           + Submit New Article
         </button>
       </div>
@@ -121,6 +130,6 @@ export default function ArticleRepositoryPage() {
         <EditorInsightsCard insights={mockEditorInsights} />
         <PeerMatchingPromoCard />
       </div>
-    </AdminLayout>
+    </>
   );
 }

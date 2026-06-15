@@ -67,9 +67,6 @@ export default function AppRoutes() {
       <Route element={<ProtectedRoute />}>
         <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/authors/leaderboard" element={<AuthorLeaderboardPage />} />
-        <Route path="/admin/dashboard" element={<AdminDashboardPage />} />
-        <Route path="/admin/articles" element={<ArticleRepositoryPage />} />
-        <Route path="/admin/articles/:id" element={<UpdateArticlePage />} />
       </Route>
 
       <Route element={<PublicRoute />}>
@@ -94,12 +91,16 @@ export default function AppRoutes() {
             element={<AuthorLeaderboardPage />}
           />
 
-          {/* Admin layouts & pages (Quản trị viên) */}
+          {/* Admin layouts & pages (Quản trị viên) - thống nhất namespace /admin/... */}
           <Route element={<AdminLayout />}>
+            <Route path="/admin/dashboard" element={<AdminDashboardPage />} />
             <Route path="/admin/users" element={<UserDirectoryPage />} />
             <Route path="/admin/users/create" element={<AddNewAccountPage />} />
             <Route path="/admin/users/:id/edit" element={<UpdateUserAccountPage />} />
-            <Route path="/admin/articles" element={<SubmitArticlePage />} />
+
+            <Route path="/admin/articles" element={<ArticleRepositoryPage />} />
+            <Route path="/admin/articles/create" element={<SubmitArticlePage />} />
+            <Route path="/admin/articles/:id" element={<UpdateArticlePage />} />
 
             {/* 🚀 Các tuyến đường quản lý cấu trúc tạp chí dành cho Admin (Issue #76) */}
             <Route path="/admin/journals" element={<JournalDirectoryPage />} />
@@ -142,11 +143,6 @@ export default function AppRoutes() {
 
       <Route path="/topics/:topicId" element={<TopicDetailPage />} />
 
-      {/* TODO: route tạm để preview UI Admin Dashboard không cần login.
-          Xóa route này khi vấn đề đăng nhập đã được xử lý xong. */}
-      <Route path="/admin-preview" element={<AdminDashboardPage />} />
-      <Route path="/admin-preview/articles" element={<ArticleRepositoryPage />} />
-      <Route path="/admin-preview/articles/:id" element={<UpdateArticlePage />} />
 
       <Route path="*" element={<LandingPage />} />
     </Routes>

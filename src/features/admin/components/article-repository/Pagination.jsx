@@ -3,7 +3,7 @@
  * - totalPages:   tổng số trang.
  * - onPageChange: handler khi click 1 số trang / Previous / Next.
  */
-import Icon from '../../../shared/components/Icon';
+import Icon from '../../../../shared/components/Icon';
 
 // Tính danh sách item hiển thị: số trang (number) hoặc dấu "..." (string 'ellipsis-left'/'ellipsis-right')
 function buildPageItems(currentPage, totalPages) {

@@ -4,7 +4,7 @@
  * - onApply: handler nút "Apply Search Filters".
  * - onClear: handler link "Clear all" (reset cả draft và applied filters).
  */
-import { JOURNAL_FILTER_OPTIONS, STATUS_FILTER_OPTIONS } from '../constants/articleListFilters';
+import { JOURNAL_FILTER_OPTIONS, STATUS_FILTER_OPTIONS } from '../../constants/articleListFilters';
 
 export default function ArticleFilterBar({
   journal,
