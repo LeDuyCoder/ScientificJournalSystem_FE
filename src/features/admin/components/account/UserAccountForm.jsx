@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Row, Col, Form, Button } from 'react-bootstrap';
-import Icon from '../../../shared/components/Icon';
-import { SYSTEM_ROLES } from '../../../shared/constants/systemConstants';
+import Icon from '../../../../shared/components/Icon';
+import { SYSTEM_ROLES } from '../../../../shared/constants/systemConstants';
 
 /**
  * UserAccountForm Component
@@ -355,8 +355,7 @@ export default function UserAccountForm({
               style={{ 
                 height: '46px', 
                 backgroundColor: '#f1f5f9',
-                marginTop: '28px', // Align vertical alignment with label spacing
-                border: '1px solid #e2e8f0'
+                marginTop: '28px' // Align vertical alignment with label spacing
               }}
             >
               <span className="small fw-semibold text-muted-custom" style={{ fontSize: '0.85rem' }}>Trạng thái tài khoản</span>

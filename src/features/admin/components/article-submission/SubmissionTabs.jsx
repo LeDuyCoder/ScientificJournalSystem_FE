@@ -1,6 +1,6 @@
 import React from 'react';
 import { Nav } from 'react-bootstrap';
-import Icon from '../../../shared/components/Icon';
+import Icon from '../../../../shared/components/Icon';
 
 /**
  * SubmissionTabs Component

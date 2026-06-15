@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { Card, Button, Row, Col, Modal, Form } from 'react-bootstrap';
 import { useNavigate, Link } from 'react-router-dom';
-import Icon from '../../../shared/components/Icon';
-import SubmissionTabs from '../components/SubmissionTabs';
-import ManualArticleForm from '../components/ManualArticleForm';
-import PdfDropzone from '../components/PdfDropzone';
-import UploadFeatureCard from '../components/UploadFeatureCard';
-import { useAdminStore } from '../../../app/store/adminStore';
+import Icon from '../../../../shared/components/Icon';
+import SubmissionTabs from '../../components/article-submission/SubmissionTabs';
+import ManualArticleForm from '../../components/article-submission/ManualArticleForm';
+import PdfDropzone from '../../components/article-submission/PdfDropzone';
+import UploadFeatureCard from '../../components/article-submission/UploadFeatureCard';
+import { useAdminStore } from '../../../../app/store/adminStore';
 
 /**
  * SubmitArticlePage Component

@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { Row, Col, Card, ProgressBar, Button, Pagination, Badge } from 'react-bootstrap';
 import { useNavigate, Link } from 'react-router-dom';
-import Icon from '../../../shared/components/Icon';
-import UserTable from '../components/UserTable';
-import UserFilterBar from '../components/UserFilterBar';
-import PendingRequestCard from '../components/PendingRequestCard';
-import { useAdminStore } from '../../../app/store/adminStore';
-import ROUTES from '../../../app/routes/routePaths';
+import Icon from '../../../../shared/components/Icon';
+import UserTable from '../../components/account/UserTable';
+import UserFilterBar from '../../components/account/UserFilterBar';
+import PendingRequestCard from '../../components/account/PendingRequestCard';
+import { useAdminStore } from '../../../../app/store/adminStore';
+import ROUTES from '../../../../app/routes/routePaths';
 
 /**
  * UserDirectoryPage Component

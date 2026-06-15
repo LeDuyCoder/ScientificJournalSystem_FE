@@ -30,7 +30,7 @@ export default function PasswordFields({
         {isEdit && (
           <Col xs={12} md={4}>
             <Form.Group controlId="currentPassword">
-              <Form.Label className="fw-semibold text-main mb-1.5 small text-uppercase tracking-wider">
+              <Form.Label className="account-form-label">
                 Current Password
               </Form.Label>
               <Form.Control
@@ -38,12 +38,7 @@ export default function PasswordFields({
                 placeholder="••••••••"
                 value={currentPassword}
                 onChange={(e) => onCurrentPasswordChange(e.target.value)}
-                style={{
-                  height: '42px',
-                  backgroundColor: 'var(--bg-main)',
-                  color: 'var(--text-main)',
-                  borderColor: 'var(--border)'
-                }}
+                className="account-form-input"
               />
             </Form.Group>
           </Col>
@@ -52,7 +47,7 @@ export default function PasswordFields({
         {/* New Password field */}
         <Col xs={12} md={isEdit ? 4 : 6}>
           <Form.Group controlId="newPassword">
-            <Form.Label className="fw-semibold text-main mb-1.5 small text-uppercase tracking-wider">
+            <Form.Label className="account-form-label">
               {isEdit ? 'New Password' : 'Password *'}
             </Form.Label>
             <Form.Control
@@ -61,12 +56,7 @@ export default function PasswordFields({
               value={newPassword}
               onChange={(e) => onNewPasswordChange(e.target.value)}
               required={!isEdit}
-              style={{
-                height: '42px',
-                backgroundColor: 'var(--bg-main)',
-                color: 'var(--text-main)',
-                borderColor: 'var(--border)'
-              }}
+              className="account-form-input"
             />
           </Form.Group>
         </Col>
@@ -74,7 +64,7 @@ export default function PasswordFields({
         {/* Confirm password field */}
         <Col xs={12} md={isEdit ? 4 : 6}>
           <Form.Group controlId="confirmPassword">
-            <Form.Label className="fw-semibold text-main mb-1.5 small text-uppercase tracking-wider">
+            <Form.Label className="account-form-label">
               {isEdit ? 'Confirm New Password' : 'Confirm Password *'}
             </Form.Label>
             <Form.Control
@@ -83,12 +73,7 @@ export default function PasswordFields({
               value={confirmPassword}
               onChange={(e) => onConfirmPasswordChange(e.target.value)}
               required={!isEdit}
-              style={{
-                height: '42px',
-                backgroundColor: 'var(--bg-main)',
-                color: 'var(--text-main)',
-                borderColor: 'var(--border)'
-              }}
+              className="account-form-input"
             />
           </Form.Group>
         </Col>

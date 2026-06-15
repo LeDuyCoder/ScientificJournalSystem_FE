@@ -1,6 +1,6 @@
 import React from 'react';
 import { Card } from 'react-bootstrap';
-import Icon from '../../../shared/components/Icon';
+import Icon from '../../../../shared/components/Icon';
 
 /**
  * UploadFeatureCard Component

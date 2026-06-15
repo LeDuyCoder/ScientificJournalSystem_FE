@@ -23,10 +23,10 @@ import EditProjectPage from '../../features/project/pages/EditProjectPage';
 import ProjectDetailPage from '../../features/project/pages/ProjectDetailPage';
 
 import AdminLayout from '../layouts/AdminLayout';
-import UserDirectoryPage from '../../features/account/pages/UserDirectoryPage';
-import AddNewAccountPage from '../../features/account/pages/AddNewAccountPage';
-import UpdateUserAccountPage from '../../features/account/pages/UpdateUserAccountPage';
-import SubmitArticlePage from '../../features/article/pages/SubmitArticlePage';
+import UserDirectoryPage from '../../features/admin/pages/account/UserDirectoryPage';
+import AddNewAccountPage from '../../features/admin/pages/account/AddNewAccountPage';
+import UpdateUserAccountPage from '../../features/admin/pages/account/UpdateUserAccountPage';
+import SubmitArticlePage from '../../features/admin/pages/article-submission/SubmitArticlePage';
 
 import {
   KeywordListPage,

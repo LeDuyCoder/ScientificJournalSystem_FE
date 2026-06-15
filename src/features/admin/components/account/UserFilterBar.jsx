@@ -1,7 +1,7 @@
 import React from 'react';
 import { Form, Row, Col } from 'react-bootstrap';
-import Icon from '../../../shared/components/Icon';
-import { SYSTEM_ROLES, ACCOUNT_STATUSES } from '../../../shared/constants/systemConstants';
+import Icon from '../../../../shared/components/Icon';
+import { SYSTEM_ROLES, ACCOUNT_STATUSES } from '../../../../shared/constants/systemConstants';
 
 /**
  * UserFilterBar Component

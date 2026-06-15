@@ -1,10 +1,10 @@
 import React from 'react';
 import { Card, Row, Col } from 'react-bootstrap';
 import { useNavigate, Link } from 'react-router-dom';
-import Icon from '../../../shared/components/Icon';
-import UserAccountForm from '../components/UserAccountForm';
-import { useAdminStore } from '../../../app/store/adminStore';
-import ROUTES from '../../../app/routes/routePaths';
+import Icon from '../../../../shared/components/Icon';
+import UserAccountForm from '../../components/account/UserAccountForm';
+import { useAdminStore } from '../../../../app/store/adminStore';
+import ROUTES from '../../../../app/routes/routePaths';
 
 /**
  * AddNewAccountPage Component

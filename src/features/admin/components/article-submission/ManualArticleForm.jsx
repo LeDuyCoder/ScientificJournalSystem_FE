@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Row, Col, Form } from 'react-bootstrap';
 import KeywordInput from './KeywordInput';
-import { getSubjectCategoriesApi } from '../../catalog/api/catalogApi';
-import { searchJournalsApi } from '../../journal/api/journalApi';
-import { MOCK_CATEGORIES, MOCK_JOURNALS } from '../../../shared/constants/mockData';
+import { getSubjectCategoriesApi } from '../../../catalog/api/catalogApi';
+import { searchJournalsApi } from '../../../journal/api/journalApi';
+import { MOCK_CATEGORIES, MOCK_JOURNALS } from '../../../../shared/constants/mockData';
 
 /**
  * ManualArticleForm Component
@@ -69,7 +69,7 @@ export default function ManualArticleForm({ formData = {}, onChange }) {
     <div className="d-flex flex-column gap-4">
       {/* Title Form Field */}
       <Form.Group controlId="articleTitle">
-        <Form.Label className="fw-semibold text-main mb-1.5 small text-uppercase tracking-wider">
+        <Form.Label className="account-form-label">
           Article Title <span className="text-danger">*</span>
         </Form.Label>
         <Form.Control
@@ -78,13 +78,13 @@ export default function ManualArticleForm({ formData = {}, onChange }) {
           value={formData.title || ''}
           onChange={(e) => handleFieldChange('title', e.target.value)}
           required
-          style={{ height: '42px', borderColor: 'var(--border)' }}
+          className="account-form-input"
         />
       </Form.Group>
 
       {/* Abstract text field */}
       <Form.Group controlId="articleAbstract">
-        <Form.Label className="fw-semibold text-main mb-1.5 small text-uppercase tracking-wider">
+        <Form.Label className="account-form-label">
           Abstract <span className="text-danger">*</span>
         </Form.Label>
         <Form.Control
@@ -94,7 +94,8 @@ export default function ManualArticleForm({ formData = {}, onChange }) {
           value={formData.abstract || ''}
           onChange={(e) => handleFieldChange('abstract', e.target.value)}
           required
-          style={{ borderColor: 'var(--border)', resize: 'vertical' }}
+          className="account-form-input"
+          style={{ resize: 'vertical' }}
         />
       </Form.Group>
 
@@ -103,7 +104,7 @@ export default function ManualArticleForm({ formData = {}, onChange }) {
         {/* Keywords tagging field */}
         <Col xs={12} md={6}>
           <Form.Group controlId="articleKeywords">
-            <Form.Label className="fw-semibold text-main mb-1.5 small text-uppercase tracking-wider">
+            <Form.Label className="account-form-label">
               Keywords
             </Form.Label>
             <KeywordInput 
@@ -117,7 +118,7 @@ export default function ManualArticleForm({ formData = {}, onChange }) {
         {/* Author Name field */}
         <Col xs={12} md={6}>
           <Form.Group controlId="articleAuthor">
-            <Form.Label className="fw-semibold text-main mb-1.5 small text-uppercase tracking-wider">
+            <Form.Label className="account-form-label">
               Author Name <span className="text-danger">*</span>
             </Form.Label>
             <Form.Control
@@ -126,7 +127,7 @@ export default function ManualArticleForm({ formData = {}, onChange }) {
               value={formData.author || ''}
               onChange={(e) => handleFieldChange('author', e.target.value)}
               required
-              style={{ height: '44px', borderColor: 'var(--border)' }}
+              className="account-form-input"
             />
           </Form.Group>
         </Col>
@@ -137,14 +138,15 @@ export default function ManualArticleForm({ formData = {}, onChange }) {
         {/* Journal Selection dropdown */}
         <Col xs={12} md={6}>
           <Form.Group controlId="articleJournal">
-            <Form.Label className="fw-semibold text-main mb-1.5 small text-uppercase tracking-wider">
+            <Form.Label className="account-form-label">
               Journal Selection <span className="text-danger">*</span>
             </Form.Label>
             <Form.Select
               value={formData.journalId || ''}
               onChange={(e) => handleFieldChange('journalId', e.target.value)}
               required
-              style={{ height: '42px', borderColor: 'var(--border)', cursor: 'pointer' }}
+              className="account-form-input"
+              style={{ cursor: 'pointer' }}
             >
               <option value="">Choose a journal...</option>
               {journals.map((j) => (
@@ -159,14 +161,15 @@ export default function ManualArticleForm({ formData = {}, onChange }) {
         {/* Subject Category dropdown */}
         <Col xs={12} md={6}>
           <Form.Group controlId="articleCategory">
-            <Form.Label className="fw-semibold text-main mb-1.5 small text-uppercase tracking-wider">
+            <Form.Label className="account-form-label">
               Section / Category <span className="text-danger">*</span>
             </Form.Label>
             <Form.Select
               value={formData.categoryId || ''}
               onChange={(e) => handleFieldChange('categoryId', e.target.value)}
               required
-              style={{ height: '42px', borderColor: 'var(--border)', cursor: 'pointer' }}
+              className="account-form-input"
+              style={{ cursor: 'pointer' }}
             >
               <option value="">Select category...</option>
               {categories.map((c) => (

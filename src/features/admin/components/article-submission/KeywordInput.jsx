@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Form, Badge } from 'react-bootstrap';
-import Icon from '../../../shared/components/Icon';
+import Icon from '../../../../shared/components/Icon';
 
 /**
  * KeywordInput Component
@@ -65,48 +65,54 @@ export default function KeywordInput({
   };
 
   return (
-    <div className="border rounded-3 p-2 bg-white" style={{ borderColor: 'var(--border)', minHeight: '44px' }}>
-      <div className="d-flex flex-wrap gap-2 align-items-center">
-        {/* Render tags */}
-        {keywords.map((kw, index) => (
-          <Badge 
-            key={index} 
-            className="rounded-pill d-flex align-items-center gap-1.5 px-2.5 py-1.5 fw-normal text-xs"
-            style={{
-              backgroundColor: 'var(--bg-section)',
-              color: 'var(--text-main)',
-              border: '1px solid var(--border)',
-            }}
-          >
-            <span>{kw}</span>
-            <Icon 
-              icon="lucide:x" 
-              width="13" 
-              style={{ cursor: 'pointer' }} 
-              className="text-muted hover-danger"
-              onClick={() => removeKeyword(index)} 
-            />
-          </Badge>
-        ))}
-
-        {/* Text Input */}
-        <input 
-          type="text" 
-          placeholder={keywords.length === 0 ? placeholder : ''}
-          value={inputValue}
-          onChange={handleInputChange}
-          onKeyDown={handleKeyDown}
-          onBlur={() => addKeyword(inputValue)}
-          className="border-0 bg-transparent flex-grow-1"
+    <div 
+      className="d-flex flex-wrap gap-2 align-items-center p-2 rounded-3" 
+      style={{ 
+        backgroundColor: '#f1f5f9', 
+        border: 'none', 
+        minHeight: '46px',
+        padding: '0.45rem 1rem' 
+      }}
+    >
+      {/* Render tags */}
+      {keywords.map((kw, index) => (
+        <Badge 
+          key={index} 
+          className="rounded-pill d-flex align-items-center gap-1.5 px-2.5 py-1.5 fw-normal text-xs"
           style={{
-            outline: 'none',
-            fontSize: '0.88rem',
+            backgroundColor: '#ffffff',
             color: 'var(--text-main)',
-            minWidth: '120px',
-            padding: '4px'
+            border: '1px solid #cbd5e1',
           }}
-        />
-      </div>
+        >
+          <span>{kw}</span>
+          <Icon 
+            icon="lucide:x" 
+            width="13" 
+            style={{ cursor: 'pointer' }} 
+            className="text-muted hover-danger"
+            onClick={() => removeKeyword(index)} 
+          />
+        </Badge>
+      ))}
+
+      {/* Text Input */}
+      <input 
+        type="text" 
+        placeholder={keywords.length === 0 ? placeholder : ''}
+        value={inputValue}
+        onChange={handleInputChange}
+        onKeyDown={handleKeyDown}
+        onBlur={() => addKeyword(inputValue)}
+        className="border-0 bg-transparent flex-grow-1"
+        style={{
+          outline: 'none',
+          fontSize: '0.88rem',
+          color: 'var(--text-main)',
+          minWidth: '120px',
+          padding: '4px'
+        }}
+      />
     </div>
   );
 }

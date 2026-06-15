@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
 import { Button, Alert, ProgressBar } from 'react-bootstrap';
-import Icon from '../../../shared/components/Icon';
+import Icon from '../../../../shared/components/Icon';
 
 /**
  * PdfDropzone Component
@@ -127,25 +127,10 @@ export default function PdfDropzone({
           onDragLeave={handleDrag}
           onDrop={handleDrop}
           onClick={triggerFileInput}
-          className="d-flex flex-column align-items-center justify-content-center p-5 rounded-4 cursor-pointer text-center"
-          style={{
-            border: isDragActive ? '2px dashed var(--primary)' : '2px dashed var(--border)',
-            backgroundColor: isDragActive ? 'var(--primary-light)' : 'rgba(255, 255, 255, 0.5)',
-            cursor: 'pointer',
-            transition: 'all 0.2s ease-in-out',
-            minHeight: '280px'
-          }}
+          className={`d-flex flex-column align-items-center justify-content-center p-5 rounded-4 premium-dropzone ${isDragActive ? 'drag-active' : ''}`}
         >
           {/* Cloud Upload Icon */}
-          <div 
-            className="rounded-circle d-flex align-items-center justify-content-center mb-3"
-            style={{
-              width: '56px',
-              height: '56px',
-              backgroundColor: 'var(--primary-light)',
-              color: 'var(--primary)'
-            }}
-          >
+          <div className="rounded-circle d-flex align-items-center justify-content-center mb-3 premium-dropzone-icon-wrapper">
             <Icon icon="lucide:cloud-upload" width="28" />
           </div>
 
@@ -156,9 +141,7 @@ export default function PdfDropzone({
 
           <Button 
             type="button"
-            variant="outline-secondary"
-            className="px-4 py-2 border rounded-pill text-main bg-white fw-bold hover-primary-light"
-            style={{ fontSize: '0.85rem' }}
+            className="px-4 py-2 rounded-pill premium-dropzone-btn"
             onClick={(e) => {
               e.stopPropagation();
               triggerFileInput();
