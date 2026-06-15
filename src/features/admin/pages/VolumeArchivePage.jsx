@@ -5,7 +5,6 @@ import { Icon } from '@iconify/react';
 import { useJournalManagement } from '../../journal/hooks/useJournalManagement';
 import Pagination from '../components/Pagination';
 import SwitchJournalModal from '../components/modals/SwitchJournalModal';
-import AdminLayout from '../../../app/layouts/AdminLayout';
 
 /**
  * VolumeArchivePage - Màn hình Lưu trữ các Tập (Volume Archive) của Tạp chí đang chọn (Figma Screen Page 10).
@@ -80,7 +79,6 @@ export default function VolumeArchivePage() {
   };
 
   return (
-    <AdminLayout>
       <div className="d-flex flex-column gap-3 text-start">
         {/* Breadcrumb */}
         <div>
@@ -222,9 +220,7 @@ export default function VolumeArchivePage() {
                       {/* Actions */}
                       <div className="d-flex gap-2 w-100 mt-auto pt-3 border-top" style={{ borderColor: 'var(--border)' }}>
                         <Button 
-                          variant="outline-primary" 
-                          className="w-100 font-sans fw-semibold btn-custom-sm d-flex align-items-center justify-content-center gap-1.5 py-2"
-                          style={{ borderColor: '#ff7a00', color: '#ff7a00' }}
+                          className="w-100 font-sans fw-semibold btn-custom-sm admin-btn-outline-accent d-flex align-items-center justify-content-center gap-1.5 py-2"
                           onClick={() => handleViewDetails(vol.id)}
                         >
                           <span>View Details</span>
@@ -262,6 +258,5 @@ export default function VolumeArchivePage() {
           handleClose={() => setShowSwitchModal(false)}
         />
       </div>
-    </AdminLayout>
   );
 }

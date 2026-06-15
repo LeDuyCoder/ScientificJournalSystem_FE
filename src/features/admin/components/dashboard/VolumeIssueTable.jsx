@@ -4,15 +4,23 @@
  * - Có nút "Export CSV" để xuất dữ liệu hiện tại ra file CSV (FE-only,
  *   xem utils/exportCsv.js).
  */
+import { useNavigate } from 'react-router-dom';
 import Icon from '../../../../shared/components/Icon';
 import StatusBadge from '../StatusBadge';
 import AdminProgressBar from '../AdminProgressBar';
 import { exportVolumeStatusToCsv } from '../../utils/exportCsv';
 
 export default function VolumeIssueTable({ items }) {
-  // Xử lý click Export CSV - xuất toàn bộ "items" hiện có ra file CSV
+  const navigate = useNavigate();
+  const isPreview = window.location.pathname.startsWith('/admin-preview');
+  const basePath = isPreview ? '/admin-preview' : '/admin';
+
   const handleExportCsv = () => {
     exportVolumeStatusToCsv(items);
+  };
+
+  const handleOpenRepository = () => {
+    navigate(`${basePath}/journals/repository`);
   };
 
   return (
@@ -41,7 +49,18 @@ export default function VolumeIssueTable({ items }) {
           </thead>
           <tbody>
             {items.map((item) => (
-              <tr key={item.id}>
+              <tr
+                key={item.id}
+                className="admin-clickable-row"
+                onClick={handleOpenRepository}
+                tabIndex={0}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    handleOpenRepository();
+                  }
+                }}
+              >
                 <td className="admin-table__cell-strong">{item.volume}</td>
                 <td>{item.totalIssues}</td>
                 <td>{item.publicationDate}</td>
@@ -52,9 +71,16 @@ export default function VolumeIssueTable({ items }) {
                   <AdminProgressBar percentage={item.progress} />
                 </td>
                 <td className="admin-table__actions-col">
-                  {/* Action chỉ UI ở bước này - chưa gắn điều hướng/edit thật */}
-                  <button type="button" className="admin-table__icon-btn" aria-label="Edit volume">
-                    <Icon icon="lucide:pencil" />
+                  <button
+                    type="button"
+                    className="admin-table__icon-btn"
+                    aria-label="Open volume repository"
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      handleOpenRepository();
+                    }}
+                  >
+                    <Icon icon="lucide:arrow-up-right" />
                   </button>
                 </td>
               </tr>

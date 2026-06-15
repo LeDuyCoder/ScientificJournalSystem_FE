@@ -55,12 +55,30 @@ export default function JournalTableAdmin({ journals, page = 1, limit = 10 }) {
             const avatarUrl = mockAvatars[charSum % mockAvatars.length];
 
             return (
-              <tr key={id} className="journal-table-row transition-hover">
+              <tr
+                key={id}
+                className="journal-table-row transition-hover admin-clickable-row"
+                onClick={() => navigate(`${basePath}/journals/repository`)}
+                tabIndex={0}
+                onKeyDown={(event) => {
+                  if (event.key === 'Enter' || event.key === ' ') {
+                    event.preventDefault();
+                    navigate(`${basePath}/journals/repository`);
+                  }
+                }}
+              >
                 {/* Tên tạp chí và danh mục */}
                 <td className="py-3 ps-4">
-                  <div className="fw-bold text-main line-clamp-1">
+                  <button
+                    type="button"
+                    className="admin-link-button fw-bold text-main line-clamp-1 p-0 text-start"
+                    onClick={(event) => {
+                      event.stopPropagation();
+                      navigate(`${basePath}/journals/repository`);
+                    }}
+                  >
                     {journal.title || journal.display_name}
-                  </div>
+                  </button>
                   <div className="text-muted-custom small mt-0.5">
                     {journal.subjectCategory || 'General Category'} • Quarterly
                   </div>
@@ -93,10 +111,10 @@ export default function JournalTableAdmin({ journals, page = 1, limit = 10 }) {
                 <td>
                   <span className={`badge px-2.5 py-1.5 rounded-pill text-uppercase text-xs font-semibold ${
                     journal.status === 'Active' || journal.status === 'Published'
-                      ? 'bg-success-subtle text-success' 
+                      ? 'admin-status-badge admin-status-badge--accent' 
                       : journal.status === 'Under Review' || journal.status === 'Draft'
-                        ? 'bg-warning-subtle text-warning'
-                        : 'bg-light text-muted border'
+                        ? 'admin-status-badge admin-status-badge--warning'
+                        : 'admin-status-badge admin-status-badge--muted'
                   }`}>
                     {journal.status || 'Draft'}
                   </span>
@@ -110,7 +128,10 @@ export default function JournalTableAdmin({ journals, page = 1, limit = 10 }) {
                       variant="light" 
                       size="sm"
                       className="btn-custom-sm d-inline-flex align-items-center justify-content-center p-2 rounded-2 border"
-                      onClick={() => navigate(`${basePath}/journals/repository`)}
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        navigate(`${basePath}/journals/repository`);
+                      }}
                       title="Quản lý Repo Volume & Issue"
                     >
                       <Icon icon="lucide:eye" width="16" className="text-dark" />
@@ -121,7 +142,10 @@ export default function JournalTableAdmin({ journals, page = 1, limit = 10 }) {
                       variant="outline-dark" 
                       size="sm"
                       className="btn-custom-sm d-inline-flex align-items-center justify-content-center p-2 rounded-2"
-                      onClick={() => navigate(`${basePath}/journals/${id}/edit`)}
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        navigate(`${basePath}/journals/${id}/edit`);
+                      }}
                       title="Chỉnh sửa thông tin Tạp chí"
                     >
                       <Icon icon="lucide:edit-2" width="16" />

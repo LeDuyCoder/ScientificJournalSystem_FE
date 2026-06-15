@@ -1,5 +1,6 @@
-import { useState, useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Icon } from '@iconify/react';
 import {
   ArticleFilterBar,
   ArticleTable,
@@ -95,10 +96,11 @@ export default function ArticleRepositoryPage() {
         <h2 className="mb-0">Article Repository</h2>
         <button
           type="button"
-          className="admin-btn admin-btn--primary admin-btn--auto"
+          className="btn-primary-glow admin-btn-consistent d-inline-flex align-items-center gap-1.5"
           onClick={() => navigate(ROUTES.ADMIN_ARTICLE_CREATE)}
         >
-          + Submit New Article
+          <Icon icon="lucide:plus" width="16" />
+          <span>Submit New Article</span>
         </button>
       </div>
 

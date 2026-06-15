@@ -201,7 +201,7 @@ export default function UserDirectoryPage() {
 
             {pendingRequests.length === 0 ? (
               <div className="text-center py-4 text-muted-custom small">
-                <Icon icon="lucide:check-circle-2" width="32" className="text-success mb-2 opacity-50" />
+                <Icon icon="lucide:check-circle-2" width="32" className="admin-accent-text mb-2 opacity-50" />
                 <p className="mb-0">All clear! No pending requests.</p>
               </div>
             ) : (

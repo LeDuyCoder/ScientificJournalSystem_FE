@@ -41,6 +41,8 @@ const ROUTES = {
   ADMIN_ARTICLE_EDIT:    "/admin/articles/:id",
   ADMIN_JOURNALS:        "/admin/journals",
   ADMIN_REPOSITORY:      "/admin/journals/repository",
+  ADMIN_JOURNAL_ARCHIVE: "/admin/journals/archive",
+  ADMIN_JOURNAL_EDIT:    "/admin/journals/:id/edit",
 
   // Bài báo (Article)
   ARTICLES:              "/articles",

@@ -5,8 +5,7 @@ import JournalFilterBar from '../components/JournalFilterBar';
 import JournalTableAdmin from '../components/JournalTableAdmin';
 import JournalCardAdmin from '../components/JournalCardAdmin';
 import AddJournalModal from '../components/modals/AddJournalModal';
-import Pagination from '../components/Pagination';
-import AdminLayout from '../../../app/layouts/AdminLayout';
+import ArticlePagination from '../components/article-repository/Pagination';
 
 /**
  * JournalDirectoryPage - Màn hình chính quản lý thư mục các Tạp chí dành cho Admin.
@@ -52,14 +51,15 @@ export default function JournalDirectoryPage() {
     return matchesSearch && matchesStatus && matchesSubject;
   });
 
-  // Calculate paginated journals
+  const totalPages = Math.max(1, Math.ceil(filteredJournals.length / limit));
+  const safePage = Math.min(currentPage, totalPages);
+
   const paginatedJournals = filteredJournals.slice(
-    (currentPage - 1) * limit,
-    currentPage * limit
+    (safePage - 1) * limit,
+    safePage * limit
   );
 
   return (
-    <AdminLayout>
       <div className="d-flex flex-column gap-3">
         {/* Header Title Section */}
         <div className="text-start mb-2">
@@ -85,7 +85,7 @@ export default function JournalDirectoryPage() {
         {/* Display journals */}
         {loading ? (
           <div className="text-center py-5">
-            <div className="spinner-border text-primary" role="status">
+            <div className="spinner-border admin-spinner" role="status">
               <span className="visually-hidden">Loading journals...</span>
             </div>
           </div>
@@ -97,17 +97,31 @@ export default function JournalDirectoryPage() {
           <div className="glass-card p-0 border-0 shadow-sm text-start bg-white rounded-3 overflow-hidden">
             <JournalTableAdmin
               journals={paginatedJournals}
-              page={currentPage}
+              page={safePage}
               limit={limit}
             />
-            <Pagination
-              totalItems={filteredJournals.length}
-              currentPage={currentPage}
-              limit={limit}
-              onPageChange={setCurrentPage}
-              onLimitChange={setLimit}
-              entityName="journals"
-            />
+            <div className="admin-journal-pagination-bar">
+              <span className="text-muted-custom small">
+                Showing <strong className="text-main">{filteredJournals.length === 0 ? 0 : (safePage - 1) * limit + 1}</strong> to{' '}
+                <strong className="text-main">{Math.min(safePage * limit, filteredJournals.length)}</strong> of{' '}
+                <strong className="text-main">{filteredJournals.length}</strong> journals
+              </span>
+              <select
+                className="admin-form-input admin-form-select admin-pagination-limit"
+                value={limit}
+                onChange={(event) => {
+                  setLimit(Number(event.target.value));
+                  setCurrentPage(1);
+                }}
+                aria-label="Rows per page"
+              >
+                <option value={5}>5 / page</option>
+                <option value={10}>10 / page</option>
+                <option value={20}>20 / page</option>
+                <option value={50}>50 / page</option>
+              </select>
+              <ArticlePagination currentPage={safePage} totalPages={totalPages} onPageChange={setCurrentPage} />
+            </div>
           </div>
         ) : (
           <div>
@@ -116,14 +130,28 @@ export default function JournalDirectoryPage() {
                 <JournalCardAdmin key={j.id || j.journal_id} journal={j} />
               ))}
             </Row>
-            <Pagination
-              totalItems={filteredJournals.length}
-              currentPage={currentPage}
-              limit={limit}
-              onPageChange={setCurrentPage}
-              onLimitChange={setLimit}
-              entityName="journals"
-            />
+            <div className="admin-journal-pagination-bar bg-white border rounded-3">
+              <span className="text-muted-custom small">
+                Showing <strong className="text-main">{filteredJournals.length === 0 ? 0 : (safePage - 1) * limit + 1}</strong> to{' '}
+                <strong className="text-main">{Math.min(safePage * limit, filteredJournals.length)}</strong> of{' '}
+                <strong className="text-main">{filteredJournals.length}</strong> journals
+              </span>
+              <select
+                className="admin-form-input admin-form-select admin-pagination-limit"
+                value={limit}
+                onChange={(event) => {
+                  setLimit(Number(event.target.value));
+                  setCurrentPage(1);
+                }}
+                aria-label="Rows per page"
+              >
+                <option value={5}>5 / page</option>
+                <option value={10}>10 / page</option>
+                <option value={20}>20 / page</option>
+                <option value={50}>50 / page</option>
+              </select>
+              <ArticlePagination currentPage={safePage} totalPages={totalPages} onPageChange={setCurrentPage} />
+            </div>
           </div>
         )}
 
@@ -133,6 +161,5 @@ export default function JournalDirectoryPage() {
           handleClose={() => setShowAddModal(false)}
         />
       </div>
-    </AdminLayout>
   );
 }

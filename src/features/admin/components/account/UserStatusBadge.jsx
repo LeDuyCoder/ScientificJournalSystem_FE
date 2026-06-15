@@ -11,16 +11,16 @@ export default function UserStatusBadge({ status }) {
   // Map color points and font color values for statuses
   const statusConfig = {
     Active: {
-      dotColor: '#16a34a', // Vibrant green
-      textColor: '#16a34a',
+      dotColor: 'var(--primary)',
+      textColor: 'var(--primary)',
     },
     Inactive: {
-      dotColor: '#0284c7', // Cyan/blue
-      textColor: '#0284c7',
+      dotColor: 'var(--text-muted)',
+      textColor: 'var(--text-muted)',
     },
     Pending: {
-      dotColor: '#f97316', // Orange
-      textColor: '#f97316',
+      dotColor: 'var(--primary)',
+      textColor: 'var(--primary)',
     }
   };
 

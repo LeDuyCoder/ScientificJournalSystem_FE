@@ -71,27 +71,24 @@ export default function SwitchJournalModal({ show, handleClose }) {
               <ListGroup.Item
                 key={j.id}
                 onClick={() => setTempSelectedId(j.id)}
-                className="d-flex justify-content-between align-items-center py-3 px-3 rounded-3"
+                className="admin-switch-journal-item rounded-3"
                 style={{
-                  border: isTempSelected ? '2px solid #ff7a00' : '1px solid var(--border)',
+                  border: isTempSelected ? '2px solid var(--primary)' : '1px solid var(--border)',
                   margin: isTempSelected ? '-1px' : '0',
                   backgroundColor: '#ffffff',
                   transition: 'all 0.15s ease',
                   cursor: 'pointer',
                 }}
               >
-                <div className="d-flex align-items-center gap-3 pe-2">
-                  <div className="bg-light p-2 rounded-2 text-muted">
+                <div className="admin-switch-journal-item__main">
+                  <div className="admin-switch-journal-item__icon">
                     <Icon icon="lucide:book" width="18" />
                   </div>
-                  <div>
-                    <div className="d-flex align-items-center gap-2 flex-wrap">
+                  <div className="admin-switch-journal-item__content">
+                    <div className="admin-switch-journal-item__title-row">
                       <span className="fw-bold text-main">{j.title}</span>
                       {isCurrent && (
-                        <span 
-                          className="badge text-uppercase text-xs font-semibold px-2 py-0.5 rounded-pill"
-                          style={{ backgroundColor: '#fff3cd', color: '#856404' }}
-                        >
+                        <span className="badge admin-status-badge admin-status-badge--warning text-uppercase text-xs font-semibold px-2 py-0.5 rounded-pill">
                           Current
                         </span>
                       )}
@@ -101,15 +98,16 @@ export default function SwitchJournalModal({ show, handleClose }) {
                     </small>
                   </div>
                 </div>
-                
-                {/* Status Badge */}
-                <span className={`badge px-2 py-1.5 rounded-pill text-uppercase text-xs ${
-                  j.status === 'Active'
-                    ? 'bg-success-subtle text-success'
-                    : 'bg-light text-muted border'
-                }`}>
-                  {j.status || 'Draft'}
-                </span>
+
+                <div className="admin-switch-journal-item__side">
+                  <span className={`badge px-2 py-1.5 rounded-pill text-uppercase text-xs ${
+                    j.status === 'Active'
+                      ? 'admin-status-badge admin-status-badge--accent'
+                      : 'admin-status-badge admin-status-badge--muted'
+                  }`}>
+                    {j.status || 'Draft'}
+                  </span>
+                </div>
               </ListGroup.Item>
             );
           })}

@@ -30,15 +30,27 @@ export default function JournalCardAdmin({ journal }) {
   const charSum = journal.editorInChief ? journal.editorInChief.split('').reduce((acc, c) => acc + c.charCodeAt(0), 0) : 0;
   const avatarUrl = mockAvatars[charSum % mockAvatars.length];
 
-  // Status mapping
   const isPublished = journal.status === 'Active' || journal.status === 'Published';
   const isReview = journal.status === 'Under Review' || journal.status === 'Draft';
-  
-  const statusColor = isPublished ? '#28a745' : isReview ? '#ffc107' : '#6c757d';
+  const statusClass = isPublished
+    ? 'admin-status-dot admin-status-dot--accent'
+    : isReview
+      ? 'admin-status-dot admin-status-dot--warning'
+      : 'admin-status-dot admin-status-dot--muted';
 
   return (
     <Col xs={12} sm={6} lg={4}>
-      <Card className="journal-dark-card h-100 shadow-sm border-1 transition-hover">
+      <Card
+        className="journal-dark-card h-100 shadow-sm border-1 transition-hover admin-clickable-card"
+        onClick={() => navigate(`${basePath}/journals/repository`)}
+        tabIndex={0}
+        onKeyDown={(event) => {
+          if (event.key === 'Enter' || event.key === ' ') {
+            event.preventDefault();
+            navigate(`${basePath}/journals/repository`);
+          }
+        }}
+      >
         <Card.Body className="d-flex flex-column p-4 text-start">
           
           {/* Header Row: ID & Category Badge */}
@@ -81,7 +93,7 @@ export default function JournalCardAdmin({ journal }) {
 
           {/* Open Access tag list */}
           <div className="d-flex gap-1.5 mb-3 flex-wrap">
-            <span className="badge bg-success-subtle text-success border border-success-subtle text-xs py-1 px-2.5 rounded-pill">
+            <span className="badge admin-status-badge admin-status-badge--accent text-xs py-1 px-2.5 rounded-pill">
               OPEN ACCESS
             </span>
             <span className="badge bg-warning-subtle text-warning border border-warning-subtle text-xs py-1 px-2.5 rounded-pill">
@@ -111,10 +123,7 @@ export default function JournalCardAdmin({ journal }) {
           <div className="d-flex justify-content-between align-items-center pt-3 border-top w-100" style={{ borderColor: 'var(--border)' }}>
             {/* Status Dot */}
             <div className="d-flex align-items-center gap-1.5">
-              <span 
-                className="rounded-circle d-inline-block" 
-                style={{ width: '8px', height: '8px', backgroundColor: statusColor }}
-              />
+              <span className={statusClass} />
               <span className="fw-bold text-uppercase text-main" style={{ fontSize: '0.75rem' }}>
                 {journal.status || 'Draft'}
               </span>
@@ -126,7 +135,10 @@ export default function JournalCardAdmin({ journal }) {
                 variant="light" 
                 size="sm"
                 className="btn-custom-sm d-inline-flex align-items-center justify-content-center p-2 rounded-2 border"
-                onClick={() => navigate(`${basePath}/journals/repository`)}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  navigate(`${basePath}/journals/repository`);
+                }}
                 title="View repository log"
               >
                 <Icon icon="lucide:eye" width="14" />
@@ -135,7 +147,10 @@ export default function JournalCardAdmin({ journal }) {
                 variant="outline-dark" 
                 size="sm"
                 className="btn-custom-sm d-inline-flex align-items-center justify-content-center p-2 rounded-2"
-                onClick={() => navigate(`${basePath}/journals/${id}/edit`)}
+                onClick={(event) => {
+                  event.stopPropagation();
+                  navigate(`${basePath}/journals/${id}/edit`);
+                }}
                 title="Edit configurations"
               >
                 <Icon icon="lucide:edit-2" width="14" />

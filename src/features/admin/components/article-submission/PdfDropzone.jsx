@@ -196,9 +196,9 @@ export default function PdfDropzone({
           <div className="mt-4 pt-2 border-top">
             <div className="d-flex justify-content-between small text-muted-custom mb-1.5">
               <span>Ready for Submission</span>
-              <span className="text-success fw-semibold">100%</span>
+              <span className="fw-semibold" style={{ color: 'var(--primary)' }}>100%</span>
             </div>
-            <ProgressBar now={100} variant="success" style={{ height: '4px' }} />
+            <ProgressBar now={100} style={{ height: '4px', '--bs-progress-bar-bg': 'var(--primary)' }} />
           </div>
         </div>
       )}

@@ -79,8 +79,8 @@ export default function IssueTable({ issues }) {
                 <td className="pe-4">
                   <span className={`badge px-2.5 py-1.5 rounded text-uppercase ${
                     isPublished
-                      ? 'bg-success-subtle text-success'
-                      : 'bg-warning-subtle text-warning'
+                      ? 'admin-status-badge admin-status-badge--accent'
+                      : 'admin-status-badge admin-status-badge--warning'
                   }`}>
                     {issue.status === 'Published' ? 'Published' : 'Draft'}
                   </span>

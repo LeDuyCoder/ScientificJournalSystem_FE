@@ -3,7 +3,6 @@ import { Form, Row, Col, Card, Button } from 'react-bootstrap';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import { useJournalManagement } from '../../journal/hooks/useJournalManagement';
-import AdminLayout from '../../../app/layouts/AdminLayout';
 
 /**
  * EditJournalPage - Màn hình chỉnh sửa thông tin Tạp chí dành cho Admin (Figma Screen Page 12).
@@ -92,7 +91,6 @@ export default function EditJournalPage() {
   };
 
   return (
-    <AdminLayout>
       <div className="d-flex flex-column gap-3 text-start">
         {/* Breadcrumb & Navigation */}
         <div>
@@ -193,6 +191,7 @@ export default function EditJournalPage() {
                     <Form.Check
                       type="switch"
                       id="visibility-switch"
+                      className="admin-toggle-switch"
                       checked={formData.visibility === 'Public'}
                       onChange={handleToggleVisibility}
                       style={{ fontSize: '1.2rem', cursor: 'pointer' }}
@@ -287,6 +286,5 @@ export default function EditJournalPage() {
           </div>
         </Form>
       </div>
-    </AdminLayout>
   );
 }

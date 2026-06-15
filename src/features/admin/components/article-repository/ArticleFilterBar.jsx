@@ -80,7 +80,7 @@ export default function ArticleFilterBar({
 
         {/* Nút Apply - căn theo chiều cao input, không cần label phía trên */}
         <div className="admin-form-group admin-filter-bar__apply-group">
-          <button type="button" className="admin-btn admin-btn--primary" onClick={onApply}>
+          <button type="button" className="btn-primary-glow admin-btn-consistent" onClick={onApply}>
             Apply Search Filters
           </button>
         </div>

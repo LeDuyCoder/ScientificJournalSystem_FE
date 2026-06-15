@@ -7,7 +7,6 @@ import IssueTable from '../components/IssueTable';
 import SwitchJournalModal from '../components/modals/SwitchJournalModal';
 import CreateVolumeModal from '../components/modals/CreateVolumeModal';
 import CreateIssueModal from '../components/modals/CreateIssueModal';
-import AdminLayout from '../../../app/layouts/AdminLayout';
 
 /**
  * RepositoryManagementPage - Màn hình điều phối quản lý Tập (Volume) và Số (Issue) tập trung của Admin.
@@ -60,7 +59,6 @@ export default function RepositoryManagementPage() {
   const activeVolObj = currentVolumes.find(v => v.id === selectedVolume);
 
   return (
-    <AdminLayout>
       <div className="d-flex flex-column gap-3 text-start">
         {/* Title Block */}
         <div className="d-flex justify-content-between align-items-center mb-1">
@@ -85,7 +83,7 @@ export default function RepositoryManagementPage() {
         {/* Selected Journal Selector Box */}
         <div className="bg-white p-4 rounded-3 border d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-2" style={{ borderColor: 'var(--border)' }}>
           <div className="d-flex align-items-center gap-3">
-            <div className="bg-primary-light p-3 rounded-2 text-primary d-none d-sm-block">
+            <div className="admin-icon-tile d-none d-sm-flex">
               <Icon icon="lucide:book-open" width="24" />
             </div>
             <div>
@@ -94,7 +92,7 @@ export default function RepositoryManagementPage() {
               </div>
               <h5 className="font-display fw-bold text-main m-0 d-flex align-items-center gap-2">
                 {currentJournal ? currentJournal.title : 'No active journal selected'}
-                <span className="badge bg-success-subtle text-success text-xs font-sans rounded px-2 py-0.5">
+                <span className="badge admin-status-badge admin-status-badge--accent text-xs font-sans rounded px-2 py-0.5">
                   ACTIVE
                 </span>
               </h5>
@@ -148,7 +146,7 @@ export default function RepositoryManagementPage() {
                 <div className="text-muted-custom small text-uppercase fw-semibold">Next Release</div>
                 <div className="text-muted bg-light p-1.5 rounded-2 d-flex"><Icon icon="lucide:calendar" width="16" /></div>
               </div>
-              <h3 className="fw-bold text-main m-0 font-monospace text-primary" style={{ fontSize: '1.25rem' }}>
+              <h3 className="fw-bold text-main m-0 font-monospace admin-accent-text" style={{ fontSize: '1.25rem' }}>
                 Oct 24, 2026
               </h3>
             </Card>
@@ -213,6 +211,5 @@ export default function RepositoryManagementPage() {
           handleClose={() => setShowIssueModal(false)}
         />
       </div>
-    </AdminLayout>
   );
 }
