@@ -3,6 +3,7 @@ import AdminLayout from '../../../app/layouts/AdminLayout';
 import DashboardStatCard from '../components/DashboardStatCard';
 import PublicationTrendsChart from '../components/PublicationTrendsChart';
 import ActivityTimeline from '../components/ActivityTimeline';
+import AllActivityModal from '../components/AllActivityModal';
 import VolumeIssueTable from '../components/VolumeIssueTable';
 import {
   mockDashboardSummary,
@@ -10,6 +11,7 @@ import {
   mockPublicationTrends,
   mockTrendYears,
   mockRecentActivity,
+  mockAllActivity,
   mockVolumeStatus,
 } from '../data/mockDashboard';
 
@@ -17,6 +19,9 @@ export default function AdminDashboardPage() {
   // Năm đang được chọn trên year selector của Publication Trends chart.
   // Mặc định lấy năm đầu tiên trong mockTrendYears (2024).
   const [selectedYear, setSelectedYear] = useState(mockTrendYears[0]);
+
+  // State điều khiển hiển thị modal "View All Activity"
+  const [showAllActivity, setShowAllActivity] = useState(false);
 
   // Build danh sách stat card từ dữ liệu summary thô (giống response API thật)
   const statCards = buildStatCards(mockDashboardSummary);
@@ -52,11 +57,18 @@ export default function AdminDashboardPage() {
           onChangeYear={setSelectedYear}
         />
 
-        <ActivityTimeline items={mockRecentActivity} />
+        <ActivityTimeline items={mockRecentActivity} onViewAll={() => setShowAllActivity(true)} />
       </div>
 
       {/* Volume & Issue Status table + Export CSV */}
       <VolumeIssueTable items={mockVolumeStatus} />
+
+      {/* Modal "View All Activity" */}
+      <AllActivityModal
+        show={showAllActivity}
+        onClose={() => setShowAllActivity(false)}
+        items={mockAllActivity}
+      />
     </AdminLayout>
   );
 }

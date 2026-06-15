@@ -41,8 +41,11 @@ api.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
+    // Không refresh token cho các endpoint auth (login, register, refresh, logout, etc.)
+    const isAuthEndpoint = originalRequest?.url?.includes('/auth/');
+
     // Mỗi request chỉ được refresh một lần để tránh vòng lặp vô hạn khi token lỗi
-    if (error.response && error.response.status === 401 && originalRequest && !originalRequest._retry) {
+    if (error.response && error.response.status === 401 && originalRequest && !originalRequest._retry && !isAuthEndpoint) {
       originalRequest._retry = true;
 
       try {

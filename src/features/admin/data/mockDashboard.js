@@ -1,3 +1,13 @@
+/**
+ * Lưu ý:
+ * - mockDashboardSummary và mockPublicationTrends được viết theo đúng
+ *   shape response của:
+ *     GET /api/v1/admin/dashboard/summary
+ *     GET /api/v1/admin/dashboard/publication-trends?year=...
+ *   để khi tích hợp API thật, chỉ cần thay nguồn data, các hàm map
+ *   (buildStatCards, formatTrendItem) vẫn dùng được nguyên vẹn.
+ */
+
 // ─────────────────────────────────────────────────────────────────
 // 1. DASHBOARD SUMMARY (raw) - khớp shape GET /admin/dashboard/summary
 // ─────────────────────────────────────────────────────────────────
@@ -153,6 +163,87 @@ export const mockRecentActivity = [
     title: 'Overdue Review',
     description: 'MS-2024-88 is 3 days past review deadline.',
     time: 'Yesterday',
+  },
+];
+
+// ─────────────────────────────────────────────────────────────────
+// 4b. ALL ACTIVITY - du lieu day du cho modal "View All Activity"
+// ─────────────────────────────────────────────────────────────────
+// Cung shape voi mockRecentActivity nhung nhieu item hon (10 item),
+// dung khi nguoi dung bam "View All Activity" tren ActivityTimeline.
+// Khi tich hop API: GET /admin/dashboard/recent-activities?page=1&limit=10
+// (xem missing_admin_apis.md) co the dung truc tiep cho ca 2 truong hop,
+// chi khac limit.
+export const mockAllActivity = [
+  {
+    id: 1,
+    type: 'published',
+    title: 'Manuscript Published',
+    description: '"Quantum Entanglement in Biological Systems"',
+    time: '2 hours ago',
+  },
+  {
+    id: 2,
+    type: 'revision',
+    title: 'New Revision Submitted',
+    description: 'Dr. Sarah Jenkins uploaded revised figures.',
+    time: '5 hours ago',
+  },
+  {
+    id: 3,
+    type: 'reviewer',
+    title: 'Reviewer Assigned',
+    description: 'Assigned 3 peer reviewers to Journal #405.',
+    time: 'Yesterday',
+  },
+  {
+    id: 4,
+    type: 'overdue',
+    title: 'Overdue Review',
+    description: 'MS-2024-88 is 3 days past review deadline.',
+    time: 'Yesterday',
+  },
+  {
+    id: 5,
+    type: 'reviewer',
+    title: 'Reviewer Assigned',
+    description: 'Assigned 2 peer reviewers to Journal #128.',
+    time: 'Yesterday',
+  },
+  {
+    id: 6,
+    type: 'published',
+    title: 'Manuscript Published',
+    description: '"Sustainable Concrete Alternatives in Arid Climates"',
+    time: '2 days ago',
+  },
+  {
+    id: 7,
+    type: 'revision',
+    title: 'New Revision Submitted',
+    description: 'Mark J. Henderson uploaded updated dataset.',
+    time: '2 days ago',
+  },
+  {
+    id: 8,
+    type: 'overdue',
+    title: 'Overdue Review',
+    description: 'MS-2023-ET-1102 is 1 day past review deadline.',
+    time: '3 days ago',
+  },
+  {
+    id: 9,
+    type: 'reviewer',
+    title: 'Reviewer Assigned',
+    description: 'Assigned 3 peer reviewers to Journal #210.',
+    time: '4 days ago',
+  },
+  {
+    id: 10,
+    type: 'published',
+    title: 'Manuscript Published',
+    description: '"Machine Learning Patterns in Urban Planning"',
+    time: '5 days ago',
   },
 ];
 

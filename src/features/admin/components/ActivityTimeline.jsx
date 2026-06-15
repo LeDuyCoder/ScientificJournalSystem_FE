@@ -1,23 +1,14 @@
 /**
- * Mỗi item có "type" quyết định màu chấm tròn:
- * - 'published' -> cam (--primary)       : sự kiện chính, tích cực
- * - 'revision'  -> xanh dương nhạt       : cập nhật thông thường
- * - 'reviewer'  -> xám (--text-muted)    : hoạt động phụ, thông tin
- * - 'overdue'   -> đỏ cảnh báo           : cần xử lý gấp
+ * Mau cham tron theo "type" duoc dinh nghia o
+ * constants/activityType.js (dung chung voi AllActivityModal):
+ * - 'published' -> cam (--primary)       : su kien chinh, tich cuc
+ * - 'revision'  -> xanh duong nhat       : cap nhat thong thuong
+ * - 'reviewer'  -> xam (--text-muted)    : hoat dong phu, thong tin
+ * - 'overdue'   -> do canh bao           : can xu ly gap
  */
+import { ACTIVITY_DOT_COLOR } from '../constants/activityType';
 
-// Map type -> màu chấm tròn. Các màu không có trong design tokens
-// (xanh dương, đỏ cảnh báo) được khai báo riêng vì chỉ dùng cho mục
-// đích phân loại trạng thái timeline, tương tự cách admin-header
-// dùng màu đỏ riêng cho notification badge.
-const ACTIVITY_DOT_COLOR = {
-  published: 'var(--primary)',
-  revision: '#3b82f6',
-  reviewer: 'var(--text-muted)',
-  overdue: '#e63946',
-};
-
-export default function ActivityTimeline({ items }) {
+export default function ActivityTimeline({ items, onViewAll }) {
   return (
     <div className="admin-card admin-activity-card">
       <h3 className="admin-card__title mb-3">Recent Activity</h3>
@@ -44,10 +35,10 @@ export default function ActivityTimeline({ items }) {
         })}
       </ul>
 
-      {/* Link xem toàn bộ hoạt động - chỉ UI, chưa gắn điều hướng thật */}
-      <a href="#all-activity" className="admin-activity-card__view-all">
+      {/* "View All Activity" - mo AllActivityModal, handler tu page cha */}
+      <button type="button" className="admin-activity-card__view-all" onClick={onViewAll}>
         View All Activity
-      </a>
+      </button>
     </div>
   );
 }
