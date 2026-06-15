@@ -41,8 +41,10 @@ import ResetPasswordPage from '../../features/auth/pages/ResetPasswordPage';
 import GeographyPage from '../../features/zone/pages/GeographyPage';
 
 // --- ĐỒNG BỘ ĐƯỜNG DẪN IMPORT THEO CHUẨN CỦA NHÓM ---
-import JournalDirectoryPage from '../../features/journal/pages/JournalDirectoryPage';
-import RepositoryManagementPage from '../../features/journal/pages/RepositoryManagementPage';
+import JournalDirectoryPage from '../../features/admin/pages/JournalDirectoryPage';
+import RepositoryManagementPage from '../../features/admin/pages/RepositoryManagementPage';
+import EditJournalPage from '../../features/admin/pages/EditJournalPage';
+import VolumeArchivePage from '../../features/admin/pages/VolumeArchivePage';
 
 /**
  * Nơi khai báo route chính của ứng dụng.
@@ -79,6 +81,8 @@ export default function AppRoutes() {
           {/* 🚀 Các tuyến đường quản lý cấu trúc tạp chí dành cho Admin (Issue #76) */}
           <Route path="/admin/journals" element={<JournalDirectoryPage />} />
           <Route path="/admin/journals/repository" element={<RepositoryManagementPage />} />
+          <Route path="/admin/journals/:id/edit" element={<EditJournalPage />} />
+          <Route path="/admin/volumes" element={<VolumeArchivePage />} />
 
           <Route path="/projects" element={<ProjectListPage />} />
           <Route path="/projects/create" element={<CreateProjectPage />} />
@@ -130,6 +134,10 @@ export default function AppRoutes() {
           Xóa route này khi vấn đề đăng nhập đã được xử lý xong. */}
       <Route path="/admin-preview" element={<AdminDashboardPage />} />
       <Route path="/admin-preview/articles/:id" element={<UpdateArticlePage />} />
+      <Route path="/admin-preview/journals" element={<JournalDirectoryPage />} />
+      <Route path="/admin-preview/journals/repository" element={<RepositoryManagementPage />} />
+      <Route path="/admin-preview/journals/:id/edit" element={<EditJournalPage />} />
+      <Route path="/admin-preview/volumes" element={<VolumeArchivePage />} />
 
       <Route path="*" element={<LandingPage />} />
     </Routes>

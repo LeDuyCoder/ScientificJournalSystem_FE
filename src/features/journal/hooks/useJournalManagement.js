@@ -78,12 +78,12 @@ export const useJournalManagement = create((set, get) => ({
     };
     
     set((state) => ({ 
-      volumes: [...state.volumes, newVol],
+      volumes: [...(state.volumes || []), newVol],
       selectedVolume: state.selectedVolume ? state.selectedVolume : newVol.id 
     }));
   },
 
-  /** Tạo một Issue mới gắn chặt vào Volume đang được chỉ định xem */
+  /** Tạo một Issue mới gắn chặt vào Volume đang được chỉ định xem và cập nhật totalIssues của Volume tương ứng */
   createIssue: (issueFields) => {
     const activeVolumeId = get().selectedVolume;
     const newIssue = {
@@ -92,6 +92,19 @@ export const useJournalManagement = create((set, get) => ({
       status: 'Scheduled',
       ...issueFields
     };
-    set((state) => ({ issues: [...state.issues, newIssue] }));
+    
+    set((state) => {
+      // Tăng số lượng issue của Volume tương ứng trong mảng volumes
+      const updatedVolumes = (state.volumes || []).map(vol => 
+        vol.id === activeVolumeId 
+          ? { ...vol, totalIssues: (vol.totalIssues || 0) + 1 }
+          : vol
+      );
+      
+      return {
+        issues: [...(state.issues || []), newIssue],
+        volumes: updatedVolumes
+      };
+    });
   }
 }));

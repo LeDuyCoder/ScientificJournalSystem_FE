@@ -1,8 +1,19 @@
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import Icon from '../../../shared/components/Icon';
 import ADMIN_MENU from '../constants/adminMenu';
 
 export default function AdminSidebar() {
+  const location = useLocation();
+  const isPreview = location.pathname.startsWith('/admin-preview');
+
+  // Hàm chuyển đổi đường dẫn nếu đang ở chế độ xem thử (preview)
+  const getPath = (path) => {
+    if (isPreview) {
+      return path.replace('/admin', '/admin-preview');
+    }
+    return path;
+  };
+
   return (
     <aside className="admin-sidebar">
       {/* Logo / tên hệ thống - dùng font-display theo quy tắc DESIGN_SYSTEM */}
@@ -16,10 +27,10 @@ export default function AdminSidebar() {
 
         {/* Danh sách menu chính - map từ ADMIN_MENU để dễ thêm/sửa */}
         <nav className="admin-sidebar__menu">
-          {ADMIN_MENU.map((item) => (
+          {(ADMIN_MENU || []).map((item) => (
             <NavLink
               key={item.key}
-              to={item.path}
+              to={getPath(item.path)}
               // NavLink tự thêm class "active" khi path khớp,
               // ta map sang class riêng để style theo design token
               className={({ isActive }) =>
