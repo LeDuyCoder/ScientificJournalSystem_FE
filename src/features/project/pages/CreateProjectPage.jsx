@@ -38,9 +38,18 @@ const CreateProjectPage = () => {
           searchJournalsApi({ limit: 200 }) // Load initial batch of journals
         ]);
         
-        if (areasRes?.data) setAreas(areasRes.data.data || areasRes.data);
-        if (catsRes?.data) setCategories(catsRes.data.data || catsRes.data);
-        if (journalsRes?.data) setJournals(journalsRes.data.data || journalsRes.data);
+        if (areasRes?.data) {
+          const rawAreas = areasRes.data.data || areasRes.data;
+          setAreas(Array.isArray(rawAreas) ? rawAreas : (rawAreas?.items || []));
+        }
+        if (catsRes?.data) {
+          const rawCats = catsRes.data.data || catsRes.data;
+          setCategories(Array.isArray(rawCats) ? rawCats : (rawCats?.items || []));
+        }
+        if (journalsRes?.data) {
+          const rawJournals = journalsRes.data.data || journalsRes.data;
+          setJournals(Array.isArray(rawJournals) ? rawJournals : (rawJournals?.items || []));
+        }
       } catch (err) {
         console.error('Lỗi tải danh mục:', err);
         setError('Không thể tải dữ liệu danh mục. Vui lòng tải lại trang.');
@@ -52,13 +61,13 @@ const CreateProjectPage = () => {
   }, []);
 
   // Format data for MultiSelect
-  const categoryOptions = categories
-    .filter(c => !subjectAreaId || String(c.subject_area_id) === String(subjectAreaId))
-    .map(c => ({ value: c.id || c.subject_category_id, label: c.name || c.category_name }));
+  const categoryOptions = (Array.isArray(categories) ? categories : [])
+    .filter(c => c && (!subjectAreaId || String(c.subject_area_id) === String(subjectAreaId)))
+    .map(c => ({ value: c.id || c.subject_category_id, label: c.name || c.category_name || c.display_name || '' }));
     
-  const journalOptions = journals
-    .filter(j => !subjectAreaId || String(j.subject_area_id) === String(subjectAreaId))
-    .map(j => ({ value: j.id || j.journal_id, label: j.name || j.title }));
+  const journalOptions = (Array.isArray(journals) ? journals : [])
+    .filter(j => j && (!subjectAreaId || String(j.subject_area_id) === String(subjectAreaId)))
+    .map(j => ({ value: j.id || j.journal_id, label: j.name || j.title || j.display_name || '' }));
 
   // Handle Area Change
   const handleAreaChange = (e) => {

@@ -23,6 +23,20 @@ const api = axios.create({
   withCredentials: true
 });
 
+// Interceptor gửi token kèm request
+api.interceptors.request.use(
+  (config) => {
+    const token = useAuthStore.getState().token;
+    if (token) {
+      config.headers['Authorization'] = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
 // Axios instance for public endpoints (does not send cookies or tokens)
 export const publicApi = axios.create({
   baseURL: import.meta.env.VITE_API_URL,

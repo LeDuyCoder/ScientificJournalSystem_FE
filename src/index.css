@@ -455,3 +455,44 @@ th,
 .auth-required-register-btn:active {
   transform: translateY(0);
 }
+
+/* --- Account Module Form custom styling --- */
+.account-form-input {
+  background-color: #f1f5f9 !important;
+  border: 1px solid #e2e8f0 !important;
+  border-radius: 8px !important;
+  font-size: 0.88rem !important;
+  height: 46px !important;
+  padding: 0.375rem 1rem !important;
+  color: var(--text-main) !important;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out !important;
+}
+
+.account-form-input::placeholder {
+  color: #94a3b8 !important;
+  opacity: 1 !important;
+}
+
+.account-form-input:focus {
+  background-color: #f1f5f9 !important;
+  border-color: var(--primary) !important;
+  box-shadow: 0 0 0 2px var(--glow-accent) !important;
+}
+
+.account-form-label {
+  font-size: 0.825rem !important;
+  font-weight: 600 !important;
+  color: #334155 !important;
+  margin-bottom: 6px !important;
+}
+
+.orange-switch-toggle .form-check-input {
+  cursor: pointer;
+  scale: 1.15;
+}
+
+.orange-switch-toggle .form-check-input:checked {
+  background-color: #ea580c !important;
+  border-color: #ea580c !important;
+}
+

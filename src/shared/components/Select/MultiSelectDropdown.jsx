@@ -28,8 +28,8 @@ export default function MultiSelectDropdown({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [wrapperRef]);
 
-  const filteredOptions = options.filter(opt => 
-    opt.label.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredOptions = (Array.isArray(options) ? options : []).filter(opt => 
+    (opt?.label || '').toLowerCase().includes((searchTerm || '').toLowerCase())
   );
 
   const toggleSelection = (optionValue) => {
