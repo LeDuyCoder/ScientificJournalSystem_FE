@@ -1,9 +1,3 @@
-/**
- * File source thuộc hệ thống FE ResearchPulse.
- *
- * File: app/routes/AppRoutes.jsx
- */
-
 import { Routes, Route } from 'react-router-dom';
 import ROUTES from './routePaths';
 
@@ -45,11 +39,17 @@ import AuthorDetailPage from '../../features/author/pages/AuthorDetailPage';
 import AuthorListPage from '../../features/author/pages/AuthorListPage';
 
 import TopicDetailPage from '../../features/topic/pages/TopicDetailPage';
+import AdminDashboardPage from '../../features/admin/pages/AdminDashboardPage';
+import UpdateArticlePage from '../../features/admin/pages/UpdateArticlePage';
 
 import ForgotPasswordPage from '../../features/auth/pages/ForgotPasswordPage';
 import ResetPasswordPage from '../../features/auth/pages/ResetPasswordPage';
 
 import GeographyPage from '../../features/zone/pages/GeographyPage';
+
+// --- ĐỒNG BỘ ĐƯỜNG DẪN IMPORT THEO CHUẨN CỦA NHÓM ---
+import JournalDirectoryPage from '../../features/journal/pages/JournalDirectoryPage';
+import RepositoryManagementPage from '../../features/journal/pages/RepositoryManagementPage';
 
 /**
  * Nơi khai báo route chính của ứng dụng.
@@ -65,6 +65,14 @@ export default function AppRoutes() {
     <Routes>
       <Route path={ROUTES.HOME} element={<LandingPage />} />
 
+      {/* Protected routes (Yêu cầu đăng nhập trước khi vào, không dùng Layout chính) */}
+      <Route element={<ProtectedRoute />}>
+        <Route path={ROUTES.DASHBOARD} element={<DashboardPage />} />
+        <Route path={ROUTES.AUTHORS_LEADERBOARD} element={<AuthorLeaderboardPage />} />
+        <Route path={ROUTES.ADMIN_DASHBOARD} element={<AdminDashboardPage />} />
+        <Route path={ROUTES.ADMIN_ARTICLE_EDIT} element={<UpdateArticlePage />} />
+      </Route>
+
       {/* Public routes (Đăng nhập / Đăng ký) */}
       <Route element={<PublicRoute />}>
         <Route path={ROUTES.LOGIN} element={<LoginPage />} />
@@ -73,9 +81,14 @@ export default function AppRoutes() {
 
       {/* Routes sử dụng layout chung có header/footer */}
       <Route element={<AuthLayoutWithUser />}>
-        {/* Protected routes (Yêu cầu đăng nhập trước khi vào) */}
+        
+        {/* 🔐 Tuyến đường yêu cầu bảo mật (Đã đăng nhập) */}
         <Route element={<ProtectedRoute />}>
           <Route path={ROUTES.DASHBOARD} element={<DashboardPage />} />
+          
+          {/* 🚀 Các tuyến đường quản lý cấu trúc tạp chí dành cho Admin */}
+          <Route path={ROUTES.ADMIN_JOURNALS} element={<JournalDirectoryPage />} />
+          <Route path={ROUTES.ADMIN_REPOSITORY} element={<RepositoryManagementPage />} />
 
           <Route path={ROUTES.PROJECTS} element={<ProjectListPage />} />
           <Route path={ROUTES.PROJECT_CREATE} element={<CreateProjectPage />} />
@@ -128,6 +141,12 @@ export default function AppRoutes() {
 
         <Route path={ROUTES.TOPIC_DETAIL} element={<TopicDetailPage />} />
       </Route>
+
+      <Route path="/topics/:topicId" element={<TopicDetailPage />} />
+
+      {/* Route tạm để preview UI Admin Dashboard không cần login. */}
+      <Route path="/admin-preview" element={<AdminDashboardPage />} />
+      <Route path="/admin-preview/articles/:id" element={<UpdateArticlePage />} />
 
       <Route path="*" element={<LandingPage />} />
     </Routes>

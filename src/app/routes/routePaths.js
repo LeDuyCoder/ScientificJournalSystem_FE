@@ -34,6 +34,13 @@ const ROUTES = {
   ADMIN_USERS_CREATE:    "/admin/users/create",
   ADMIN_USERS_EDIT:      "/admin/users/:id/edit",
 
+  // Tuyến đường quản trị bài viết khoa học & Tạp chí (Admin Dashboard, Update Article, Journals Directory...)
+  ADMIN_DASHBOARD:       "/admin/dashboard",
+  ADMIN_ARTICLES:        "/admin/articles",
+  ADMIN_ARTICLE_EDIT:    "/admin/articles/:id",
+  ADMIN_JOURNALS:        "/admin/journals",
+  ADMIN_REPOSITORY:      "/admin/journals/repository",
+
   // Bài báo (Article)
   ARTICLES:              "/articles",
   ARTICLE_SUBMIT:        "/articles/submit",

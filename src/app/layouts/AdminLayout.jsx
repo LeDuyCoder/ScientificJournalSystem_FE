@@ -3,31 +3,33 @@ import { Outlet } from 'react-router-dom';
 import AdminSidebar from './AdminSidebar';
 import AdminHeader from './AdminHeader';
 import AdminFooter from './AdminFooter';
+import '../../features/admin/admin.css';
 
 /**
  * AdminLayout
- * Master wrapper layout for administrative dashboards and operations.
- * Organizes layout with: Sidebar (Left) + Header, Outlet, Footer (Right column)
+ * Layout chính cho khu vực quản trị viên (Admin).
+ * Hỗ trợ cả cơ chế lồng route của react-router-dom (Outlet) và cơ chế bọc component con (children).
  */
-export default function AdminLayout() {
+export default function AdminLayout({ children }) {
   return (
     <div className="d-flex min-vh-100" style={{ backgroundColor: '#f8fafc' }}>
-      {/* Sidebar navigation */}
+      {/* Sidebar điều hướng cố định bên trái */}
       <AdminSidebar />
 
-      {/* Main content body container */}
+      {/* Vùng nội dung chính bên phải */}
       <div className="d-flex flex-column flex-grow-1" style={{ minWidth: 0 }}>
-        {/* Top bar header */}
+        {/* Header trên cùng */}
         <AdminHeader />
 
-        {/* Scrollable page body */}
+        {/* Nội dung trang hiển thị ở giữa */}
         <div className="p-4 flex-grow-1 d-flex flex-column" style={{ minHeight: 'calc(100vh - 140px)' }}>
-          <Outlet />
+          {children || <Outlet />}
         </div>
 
-        {/* Bottom copyright & information footer */}
+        {/* Footer dưới cùng */}
         <AdminFooter />
       </div>
     </div>
   );
 }
+
