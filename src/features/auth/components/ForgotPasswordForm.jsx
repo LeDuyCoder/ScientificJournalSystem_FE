@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Form } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import InputField from '../../../shared/components/InputField';
+import ROUTES from '../../../app/routes/routePaths';
 import SubmitButton from './SubmitButton';
 import FormErrorMessage from './FormErrorMessage';
 
@@ -68,7 +69,7 @@ export default function ForgotPasswordForm({ onSubmit, isLoading, apiError }) {
 
       {/* Link back to Login */}
       <div className="text-center mt-4 text-sm font-medium">
-        <Link to="/login" className="text-decoration-none" style={{ color: 'var(--primary)', fontWeight: 600 }}>
+        <Link to={ROUTES.LOGIN} className="text-decoration-none" style={{ color: 'var(--primary)', fontWeight: 600 }}>
           Quay lại đăng nhập
         </Link>
       </div>

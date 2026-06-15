@@ -5,10 +5,11 @@
 import axios from 'axios';
 
 const httpClient = axios.create({
-  // Đọc base URL từ biến môi trường, không hardcode localhost
-  baseURL: import.meta.env.VITE_API_BASE_URL,
+  // Tự động phân giải base URL của API từ biến môi trường.
+  // Fallback linh hoạt giữa VITE_API_URL (chuẩn chính) và VITE_API_BASE_URL.
+  baseURL: import.meta.env.VITE_API_URL || import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api/v1',
 
-  // Timeout 10 giây — tránh treo request mãi mãi
+  // Thời gian chờ tối đa cho request (10 giây) để tránh treo ứng dụng
   timeout: 10000,
 
   headers: {

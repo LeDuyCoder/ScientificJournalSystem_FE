@@ -17,7 +17,7 @@ export default function GeographyRankingTable({ data = [], loading = false, sele
   }, [rankedData, searchTerm]);
 
   return (
-    <div className="p-4 bg-white rounded-3 h-100 d-flex flex-column" style={{ border: '1px solid var(--border)', boxShadow: '0 2px 8px rgba(0,0,0,0.02)' }}>
+    <div className="p-4 journal-dark-card h-100 d-flex flex-column">
       {/* Header */}
       <div className="mb-3">
         <h3 className="font-display fw-bold text-main mb-0" style={{ fontSize: '1.1rem' }}>
@@ -26,24 +26,16 @@ export default function GeographyRankingTable({ data = [], loading = false, sele
       </div>
 
       {/* Search Bar */}
-      <div className="mb-3 position-relative">
+      <div className="mb-3 geography-search-wrapper">
         <Icon 
           icon="lucide:search" 
           width="14" 
-          className="position-absolute" 
-          style={{ left: '12px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }} 
+          className="geography-search-icon" 
         />
         <input 
           type="text" 
           placeholder="Tìm quốc gia..." 
-          className="w-100 form-control shadow-none" 
-          style={{ 
-            paddingLeft: '32px', 
-            fontSize: '0.85rem', 
-            borderRadius: '6px', 
-            border: '1px solid var(--border)',
-            backgroundColor: 'var(--bg-main)'
-          }}
+          className="w-100 form-control geography-search-input shadow-none" 
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
         />
@@ -51,8 +43,8 @@ export default function GeographyRankingTable({ data = [], loading = false, sele
 
       {/* Table */}
       <div className="table-responsive flex-grow-1" style={{ overflowY: 'auto', maxHeight: '400px' }}>
-        <table className="table table-hover align-middle mb-0" style={{ fontSize: '0.85rem' }}>
-          <thead style={{ position: 'sticky', top: 0, backgroundColor: 'var(--bg-white)', zIndex: 1 }}>
+        <table className="table table-hover align-middle mb-0 geography-table" style={{ fontSize: '0.85rem' }}>
+          <thead style={{ position: 'sticky', top: 0, backgroundColor: 'var(--bg-card)', zIndex: 1 }}>
             <tr>
               <th className="py-2 text-main font-sans fw-bold border-bottom" style={{ width: '60px' }}>Hạng</th>
               <th className="py-2 text-main font-sans fw-bold border-bottom">Quốc gia</th>
@@ -79,11 +71,7 @@ export default function GeographyRankingTable({ data = [], loading = false, sele
                 <tr 
                   key={item.zone_id}
                   onClick={() => onSelectCountry?.(item)}
-                  style={{ 
-                    cursor: 'pointer',
-                    backgroundColor: selectedCountry?.zone_id === item.zone_id ? 'var(--primary-light)' : 'transparent',
-                    transition: 'background-color 0.15s ease'
-                  }}
+                  className={`geography-ranking-row ${selectedCountry?.zone_id === item.zone_id ? 'is-active' : ''}`}
                 >
                   <td className="py-3 text-main fw-bold font-sans">
                     {item.rank}

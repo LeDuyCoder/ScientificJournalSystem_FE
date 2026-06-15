@@ -16,6 +16,7 @@ import Dropdown from "react-bootstrap/Dropdown";
 import Icon from "../../../shared/components/Icon";
 import useAuth from "../../auth/hooks/useAuth";
 import { useUserStore } from "../../../app/store/userStore";
+import ROUTES from "../../../app/routes/routePaths";
 
 export default function Header() {
   const { t, i18n } = useTranslation();
@@ -48,11 +49,11 @@ export default function Header() {
   };
 
   const handleAuthLogin = () => {
-    navigate("/login");
+    navigate(ROUTES.LOGIN);
   };
   const handleAuthRegister = () => {
-    navigate("/register")
-  }
+    navigate(ROUTES.REGISTER);
+  };
 
   return (
     <>
@@ -71,7 +72,7 @@ export default function Header() {
         <Container>
           {/* Logo Brand */}
           <Navbar.Brand
-            onClick={() => navigate("/")}
+            onClick={() => navigate(ROUTES.HOME)}
             className="d-flex align-items-center text-main font-weight-bold"
             style={{
               fontFamily: "var(--font-display)",
@@ -111,46 +112,71 @@ export default function Header() {
             <Nav className="mx-auto align-items-center" style={{ gap: "4px" }}>
               {/* Tổng quan */}
               <Nav.Link
-                onClick={() => navigate("/dashboard")}
+                onClick={() => navigate(ROUTES.DASHBOARD)}
                 className="px-3 py-1 text-sm font-semibold d-flex align-items-center gap-1"
                 style={{
                   borderRadius: '6px',
-                  backgroundColor: (pathname === '/dashboard' || pathname === '/geography') ? 'var(--primary-light)' : 'transparent',
-                  color: (pathname === '/dashboard' || pathname === '/geography') ? 'var(--primary)' : 'var(--text-muted)',
-                  border: (pathname === '/dashboard' || pathname === '/geography') ? '1px solid var(--border)' : '1px solid transparent',
+                  backgroundColor: (pathname === ROUTES.DASHBOARD || pathname === ROUTES.GEOGRAPHY) ? 'var(--primary-light)' : 'transparent',
+                  color: (pathname === ROUTES.DASHBOARD || pathname === ROUTES.GEOGRAPHY) ? 'var(--primary)' : 'var(--text-muted)',
+                  border: (pathname === ROUTES.DASHBOARD || pathname === ROUTES.GEOGRAPHY) ? '1px solid var(--border)' : '1px solid transparent',
                   transition: 'all 0.2s',
-                  fontWeight: (pathname === '/dashboard' || pathname === '/geography') ? 700 : 500,
+                  fontWeight: (pathname === ROUTES.DASHBOARD || pathname === ROUTES.GEOGRAPHY) ? 700 : 500,
                 }}
               >
                 <Icon icon="lucide:layout-dashboard" width="14" />
                 Tổng quan
               </Nav.Link>
 
-              {/* Tìm kiếm */}
+              {/* Dự án */}
               <Nav.Link
-                onClick={() => navigate("/catalog")}
+                onClick={() => navigate(ROUTES.PROJECTS)}
                 className="px-3 py-1 text-sm font-semibold d-flex align-items-center gap-1"
                 style={{
                   borderRadius: "6px",
                   backgroundColor:
-                    pathname.startsWith("/catalog") ||
-                    pathname.startsWith("/search")
+                    pathname.startsWith(ROUTES.PROJECTS)
                       ? "var(--primary-light)"
                       : "transparent",
                   color:
-                    pathname.startsWith("/catalog") ||
-                    pathname.startsWith("/search")
+                    pathname.startsWith(ROUTES.PROJECTS)
                       ? "var(--primary)"
                       : "var(--text-muted)",
                   border:
-                    pathname.startsWith("/catalog") ||
-                    pathname.startsWith("/search")
+                    pathname.startsWith(ROUTES.PROJECTS)
+                      ? "1px solid var(--border)"
+                      : "1px solid transparent",
+                  transition: "all 0.2s",
+                  fontWeight: pathname.startsWith(ROUTES.PROJECTS) ? 700 : 500,
+                }}
+              >
+                <Icon icon="lucide:folder" width="14" />
+                Dự án
+              </Nav.Link>
+              {/* Tìm kiếm */}
+              <Nav.Link
+                onClick={() => navigate(ROUTES.CATALOG)}
+                className="px-3 py-1 text-sm font-semibold d-flex align-items-center gap-1"
+                style={{
+                  borderRadius: "6px",
+                  backgroundColor:
+                    pathname.startsWith(ROUTES.CATALOG) ||
+                    pathname.startsWith(ROUTES.SEARCH)
+                      ? "var(--primary-light)"
+                      : "transparent",
+                  color:
+                    pathname.startsWith(ROUTES.CATALOG) ||
+                    pathname.startsWith(ROUTES.SEARCH)
+                      ? "var(--primary)"
+                      : "var(--text-muted)",
+                  border:
+                    pathname.startsWith(ROUTES.CATALOG) ||
+                    pathname.startsWith(ROUTES.SEARCH)
                       ? "1px solid var(--border)"
                       : "1px solid transparent",
                   transition: "all 0.2s",
                   fontWeight:
-                    pathname.startsWith("/catalog") ||
-                    pathname.startsWith("/search")
+                    pathname.startsWith(ROUTES.CATALOG) ||
+                    pathname.startsWith(ROUTES.SEARCH)
                       ? 700
                       : 500,
                 }}
@@ -161,21 +187,21 @@ export default function Header() {
 
               {/* Bài báo */}
               <Nav.Link
-                onClick={() => navigate("/articles")}
+                onClick={() => navigate(ROUTES.ARTICLES)}
                 className="px-3 py-1 text-sm font-semibold d-flex align-items-center gap-1"
                 style={{
                   borderRadius: "6px",
-                  backgroundColor: pathname.startsWith("/articles")
+                  backgroundColor: pathname.startsWith(ROUTES.ARTICLES)
                     ? "var(--primary-light)"
                     : "transparent",
-                  color: pathname.startsWith("/articles")
+                  color: pathname.startsWith(ROUTES.ARTICLES)
                     ? "var(--primary)"
                     : "var(--text-muted)",
-                  border: pathname.startsWith("/articles")
+                  border: pathname.startsWith(ROUTES.ARTICLES)
                     ? "1px solid var(--border)"
                     : "1px solid transparent",
                   transition: "all 0.2s",
-                  fontWeight: pathname.startsWith("/articles") ? 700 : 500,
+                  fontWeight: pathname.startsWith(ROUTES.ARTICLES) ? 700 : 500,
                 }}
               >
                 <Icon icon="lucide:file-text" width="14" />
@@ -184,19 +210,19 @@ export default function Header() {
 
               {/* Tác Giả */}
               <Nav.Link
-                onClick={() => navigate("/authors")}
+                onClick={() => navigate(ROUTES.AUTHORS)}
                 className="px-3 py-1 text-sm font-semibold d-flex align-items-center gap-1"
                 style={{
                   borderRadius: "6px",
                   backgroundColor:
-                    pathname.startsWith("/authors") ? "var(--primary-light)" : "transparent",
+                    pathname.startsWith(ROUTES.AUTHORS) ? "var(--primary-light)" : "transparent",
                   color:
-                    pathname.startsWith("/authors") ? "var(--primary)" : "var(--text-muted)",
-                  border: pathname.startsWith("/authors")
+                    pathname.startsWith(ROUTES.AUTHORS) ? "var(--primary)" : "var(--text-muted)",
+                  border: pathname.startsWith(ROUTES.AUTHORS)
                     ? "1px solid var(--border)"
                     : "1px solid transparent",
                   transition: "all 0.2s",
-                  fontWeight: pathname.startsWith("/authors") ? 700 : 500,
+                  fontWeight: pathname.startsWith(ROUTES.AUTHORS) ? 700 : 500,
                 }}
               >
                 <Icon icon="lucide:file-text" width="14" />
@@ -277,7 +303,7 @@ export default function Header() {
                       </div>
                     </div>
                     <Dropdown.Item
-                      onClick={() => navigate("/dashboard")}
+                      onClick={() => navigate(ROUTES.DASHBOARD)}
                       className="d-flex align-items-center gap-2 text-xs py-2 text-main"
                     >
                       <Icon
@@ -286,6 +312,28 @@ export default function Header() {
                         className="text-muted-custom"
                       />
                       <span>Bảng điều khiển</span>
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      onClick={() => navigate(ROUTES.ARTICLE_SUBMIT)}
+                      className="d-flex align-items-center gap-2 text-xs py-2 text-main"
+                    >
+                      <Icon
+                        icon="lucide:file-text"
+                        width="14"
+                        className="text-muted-custom"
+                      />
+                      <span>Nộp bài báo (Submit)</span>
+                    </Dropdown.Item>
+                    <Dropdown.Item
+                      onClick={() => navigate(ROUTES.ADMIN_USERS)}
+                      className="d-flex align-items-center gap-2 text-xs py-2 text-main"
+                    >
+                      <Icon
+                        icon="lucide:users"
+                        width="14"
+                        className="text-muted-custom"
+                      />
+                      <span>Quản trị tài khoản</span>
                     </Dropdown.Item>
                     <Dropdown.Item
                       onClick={logout}
@@ -401,7 +449,7 @@ export default function Header() {
             <Nav.Link
               onClick={() => {
                 setShowMobileMenu(false);
-                navigate("/dashboard");
+                navigate(ROUTES.DASHBOARD);
               }}
               className="text-muted-custom hover:text-main py-2 text-sm font-semibold border-bottom border-light"
             >
@@ -410,7 +458,22 @@ export default function Header() {
             <Nav.Link
               onClick={() => {
                 setShowMobileMenu(false);
-                navigate("/catalog");
+                navigate(ROUTES.PROJECTS);
+              }}
+              className="text-muted-custom hover:text-main py-2 text-sm font-semibold border-bottom border-light"
+              style={{
+                color: pathname.startsWith(ROUTES.PROJECTS)
+                  ? "var(--primary)"
+                  : "var(--text-muted)",
+                fontWeight: pathname.startsWith(ROUTES.PROJECTS) ? 700 : 600,
+              }}
+            >
+              Dự án
+            </Nav.Link>
+            <Nav.Link
+              onClick={() => {
+                setShowMobileMenu(false);
+                navigate(ROUTES.CATALOG);
               }}
               className="text-muted-custom hover:text-main py-2 text-sm font-semibold border-bottom border-light"
             >
@@ -419,14 +482,14 @@ export default function Header() {
             <Nav.Link
               onClick={() => {
                 setShowMobileMenu(false);
-                navigate("/articles");
+                navigate(ROUTES.ARTICLES);
               }}
               className="text-muted-custom hover:text-main py-2 text-sm font-semibold border-bottom border-light"
               style={{
-                color: pathname.startsWith("/articles")
+                color: pathname.startsWith(ROUTES.ARTICLES)
                   ? "var(--primary)"
                   : "var(--text-muted)",
-                fontWeight: pathname.startsWith("/articles") ? 700 : 600,
+                fontWeight: pathname.startsWith(ROUTES.ARTICLES) ? 700 : 600,
               }}
             >
               Bài báo
@@ -469,7 +532,7 @@ export default function Header() {
                   className="w-100 rounded-pill py-2.5 text-xs font-bold"
                   onClick={() => {
                     setShowMobileMenu(false);
-                    navigate("/dashboard");
+                    navigate(ROUTES.DASHBOARD);
                   }}
                 >
                   <Icon icon="lucide:layout-dashboard" className="me-1" />

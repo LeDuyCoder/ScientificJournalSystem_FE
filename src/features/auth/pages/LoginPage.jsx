@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Trang đăng nhập người dùng.
  *
  * File: features/auth/pages/LoginPage.jsx
@@ -11,8 +11,9 @@ import AuthBanner from '../components/AuthBanner';
 import LoginForm from '../components/LoginForm';
 import SocialAuthButton from '../components/SocialAuthButton';
 import { toast } from '../../../shared/utils/toast';
+import ROUTES from '../../../app/routes/routePaths';
 
-const DASHBOARD_PAGE = '/dashboard';
+const DASHBOARD_PAGE = ROUTES.DASHBOARD;
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -98,7 +99,7 @@ export default function LoginPage() {
       {/* Điều hướng sang trang đăng ký nếu người dùng chưa có tài khoản. */}
       <div className="text-center mt-4 text-sm font-medium">
         <span className="text-muted-custom" style={{ color: '#94a3b8 !important' }}>Chưa có tài khoản? </span>
-        <Link to="/register" className="text-decoration-none" style={{ color: 'var(--primary)', fontWeight: 600 }}>
+        <Link to={ROUTES.REGISTER} className="text-decoration-none" style={{ color: 'var(--primary)', fontWeight: 600 }}>
           Đăng ký miễn phí
         </Link>
       </div>

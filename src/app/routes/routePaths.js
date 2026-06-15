@@ -1,23 +1,66 @@
-// routePaths.js
-// Tập trung tất cả đường dẫn route vào một chỗ.
-// Tránh hardcode string rải rác trong nhiều file — dễ sửa, dễ tìm.
-
+/**
+ * File: app/routes/routePaths.js
+ * Danh sách tập trung tất cả các đường dẫn định tuyến (routes) trong hệ thống ResearchPulse.
+ * Tránh việc hardcode các chuỗi URL liên kết tĩnh giúp bảo trì và cấu hình dễ dàng hơn.
+ */
 const ROUTES = {
-  HOME:         "/",
-  DASHBOARD:    "/dashboard",
-  CATALOG:      "/catalog",
-  SEARCH:       "/search",
-  ARTICLES:     "/articles",
-  ARTICLE_DETAIL: "/articles/:id",
-  JOURNAL_DETAIL: "/journals/:id",
-  LOGIN:        "/login",
-  REGISTER:     "/register",
-  VERIFY_EMAIL: "/verify-email",   // ← route mới cho trang kích hoạt tài khoản
+  // Trang chủ
+  HOME:                  "/",
 
-  // ─── Admin routes ───
-  ADMIN_DASHBOARD:    "/admin/dashboard",
-  ADMIN_ARTICLES:     "/admin/articles",
-  ADMIN_ARTICLE_EDIT: "/admin/articles/:id",
+  // Xác thực người dùng
+  LOGIN:                 "/login",
+  REGISTER:              "/register",
+  VERIFY_EMAIL:          "/verify-email",
+  FORGOT_PASSWORD:       "/forgot-password",
+  RESET_PASSWORD:        "/reset-password",
+
+  // Tổng quan & Bản đồ phân bố địa lý
+  DASHBOARD:             "/dashboard",
+  GEOGRAPHY:             "/geography",
+
+  // Quản lý Dự án (Project)
+  PROJECTS:              "/projects",
+  PROJECT_CREATE:        "/projects/create",
+  PROJECT_EDIT:          "/projects/:id/edit",
+  PROJECT_DETAIL:        "/projects/:id",
+
+  // Tác giả (Author)
+  AUTHORS:               "/authors",
+  AUTHORS_LEADERBOARD:   "/authors/leaderboard",
+  AUTHOR_DETAIL:         "/authors/:id",
+
+  // Quản trị người dùng (Admin)
+  ADMIN_USERS:           "/admin/users",
+  ADMIN_USERS_CREATE:    "/admin/users/create",
+  ADMIN_USERS_EDIT:      "/admin/users/:id/edit",
+
+  // Tuyến đường quản trị bài viết khoa học & Tạp chí (Admin Dashboard, Update Article, Journals Directory...)
+  ADMIN_DASHBOARD:       "/admin/dashboard",
+  ADMIN_ARTICLES:        "/admin/articles",
+  ADMIN_ARTICLE_EDIT:    "/admin/articles/:id",
+  ADMIN_JOURNALS:        "/admin/journals",
+  ADMIN_REPOSITORY:      "/admin/journals/repository",
+
+  // Bài báo (Article)
+  ARTICLES:              "/articles",
+  ARTICLE_SUBMIT:        "/admin/articles",
+  ARTICLE_DETAIL:        "/articles/:id",
+  ARTICLE_VISUAL_DETAIL: "/articles/:id/visual",
+
+  // Hồ sơ cá nhân
+  PROFILE:               "/profile",
+
+  // Tìm kiếm & Danh mục tạp chí
+  CATALOG:               "/catalog",
+  SEARCH:                "/search",
+  JOURNALS:              "/journals/:id",
+
+  // Từ khóa (Keyword)
+  KEYWORDS:              "/keywords",
+  KEYWORD_ARTICLES:      "/keywords/:keywordId/articles",
+
+  // Chủ đề (Topic)
+  TOPIC_DETAIL:          "/topics/:topicId",
 };
 
 export default ROUTES;

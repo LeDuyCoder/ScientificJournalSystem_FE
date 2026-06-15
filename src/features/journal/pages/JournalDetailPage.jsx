@@ -173,7 +173,7 @@ export default function JournalDetailPage() {
             <ArticlesTabContent 
               recentArticles={recentArticles} 
               loading={loadingArticles}
-              onArticleClick={(artId) => navigate(`/articles/${artId}`)}
+              onArticleClick={(artId) => navigate(`/articles/${artId}/visual`)}
             />
           )}
         </div>
