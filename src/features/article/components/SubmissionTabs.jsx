@@ -16,7 +16,7 @@ export default function SubmissionTabs({ activeTab, onTabChange }) {
       {/* Manual Entry Tab */}
       <Nav.Item>
         <button 
-          className={`nav-link border-0 bg-transparent px-0 pb-3 fw-medium d-flex align-items-center gap-2 ${
+          className={`nav-link bg-transparent px-0 pb-3 fw-medium d-flex align-items-center gap-2 ${
             activeTab === 'manual' 
               ? 'active' 
               : 'text-muted-custom'
@@ -32,7 +32,7 @@ export default function SubmissionTabs({ activeTab, onTabChange }) {
       {/* PDF Upload Tab */}
       <Nav.Item>
         <button 
-          className={`nav-link border-0 bg-transparent px-0 pb-3 fw-medium d-flex align-items-center gap-2 ${
+          className={`nav-link bg-transparent px-0 pb-3 fw-medium d-flex align-items-center gap-2 ${
             activeTab === 'pdf' 
               ? 'active' 
               : 'text-muted-custom'
