@@ -1628,3 +1628,68 @@
 .admin-activity-modal__body .admin-activity-list {
   gap: 18px;
 }
+
+.admin-activity-modal-backdrop {
+  --bs-backdrop-bg: #0d1b1c;
+  --bs-backdrop-opacity: 0.32 !important;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.admin-activity-modal .modal-dialog {
+  max-width: 420px;
+}
+
+.admin-activity-modal__content {
+  background: rgba(255, 255, 255, 0.96);
+  border: 0;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 24px 64px rgba(13, 27, 28, 0.18);
+}
+
+.admin-activity-modal__header {
+  border-bottom: 1px solid rgba(13, 27, 28, 0.08);
+  padding: 1.25rem 1.25rem 1rem;
+  background: transparent;
+}
+
+.admin-activity-modal__body {
+  background: transparent;
+}
+
+.admin-activity-modal__close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  margin-left: auto;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: rgba(13, 27, 28, 0.6);
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.admin-activity-modal__close:hover {
+  background: rgba(13, 27, 28, 0.06);
+  color: rgba(13, 27, 28, 0.9);
+}
+
+.admin-dashboard-shell {
+  transition: filter 0.25s ease, opacity 0.25s ease;
+}
+
+.admin-dashboard-shell.is-modal-open {
+  filter: blur(6px);
+  opacity: 0.55;
+  pointer-events: none;
+  user-select: none;
+}
+
+.admin-activity-modal-backdrop {
+  background: rgba(13, 27, 28, 0.22) !important;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}

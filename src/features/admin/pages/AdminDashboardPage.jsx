@@ -31,39 +31,39 @@ export default function AdminDashboardPage() {
 
   return (
     <AdminLayout>
-      {/* Tiêu đề trang - h2 tự động áp dụng font-display theo index.css */}
-      <h2 className="mb-3">Dashboard</h2>
+      <div className={`admin-dashboard-shell ${showAllActivity ? 'is-modal-open' : ''}`}>
+        <h2 className="mb-3">Dashboard</h2>
 
-      {/* Grid 4 stat card - map từ statCards, mỗi item có key riêng */}
-      <div className="admin-stat-grid">
-        {statCards.map((stat) => (
-          <DashboardStatCard
-            key={stat.key}
-            label={stat.label}
-            value={stat.value}
-            icon={stat.icon}
-            note={stat.note}
-            noteType={stat.noteType}
+        <div className="admin-stat-grid">
+          {statCards.map((stat) => (
+            <DashboardStatCard
+              key={stat.key}
+              label={stat.label}
+              value={stat.value}
+              icon={stat.icon}
+              note={stat.note}
+              noteType={stat.noteType}
+            />
+          ))}
+        </div>
+
+        <div className="admin-dashboard-row">
+          <PublicationTrendsChart
+            data={trendsData}
+            years={mockTrendYears}
+            selectedYear={selectedYear}
+            onChangeYear={setSelectedYear}
           />
-        ))}
+
+          <ActivityTimeline
+            items={mockRecentActivity}
+            onViewAll={() => setShowAllActivity(true)}
+          />
+        </div>
+
+        <VolumeIssueTable items={mockVolumeStatus} />
       </div>
 
-      {/* Hàng 2 cột: Publication Trends chart (trái) + Recent Activity (phải) */}
-      <div className="admin-dashboard-row">
-        <PublicationTrendsChart
-          data={trendsData}
-          years={mockTrendYears}
-          selectedYear={selectedYear}
-          onChangeYear={setSelectedYear}
-        />
-
-        <ActivityTimeline items={mockRecentActivity} onViewAll={() => setShowAllActivity(true)} />
-      </div>
-
-      {/* Volume & Issue Status table + Export CSV */}
-      <VolumeIssueTable items={mockVolumeStatus} />
-
-      {/* Modal "View All Activity" */}
       <AllActivityModal
         show={showAllActivity}
         onClose={() => setShowAllActivity(false)}
