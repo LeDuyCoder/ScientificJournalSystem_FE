@@ -44,6 +44,10 @@ import ResetPasswordPage from '../../features/auth/pages/ResetPasswordPage';
 
 import GeographyPage from '../../features/zone/pages/GeographyPage';
 
+// --- ĐỒNG BỘ ĐƯỜNG DẪN IMPORT THEO CHUẨN CỦA NHÓM ---
+import JournalDirectoryPage from '../../features/journal/pages/JournalDirectoryPage';
+import RepositoryManagementPage from '../../features/journal/pages/RepositoryManagementPage';
+
 /**
  * Nơi khai báo route chính của ứng dụng.
  *
@@ -65,9 +69,14 @@ export default function AppRoutes() {
 
       {/* Routes sử dụng layout chung */}
       <Route element={<AuthLayoutWithUser />}>
-        {/* Protected routes */}
+        
+        {/* 🔐 Tuyến đường yêu cầu bảo mật (Đã đăng nhập) */}
         <Route element={<ProtectedRoute />}>
           <Route path="/dashboard" element={<DashboardPage />} />
+          
+          {/* 🚀 Các tuyến đường quản lý cấu trúc tạp chí dành cho Admin (Issue #76) */}
+          <Route path="/admin/journals" element={<JournalDirectoryPage />} />
+          <Route path="/admin/journals/repository" element={<RepositoryManagementPage />} />
 
           <Route path="/projects" element={<ProjectListPage />} />
           <Route path="/projects/create" element={<CreateProjectPage />} />
