@@ -121,11 +121,10 @@ const ProjectDetailPage = () => {
           </div>
         </div>
 
-        {/* Tabs */}
         <ul className="nav nav-tabs tab-nav-custom mb-4 border-bottom-0 gap-4" style={{ paddingLeft: '1rem' }}>
           <li className="nav-item">
             <button 
-              className={`nav-link border-0 bg-transparent px-0 pb-3 fw-medium ${activeTab === 'overview' ? 'active text-primary border-bottom border-2 border-primary' : 'text-muted-custom'}`}
+              className={`nav-link border-0 bg-transparent px-0 pb-3 fw-medium ${activeTab === 'overview' ? 'active' : 'text-muted-custom'}`}
               onClick={() => setActiveTab('overview')}
             >
               <Icon icon="lucide:bar-chart-2" width="18" className="me-2" /> Tổng quan & Biểu đồ
@@ -133,7 +132,7 @@ const ProjectDetailPage = () => {
           </li>
           <li className="nav-item">
             <button 
-              className={`nav-link border-0 bg-transparent px-0 pb-3 fw-medium ${activeTab === 'articles' ? 'active text-primary border-bottom border-2 border-primary' : 'text-muted-custom'}`}
+              className={`nav-link border-0 bg-transparent px-0 pb-3 fw-medium ${activeTab === 'articles' ? 'active' : 'text-muted-custom'}`}
               onClick={() => setActiveTab('articles')}
             >
               <Icon icon="lucide:file-text" width="18" className="me-2" /> Luồng Bài Báo ({articleCount})
@@ -141,7 +140,7 @@ const ProjectDetailPage = () => {
           </li>
           <li className="nav-item">
             <button 
-              className={`nav-link border-0 bg-transparent px-0 pb-3 fw-medium ${activeTab === 'keywords' ? 'active text-primary border-bottom border-2 border-primary' : 'text-muted-custom'}`}
+              className={`nav-link border-0 bg-transparent px-0 pb-3 fw-medium ${activeTab === 'keywords' ? 'active' : 'text-muted-custom'}`}
               onClick={() => setActiveTab('keywords')}
             >
               <Icon icon="lucide:key" width="18" className="me-2" /> Keywords & Giám sát ({keywordCount})

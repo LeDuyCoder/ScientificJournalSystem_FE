@@ -18,7 +18,7 @@ export default function SubmissionTabs({ activeTab, onTabChange }) {
         <button 
           className={`nav-link border-0 bg-transparent px-0 pb-3 fw-medium d-flex align-items-center gap-2 ${
             activeTab === 'manual' 
-              ? 'active text-primary border-bottom border-2 border-primary' 
+              ? 'active' 
               : 'text-muted-custom'
           }`}
           onClick={() => onTabChange('manual')}
@@ -34,7 +34,7 @@ export default function SubmissionTabs({ activeTab, onTabChange }) {
         <button 
           className={`nav-link border-0 bg-transparent px-0 pb-3 fw-medium d-flex align-items-center gap-2 ${
             activeTab === 'pdf' 
-              ? 'active text-primary border-bottom border-2 border-primary' 
+              ? 'active' 
               : 'text-muted-custom'
           }`}
           onClick={() => onTabChange('pdf')}
