@@ -43,7 +43,7 @@ const ROUTES = {
 
   // Bài báo (Article)
   ARTICLES:              "/articles",
-  ARTICLE_SUBMIT:        "/articles/submit",
+  ARTICLE_SUBMIT:        "/admin/articles",
   ARTICLE_DETAIL:        "/articles/:id",
   ARTICLE_VISUAL_DETAIL: "/articles/:id/visual",
 

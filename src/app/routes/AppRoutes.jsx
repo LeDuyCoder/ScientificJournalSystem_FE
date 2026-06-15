@@ -68,7 +68,6 @@ export default function AppRoutes() {
         <Route path="/authors/leaderboard" element={<AuthorLeaderboardPage />} />
         <Route path="/admin/dashboard" element={<AdminDashboardPage />} />
         <Route path="/admin/articles/:id" element={<UpdateArticlePage />} />
-        <Route path="/admin/articles" element={<AdminDashboardPage />} />
       </Route>
 
       <Route element={<PublicRoute />}>
@@ -98,7 +97,7 @@ export default function AppRoutes() {
             <Route path="/admin/users" element={<UserDirectoryPage />} />
             <Route path="/admin/users/create" element={<AddNewAccountPage />} />
             <Route path="/admin/users/:id/edit" element={<UpdateUserAccountPage />} />
-            <Route path="/articles/submit" element={<SubmitArticlePage />} />
+            <Route path="/admin/articles" element={<SubmitArticlePage />} />
 
             {/* 🚀 Các tuyến đường quản lý cấu trúc tạp chí dành cho Admin (Issue #76) */}
             <Route path="/admin/journals" element={<JournalDirectoryPage />} />
