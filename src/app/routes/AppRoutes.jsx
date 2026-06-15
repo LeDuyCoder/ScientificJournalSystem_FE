@@ -25,6 +25,7 @@ import AuthorListPage from '../../features/author/pages/AuthorListPage';
 import TopicDetailPage from '../../features/topic/pages/TopicDetailPage';
 import AdminDashboardPage from '../../features/admin/pages/AdminDashboardPage';
 import UpdateArticlePage from '../../features/admin/pages/UpdateArticlePage';
+import ArticleRepositoryPage from '../../features/admin/pages/ArticleRepositoryPage';
 
 /**
  * Nơi khai báo route chính của ứng dụng.
@@ -49,6 +50,7 @@ export default function AppRoutes() {
         <Route path="/dashboard" element={<DashboardPage />} />
         <Route path="/authors/leaderboard" element={<AuthorLeaderboardPage />} />
         <Route path="/admin/dashboard" element={<AdminDashboardPage />} />
+        <Route path="/admin/articles" element={<ArticleRepositoryPage />} />
         <Route path="/admin/articles/:id" element={<UpdateArticlePage />} />
       </Route>
 
@@ -79,6 +81,7 @@ export default function AppRoutes() {
       {/* TODO: route tạm để preview UI Admin Dashboard không cần login.
           Xóa route này khi vấn đề đăng nhập đã được xử lý xong. */}
       <Route path="/admin-preview" element={<AdminDashboardPage />} />
+      <Route path="/admin-preview/articles" element={<ArticleRepositoryPage />} />
       <Route path="/admin-preview/articles/:id" element={<UpdateArticlePage />} />
 
       <Route path="*" element={<LandingPage />} />

@@ -1200,3 +1200,391 @@
   gap: 10px;
   width: 100%;
 }
+
+/* ───────────────────────────────────────────────────────────────
+ * 20. ARTICLE REPOSITORY PAGE - header + filter bar
+ * ─────────────────────────────────────────────────────────────── */
+
+/* Header: title bên trái, nút "Submit New Article" bên phải */
+.admin-page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+}
+
+/* Nút "Submit New Article" - dùng .admin-btn--primary nhưng width auto
+   (khác Update/Apply full width trong form), thêm padding ngang rộng hơn */
+.admin-btn--auto {
+  width: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 18px;
+}
+
+.admin-filter-bar {
+  margin-bottom: 16px;
+}
+
+.admin-filter-bar__label {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  margin-bottom: 12px;
+}
+
+.admin-filter-bar__clear {
+  border: none;
+  background: transparent;
+  color: var(--primary);
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 0.75rem;
+  text-transform: none;
+  letter-spacing: normal;
+  cursor: pointer;
+}
+
+.admin-filter-bar__clear:hover {
+  text-decoration: underline;
+}
+
+/* Hàng filter: 3 field co dãn đều + nút Apply có width riêng */
+.admin-filter-bar__row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr auto;
+  gap: 14px;
+  align-items: end;
+}
+
+@media (max-width: 992px) {
+  .admin-filter-bar__row {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 576px) {
+  .admin-filter-bar__row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Group chứa nút Apply - không có label nên cần margin-bottom để
+   căn ngang hàng với input phía trên (label chiếm khoảng 22px) */
+.admin-filter-bar__apply-group {
+  margin-bottom: 0;
+}
+
+.admin-filter-bar__apply-group .admin-btn {
+  white-space: nowrap;
+}
+
+/* ───────────────────────────────────────────────────────────────
+ * 21. ARTICLE TABLE - Article Repository
+ * ─────────────────────────────────────────────────────────────── */
+
+.admin-article-table-card {
+  margin-bottom: 16px;
+}
+
+/* Cell "Article Details": title (link cam, đậm) + meta (MS ID/pages/citations) */
+.admin-article-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  white-space: normal; /* cho phép title xuống dòng nếu quá dài */
+  min-width: 220px;
+}
+
+.admin-article-cell__title {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--primary);
+}
+
+.admin-article-cell__meta {
+  font-family: var(--font-sans);
+  font-weight: 400;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+/* Cell "Lead Author": avatar tròn + tên */
+.admin-author-cell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.admin-author-cell__avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+/* Trạng thái rỗng khi filter không có kết quả */
+.admin-table__empty {
+  text-align: center;
+  color: var(--text-muted);
+  padding: 24px 12px;
+  white-space: normal;
+}
+
+/* Dòng "Showing X-Y of Z manuscripts" - căn phải, dưới table */
+.admin-article-table-card__summary {
+  margin: 12px 0 0;
+  text-align: right;
+  font-family: var(--font-sans);
+  font-size: 0.78rem;
+  color: var(--text-muted);
+}
+
+/* ───────────────────────────────────────────────────────────────
+ * 22. PAGINATION
+ * ─────────────────────────────────────────────────────────────── */
+
+.admin-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-top: 16px;
+}
+
+.admin-pagination__btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  height: 32px;
+  padding: 0 8px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background-color: var(--bg-card);
+  color: var(--text-main);
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.admin-pagination__btn:hover:not(:disabled) {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.admin-pagination__btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* Trang hiện tại - nền cam, chữ trắng */
+.admin-pagination__btn--active {
+  background-color: var(--primary);
+  border-color: var(--primary);
+  color: #ffffff;
+}
+
+.admin-pagination__btn--active:hover {
+  color: #ffffff;
+}
+
+.admin-pagination__ellipsis {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  height: 32px;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+}
+
+/* ───────────────────────────────────────────────────────────────
+ * 23. ARTICLE REPOSITORY BOTTOM ROW
+ *     Editor's Insights (left, wider) + Peer-Matching promo (right)
+ * ─────────────────────────────────────────────────────────────── */
+
+.admin-repository-bottom-row {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 16px;
+  margin-top: 16px;
+  align-items: start;
+}
+
+@media (max-width: 992px) {
+  .admin-repository-bottom-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ───────────────────────────────────────────────────────────────
+ * 24. EDITOR'S INSIGHTS CARD
+ * ─────────────────────────────────────────────────────────────── */
+
+.admin-insights-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+/* "Q4 Performance" badge - cam nhat, giong Q2 badge */
+.admin-insights-card__period-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background-color: var(--primary-light);
+  color: var(--primary);
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+
+.admin-insights-card__summary {
+  font-family: var(--font-sans);
+  font-size: 0.85rem;
+  line-height: 1.6;
+  color: var(--text-muted);
+  margin: 0 0 16px;
+}
+
+/* 3 mini stats, side by side on desktop */
+.admin-insights-card__stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+}
+
+@media (max-width: 576px) {
+  .admin-insights-card__stats {
+    grid-template-columns: 1fr;
+  }
+}
+
+.admin-insights-stat {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.admin-insights-stat__label {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--text-muted);
+}
+
+.admin-insights-stat__value {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.4rem;
+  color: var(--text-main);
+}
+
+.admin-insights-stat__trend {
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 0.74rem;
+}
+
+/* Positive trend - xanh la giong Q1 badge */
+.admin-insights-stat__trend--positive {
+  color: var(--q1-color);
+}
+
+/* Neutral trend - xam */
+.admin-insights-stat__trend--neutral {
+  color: var(--text-muted);
+}
+
+/* ───────────────────────────────────────────────────────────────
+ * 25. AUTOMATED PEER-MATCHING ENGINE PROMO CARD
+ * ─────────────────────────────────────────────────────────────── */
+
+/* Card nen cam dam (--primary), chu trang - khac biet han voi cac
+   admin-card trang con lai de lam noi bat tinh nang moi */
+.admin-promo-card {
+  background-color: var(--primary);
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  color: #ffffff;
+  height: 100%;
+}
+
+/* "NEW SYSTEM" tag - nen trang mo, chu trang */
+.admin-promo-card__tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  align-self: flex-start;
+  padding: 3px 10px;
+  border-radius: 999px;
+  background-color: rgba(255, 255, 255, 0.18);
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.admin-promo-card__title {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.1rem;
+  margin: 4px 0 0;
+  color: #ffffff;
+}
+
+.admin-promo-card__description {
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0;
+  flex: 1;
+}
+
+/* CTA button - nen trang, chu cam (dao mau so voi nen card) */
+.admin-promo-card__btn {
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: none;
+  background-color: #ffffff;
+  color: var(--primary);
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: opacity 0.15s ease;
+}
+
+.admin-promo-card__btn:hover {
+  opacity: 0.9;
+}
