@@ -6,6 +6,7 @@ import ResetPasswordForm from '../components/ResetPasswordForm';
 import ResetPasswordSuccess from '../components/ResetPasswordSuccess';
 import { resetPasswordApi } from '../api/auth.api';
 import Icon from '../../../shared/components/Icon';
+import ROUTES from '../../../app/routes/routePaths';
 
 export default function ResetPasswordPage() {
   const [searchParams] = useSearchParams();
@@ -91,7 +92,7 @@ export default function ResetPasswordPage() {
               <div>
                 Liên kết khôi phục mật khẩu không hợp lệ hoặc thiếu mã token. Vui lòng kiểm tra lại email của bạn hoặc gửi lại yêu cầu.
                 <div className="mt-2">
-                  <Link to="/forgot-password" style={{ color: 'var(--primary)', textDecoration: 'none', fontWeight: 600 }}>
+                  <Link to={ROUTES.FORGOT_PASSWORD} style={{ color: 'var(--primary)', textDecoration: 'none', fontWeight: 600 }}>
                     Yêu cầu liên kết mới →
                   </Link>
                 </div>
@@ -109,7 +110,7 @@ export default function ResetPasswordPage() {
           {!isSubmitted && (
             <div className="text-center mt-4 text-sm font-medium">
               <span className="text-muted-custom">Quay lại </span>
-              <Link to="/login" className="text-decoration-none" style={{ color: 'var(--primary)', fontWeight: 600 }}>
+              <Link to={ROUTES.LOGIN} className="text-decoration-none" style={{ color: 'var(--primary)', fontWeight: 600 }}>
                 Đăng nhập
               </Link>
             </div>

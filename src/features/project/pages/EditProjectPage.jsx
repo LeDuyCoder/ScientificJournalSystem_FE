@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link, useParams } from 'react-router-dom';
+import ROUTES from '../../../app/routes/routePaths';
 import projectService from '../services/projectService';
 import { Icon } from '@iconify/react';
 import { getSubjectAreasApi, getSubjectCategoriesApi } from '../../catalog/api/catalogApi';
@@ -107,7 +108,7 @@ const EditProjectPage = () => {
       
       const response = await projectService.updateProject(id, payload);
       if (response && response.success !== false) {
-        navigate(`/projects/${id}`);
+        navigate(ROUTES.PROJECT_DETAIL.replace(':id', id));
       } else {
         setError(response?.message || 'Cập nhật dự án thất bại');
       }
@@ -132,9 +133,9 @@ const EditProjectPage = () => {
       <div className="container mx-auto" style={{ maxWidth: '650px', marginTop: '20px' }}>
         <nav aria-label="breadcrumb" className="mb-4">
           <ol className="breadcrumb mb-2 text-muted-custom small">
-            <li className="breadcrumb-item"><Link to="/dashboard" className="text-decoration-none text-muted-custom hover-primary">Tổng quan</Link></li>
-            <li className="breadcrumb-item"><Link to="/projects" className="text-decoration-none text-muted-custom hover-primary">Dự án theo dõi</Link></li>
-            <li className="breadcrumb-item"><Link to={`/projects/${id}`} className="text-decoration-none text-muted-custom hover-primary">{title || 'Dự án'}</Link></li>
+            <li className="breadcrumb-item"><Link to={ROUTES.DASHBOARD} className="text-decoration-none text-muted-custom hover-primary">Tổng quan</Link></li>
+            <li className="breadcrumb-item"><Link to={ROUTES.PROJECTS} className="text-decoration-none text-muted-custom hover-primary">Dự án theo dõi</Link></li>
+            <li className="breadcrumb-item"><Link to={ROUTES.PROJECT_DETAIL.replace(':id', id)} className="text-decoration-none text-muted-custom hover-primary">{title || 'Dự án'}</Link></li>
             <li className="breadcrumb-item active" aria-current="page">Chỉnh sửa</li>
           </ol>
         </nav>

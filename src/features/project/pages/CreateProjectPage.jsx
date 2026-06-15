@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import ROUTES from '../../../app/routes/routePaths';
 import useProjects from '../hooks/useProjects';
 import { Icon } from '@iconify/react';
 import { getSubjectAreasApi, getSubjectCategoriesApi } from '../../catalog/api/catalogApi';
@@ -97,7 +98,7 @@ const CreateProjectPage = () => {
       const response = await createProject(payload);
       if (response && response.success !== false) {
         const projectId = response.data?.project_id || response.data?.id || response.project_id;
-        navigate(projectId ? `/projects/${projectId}` : '/projects');
+        navigate(projectId ? ROUTES.PROJECT_DETAIL.replace(':id', projectId) : ROUTES.PROJECTS);
       } else {
         setError(response?.message || 'Tạo dự án thất bại');
       }
@@ -114,8 +115,8 @@ const CreateProjectPage = () => {
       <div className="container mx-auto" style={{ maxWidth: '650px', marginTop: '20px' }}>
         <nav aria-label="breadcrumb" className="mb-4">
           <ol className="breadcrumb mb-2 text-muted-custom small">
-            <li className="breadcrumb-item"><Link to="/dashboard" className="text-decoration-none text-muted-custom hover-primary">Tổng quan</Link></li>
-            <li className="breadcrumb-item"><Link to="/projects" className="text-decoration-none text-muted-custom hover-primary">Dự án theo dõi</Link></li>
+            <li className="breadcrumb-item"><Link to={ROUTES.DASHBOARD} className="text-decoration-none text-muted-custom hover-primary">Tổng quan</Link></li>
+            <li className="breadcrumb-item"><Link to={ROUTES.PROJECTS} className="text-decoration-none text-muted-custom hover-primary">Dự án theo dõi</Link></li>
             <li className="breadcrumb-item active" aria-current="page">Tạo dự án mới</li>
           </ol>
         </nav>

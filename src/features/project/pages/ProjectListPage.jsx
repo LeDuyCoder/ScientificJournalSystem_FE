@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import ROUTES from '../../../app/routes/routePaths';
 import useProjects from '../hooks/useProjects';
 import ProjectCard from '../components/ProjectCard';
 import EmptyState from '../../../shared/components/EmptyState';
@@ -28,7 +29,7 @@ const ProjectListPage = () => {
         {/* Breadcrumb */}
         <nav aria-label="breadcrumb" className="mb-4">
           <ol className="breadcrumb mb-2 text-muted-custom small">
-            <li className="breadcrumb-item"><Link to="/dashboard" className="text-decoration-none text-muted-custom hover-primary">Tổng quan</Link></li>
+            <li className="breadcrumb-item"><Link to={ROUTES.DASHBOARD} className="text-decoration-none text-muted-custom hover-primary">Tổng quan</Link></li>
             <li className="breadcrumb-item active" aria-current="page">Dự án theo dõi</li>
           </ol>
         </nav>
@@ -41,7 +42,7 @@ const ProjectListPage = () => {
           </div>
           <button 
             className="btn btn-primary btn-primary-glow px-4 py-2 fw-medium d-flex align-items-center gap-2 rounded-pill"
-            onClick={() => navigate('/projects/create')}
+            onClick={() => navigate(ROUTES.PROJECT_CREATE)}
           >
             <Icon icon="lucide:plus" width="18" /> Tạo dự án mới
           </button>
@@ -98,7 +99,7 @@ const ProjectListPage = () => {
             description="Tạo dự án đầu tiên để bắt đầu theo dõi từ khóa và cập nhật bài báo khoa học." 
             icon="lucide:folder-open" 
             actionLabel="+ Tạo dự án mới"
-            onAction={() => navigate('/projects/create')}
+            onAction={() => navigate(ROUTES.PROJECT_CREATE)}
             className="mt-4"
           />
         ) : (

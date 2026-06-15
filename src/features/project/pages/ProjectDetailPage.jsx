@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
+import ROUTES from '../../../app/routes/routePaths';
 import { useKeywordTracking } from '../../keyword/hooks/useKeywordTracking';
 import KeywordWatchList from '../../keyword/components/KeywordWatchList';
 import AddKeywordModal from '../../keyword/components/AddKeywordModal';
@@ -43,7 +44,7 @@ const ProjectDetailPage = () => {
               <h6 className="fw-bold mb-1">Không thể tải dự án</h6>
               <p className="mb-0 small">{error || 'Dự án không tồn tại hoặc đã bị xóa.'}</p>
             </div>
-            <button className="btn btn-outline-danger btn-sm ms-auto" onClick={() => navigate('/projects')}>Quay lại</button>
+            <button className="btn btn-outline-danger btn-sm ms-auto" onClick={() => navigate(ROUTES.PROJECTS)}>Quay lại</button>
           </div>
         </div>
       </div>
@@ -62,8 +63,8 @@ const ProjectDetailPage = () => {
         {/* Breadcrumb */}
         <nav aria-label="breadcrumb" className="mb-4">
           <ol className="breadcrumb mb-2 text-muted-custom small">
-            <li className="breadcrumb-item"><Link to="/dashboard" className="text-decoration-none text-muted-custom hover-primary">Tổng quan</Link></li>
-            <li className="breadcrumb-item"><Link to="/projects" className="text-decoration-none text-muted-custom hover-primary">Dự án theo dõi</Link></li>
+            <li className="breadcrumb-item"><Link to={ROUTES.DASHBOARD} className="text-decoration-none text-muted-custom hover-primary">Tổng quan</Link></li>
+            <li className="breadcrumb-item"><Link to={ROUTES.PROJECTS} className="text-decoration-none text-muted-custom hover-primary">Dự án theo dõi</Link></li>
             <li className="breadcrumb-item active" aria-current="page">{title}</li>
           </ol>
         </nav>
@@ -83,7 +84,7 @@ const ProjectDetailPage = () => {
             <div className="d-flex gap-2">
               <button 
                 className="btn btn-light border fw-medium d-flex align-items-center gap-2 rounded-pill px-3"
-                onClick={() => navigate(`/projects/${projectId}/edit`)}
+                onClick={() => navigate(ROUTES.PROJECT_EDIT.replace(':id', projectId))}
               >
                 <Icon icon="lucide:settings" width="16" /> Cấu hình từ khóa
               </button>
