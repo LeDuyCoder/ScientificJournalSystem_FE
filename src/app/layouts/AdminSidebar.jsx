@@ -29,6 +29,10 @@ export default function AdminSidebar() {
    * Kiểm tra xem mục menu hiện tại có đang active (được chọn) hay không.
    */
   const isActive = (itemPath) => {
+    if (itemPath === ROUTES.ADMIN_JOURNALS) {
+      // Journals chỉ active khi ở /admin/journals hoặc các subpath mà không phải repository
+      return pathname === ROUTES.ADMIN_JOURNALS || (pathname.startsWith(ROUTES.ADMIN_JOURNALS) && !pathname.startsWith(ROUTES.ADMIN_REPOSITORY));
+    }
     if (itemPath === ROUTES.ADMIN_DASHBOARD) {
       return pathname === ROUTES.ADMIN_DASHBOARD;
     }
