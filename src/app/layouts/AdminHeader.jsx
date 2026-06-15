@@ -1,5 +1,6 @@
 import React from 'react';
 import { useUserStore } from '../store/userStore';
+import { useAuthStore } from '../store/authStore';
 import Icon from '../../shared/components/Icon';
 
 /**
@@ -7,9 +8,23 @@ import Icon from '../../shared/components/Icon';
  * Renders the top search & user profile bar matching the mockups.
  */
 export default function AdminHeader() {
+  const user = useAuthStore((state) => state.user);
   const email = useUserStore((state) => state.email) || 'admin@researchpulse.org';
   const name = email.split('@')[0];
   const formattedName = name.charAt(0).toUpperCase() + name.slice(1);
+
+  const displayName = user ? `${user.first_name || ''} ${user.last_name || ''}`.trim() || formattedName : formattedName;
+
+  let displayRole = 'Journal Editor';
+  if (user?.role) {
+    if (user.role.toLowerCase() === 'admin') {
+      displayRole = 'System Administrator';
+    } else if (user.role.toLowerCase() === 'editor') {
+      displayRole = 'Journal Editor';
+    } else {
+      displayRole = user.role.charAt(0).toUpperCase() + user.role.slice(1);
+    }
+  }
 
   return (
     <div 
@@ -20,8 +35,8 @@ export default function AdminHeader() {
       <div 
         className="d-flex align-items-center gap-2 px-3 py-1.5 rounded-pill"
         style={{
-          backgroundColor: '#f8fafc',
-          border: '1px solid var(--border)',
+          backgroundColor: '#f1f5f9',
+          border: 'none',
           width: '380px',
         }}
       >
@@ -35,7 +50,7 @@ export default function AdminHeader() {
       </div>
 
       {/* Right control utilities and profile section */}
-      <div className="d-flex align-items-center gap-4">
+      <div className="d-flex align-items-center gap-3">
         {/* Notification Icon */}
         <div className="text-muted-custom position-relative" style={{ cursor: 'pointer' }}>
           <Icon icon="lucide:bell" width="20" />
@@ -46,18 +61,21 @@ export default function AdminHeader() {
         </div>
 
         {/* Settings Icon */}
-        <div className="text-muted-custom" style={{ cursor: 'pointer' }}>
+        <div className="text-muted-custom me-2" style={{ cursor: 'pointer' }}>
           <Icon icon="lucide:settings" width="20" />
         </div>
 
+        {/* Vertical Divider */}
+        <div style={{ width: '1px', height: '24px', backgroundColor: '#e2e8f0' }}></div>
+
         {/* User profile section matching mockup format */}
-        <div className="d-flex align-items-center gap-3">
+        <div className="d-flex align-items-center gap-3 ms-2">
           <div className="text-end">
             <div className="text-sm fw-bold text-main" style={{ fontSize: '0.9rem', lineHeight: '1.2' }}>
-              {formattedName}
+              {displayName}
             </div>
             <div className="text-muted-custom" style={{ fontSize: '0.75rem', lineHeight: '1' }}>
-              System Administrator
+              {displayRole}
             </div>
           </div>
           {/* Avatar image */}
@@ -66,7 +84,7 @@ export default function AdminHeader() {
             style={{
               width: '40px',
               height: '40px',
-              border: '2px solid var(--primary-light)',
+              border: '2px solid var(--primary)',
               backgroundColor: 'var(--bg-section)'
             }}
           >
