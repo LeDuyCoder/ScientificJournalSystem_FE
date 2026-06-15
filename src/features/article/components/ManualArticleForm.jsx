@@ -24,17 +24,27 @@ export default function ManualArticleForm({ formData = {}, onChange }) {
       setLoadingOptions(true);
       try {
         const [catsRes, journalsRes] = await Promise.all([
-          getSubjectCategoriesApi(),
+          getSubjectCategoriesApi({ limit: 1000 }), // Tăng giới hạn lên 1000 để lấy đa dạng các category thay vì 10 mục mặc định
           searchJournalsApi({ limit: 100 })
         ]);
         
         if (catsRes?.data) {
           const rawCats = catsRes.data.data || catsRes.data;
-          setCategories(Array.isArray(rawCats) ? rawCats : (rawCats?.items || []));
+          const list = Array.isArray(rawCats) ? rawCats : (rawCats?.items || []);
+          // Loại bỏ các category bị trùng lặp tên để hiển thị giao diện sạch đẹp
+          const uniqueCats = list.filter((c, index, self) => 
+            self.findIndex(t => (t.display_name || t.name) === (c.display_name || c.name)) === index
+          );
+          setCategories(uniqueCats);
         }
         if (journalsRes?.data) {
           const rawJournals = journalsRes.data.data || journalsRes.data;
-          setJournals(Array.isArray(rawJournals) ? rawJournals : (rawJournals?.items || []));
+          const list = Array.isArray(rawJournals) ? rawJournals : (rawJournals?.items || []);
+          // Loại bỏ các journal trùng lặp tên
+          const uniqueJournals = list.filter((j, index, self) =>
+            self.findIndex(t => (t.display_name || t.name || t.title) === (j.display_name || j.name || j.title)) === index
+          );
+          setJournals(uniqueJournals);
         }
       } catch (err) {
         console.warn('Could not load categories/journals from API, using mock items:', err);
