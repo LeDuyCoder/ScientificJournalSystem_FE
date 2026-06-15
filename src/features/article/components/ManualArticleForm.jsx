@@ -139,7 +139,7 @@ export default function ManualArticleForm({ formData = {}, onChange }) {
               <option value="">Choose a journal...</option>
               {journals.map((j) => (
                 <option key={j.id || j.journal_id} value={j.id || j.journal_id}>
-                  {j.name || j.title}
+                  {j.display_name || j.name || j.title}
                 </option>
               ))}
             </Form.Select>
@@ -161,7 +161,7 @@ export default function ManualArticleForm({ formData = {}, onChange }) {
               <option value="">Select category...</option>
               {categories.map((c) => (
                 <option key={c.id || c.subject_category_id} value={c.id || c.subject_category_id}>
-                  {c.name || c.category_name}
+                  {c.display_name || c.name || c.category_name}
                 </option>
               ))}
             </Form.Select>
