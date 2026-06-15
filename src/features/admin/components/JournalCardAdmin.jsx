@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, Col, Button } from 'react-bootstrap';
+import { Card, Col, Row, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 
@@ -17,7 +17,8 @@ export default function JournalCardAdmin({ journal }) {
   const basePath = isPreview ? '/admin-preview' : '/admin';
 
   // Get index clean representation
-  const cleanId = id.replace(/\D/g, '') || '101';
+  const idStr = id ? String(id) : '';
+  const cleanId = idStr.replace(/\D/g, '') || '101';
   const displayId = `ID: #${cleanId}`;
 
   // Avatar selector fallback

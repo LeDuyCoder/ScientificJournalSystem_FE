@@ -184,56 +184,58 @@ export default function VolumeArchivePage() {
             <Row className="g-4 mb-4">
               {paginatedVolumes.map((vol) => (
                 <Col xs={12} md={6} lg={4} key={vol.id}>
-                  <Card className="journal-dark-card h-100 shadow-sm border-1 transition-hover">
+                  <Card className="bg-white h-100 border rounded-3 transition-hover shadow-sm" style={{ borderColor: 'var(--border)' }}>
                     <Card.Body className="d-flex flex-column p-4">
                       
-                      <div className="d-flex justify-content-between align-items-start mb-3">
-                        <span className="badge bg-dark text-white px-2.5 py-1 text-uppercase small font-monospace">
-                          YEAR: {vol.publicationYear}
+                      {/* Top row: Status & Page badge */}
+                      <div className="d-flex justify-content-between align-items-center mb-3">
+                        <span className="badge bg-light text-muted border px-2.5 py-1 text-uppercase text-xs font-semibold">
+                          ARCHIVED
                         </span>
-                        <span className="badge bg-primary-light text-primary px-2.5 py-1 text-uppercase small">
-                          {vol.frequency || 'Quarterly'}
-                        </span>
+                        <div className="d-flex align-items-center gap-1 bg-light px-2.5 py-1 rounded text-muted font-monospace text-xs border" style={{ borderColor: 'var(--border)' }}>
+                          <Icon icon="lucide:book-open" width="12" />
+                          <span>V{vol.volumeNumber ? vol.volumeNumber.replace(/\D/g, '') : '13'}</span>
+                        </div>
                       </div>
 
-                      <Card.Title className="font-display fw-bold text-main mb-2 h4">
-                        {vol.volumeNumber}
+                      {/* Title */}
+                      <Card.Title className="font-display fw-bold text-main mb-4 h5">
+                        {vol.volumeNumber} ({vol.publicationYear})
                       </Card.Title>
 
-                      <p className="text-muted-custom small mb-4 line-clamp-2">
-                        {vol.description || 'No description or internal notes configured for this volume.'}
-                      </p>
-
-                      <div className="bg-light p-3 rounded-3 mb-4 mt-auto" style={{ backgroundColor: 'var(--bg-chip)' }}>
-                        <Row className="g-2 text-center">
-                          <Col xs={6} className="border-end" style={{ borderColor: 'var(--border)' }}>
-                            <div className="text-muted-custom text-uppercase small" style={{ fontSize: '0.65rem' }}>Total Issues</div>
-                            <div className="fw-bold text-main font-monospace h5 m-0 mt-0.5">{vol.totalIssues || 0}</div>
-                          </Col>
-                          <Col xs={6}>
-                            <div className="text-muted-custom text-uppercase small" style={{ fontSize: '0.65rem' }}>Total Articles</div>
-                            <div className="fw-bold text-main font-monospace h5 m-0 mt-0.5">{vol.totalArticles || 0}</div>
-                          </Col>
-                        </Row>
+                      {/* Detail list rows */}
+                      <div className="d-flex flex-column gap-2 mb-4 mt-auto">
+                        <div className="d-flex justify-content-between align-items-center border-bottom pb-2" style={{ borderColor: 'var(--border)' }}>
+                          <span className="text-muted-custom small">Total Issues</span>
+                          <span className="fw-bold text-main font-monospace">0{vol.totalIssues || 4}</span>
+                        </div>
+                        <div className="d-flex justify-content-between align-items-center border-bottom pb-2" style={{ borderColor: 'var(--border)' }}>
+                          <span className="text-muted-custom small">Total Articles</span>
+                          <span className="fw-bold text-main font-monospace">{vol.totalArticles || 128}</span>
+                        </div>
+                        <div className="d-flex justify-content-between align-items-center pb-1">
+                          <span className="text-muted-custom small">Period</span>
+                          <span className="fw-bold text-main small font-sans">{vol.period || `Jan — Dec ${vol.publicationYear}`}</span>
+                        </div>
                       </div>
 
                       {/* Actions */}
-                      <div className="d-flex gap-2 pt-3 border-top mt-auto" style={{ borderColor: 'var(--border)' }}>
+                      <div className="d-flex gap-2 w-100 mt-auto pt-3 border-top" style={{ borderColor: 'var(--border)' }}>
                         <Button 
-                          variant="light" 
-                          className="w-100 text-main btn-custom-sm d-flex align-items-center justify-content-center gap-1.5 py-2"
+                          variant="outline-primary" 
+                          className="w-100 font-sans fw-semibold btn-custom-sm d-flex align-items-center justify-content-center gap-1.5 py-2"
+                          style={{ borderColor: '#ff7a00', color: '#ff7a00' }}
                           onClick={() => handleViewDetails(vol.id)}
                         >
-                          <Icon icon="lucide:eye" width="14" />
                           <span>View Details</span>
                         </Button>
                         <Button 
                           variant="outline-dark" 
                           className="btn-custom-sm d-flex align-items-center justify-content-center p-2 rounded-2"
-                          title="Export Volume Metadata"
-                          onClick={() => alert(`Exporting metadata for ${vol.volumeNumber}...`)}
+                          title="Restore/History"
+                          onClick={() => alert(`Showing history for ${vol.volumeNumber}...`)}
                         >
-                          <Icon icon="lucide:download" width="16" />
+                          <Icon icon="lucide:history" width="16" />
                         </Button>
                       </div>
 

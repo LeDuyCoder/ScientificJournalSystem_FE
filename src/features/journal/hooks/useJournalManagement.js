@@ -17,8 +17,13 @@ export const useJournalManagement = create((set, get) => ({
 
   // --- FUNCTIONS / ACTIONS ---
 
-  /** Khởi tạo dữ liệu gốc ban đầu cho toàn bộ feature */
+  /** Khởi tạo dữ liệu gốc ban đầu cho toàn bộ feature nếu dữ liệu chưa có sẵn */
   fetchInitialData: () => {
+    // Chỉ nạp dữ liệu khi mảng journals trống để tránh ghi đè dữ liệu Admin vừa thêm/sửa
+    if (get().journals && get().journals.length > 0) {
+      return;
+    }
+    
     set({ loading: true, error: null });
     try {
       // Đổ dữ liệu từ Mock Constants vào State quản lý tập trung

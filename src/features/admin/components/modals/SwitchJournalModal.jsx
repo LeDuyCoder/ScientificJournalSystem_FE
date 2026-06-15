@@ -71,22 +71,22 @@ export default function SwitchJournalModal({ show, handleClose }) {
               <ListGroup.Item
                 key={j.id}
                 onClick={() => setTempSelectedId(j.id)}
-                className="d-flex justify-content-between align-items-center py-3 px-3 rounded-3 border"
+                className="d-flex justify-content-between align-items-center py-3 px-3 rounded-3"
                 style={{
-                  borderColor: isTempSelected ? '#ff7a00' : 'var(--border)',
-                  borderWidth: isTempSelected ? '2px' : '1px',
+                  border: isTempSelected ? '2px solid #ff7a00' : '1px solid var(--border)',
+                  margin: isTempSelected ? '-1px' : '0',
                   backgroundColor: '#ffffff',
                   transition: 'all 0.15s ease',
                   cursor: 'pointer',
                 }}
               >
-                <div className="d-flex align-items-center gap-3 text-truncate pe-2">
+                <div className="d-flex align-items-center gap-3 pe-2">
                   <div className="bg-light p-2 rounded-2 text-muted">
                     <Icon icon="lucide:book" width="18" />
                   </div>
-                  <div className="text-truncate">
+                  <div>
                     <div className="d-flex align-items-center gap-2 flex-wrap">
-                      <span className="fw-bold text-main text-truncate">{j.title}</span>
+                      <span className="fw-bold text-main">{j.title}</span>
                       {isCurrent && (
                         <span 
                           className="badge text-uppercase text-xs font-semibold px-2 py-0.5 rounded-pill"
