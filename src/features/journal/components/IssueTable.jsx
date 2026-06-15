@@ -22,12 +22,12 @@ export default function IssueTable({ issues }) {
   return (
     <div className="table-responsive rounded-3 border shadow-sm">
       <Table hover className="align-middle mb-0 text-start bg-white">
-        <thead className="table-light">
+        <thead className="border-bottom" style={{ fontSize: '0.75rem', letterSpacing: '0.05em' }}>
           <tr>
-            <th className="py-3 ps-4 text-muted-custom" style={{ width: '80px' }}>Số hiệu</th>
-            <th className="py-3 text-muted-custom">Tên chủ đề / Tên Issue</th>
-            <th className="py-3 text-muted-custom">Năm phát hành</th>
-            <th className="py-3 text-muted-custom">Trạng thái phát hành</th>
+            <th className="py-3 ps-4" style={{ width: '80px', backgroundColor: '#f8fafc', color: '#64748b' }}>Số hiệu</th>
+            <th className="py-3" style={{ backgroundColor: '#f8fafc', color: '#64748b' }}>Tên chủ đề / Tên Issue</th>
+            <th className="py-3" style={{ backgroundColor: '#f8fafc', color: '#64748b' }}>Năm phát hành</th>
+            <th className="py-3" style={{ backgroundColor: '#f8fafc', color: '#64748b' }}>Trạng thái phát hành</th>
           </tr>
         </thead>
         <tbody>

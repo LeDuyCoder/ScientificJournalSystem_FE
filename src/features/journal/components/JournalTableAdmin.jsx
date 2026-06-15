@@ -27,16 +27,16 @@ export default function JournalTableAdmin({ journals, page = 1, limit = 10 }) {
   return (
     <div className="journal-table-shell table-responsive shadow-sm rounded-3 overflow-hidden">
       <Table hover className="journal-table align-middle mb-0 text-start bg-white">
-        <thead className="table-light">
+        <thead className="border-bottom" style={{ fontSize: '0.75rem', letterSpacing: '0.05em' }}>
           <tr>
-            <th className="py-3.5 ps-4 text-muted-custom" style={{ width: '60px' }}>#</th>
-            <th className="py-3.5 text-muted-custom">Journal Title / Publisher</th>
-            <th className="py-3.5 text-muted-custom">ISSN</th>
-            <th className="py-3.5 text-muted-custom">Lĩnh vực / Chuyên ngành</th>
-            <th className="py-3.5 text-muted-custom">Editor-in-Chief</th>
-            <th className="py-3.5 text-muted-custom">Last Updated</th>
-            <th className="py-3.5 text-muted-custom">Status</th>
-            <th className="py-3.5 pe-4 text-end text-muted-custom" style={{ width: '140px' }}>Hành động</th>
+            <th className="py-3.5 ps-4" style={{ width: '60px', backgroundColor: '#f8fafc', color: '#64748b' }}>#</th>
+            <th className="py-3.5" style={{ backgroundColor: '#f8fafc', color: '#64748b' }}>Journal Title / Publisher</th>
+            <th className="py-3.5" style={{ backgroundColor: '#f8fafc', color: '#64748b' }}>ISSN</th>
+            <th className="py-3.5" style={{ backgroundColor: '#f8fafc', color: '#64748b' }}>Lĩnh vực / Chuyên ngành</th>
+            <th className="py-3.5" style={{ backgroundColor: '#f8fafc', color: '#64748b' }}>Editor-in-Chief</th>
+            <th className="py-3.5" style={{ backgroundColor: '#f8fafc', color: '#64748b' }}>Last Updated</th>
+            <th className="py-3.5" style={{ backgroundColor: '#f8fafc', color: '#64748b' }}>Status</th>
+            <th className="py-3.5 pe-4 text-end" style={{ width: '140px', backgroundColor: '#f8fafc', color: '#64748b' }}>Hành động</th>
           </tr>
         </thead>
         <tbody>

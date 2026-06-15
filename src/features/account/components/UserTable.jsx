@@ -28,12 +28,12 @@ export default function UserTable({ users = [], onEdit, onDelete }) {
     <div className="table-responsive bg-white rounded-3 border">
       <Table className="align-middle mb-0" hover style={{ borderCollapse: 'collapse' }}>
         {/* Table Header */}
-        <thead className="bg-light border-bottom text-muted-custom" style={{ fontSize: '0.75rem', letterSpacing: '0.05em' }}>
+        <thead className="border-bottom text-muted-custom" style={{ fontSize: '0.75rem', letterSpacing: '0.05em' }}>
           <tr>
-            <th className="py-3 px-4 fw-bold text-uppercase" style={{ width: '45%' }}>User Profile</th>
-            <th className="py-3 px-3 fw-bold text-uppercase" style={{ width: '20%' }}>Role</th>
-            <th className="py-3 px-3 fw-bold text-uppercase" style={{ width: '15%' }}>Status</th>
-            <th className="py-3 px-4 fw-bold text-uppercase text-end" style={{ width: '20%' }}>Actions</th>
+            <th className="py-3 px-4 fw-bold text-uppercase" style={{ width: '45%', backgroundColor: '#f8fafc', color: '#64748b' }}>User Profile</th>
+            <th className="py-3 px-3 fw-bold text-uppercase" style={{ width: '20%', backgroundColor: '#f8fafc', color: '#64748b' }}>Role</th>
+            <th className="py-3 px-3 fw-bold text-uppercase" style={{ width: '15%', backgroundColor: '#f8fafc', color: '#64748b' }}>Status</th>
+            <th className="py-3 px-4 fw-bold text-uppercase text-end" style={{ width: '20%', backgroundColor: '#f8fafc', color: '#64748b' }}>Actions</th>
           </tr>
         </thead>
 
