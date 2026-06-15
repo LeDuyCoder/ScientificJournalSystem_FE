@@ -1,5 +1,4 @@
 import { Routes, Route } from 'react-router-dom';
-import ROUTES from './routePaths';
 
 import LandingPage from '../../features/landing/pages/LandingPage';
 import JournalDetailPage from '../../features/journal/pages/JournalDetailPage';
@@ -53,8 +52,7 @@ import RepositoryManagementPage from '../../features/journal/pages/RepositoryMan
 
 /**
  * Nơi khai báo route chính của ứng dụng.
- * Sử dụng hằng số ROUTES để tránh hardcode các đường dẫn chuỗi tĩnh trên toàn hệ thống.
- * 
+ *
  * Chính sách hiện tại:
  * - Các trang khám phá dữ liệu/bài báo cho phép guest truy cập công khai.
  * - Login/Register sử dụng PublicRoute.
@@ -63,89 +61,88 @@ import RepositoryManagementPage from '../../features/journal/pages/RepositoryMan
 export default function AppRoutes() {
   return (
     <Routes>
-      <Route path={ROUTES.HOME} element={<LandingPage />} />
+      <Route path="/" element={<LandingPage />} />
 
-      {/* Protected routes (Yêu cầu đăng nhập trước khi vào, không dùng Layout chính) */}
       <Route element={<ProtectedRoute />}>
-        <Route path={ROUTES.DASHBOARD} element={<DashboardPage />} />
-        <Route path={ROUTES.AUTHORS_LEADERBOARD} element={<AuthorLeaderboardPage />} />
-        <Route path={ROUTES.ADMIN_DASHBOARD} element={<AdminDashboardPage />} />
-        <Route path={ROUTES.ADMIN_ARTICLE_EDIT} element={<UpdateArticlePage />} />
-        <Route path={ROUTES.ADMIN_ARTICLES} element={<AdminDashboardPage />} />
+        <Route path="/dashboard" element={<DashboardPage />} />
+        <Route path="/authors/leaderboard" element={<AuthorLeaderboardPage />} />
+        <Route path="/admin/dashboard" element={<AdminDashboardPage />} />
+        <Route path="/admin/articles/:id" element={<UpdateArticlePage />} />
+        <Route path="/admin/articles" element={<AdminDashboardPage />} />
       </Route>
 
-      {/* Public routes (Đăng nhập / Đăng ký) */}
       <Route element={<PublicRoute />}>
-        <Route path={ROUTES.LOGIN} element={<LoginPage />} />
-        <Route path={ROUTES.REGISTER} element={<RegisterPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
       </Route>
 
-      {/* Routes sử dụng layout chung có header/footer */}
+      {/* Routes sử dụng layout chung */}
       <Route element={<AuthLayoutWithUser />}>
         
         {/* 🔐 Tuyến đường yêu cầu bảo mật (Đã đăng nhập) */}
         <Route element={<ProtectedRoute />}>
-          <Route path={ROUTES.DASHBOARD} element={<DashboardPage />} />
+          <Route path="/dashboard" element={<DashboardPage />} />
           
-          <Route path={ROUTES.PROJECTS} element={<ProjectListPage />} />
-          <Route path={ROUTES.PROJECT_CREATE} element={<CreateProjectPage />} />
-          <Route path={ROUTES.PROJECT_EDIT} element={<EditProjectPage />} />
-          <Route path={ROUTES.PROJECT_DETAIL} element={<ProjectDetailPage />} />
+          {/* 🚀 Các tuyến đường quản lý cấu trúc tạp chí dành cho Admin (Issue #76) */}
+          <Route path="/admin/journals" element={<JournalDirectoryPage />} />
+          <Route path="/admin/journals/repository" element={<RepositoryManagementPage />} />
+
+          <Route path="/projects" element={<ProjectListPage />} />
+          <Route path="/projects/create" element={<CreateProjectPage />} />
+          <Route path="/projects/:id/edit" element={<EditProjectPage />} />
+          <Route path="/projects/:id" element={<ProjectDetailPage />} />
 
           <Route
-            path={ROUTES.AUTHORS_LEADERBOARD}
+            path="/authors/leaderboard"
             element={<AuthorLeaderboardPage />}
           />
 
           {/* Admin layouts & pages (Quản trị viên) */}
           <Route element={<AdminLayout />}>
-            <Route path={ROUTES.ADMIN_USERS} element={<UserDirectoryPage />} />
-            <Route path={ROUTES.ADMIN_USERS_CREATE} element={<AddNewAccountPage />} />
-            <Route path={ROUTES.ADMIN_USERS_EDIT} element={<UpdateUserAccountPage />} />
-            <Route path={ROUTES.ARTICLE_SUBMIT} element={<SubmitArticlePage />} />
-
-            {/* 🚀 Các tuyến đường quản lý cấu trúc tạp chí dành cho Admin */}
-            <Route path={ROUTES.ADMIN_JOURNALS} element={<JournalDirectoryPage />} />
-            <Route path={ROUTES.ADMIN_REPOSITORY} element={<RepositoryManagementPage />} />
+            <Route path="/admin/users" element={<UserDirectoryPage />} />
+            <Route path="/admin/users/create" element={<AddNewAccountPage />} />
+            <Route path="/admin/users/:id/edit" element={<UpdateUserAccountPage />} />
+            <Route path="/articles/submit" element={<SubmitArticlePage />} />
           </Route>
         </Route>
 
-        {/* Public pages inside layout (Trang xem công khai nằm trong layout chung) */}
-        <Route path={ROUTES.SEARCH} element={<CatalogSearchPage />} />
-        <Route path={ROUTES.CATALOG} element={<CatalogSearchPage />} />
+        {/* Public pages inside layout */}
+        <Route path="/search" element={<CatalogSearchPage />} />
+        <Route path="/catalog" element={<CatalogSearchPage />} />
 
-        <Route path={ROUTES.ARTICLES} element={<ArticleListPage />} />
-        <Route path={ROUTES.ARTICLE_DETAIL} element={<ArticleDetailPage />} />
+        <Route path="/articles" element={<ArticleListPage />} />
+        <Route path="/articles/:id" element={<ArticleDetailPage />} />
         <Route
-          path={ROUTES.ARTICLE_VISUAL_DETAIL}
+          path="/articles/:id/visual"
           element={<ArticleVisualDetailPage />}
         />
 
-        <Route path={ROUTES.PROFILE} element={<ProfilePage />} />
-        <Route path={ROUTES.VERIFY_EMAIL} element={<VerifyEmailPage />} />
+        <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/verify-email" element={<VerifyEmailPage />} />
 
-        <Route path={ROUTES.AUTHORS} element={<AuthorListPage />} />
-        <Route path={ROUTES.AUTHOR_DETAIL} element={<AuthorDetailPage />} />
+        <Route path="/authors" element={<AuthorListPage />} />
+        <Route path="/authors/:id" element={<AuthorDetailPage />} />
 
-        <Route path={ROUTES.JOURNALS} element={<JournalDetailPage />} />
+        <Route path="/journals/:id" element={<JournalDetailPage />} />
 
-        <Route path={ROUTES.KEYWORDS} element={<KeywordListPage />} />
+        <Route path="/keywords" element={<KeywordListPage />} />
         <Route
-          path={ROUTES.KEYWORD_ARTICLES}
+          path="/keywords/:keywordId/articles"
           element={<KeywordArticlesPage />}
         />
 
-        <Route path={ROUTES.FORGOT_PASSWORD} element={<ForgotPasswordPage />} />
-        <Route path={ROUTES.RESET_PASSWORD} element={<ResetPasswordPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="/reset-password" element={<ResetPasswordPage />} />
 
-        <Route path={ROUTES.GEOGRAPHY} element={<GeographyPage />} />
+        <Route path="/geography" element={<GeographyPage />} />
 
-        <Route path={ROUTES.TOPIC_DETAIL} element={<TopicDetailPage />} />
+        <Route path="/topics/:topicId" element={<TopicDetailPage />} />
       </Route>
 
       <Route path="/topics/:topicId" element={<TopicDetailPage />} />
 
-      {/* Route tạm để preview UI Admin Dashboard không cần login. */}
+      {/* TODO: route tạm để preview UI Admin Dashboard không cần login.
+          Xóa route này khi vấn đề đăng nhập đã được xử lý xong. */}
       <Route path="/admin-preview" element={<AdminDashboardPage />} />
       <Route path="/admin-preview/articles/:id" element={<UpdateArticlePage />} />
 
