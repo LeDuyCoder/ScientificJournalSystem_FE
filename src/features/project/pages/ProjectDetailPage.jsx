@@ -84,12 +84,7 @@ const ProjectDetailPage = () => {
               <h1 className="font-display fw-bold text-main mb-0" style={{ fontSize: '2rem' }}>{title}</h1>
             </div>
             <div className="d-flex gap-2">
-              <button 
-                className="btn btn-light border fw-medium d-flex align-items-center gap-2 rounded-pill px-3"
-                onClick={() => navigate(`/projects/${projectId}/edit`)}
-              >
-                <Icon icon="lucide:settings" width="16" /> Cấu hình từ khóa
-              </button>
+
               <button 
                 className="btn btn-primary btn-primary-glow fw-medium d-flex align-items-center gap-2 rounded-pill px-3"
                 onClick={() => setShowAddModal(true)}
@@ -207,7 +202,7 @@ const ProjectDetailPage = () => {
                 </div>
                 <button 
                   className="btn btn-dark btn-dark-solid rounded-pill px-3 py-2 fw-medium d-flex align-items-center gap-2"
-                  onClick={() => setShowManageModal(true)}
+                  onClick={() => navigate(`/projects/${projectId}/edit`)}
                 >
                   <Icon icon="lucide:edit-2" width="16" /> Chỉnh sửa danh sách
                 </button>

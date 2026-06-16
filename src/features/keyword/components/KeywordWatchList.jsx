@@ -10,9 +10,6 @@ const KeywordWatchList = ({ watchedKeywords, articles, loading, onManageClick })
           <span className="text-warning me-2">★</span> 
           Keywords đang theo dõi ({Array.isArray(watchedKeywords) ? watchedKeywords.length : 0})
         </h4>
-        <button className="btn btn-sm text-muted-custom border" onClick={onManageClick}>
-          Quản lý
-        </button>
       </div>
 
       {loading ? (

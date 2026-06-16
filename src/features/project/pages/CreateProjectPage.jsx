@@ -3,6 +3,8 @@ import { useNavigate, Link } from 'react-router-dom';
 import useProjects from '../hooks/useProjects';
 import { Icon } from '@iconify/react';
 import { getSubjectAreasApi } from '../../catalog/api/catalogApi';
+import SearchableSelect from '../../../shared/components/Select/SearchableSelect';
+import SearchableKeywordInput from '../../../shared/components/Input/SearchableKeywordInput';
 import Header from '../../landing/components/Header';
 
 const CreateProjectPage = () => {
@@ -13,7 +15,6 @@ const CreateProjectPage = () => {
   const [title, setTitle] = useState('');
   const [subjectAreaId, setSubjectAreaId] = useState('');
   const [keywords, setKeywords] = useState([]);
-  const [keywordInput, setKeywordInput] = useState('');
   
   // API Data State
   const [areas, setAreas] = useState([]);
@@ -54,16 +55,6 @@ const CreateProjectPage = () => {
     return ["Data Analysis", "Methodology", "Research Design", "Literature Review"];
   };
 
-  const handleKeywordKeyDown = (e) => {
-    if (e.key === 'Enter' || e.key === ',') {
-      e.preventDefault();
-      const val = keywordInput.trim();
-      if (val && !keywords.includes(val)) {
-        setKeywords([...keywords, val]);
-      }
-      setKeywordInput('');
-    }
-  };
 
   const removeKeyword = (kw) => {
     setKeywords(keywords.filter(k => k !== kw));
@@ -76,9 +67,14 @@ const CreateProjectPage = () => {
   };
 
   // Handle Area Change
-  const handleAreaChange = (e) => {
-    setSubjectAreaId(e.target.value);
+  const handleAreaChange = (val) => {
+    setSubjectAreaId(val);
   };
+
+  const areaOptions = Array.isArray(areas) ? areas.map(area => ({
+    value: area.id || area.subject_area_id,
+    label: area.display_name || area.name || area.area_name
+  })) : [];
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -161,23 +157,24 @@ const CreateProjectPage = () => {
               <label htmlFor="subjectArea" className="form-label fw-semibold text-main mb-2 small text-uppercase tracking-wider">
                 Lĩnh vực nghiên cứu chính <span className="text-danger">*</span>
               </label>
-              <select
-                className="form-select form-control-lg journal-dark-input"
-                id="subjectArea"
+              <SearchableSelect
+                options={areas.map(a => ({ value: a.id || a.subject_area_id, label: a.display_name || a.name || a.area_name }))}
+                fetchOptions={async (search) => {
+                  const res = await getSubjectAreasApi({ search, limit: 20 });
+                  const items = res?.data?.data?.items || res?.data?.data || res?.data || [];
+                  return items.map(a => ({
+                    value: a.id || a.subject_area_id,
+                    label: a.display_name || a.name || a.area_name
+                  }));
+                }}
                 value={subjectAreaId}
                 onChange={handleAreaChange}
+                placeholder="-- Chọn lĩnh vực nghiên cứu --"
                 disabled={loadingCatalogs || loading}
-                required
-                style={{ backgroundColor: 'var(--bg-main)', color: 'var(--text-main)', borderColor: 'var(--border)' }}
-              >
-                <option value="">-- Chọn lĩnh vực nghiên cứu --</option>
-                {Array.isArray(areas) && areas.map(area => (
-                  <option key={area.id || area.subject_area_id} value={area.id || area.subject_area_id}>
-                    {area.display_name || area.name || area.area_name}
-                  </option>
-                ))}
-              </select>
-              {loadingCatalogs && <div className="form-text mt-2"><span className="spinner-border spinner-border-sm me-2"></span> Đang tải danh mục...</div>}
+                debounceTime={100}
+                loading={loadingCatalogs}
+                limit={20}
+              />
             </div>
 
             <div className="mb-5">
@@ -186,24 +183,17 @@ const CreateProjectPage = () => {
               </label>
               <p className="text-muted-custom small mb-2">Nhấn Enter hoặc gõ dấu phẩy để thêm từ khóa. Hệ thống sẽ quét các bài báo mới dựa trên các từ khóa này.</p>
               
-              <div className="form-control form-control-lg journal-dark-input d-flex flex-wrap gap-2 align-items-center" style={{ minHeight: '50px', backgroundColor: 'var(--bg-main)', borderColor: 'var(--border)' }}>
-                {keywords.map(kw => (
-                  <span key={kw} className="badge rounded-pill d-flex align-items-center gap-1 px-2 py-1 fw-normal" style={{ backgroundColor: 'var(--bg-section)', color: 'var(--text-main)', border: '1px solid var(--border)' }}>
-                    {kw}
-                    <Icon icon="lucide:x" width="14" className="cursor-pointer hover-danger" onClick={() => removeKeyword(kw)} />
-                  </span>
-                ))}
-                <input
-                  type="text"
-                  className="border-0 bg-transparent text-main flex-grow-1"
-                  style={{ outline: 'none', minWidth: '150px' }}
-                  placeholder="Thêm từ khóa và nhấn Enter..."
-                  value={keywordInput}
-                  onChange={(e) => setKeywordInput(e.target.value)}
-                  onKeyDown={handleKeywordKeyDown}
-                  disabled={loading}
-                />
-              </div>
+              <SearchableKeywordInput
+                keywords={keywords}
+                placeholder="-- Chọn từ khóa theo dõi --"
+                disabled={loading}
+                onAddKeyword={(val) => {
+                  if (val && !keywords.includes(val)) {
+                    setKeywords([...keywords, val]);
+                  }
+                }}
+                onRemoveKeyword={removeKeyword}
+              />
 
               {subjectAreaId && (
                 <div className="mt-3 small">

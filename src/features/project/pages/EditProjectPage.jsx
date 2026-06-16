@@ -3,6 +3,7 @@ import { useNavigate, Link, useParams } from 'react-router-dom';
 import projectService from '../services/projectService';
 import { Icon } from '@iconify/react';
 import { getSubjectAreasApi } from '../../catalog/api/catalogApi';
+import SearchableKeywordInput from '../../../shared/components/Input/SearchableKeywordInput';
 import Header from '../../landing/components/Header';
 
 const EditProjectPage = () => {
@@ -13,7 +14,6 @@ const EditProjectPage = () => {
   const [title, setTitle] = useState('');
   const [subjectAreaId, setSubjectAreaId] = useState('');
   const [keywords, setKeywords] = useState([]);
-  const [keywordInput, setKeywordInput] = useState('');
   
   // API Data State
   const [areas, setAreas] = useState([]);
@@ -71,16 +71,6 @@ const EditProjectPage = () => {
     return ["Data Analysis", "Methodology", "Research Design", "Literature Review"];
   };
 
-  const handleKeywordKeyDown = (e) => {
-    if (e.key === 'Enter' || e.key === ',') {
-      e.preventDefault();
-      const val = keywordInput.trim();
-      if (val && !keywords.includes(val)) {
-        setKeywords([...keywords, val]);
-      }
-      setKeywordInput('');
-    }
-  };
 
   const removeKeyword = (kw) => {
     setKeywords(keywords.filter(k => k !== kw));
@@ -164,58 +154,21 @@ const EditProjectPage = () => {
           )}
 
           <form onSubmit={handleSubmit}>
-            <div className="mb-4">
-              <label className="form-label fw-semibold text-muted-custom mb-2 small text-uppercase tracking-wider">
-                THÊM TỪ KHÓA MỚI
-              </label>
-              <div className="input-group input-group-lg border rounded-3 p-1" style={{ backgroundColor: 'var(--bg-main)', borderColor: 'var(--border)' }}>
-                <input
-                  type="text"
-                  className="form-control border-0 bg-transparent text-main fs-6 shadow-none"
-                  placeholder="Ví dụ: Transformer, Large Language Models..."
-                  value={keywordInput}
-                  onChange={(e) => setKeywordInput(e.target.value)}
-                  onKeyDown={handleKeywordKeyDown}
-                  disabled={loading}
-                />
-                <button
-                  type="button"
-                  className="btn btn-dark fw-medium rounded-2 px-4"
-                  onClick={() => {
-                    const val = keywordInput.trim();
-                    if (val && !keywords.includes(val)) {
-                      setKeywords([...keywords, val]);
-                    }
-                    setKeywordInput('');
-                  }}
-                  disabled={loading}
-                >
-                  Thêm
-                </button>
-              </div>
-            </div>
-
             <div className="mb-5">
               <label className="form-label fw-semibold text-muted-custom mb-2 small text-uppercase tracking-wider">
-                DANH SÁCH TỪ KHÓA ĐANG HOẠT ĐỘNG ({keywords.length})
+                TỪ KHÓA ĐANG THEO DÕI
               </label>
-              
-              <div className="border rounded-3 p-4" style={{ backgroundColor: '#FAFAFA', minHeight: '120px' }}>
-                {keywords.length === 0 ? (
-                  <div className="d-flex align-items-center justify-content-center h-100 text-muted-custom small text-center" style={{ minHeight: '80px' }}>
-                    Chưa có từ khóa nào được đăng ký. Hãy thêm một vài từ khóa bên trên!
-                  </div>
-                ) : (
-                  <div className="d-flex flex-wrap gap-2">
-                    {keywords.map(kw => (
-                      <span key={kw} className="badge rounded-pill d-flex align-items-center gap-1 px-3 py-2 fw-normal fs-6 shadow-sm bg-white" style={{ color: 'var(--text-main)', border: '1px solid var(--border)' }}>
-                        {kw}
-                        <Icon icon="lucide:x" width="16" className="cursor-pointer text-muted-custom ms-1 hover-danger" onClick={() => removeKeyword(kw)} />
-                      </span>
-                    ))}
-                  </div>
-                )}
-              </div>
+              <SearchableKeywordInput
+                keywords={keywords}
+                placeholder="-- Chọn từ khóa theo dõi --"
+                disabled={loading}
+                onAddKeyword={(val) => {
+                  if (val && !keywords.includes(val)) {
+                    setKeywords([...keywords, val]);
+                  }
+                }}
+                onRemoveKeyword={removeKeyword}
+              />
             </div>
 
             <div className="d-flex gap-3 justify-content-end pt-4 mt-4 border-top">
