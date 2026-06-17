@@ -3,6 +3,8 @@ import { useNavigate, Link, useParams } from 'react-router-dom';
 import projectService from '../services/projectService';
 import { Icon } from '@iconify/react';
 import { getSubjectAreasApi } from '../../catalog/api/catalogApi';
+import keywordApi from '../../keywords/api/keywordApi';
+import keywordService from '../../keyword/services/keywordService';
 import SearchableKeywordInput from '../../../shared/components/Input/SearchableKeywordInput';
 import Header from '../../landing/components/Header';
 
@@ -17,10 +19,12 @@ const EditProjectPage = () => {
   
   // API Data State
   const [areas, setAreas] = useState([]);
+  const [suggestedKeywords, setSuggestedKeywords] = useState([]);
   
   // Loading States
   const [loading, setLoading] = useState(false);
   const [loadingData, setLoadingData] = useState(true);
+  const [loadingSuggestions, setLoadingSuggestions] = useState(false);
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -35,14 +39,24 @@ const EditProjectPage = () => {
         if (areasRes?.data) setAreas(areasRes.data?.data?.items || areasRes.data?.data || areasRes.data || []);
 
         // Pre-fill
-        if (projectRes?.data) {
+        if (projectRes && projectRes.data) {
           const p = projectRes.data;
           setTitle(p.title || '');
           setSubjectAreaId(p.subject_area?.subject_area_id || p.subject_area || '');
-          if (p.keywords && Array.isArray(p.keywords)) {
-            setKeywords(p.keywords);
-          } else if (p.project_keywords) {
-            setKeywords(p.project_keywords.map(pk => pk.keyword_text || pk.keyword || pk));
+          
+          if (p.watched_keywords && Array.isArray(p.watched_keywords) && p.watched_keywords.length > 0) {
+            setKeywords(p.watched_keywords);
+          } else {
+            try {
+              const trendingList = await keywordService.getTrendingKeywords(id, 100);
+              if (trendingList && trendingList.length > 0) {
+                setKeywords(trendingList.map(t => t.keyword || t.display_name));
+              } else if (p.project_keywords) {
+                setKeywords(p.project_keywords.map(pk => pk.keyword_text || pk.keyword || pk));
+              }
+            } catch (e) {
+              console.error('Error fetching trending keywords:', e);
+            }
           }
         }
       } catch (err) {
@@ -57,19 +71,24 @@ const EditProjectPage = () => {
     }
   }, [id]);
 
+  useEffect(() => {
+    const fetchSuggestions = async () => {
+      setLoadingSuggestions(true);
+      try {
+        const res = await keywordApi.getKeywords({ limit: 10 });
+        const items = res?.data?.data?.items || res?.data?.data || res?.data || [];
+        setSuggestedKeywords(Array.isArray(items) ? items.map(k => k.display_name || k.name).filter(Boolean) : []);
+      } catch (err) {
+        console.error('Lỗi tải gợi ý từ khóa:', err);
+      } finally {
+        setLoadingSuggestions(false);
+      }
+    };
+    fetchSuggestions();
+  }, []);
+
   const selectedAreaObj = areas.find(a => String(a.id || a.subject_area_id) === String(subjectAreaId));
   const selectedAreaName = selectedAreaObj ? (selectedAreaObj.display_name || selectedAreaObj.name || selectedAreaObj.area_name) : '';
-
-  const getSuggestions = (areaName) => {
-    if (!areaName) return [];
-    if (areaName.toLowerCase().includes('computer science')) {
-      return ["Machine Learning", "Artificial Intelligence", "Cybersecurity", "Blockchain", "Cloud Computing", "Computer Vision", "NLP"];
-    }
-    if (areaName.toLowerCase().includes('medicine') || areaName.toLowerCase().includes('health')) {
-      return ["Clinical Trials", "Public Health", "Genetics", "Immunology", "Neuroscience"];
-    }
-    return ["Data Analysis", "Methodology", "Research Design", "Literature Review"];
-  };
 
 
   const removeKeyword = (kw) => {
@@ -98,17 +117,20 @@ const EditProjectPage = () => {
     setError(null);
 
     try {
-      const payload = {
+      // 1. Cập nhật thông tin dự án (không kèm keywords vì BE đã revert)
+      const res = await projectService.updateProject(id, {
         title: title.trim(),
         subject_area_id: parseInt(subjectAreaId, 10),
-        keywords: keywords
-      };
-      
-      const response = await projectService.updateProject(id, payload);
-      if (response && response.success !== false) {
+        subject_category_ids: [],
+        journal_ids: [],
+      });
+
+      // 2. Đồng bộ keywords từ Frontend
+      if (res && res.success !== false) {
+        await keywordService.syncProjectKeywordsFEOnly(id, keywords);
         navigate(`/projects/${id}`);
       } else {
-        setError(response?.message || 'Cập nhật dự án thất bại');
+        setError(res?.message || 'Cập nhật dự án thất bại');
       }
     } catch (err) {
       console.error('Error updating project:', err);
@@ -169,6 +191,27 @@ const EditProjectPage = () => {
                 }}
                 onRemoveKeyword={removeKeyword}
               />
+
+              {suggestedKeywords.length > 0 && (
+                <div className="mt-3 small">
+                  <span className="text-muted-custom">Gợi ý từ khóa nổi bật: </span>
+                  {loadingSuggestions ? (
+                    <span className="text-muted-custom ms-2">Đang tải...</span>
+                  ) : (
+                    <div className="d-flex flex-wrap gap-2 mt-2">
+                      {suggestedKeywords.filter(k => !keywords.includes(k)).map(sugg => (
+                        <span 
+                          key={sugg} 
+                          className="badge rounded-pill bg-light text-dark border cursor-pointer hover-primary"
+                          onClick={() => addSuggestedKeyword(sugg)}
+                        >
+                          + {sugg}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
 
             <div className="d-flex gap-3 justify-content-end pt-4 mt-4 border-top">

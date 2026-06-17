@@ -3,6 +3,8 @@ import { useNavigate, Link } from 'react-router-dom';
 import useProjects from '../hooks/useProjects';
 import { Icon } from '@iconify/react';
 import { getSubjectAreasApi } from '../../catalog/api/catalogApi';
+import keywordApi from '../../keywords/api/keywordApi';
+import keywordService from '../../keyword/services/keywordService';
 import SearchableSelect from '../../../shared/components/Select/SearchableSelect';
 import SearchableKeywordInput from '../../../shared/components/Input/SearchableKeywordInput';
 import Header from '../../landing/components/Header';
@@ -18,10 +20,12 @@ const CreateProjectPage = () => {
   
   // API Data State
   const [areas, setAreas] = useState([]);
+  const [suggestedKeywords, setSuggestedKeywords] = useState([]);
   
   // Loading States
   const [loading, setLoading] = useState(false);
   const [loadingCatalogs, setLoadingCatalogs] = useState(true);
+  const [loadingSuggestions, setLoadingSuggestions] = useState(false);
   const [error, setError] = useState(null);
 
   // Initial Data Fetch
@@ -41,20 +45,26 @@ const CreateProjectPage = () => {
     fetchCatalogs();
   }, []);
 
+  // Fetch suggested keywords
+  useEffect(() => {
+    const fetchSuggestions = async () => {
+      setLoadingSuggestions(true);
+      try {
+        const res = await keywordApi.getKeywords({ limit: 10 });
+        const items = res?.data?.data?.items || res?.data?.data || res?.data || [];
+        // Map to string names for the UI suggestions
+        setSuggestedKeywords(Array.isArray(items) ? items.map(k => k.display_name || k.name).filter(Boolean) : []);
+      } catch (err) {
+        console.error('Lỗi tải gợi ý từ khóa:', err);
+      } finally {
+        setLoadingSuggestions(false);
+      }
+    };
+    fetchSuggestions();
+  }, []);
+
   const selectedAreaObj = areas.find(a => String(a.id || a.subject_area_id) === String(subjectAreaId));
   const selectedAreaName = selectedAreaObj ? (selectedAreaObj.display_name || selectedAreaObj.name || selectedAreaObj.area_name) : '';
-
-  const getSuggestions = (areaName) => {
-    if (!areaName) return [];
-    if (areaName.toLowerCase().includes('computer science')) {
-      return ["Machine Learning", "Artificial Intelligence", "Cybersecurity", "Blockchain", "Cloud Computing", "Computer Vision", "NLP"];
-    }
-    if (areaName.toLowerCase().includes('medicine') || areaName.toLowerCase().includes('health')) {
-      return ["Clinical Trials", "Public Health", "Genetics", "Immunology", "Neuroscience"];
-    }
-    return ["Data Analysis", "Methodology", "Research Design", "Literature Review"];
-  };
-
 
   const removeKeyword = (kw) => {
     setKeywords(keywords.filter(k => k !== kw));
@@ -87,18 +97,21 @@ const CreateProjectPage = () => {
     setError(null);
 
     try {
-      const payload = {
+      // 1. Tạo project (không truyền keywords vì BE không còn nhận)
+      const res = await createProject({
         title: title.trim(),
         subject_area_id: parseInt(subjectAreaId, 10),
-        keywords: keywords
-      };
-      
-      const response = await createProject(payload);
-      if (response && response.success !== false) {
-        const projectId = response.data?.project_id || response.data?.id || response.project_id;
-        navigate(projectId ? `/projects/${projectId}` : '/projects');
+        subject_category_ids: [],
+        journal_ids: [],
+      });
+
+      // 2. Đồng bộ keywords bằng API FE
+      const projectId = res?.data?.project_id || res?.data?.id || res?.project_id;
+      if (projectId) {
+        await keywordService.syncProjectKeywordsFEOnly(projectId, keywords);
+        navigate(`/projects/${projectId}`);
       } else {
-        setError(response?.message || 'Tạo dự án thất bại');
+        setError(res?.message || 'Tạo dự án thất bại');
       }
     } catch (err) {
       console.error('Error creating project:', err);
@@ -195,20 +208,24 @@ const CreateProjectPage = () => {
                 onRemoveKeyword={removeKeyword}
               />
 
-              {subjectAreaId && (
+              {suggestedKeywords.length > 0 && (
                 <div className="mt-3 small">
-                  <span className="text-muted-custom">Gợi ý từ khóa cho {selectedAreaName}: </span>
-                  <div className="d-flex flex-wrap gap-2 mt-1">
-                    {getSuggestions(selectedAreaName).map(sugg => (
-                      <span 
-                        key={sugg} 
-                        className="text-muted-custom cursor-pointer hover-primary"
-                        onClick={() => addSuggestedKeyword(sugg)}
-                      >
-                        + {sugg}
-                      </span>
-                    ))}
-                  </div>
+                  <span className="text-muted-custom">Gợi ý từ khóa nổi bật: </span>
+                  {loadingSuggestions ? (
+                    <span className="text-muted-custom ms-2">Đang tải...</span>
+                  ) : (
+                    <div className="d-flex flex-wrap gap-2 mt-2">
+                      {suggestedKeywords.filter(k => !keywords.includes(k)).map(sugg => (
+                        <span 
+                          key={sugg} 
+                          className="badge rounded-pill bg-light text-dark border cursor-pointer hover-primary"
+                          onClick={() => addSuggestedKeyword(sugg)}
+                        >
+                          + {sugg}
+                        </span>
+                      ))}
+                    </div>
+                  )}
                 </div>
               )}
             </div>

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { Icon } from '@iconify/react';
 
 const KeywordRelatedArticleList = ({ articles, loading }) => {
   if (loading) {
@@ -29,15 +30,16 @@ const KeywordRelatedArticleList = ({ articles, loading }) => {
       {articles.map((article, idx) => (
         <div key={article.id || idx} className="p-3 border rounded bg-card hover-shadow transition-all">
           <div className="d-flex justify-content-between align-items-start mb-2">
-            <div>
-               {article.matched_keyword && (
-                 <span className="badge border mb-2 me-2" style={{ backgroundColor: 'var(--bg-chip)', color: 'var(--primary)', borderColor: 'var(--border) !important' }}>
-                   {article.matched_keyword}
-                 </span>
-               )}
+            <div className="d-flex gap-2 flex-wrap">
+              {article.matched_keywords?.map((kw, kwIdx) => (
+                <span key={kwIdx} className="badge border mb-2" style={{ backgroundColor: '#fff3cd', color: '#856404', borderColor: '#ffeeba !important' }}>
+                  <span className="text-warning me-1">★</span>
+                  {kw}
+                </span>
+              ))}
             </div>
             <span className="text-muted-custom small">
-              {article.published_date || article.year || 'Gần đây'}
+              {article.publication_year || article.year || 'Gần đây'}
             </span>
           </div>
           <h5 className="font-display fw-bold mb-2">

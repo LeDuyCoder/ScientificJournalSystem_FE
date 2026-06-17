@@ -15,16 +15,64 @@ const ProjectDetailPage = () => {
     project,
     watchArticles,
     watchedKeywords,
+    watchArticlesPagination,
     loading,
     error,
     actionLoading,
     addKeywordWatch,
-    removeKeywordWatch
+    removeKeywordWatch,
+    fetchWatchArticles
   } = useKeywordTracking(projectId);
 
   const [activeTab, setActiveTab] = useState('articles'); // 'overview', 'articles', 'keywords'
   const [showAddModal, setShowAddModal] = useState(false);
   const [showManageModal, setShowManageModal] = useState(false);
+
+  const renderPagination = () => {
+    if (!watchArticlesPagination || watchArticlesPagination.totalPages <= 1) return null;
+    const { page, totalPages } = watchArticlesPagination;
+
+    const pages = [];
+    if (totalPages <= 7) {
+      for (let i = 1; i <= totalPages; i++) pages.push(i);
+    } else {
+      if (page <= 4) {
+        pages.push(1, 2, 3, 4, 5, '...', totalPages);
+      } else if (page >= totalPages - 3) {
+        pages.push(1, '...', totalPages - 4, totalPages - 3, totalPages - 2, totalPages - 1, totalPages);
+      } else {
+        pages.push(1, '...', page - 1, page, page + 1, '...', totalPages);
+      }
+    }
+
+    return (
+      <div className="d-flex justify-content-center mt-4">
+        <ul className="pagination shadow-sm">
+          <li className={`page-item ${page <= 1 ? 'disabled' : ''}`}>
+            <button className="page-link text-dark" onClick={() => fetchWatchArticles(page - 1)} style={{ cursor: page <= 1 ? 'not-allowed' : 'pointer' }}>
+              <Icon icon="lucide:chevron-left" />
+            </button>
+          </li>
+          {pages.map((p, idx) => (
+            <li key={idx} className={`page-item ${p === page ? 'active' : ''} ${p === '...' ? 'disabled' : ''}`}>
+              <button 
+                className={`page-link ${p === page ? '' : 'text-dark'}`}
+                style={p === page ? { backgroundColor: '#fd7e14', borderColor: '#fd7e14', color: '#fff', cursor: 'default' } : { cursor: p === '...' ? 'default' : 'pointer' }}
+                onClick={() => p !== '...' && p !== page && fetchWatchArticles(p)}
+              >
+                {p}
+              </button>
+            </li>
+          ))}
+          <li className={`page-item ${page >= totalPages ? 'disabled' : ''}`}>
+            <button className="page-link text-dark" onClick={() => fetchWatchArticles(page + 1)} style={{ cursor: page >= totalPages ? 'not-allowed' : 'pointer' }}>
+              <Icon icon="lucide:chevron-right" />
+            </button>
+          </li>
+        </ul>
+      </div>
+    );
+  };
 
   if (loading) {
     return (
@@ -55,7 +103,7 @@ const ProjectDetailPage = () => {
   const areaName = project.subject_area?.display_name || project.subject_area?.name || (typeof project.subject_area === 'string' ? project.subject_area : 'Chưa xác định lĩnh vực');
   const createdAt = project.created_at ? new Date(project.created_at).toLocaleDateString('vi-VN') : 'N/A';
   const keywordCount = watchedKeywords?.length || 0;
-  const articleCount = watchArticles?.length || 0;
+  const articleCount = watchArticlesPagination?.total || 0;
 
   return (
     <div className="container-fluid pb-4 grid-bg min-vh-100 position-relative overflow-hidden" style={{ paddingTop: '80px' }}>
@@ -85,7 +133,7 @@ const ProjectDetailPage = () => {
             </div>
             <div className="d-flex gap-2">
 
-              <button 
+              <button
                 className="btn btn-primary btn-primary-glow fw-medium d-flex align-items-center gap-2 rounded-pill px-3"
                 onClick={() => setShowAddModal(true)}
               >
@@ -121,7 +169,7 @@ const ProjectDetailPage = () => {
         {/* Tabs */}
         <ul className="nav nav-tabs tab-nav-custom mb-4 border-bottom-0 gap-4" style={{ paddingLeft: '1rem' }}>
           <li className="nav-item">
-            <button 
+            <button
               className={`nav-link border-0 bg-transparent px-0 pb-3 fw-medium ${activeTab === 'overview' ? 'active text-primary border-bottom border-2 border-primary' : 'text-muted-custom'}`}
               onClick={() => setActiveTab('overview')}
             >
@@ -129,7 +177,7 @@ const ProjectDetailPage = () => {
             </button>
           </li>
           <li className="nav-item">
-            <button 
+            <button
               className={`nav-link border-0 bg-transparent px-0 pb-3 fw-medium ${activeTab === 'articles' ? 'active text-primary border-bottom border-2 border-primary' : 'text-muted-custom'}`}
               onClick={() => setActiveTab('articles')}
             >
@@ -137,7 +185,7 @@ const ProjectDetailPage = () => {
             </button>
           </li>
           <li className="nav-item">
-            <button 
+            <button
               className={`nav-link border-0 bg-transparent px-0 pb-3 fw-medium ${activeTab === 'keywords' ? 'active text-primary border-bottom border-2 border-primary' : 'text-muted-custom'}`}
               onClick={() => setActiveTab('keywords')}
             >
@@ -179,17 +227,38 @@ const ProjectDetailPage = () => {
                       <Link to={`/articles/${article.article_id || article.id}/visual`} className="text-decoration-none">
                         <h6 className="fw-bold text-main mb-2 hover-primary lh-base">{article.title}</h6>
                       </Link>
-                      <p className="text-muted-custom small mb-2 text-truncate">{article.abstract || 'Không có tóm tắt.'}</p>
-                      <div className="d-flex justify-content-between align-items-center">
-                        <span className="text-muted-custom small">
-                          Tác giả: <strong className="text-main fw-medium">{article.authors?.map(a => a.name).join(', ') || 'N/A'}</strong>
-                        </span>
-                        <span className="badge bg-light text-muted border fw-normal" style={{ fontSize: '0.7rem' }}>Độ trùng khớp cao</span>
+                      <div className="d-flex justify-content-between align-items-center mt-2">
+                        <div className="text-muted-custom small text-truncate pe-3">
+                          {article.doi && (
+                            <>
+                              DOI: <a href={article.doi.startsWith('http') ? article.doi : `https://doi.org/${article.doi}`} target="_blank" rel="noopener noreferrer" className="text-muted-custom text-decoration-none hover-primary">{article.doi}</a>
+                            </>
+                          )}
+                        </div>
+                        <div className="d-flex gap-2 flex-wrap justify-content-end">
+                          {article.matched_areas?.map((area, aIdx) => (
+                            <span key={`area-${aIdx}`} className="badge border fw-normal text-nowrap" style={{ fontSize: '0.7rem', backgroundColor: '#e2e3e5', color: '#383d41', borderColor: '#d6d8db !important' }}>
+                              <Icon icon="lucide:book-open" className="me-1" width="12" />
+                              {area}
+                            </span>
+                          ))}
+                          {article.matched_keywords?.map((kw, kwIdx) => (
+                            <span key={`kw-${kwIdx}`} className="badge border fw-normal text-nowrap" style={{ fontSize: '0.7rem', backgroundColor: '#fff3cd', color: '#856404', borderColor: '#ffeeba !important' }}>
+                              <span className="text-warning me-1">★</span>
+                              {kw}
+                            </span>
+                          ))}
+                          {(!article.matched_keywords?.length && !article.matched_areas?.length) && (
+                            <span className="badge bg-light text-muted border fw-normal text-nowrap" style={{ fontSize: '0.7rem' }}>Độ trùng khớp cao</span>
+                          )}
+                        </div>
                       </div>
                     </div>
                   ))}
                 </div>
               )}
+              
+              {renderPagination()}
             </div>
           )}
 
@@ -200,7 +269,7 @@ const ProjectDetailPage = () => {
                   <h5 className="fw-bold text-main mb-1">Quản lý Watch-List từ khóa</h5>
                   <p className="text-muted-custom small mb-0">Hệ thống sẽ liên tục quét bài báo mới và gửi thông báo theo các từ khóa này.</p>
                 </div>
-                <button 
+                <button
                   className="btn btn-dark btn-dark-solid rounded-pill px-3 py-2 fw-medium d-flex align-items-center gap-2"
                   onClick={() => navigate(`/projects/${projectId}/edit`)}
                 >
@@ -208,21 +277,23 @@ const ProjectDetailPage = () => {
                 </button>
               </div>
 
-              <KeywordWatchList 
-                watchedKeywords={watchedKeywords} 
-                articles={[]} // Not used in this view since we show articles in tab
-                loading={loading} 
+              <KeywordWatchList
+                watchedKeywords={watchedKeywords}
+                articles={watchArticles.filter(a => a.matched_keywords?.length > 0)}
+                loading={loading}
                 onManageClick={() => setShowManageModal(true)}
               />
+              
+              {renderPagination()}
             </div>
           )}
         </div>
       </div>
 
       {/* Modals */}
-      <AddKeywordModal 
-        show={showAddModal} 
-        onHide={() => setShowAddModal(false)} 
+      <AddKeywordModal
+        show={showAddModal}
+        onHide={() => setShowAddModal(false)}
         onAdd={addKeywordWatch}
         actionLoading={actionLoading}
       />
