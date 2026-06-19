@@ -89,9 +89,9 @@ export const getTrendingKeywordsApi = (id, limit = 20, sortBy = 'count') => {
  * @param {number|string} id - Project ID
  * @returns {Promise} Axios promise
  */
-export const getWatchedKeywordArticlesApi = (id, page = 1, limit = 10) => {
+export const getWatchedKeywordArticlesApi = (id, page = 1, limit = 10, filter = 'all') => {
   return api.get(`/projects/${id}/keywords/watch/articles`, {
-    params: { page, limit }
+    params: { page, limit, filter }
   });
 };
 

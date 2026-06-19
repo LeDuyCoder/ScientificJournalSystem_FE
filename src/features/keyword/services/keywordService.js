@@ -22,8 +22,8 @@ const keywordService = {
    * @param {number|string} projectId - ID dự án
    * @returns {Promise<Array>} Danh sách bài báo
    */
-  async getWatchedKeywordArticles(projectId, page = 1, limit = 10) {
-    const res = await projectApi.getWatchedKeywordArticlesApi(projectId, page, limit);
+  async getWatchedKeywordArticles(projectId, page = 1, limit = 10, filter = 'all') {
+    const res = await projectApi.getWatchedKeywordArticlesApi(projectId, page, limit, filter);
     return res.data;
   },
 

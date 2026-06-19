@@ -14,23 +14,29 @@ const ProjectDetailPage = () => {
   const {
     project,
     watchArticles,
+    keywordArticles,
     watchedKeywords,
     watchArticlesPagination,
+    keywordArticlesPagination,
     loading,
     error,
     actionLoading,
     addKeywordWatch,
     removeKeywordWatch,
-    fetchWatchArticles
+    fetchWatchArticles,
+    fetchKeywordArticles
   } = useKeywordTracking(projectId);
 
   const [activeTab, setActiveTab] = useState('articles'); // 'overview', 'articles', 'keywords'
   const [showAddModal, setShowAddModal] = useState(false);
   const [showManageModal, setShowManageModal] = useState(false);
 
-  const renderPagination = () => {
-    if (!watchArticlesPagination || watchArticlesPagination.totalPages <= 1) return null;
-    const { page, totalPages } = watchArticlesPagination;
+  const renderPagination = (type) => {
+    const pagination = type === 'keywords' ? keywordArticlesPagination : watchArticlesPagination;
+    const fetchFn = type === 'keywords' ? fetchKeywordArticles : fetchWatchArticles;
+
+    if (!pagination || pagination.totalPages <= 1) return null;
+    const { page, totalPages } = pagination;
 
     const pages = [];
     if (totalPages <= 7) {
@@ -49,7 +55,7 @@ const ProjectDetailPage = () => {
       <div className="d-flex justify-content-center mt-4">
         <ul className="pagination shadow-sm">
           <li className={`page-item ${page <= 1 ? 'disabled' : ''}`}>
-            <button className="page-link text-dark" onClick={() => fetchWatchArticles(page - 1)} style={{ cursor: page <= 1 ? 'not-allowed' : 'pointer' }}>
+            <button className="page-link text-dark" onClick={() => fetchFn(page - 1)} style={{ cursor: page <= 1 ? 'not-allowed' : 'pointer' }}>
               <Icon icon="lucide:chevron-left" />
             </button>
           </li>
@@ -58,14 +64,14 @@ const ProjectDetailPage = () => {
               <button 
                 className={`page-link ${p === page ? '' : 'text-dark'}`}
                 style={p === page ? { backgroundColor: '#fd7e14', borderColor: '#fd7e14', color: '#fff', cursor: 'default' } : { cursor: p === '...' ? 'default' : 'pointer' }}
-                onClick={() => p !== '...' && p !== page && fetchWatchArticles(p)}
+                onClick={() => p !== '...' && p !== page && fetchFn(p)}
               >
                 {p}
               </button>
             </li>
           ))}
           <li className={`page-item ${page >= totalPages ? 'disabled' : ''}`}>
-            <button className="page-link text-dark" onClick={() => fetchWatchArticles(page + 1)} style={{ cursor: page >= totalPages ? 'not-allowed' : 'pointer' }}>
+            <button className="page-link text-dark" onClick={() => fetchFn(page + 1)} style={{ cursor: page >= totalPages ? 'not-allowed' : 'pointer' }}>
               <Icon icon="lucide:chevron-right" />
             </button>
           </li>
@@ -153,14 +159,18 @@ const ProjectDetailPage = () => {
             </div>
             <div className="col-6 col-md-3">
               <div className="text-muted-custom small mb-1 text-uppercase tracking-wider fw-semibold">Cảnh báo mới (24H)</div>
-              <div className="fs-3 fw-bold text-success d-flex align-items-center gap-1">
-                <Icon icon="lucide:bell" width="20" /> 0
+              <div className={`fs-3 fw-bold d-flex align-items-center gap-1 ${(project?.alerts_24h?.todayCount || 0) > 0 ? 'text-success' : 'text-main'}`}>
+                <Icon icon="lucide:bell" width="20" /> {project?.alerts_24h?.todayCount || 0}
               </div>
             </div>
             <div className="col-6 col-md-3">
               <div className="text-muted-custom small mb-1 text-uppercase tracking-wider fw-semibold">Mức độ tăng trưởng</div>
-              <div className="fs-3 fw-bold text-primary d-flex align-items-center gap-1">
-                <Icon icon="lucide:trending-up" width="24" /> +0.0%
+              <div className={`fs-3 fw-bold d-flex align-items-center gap-1 ${
+                (project?.alerts_24h?.growthRate || 0) > 0 ? 'text-success' : 
+                (project?.alerts_24h?.growthRate || 0) < 0 ? 'text-danger' : 'text-muted'
+              }`}>
+                <Icon icon={(project?.alerts_24h?.growthRate || 0) > 0 ? "lucide:trending-up" : (project?.alerts_24h?.growthRate || 0) < 0 ? "lucide:trending-down" : "lucide:minus"} width="24" /> 
+                {(project?.alerts_24h?.growthRate || 0) > 0 ? '+' : ''}{project?.alerts_24h?.growthRate || 0}%
               </div>
             </div>
           </div>
@@ -258,7 +268,7 @@ const ProjectDetailPage = () => {
                 </div>
               )}
               
-              {renderPagination()}
+              {renderPagination('articles')}
             </div>
           )}
 
@@ -279,12 +289,12 @@ const ProjectDetailPage = () => {
 
               <KeywordWatchList
                 watchedKeywords={watchedKeywords}
-                articles={watchArticles.filter(a => a.matched_keywords?.length > 0)}
+                articles={keywordArticles}
                 loading={loading}
                 onManageClick={() => setShowManageModal(true)}
               />
               
-              {renderPagination()}
+              {renderPagination('keywords')}
             </div>
           )}
         </div>

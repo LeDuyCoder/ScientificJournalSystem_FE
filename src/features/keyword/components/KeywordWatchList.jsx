@@ -4,7 +4,7 @@ import KeywordRelatedArticleList from './KeywordRelatedArticleList';
 
 const KeywordWatchList = ({ watchedKeywords, articles, loading, onManageClick }) => {
   return (
-    <div className="glass-card p-4 rounded-4">
+    <div className="mt-2">
       <div className="d-flex align-items-center justify-content-between mb-4">
         <h4 className="font-display mb-0 text-main fw-bold">
           <span className="text-warning me-2">★</span> 
