@@ -42,8 +42,8 @@ export default function JournalCard({ journal }) {
                 <span className="fw-medium">{journal.issn}</span>
               </Col>
               <Col xs={6}>
-                <span className="text-muted d-block" style={{ fontSize: '0.75rem' }}>Tổng biên tập:</span>
-                <span className="fw-medium text-truncate d-block">{journal.editorInChief}</span>
+                <span className="text-muted d-block" style={{ fontSize: '0.75rem' }}>Nhà xuất bản:</span>
+                <span className="fw-medium text-truncate d-block">{journal.publisher}</span>
               </Col>
             </Row>
           </div>

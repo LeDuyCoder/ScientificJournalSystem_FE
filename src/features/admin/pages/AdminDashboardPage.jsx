@@ -1,63 +1,104 @@
-import { useState } from 'react';
 import {
   DashboardStatCard,
   PublicationTrendsChart,
   ActivityTimeline,
   VolumeIssueTable,
 } from '../components/dashboard';
-import {
-  mockDashboardSummary,
-  buildStatCards,
-  mockPublicationTrends,
-  mockTrendYears,
-  mockRecentActivity,
-  mockVolumeStatus,
-} from '../data/mockDashboard';
+import useAdminDashboard from '../hooks/useAdminDashboard';
 
 export default function AdminDashboardPage() {
-  // Năm đang được chọn trên year selector của Publication Trends chart.
-  // Mặc định lấy năm đầu tiên trong mockTrendYears (2024).
-  const [selectedYear, setSelectedYear] = useState(mockTrendYears[0]);
-
-  // Build danh sách stat card từ dữ liệu summary thô (giống response API thật)
-  const statCards = buildStatCards(mockDashboardSummary);
-
-  // Dữ liệu chart tương ứng với năm đang chọn (lấy mảng "items" từ response)
-  const trendsData = mockPublicationTrends[selectedYear]?.items || [];
+  const {
+    selectedYear,
+    setSelectedYear,
+    statCards,
+    summaryLoading,
+    summaryError,
+    trendItems,
+    trendYears,
+    trendsLoading,
+    trendsError,
+    activityItems,
+    activityLoading,
+    activityError,
+    volumeStatusItems,
+    volumeLoading,
+    volumeError,
+    volumePage,
+    setVolumePage,
+    volumeLimit,
+    volumeTotalPages,
+    volumeTotalItems,
+  } = useAdminDashboard();
 
   return (
     <>
-      {/* Tiêu đề trang - h2 tự động áp dụng font-display theo index.css */}
-      <h2 className="mb-3">Dashboard</h2>
-
-      {/* Grid 4 stat card - map từ statCards, mỗi item có key riêng */}
-      <div className="admin-stat-grid">
-        {statCards.map((stat) => (
-          <DashboardStatCard
-            key={stat.key}
-            label={stat.label}
-            value={stat.value}
-            icon={stat.icon}
-            note={stat.note}
-            noteType={stat.noteType}
-          />
-        ))}
+      <div className="admin-page-header">
+        <div className="admin-page-header__copy">
+          <p className="admin-page-kicker">Admin Overview</p>
+          <h1 className="admin-page-title">Dashboard</h1>
+          <p className="admin-page-lede">
+            Monitor journals, article flow, review workload, and publication operations from a single research management surface.
+          </p>
+        </div>
       </div>
 
-      {/* Hàng 2 cột: Publication Trends chart (trái) + Recent Activity (phải) */}
+      <div className="admin-stat-grid">
+        {summaryLoading ? (
+          <div className="admin-state-card">
+            <span className="admin-state-dot" />
+            <span>Đang tải số liệu Dashboard...</span>
+          </div>
+        ) : summaryError ? (
+          <div className="admin-state-card admin-state-card--error">
+            <span className="admin-state-dot" />
+            <span>{summaryError}</span>
+          </div>
+        ) : statCards.length === 0 ? (
+          <div className="admin-state-card">
+            <span className="admin-state-dot" />
+            <span>Chưa có dữ liệu tổng quan Dashboard.</span>
+          </div>
+        ) : (
+          statCards.map((stat) => (
+            <DashboardStatCard
+              key={stat.key}
+              label={stat.label}
+              value={stat.value}
+              icon={stat.icon}
+              note={stat.note}
+              noteType={stat.noteType}
+            />
+          ))
+        )}
+      </div>
+
       <div className="admin-dashboard-row">
         <PublicationTrendsChart
-          data={trendsData}
-          years={mockTrendYears}
+          data={trendItems}
+          years={trendYears}
           selectedYear={selectedYear}
           onChangeYear={setSelectedYear}
+          loading={trendsLoading}
+          error={trendsError}
         />
 
-        <ActivityTimeline items={mockRecentActivity} />
+        <ActivityTimeline
+          items={activityItems}
+          loading={activityLoading}
+          error={activityError}
+        />
       </div>
 
-      {/* Volume & Issue Status table + Export CSV */}
-      <VolumeIssueTable items={mockVolumeStatus} />
+      <VolumeIssueTable
+        items={volumeStatusItems}
+        loading={volumeLoading}
+        error={volumeError}
+        currentPage={volumePage}
+        totalPages={volumeTotalPages}
+        onPageChange={setVolumePage}
+        totalItems={volumeTotalItems}
+        limit={volumeLimit}
+      />
     </>
   );
 }

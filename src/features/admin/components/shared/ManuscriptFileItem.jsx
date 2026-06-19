@@ -1,4 +1,4 @@
-import Icon from '../../../shared/components/Icon';
+import Icon from '../../../../shared/components/Icon';
 
 // Map file type -> icon Iconify hiển thị ở đầu mỗi dòng file
 const FILE_TYPE_ICON = {

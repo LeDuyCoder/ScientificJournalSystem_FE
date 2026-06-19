@@ -1,34 +1,77 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Modal, Button, Form, Row, Col } from 'react-bootstrap';
 import { useJournalManagement } from '../../../journal/hooks/useJournalManagement';
 
-/**
- * Component AddJournalModal - Form cửa sổ bật lên để Admin khởi tạo một Tạp chí mới.
- * Đáp ứng tiêu chí Acceptance Criteria: Có đầy đủ các trường form, thực hiện kiểm tra lỗi (validation).
- */
 export default function AddJournalModal({ show, handleClose }) {
-  // Lấy hàm thêm mới từ Zustand Store tập trung
   const { addJournal } = useJournalManagement();
 
-  // Khởi tạo trạng thái quản lý các ô nhập liệu của Form
   const [formData, setFormData] = useState({
     title: '',
     issn: '',
     onlineIssn: '',
-    publisher: '',
+    publisher: '', // this will store publisher_id
     subjectCategory: '',
     subjectArea: '',
-    editorInChief: '',
     aimScope: '',
     visibility: 'Public',
     broadCategory: 'Technology',
     specificResearchArea: ''
   });
 
-  // State lưu trữ thông báo lỗi khi validate dữ liệu đầu vào
+  const [publishers, setPublishers] = useState([]);
+  const [subjectAreas, setSubjectAreas] = useState([]);
+  const [subjectCategories, setSubjectCategories] = useState([]);
+  const [zones, setZones] = useState({ countryZoneId: 1, regionZoneId: 2 });
+  const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
 
-  /** Xử lý cập nhật thay đổi chữ khi người dùng gõ vào ô input */
+  useEffect(() => {
+    if (show) {
+      const loadData = async () => {
+        setLoading(true);
+        
+        try {
+          const { getPublishersApi, getSubjectAreasApi, getSubjectCategoriesApi } = await import('../../../journal/api/journalApi');
+          const { getCountryStatsApi, getRegionStatsApi } = await import('../../../zone/api/zone.api');
+          
+          const [pubRes, countryRes, regionRes, areaRes, catRes] = await Promise.all([
+            getPublishersApi({ page: 1, limit: 100 }),
+            getCountryStatsApi({ limit: 1 }),
+            getRegionStatsApi({ limit: 1 }),
+            getSubjectAreasApi({ page: 1, limit: 100 }),
+            getSubjectCategoriesApi({ page: 1, limit: 100 })
+          ]);
+          
+          const pubItems = pubRes.data?.data?.items || pubRes.data?.data || [];
+          setPublishers(pubItems);
+          if (pubItems.length > 0) {
+            setFormData(prev => ({ ...prev, publisher: pubItems[0].publisher_id || pubItems[0].id }));
+          }
+
+          const areaItems = areaRes.data?.data?.items || areaRes.data?.data || [];
+          setSubjectAreas(areaItems);
+
+          const catItems = catRes.data?.data?.items || catRes.data?.data || [];
+          setSubjectCategories(catItems);
+          
+          const countryItems = countryRes.data?.data?.items || countryRes.data?.data || [];
+          const regionItems = regionRes.data?.data?.items || regionRes.data?.data || [];
+          
+          setZones({
+            countryZoneId: countryItems[0]?.zone_id || 1,
+            regionZoneId: regionItems[0]?.zone_id || 2
+          });
+        } catch (err) {
+
+          console.error('Failed to load publishers or zones:', err);
+        } finally {
+          setLoading(false);
+        }
+      };
+      loadData();
+    }
+  }, [show]);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -37,11 +80,11 @@ export default function AddJournalModal({ show, handleClose }) {
     }
   };
 
-  /** Hàm thực hiện kiểm tra tính hợp lệ của dữ liệu trước khi lưu */
   const validateForm = () => {
     const newErrors = {};
     if (!formData.title.trim()) newErrors.title = 'Tên tạp chí không được để trống';
     if (!formData.issn.trim()) newErrors.issn = 'Mã số ISSN không được để trống';
+    if (!formData.publisher) newErrors.publisher = 'Vui lòng chọn nhà xuất bản';
     if (!formData.subjectCategory) newErrors.subjectCategory = 'Vui lòng chọn danh mục chính';
     if (!formData.subjectArea) newErrors.subjectArea = 'Lĩnh vực nghiên cứu cụ thể không được trống';
     
@@ -49,33 +92,48 @@ export default function AddJournalModal({ show, handleClose }) {
     return Object.keys(newErrors).length === 0;
   };
 
-  /** Xử lý submit lưu dữ liệu */
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
 
-    addJournal({
-      ...formData,
-      publisher: 'ResearchPulse Press',
-      country: 'Vietnam',
-      broadCategory: formData.subjectCategory,
-      specificResearchArea: formData.subjectArea
-    });
-    
-    setFormData({
-      title: '',
-      issn: '',
-      onlineIssn: '',
-      publisher: '',
-      subjectCategory: '',
-      subjectArea: '',
-      editorInChief: '',
-      aimScope: '',
-      visibility: 'Public',
-      broadCategory: 'Technology',
-      specificResearchArea: ''
-    });
-    handleClose();
+    try {
+      const selectedPub = publishers.find(p => String(p.publisher_id || p.id) === String(formData.publisher));
+      
+      const payload = {
+        display_name: formData.title,
+        publisher_id: parseInt(formData.publisher),
+        country: parseInt(zones.countryZoneId),
+        region: parseInt(zones.regionZoneId),
+        
+        // Include frontend specific fields so normalizer works
+        title: formData.title,
+        issn: formData.issn,
+        onlineIssn: formData.onlineIssn,
+        aimScope: formData.aimScope,
+        visibility: formData.visibility,
+        subjectCategory: formData.subjectCategory,
+        subjectArea: formData.subjectArea,
+        publisher_name: selectedPub ? selectedPub.display_name : 'ResearchPulse Press'
+      };
+
+      await addJournal(payload);
+      
+      setFormData({
+        title: '',
+        issn: '',
+        onlineIssn: '',
+        publisher: publishers[0]?.publisher_id || publishers[0]?.id || '',
+        subjectCategory: '',
+        subjectArea: '',
+        aimScope: '',
+        visibility: 'Public',
+        broadCategory: 'Technology',
+        specificResearchArea: ''
+      });
+      handleClose();
+    } catch (err) {
+      alert('Lỗi tạo tạp chí: ' + err.message);
+    }
   };
 
   return (
@@ -129,28 +187,42 @@ export default function AddJournalModal({ show, handleClose }) {
                   style={{ cursor: 'pointer' }}
                 >
                   <option value="">Chọn danh mục</option>
-                  <option value="Computer Science">Computer Science</option>
-                  <option value="Environmental Science">Environmental Science</option>
-                  <option value="Medical Science">Medical Science</option>
-                  <option value="Social Sciences">Social Sciences</option>
+                  {subjectCategories.map(cat => (
+                    <option key={cat.subject_category_id || cat.id || cat.display_name} value={cat.display_name || cat.name}>
+                      {cat.display_name || cat.name}
+                    </option>
+                  ))}
                 </Form.Select>
                 <Form.Control.Feedback type="invalid">{errors.subjectCategory}</Form.Control.Feedback>
               </Form.Group>
             </Col>
           </Row>
 
-          {/* Row 3: Tổng biên tập & Lĩnh vực nghiên cứu */}
+          {/* Row 3: Nhà xuất bản & Lĩnh vực nghiên cứu */}
           <Row className="g-3 mb-3">
             <Col xs={12} sm={6}>
               <Form.Group>
-                <Form.Label className="fw-medium small text-main">Tổng biên tập</Form.Label>
-                <Form.Control
-                  type="text"
-                  name="editorInChief"
-                  value={formData.editorInChief}
+                <Form.Label className="fw-medium small text-main">Nhà xuất bản <span className="text-danger">*</span></Form.Label>
+                <Form.Select
+                  name="publisher"
+                  value={formData.publisher}
                   onChange={handleChange}
-                  placeholder="Tên tổng biên tập"
-                />
+                  isInvalid={!!errors.publisher}
+                  style={{ cursor: 'pointer' }}
+                >
+                  {loading ? (
+                    <option>Đang tải danh sách nhà xuất bản...</option>
+                  ) : publishers.length === 0 ? (
+                    <option value="">Không có nhà xuất bản nào</option>
+                  ) : (
+                    publishers.map((pub) => (
+                      <option key={pub.publisher_id || pub.id} value={pub.publisher_id || pub.id}>
+                        {pub.display_name}
+                      </option>
+                    ))
+                  )}
+                </Form.Select>
+                <Form.Control.Feedback type="invalid">{errors.publisher}</Form.Control.Feedback>
               </Form.Group>
             </Col>
             
@@ -165,11 +237,11 @@ export default function AddJournalModal({ show, handleClose }) {
                   style={{ cursor: 'pointer' }}
                 >
                   <option value="">Chọn lĩnh vực</option>
-                  <option value="Artificial Intelligence">Artificial Intelligence</option>
-                  <option value="Renewable Energy">Renewable Energy</option>
-                  <option value="Medical Ethics">Medical Ethics</option>
-                  <option value="Sociology">Sociology</option>
-                  <option value="General Science">General Science</option>
+                  {subjectAreas.map(area => (
+                    <option key={area.subject_area_id || area.id || area.display_name} value={area.display_name || area.name}>
+                      {area.display_name || area.name}
+                    </option>
+                  ))}
                 </Form.Select>
                 <Form.Control.Feedback type="invalid">{errors.subjectArea}</Form.Control.Feedback>
               </Form.Group>

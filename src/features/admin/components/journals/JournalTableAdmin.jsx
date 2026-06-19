@@ -1,20 +1,15 @@
-import React from 'react';
-import { Table, Button } from 'react-bootstrap';
+﻿import { Table, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 
 /**
- * Component JournalTableAdmin - Bảng hiển thị danh sách tạp chí phục vụ mục đích quản trị (Admin View).
- * Đáp ứng Issue #76: Hiển thị Title, ISSN, Publisher, Editor-in-Chief, Last Updated, Status và các nút Action.
+ * Component JournalTableAdmin - Bảng hiển thị danh sách tạp chí phục vụ mục đích quản trị.
  *
  * @param {Array} journals - Danh sách tạp chí sau khi đã qua bộ lọc search/status
- * @param {number} page - Trang hiện tại (phục vụ tính toán số thứ tự tăng tiến)
- * @param {number} limit - Số lượng dòng trên một trang
  */
-export default function JournalTableAdmin({ journals, page = 1, limit = 10 }) {
+export default function JournalTableAdmin({ journals }) {
   const navigate = useNavigate();
 
-  // Trạng thái trống nếu không tìm thấy dữ liệu phù hợp với bộ lọc
   if (!journals || journals.length === 0) {
     return (
       <div className="journal-empty-state text-center py-5 glass-card">
@@ -25,7 +20,6 @@ export default function JournalTableAdmin({ journals, page = 1, limit = 10 }) {
     );
   }
 
-  // Dynamic route base path detection
   const isPreview = window.location.pathname.startsWith('/admin-preview');
   const basePath = isPreview ? '/admin-preview' : '/admin';
 
@@ -36,7 +30,7 @@ export default function JournalTableAdmin({ journals, page = 1, limit = 10 }) {
           <tr>
             <th className="py-3.5 ps-4 text-muted-custom">JOURNAL TITLE & CATEGORY</th>
             <th className="py-3.5 text-muted-custom">ISSN</th>
-            <th className="py-3.5 text-muted-custom">EDITOR-IN-CHIEF</th>
+            <th className="py-3.5 text-muted-custom">PUBLISHER</th>
             <th className="py-3.5 text-muted-custom">LAST UPDATED</th>
             <th className="py-3.5 text-muted-custom">STATUS</th>
             <th className="py-3.5 pe-4 text-end text-muted-custom" style={{ width: '120px' }}>ACTIONS</th>
@@ -45,14 +39,6 @@ export default function JournalTableAdmin({ journals, page = 1, limit = 10 }) {
         <tbody>
           {journals.map((journal) => {
             const id = journal.id || journal.journal_id;
-            // Avatar fallback for different mock editors
-            const mockAvatars = [
-              "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=100",
-              "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=100",
-              "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=100"
-            ];
-            const charSum = journal.editorInChief ? journal.editorInChief.split('').reduce((acc, c) => acc + c.charCodeAt(0), 0) : 0;
-            const avatarUrl = mockAvatars[charSum % mockAvatars.length];
 
             return (
               <tr
@@ -67,7 +53,6 @@ export default function JournalTableAdmin({ journals, page = 1, limit = 10 }) {
                   }
                 }}
               >
-                {/* Tên tạp chí và danh mục */}
                 <td className="py-3 ps-4">
                   <button
                     type="button"
@@ -84,34 +69,31 @@ export default function JournalTableAdmin({ journals, page = 1, limit = 10 }) {
                   </div>
                 </td>
 
-                {/* Mã số định danh ISSN */}
                 <td className="font-monospace small text-main">
                   {journal.issn || '—'}
                 </td>
 
-                {/* Editor-in-Chief (avatar + name) */}
                 <td className="py-3">
                   <div className="d-flex align-items-center gap-2">
-                    <img
-                      src={avatarUrl}
-                      alt={journal.editorInChief || 'Editor'}
-                      className="rounded-circle"
-                      style={{ width: '32px', height: '32px', objectFit: 'cover', border: '1px solid var(--border)' }}
-                    />
-                    <span className="text-main fw-semibold">{journal.editorInChief || 'Chưa chỉ định'}</span>
+                    <div
+                      className="rounded-circle d-inline-flex align-items-center justify-content-center text-muted-custom"
+                      style={{ width: '32px', height: '32px', backgroundColor: 'var(--bg-chip)', border: '1px solid var(--border)', flexShrink: 0 }}
+                      aria-hidden="true"
+                    >
+                      <Icon icon="lucide:building-2" width="15" />
+                    </div>
+                    <span className="text-main fw-semibold">{journal.publisher || 'Chưa chỉ định'}</span>
                   </div>
                 </td>
 
-                {/* Ngày cập nhật gần nhất */}
                 <td className="text-muted-custom small font-monospace">
                   {journal.lastUpdated || '—'}
                 </td>
 
-                {/* Badge trạng thái hoạt động */}
                 <td>
                   <span className={`badge px-2.5 py-1.5 rounded-pill text-uppercase text-xs font-semibold ${
                     journal.status === 'Active' || journal.status === 'Published'
-                      ? 'admin-status-badge admin-status-badge--accent' 
+                      ? 'admin-status-badge admin-status-badge--accent'
                       : journal.status === 'Under Review' || journal.status === 'Draft'
                         ? 'admin-status-badge admin-status-badge--warning'
                         : 'admin-status-badge admin-status-badge--muted'
@@ -120,12 +102,10 @@ export default function JournalTableAdmin({ journals, page = 1, limit = 10 }) {
                   </span>
                 </td>
 
-                {/* Các nút bấm thao tác */}
                 <td className="pe-4 text-end">
                   <div className="d-flex justify-content-end gap-2">
-                    {/* Nút vào quản lý kho cấu trúc Volume và Issue */}
-                    <Button 
-                      variant="light" 
+                    <Button
+                      variant="light"
                       size="sm"
                       className="btn-custom-sm d-inline-flex align-items-center justify-content-center p-2 rounded-2 border"
                       onClick={(event) => {
@@ -136,10 +116,9 @@ export default function JournalTableAdmin({ journals, page = 1, limit = 10 }) {
                     >
                       <Icon icon="lucide:eye" width="16" className="text-dark" />
                     </Button>
-                    
-                    {/* Nút vào form chỉnh sửa chi tiết cấu hình Journal */}
-                    <Button 
-                      variant="outline-dark" 
+
+                    <Button
+                      variant="outline-dark"
                       size="sm"
                       className="btn-custom-sm d-inline-flex align-items-center justify-content-center p-2 rounded-2"
                       onClick={(event) => {

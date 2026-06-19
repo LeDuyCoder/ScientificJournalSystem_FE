@@ -6,7 +6,7 @@
  */
 import { useNavigate } from 'react-router-dom';
 import Icon from '../../../../shared/components/Icon';
-import StatusBadge from '../StatusBadge';
+import StatusBadge from '../shared/StatusBadge';
 
 export default function ArticleTable({ items, totalItems, startIndex, endIndex }) {
   const navigate = useNavigate();

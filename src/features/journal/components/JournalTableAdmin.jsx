@@ -5,7 +5,7 @@ import { Icon } from '@iconify/react';
 
 /**
  * Component JournalTableAdmin - Bảng hiển thị danh sách tạp chí phục vụ mục đích quản trị (Admin View).
- * Đáp ứng Issue #76: Hiển thị Title, ISSN, Publisher, Editor-in-Chief, Last Updated, Status và các nút Action.
+ * Đáp ứng Issue #76: Hiển thị Title, ISSN, Publisher, Publisher, Last Updated, Status và các nút Action.
  * * @param {Array} journals - Danh sách tạp chí sau khi đã qua bộ lọc search/status
  * @param {number} page - Trang hiện tại (phục vụ tính toán số thứ tự tăng tiến)
  * @param {number} limit - Số lượng dòng trên một trang
@@ -33,7 +33,7 @@ export default function JournalTableAdmin({ journals, page = 1, limit = 10 }) {
             <th className="py-3.5" style={{ backgroundColor: '#f8fafc', color: '#64748b' }}>Journal Title / Publisher</th>
             <th className="py-3.5" style={{ backgroundColor: '#f8fafc', color: '#64748b' }}>ISSN</th>
             <th className="py-3.5" style={{ backgroundColor: '#f8fafc', color: '#64748b' }}>Lĩnh vực / Chuyên ngành</th>
-            <th className="py-3.5" style={{ backgroundColor: '#f8fafc', color: '#64748b' }}>Editor-in-Chief</th>
+            <th className="py-3.5" style={{ backgroundColor: '#f8fafc', color: '#64748b' }}>Publisher</th>
             <th className="py-3.5" style={{ backgroundColor: '#f8fafc', color: '#64748b' }}>Last Updated</th>
             <th className="py-3.5" style={{ backgroundColor: '#f8fafc', color: '#64748b' }}>Status</th>
             <th className="py-3.5 pe-4 text-end" style={{ width: '140px', backgroundColor: '#f8fafc', color: '#64748b' }}>Hành động</th>
@@ -81,7 +81,7 @@ export default function JournalTableAdmin({ journals, page = 1, limit = 10 }) {
 
                 {/* Tên giáo sư / tổng biên tập chịu trách nhiệm nội dung */}
                 <td className="text-main fw-medium">
-                  {journal.editorInChief || 'Chưa chỉ định'}
+                  {journal.publisher || 'Chưa chỉ định'}
                 </td>
 
                 {/* Ngày cập nhật dữ liệu cấu trúc gần nhất */}

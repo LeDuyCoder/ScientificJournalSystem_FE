@@ -1,8 +1,8 @@
-import ROUTES from '../../../app/routes/routePaths';
+﻿import ROUTES from '../../../app/routes/routePaths';
 
 const ADMIN_MENU = [
   // Trang tổng quan: Total Journals, Total Articles, Pending Reviews, Active Users,
-  // Publication Trends chart, Recent Activity, Volume & Issue Status table.
+  // Publication Trends chart, Recent Activity, Volume & Issue Overview table.
   { key: 'dashboard', label: 'Dashboard', icon: 'lucide:layout-dashboard', path: ROUTES.ADMIN_DASHBOARD },
 
   // Quản lý danh sách journal (sẽ phát triển ở issue khác).

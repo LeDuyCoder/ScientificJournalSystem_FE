@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import Icon from '../../../shared/components/Icon';
+import Icon from '../../../../shared/components/Icon';
 
 export default function KeywordInput({ keywords, onChange, placeholder = 'Add keywords separated by commas...' }) {
   // Giá trị đang gõ trong input, chưa được "chốt" thành tag

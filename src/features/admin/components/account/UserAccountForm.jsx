@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Row, Col, Form, Button } from 'react-bootstrap';
 import Icon from '../../../../shared/components/Icon';
 import { SYSTEM_ROLES } from '../../../../shared/constants/systemConstants';
@@ -12,7 +12,8 @@ export default function UserAccountForm({
   initialData = {},
   isEdit = false,
   onSubmit,
-  onCancel
+  onCancel,
+  submitting = false
 }) {
   // Form fields states
   const [firstName, setFirstName] = useState('');
@@ -21,7 +22,7 @@ export default function UserAccountForm({
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [institution, setInstitution] = useState('');
-  const [role, setRole] = useState(isEdit ? 'Researcher' : '');
+  const [role, setRole] = useState(isEdit ? 'RESEARCHER' : '');
   const [status, setStatus] = useState('Active'); // Active, Inactive
   
   // Passwords states
@@ -31,9 +32,7 @@ export default function UserAccountForm({
   
   // Validation / status feedback
   const [error, setError] = useState('');
-  const [profileImage, setProfileImage] = useState(
-    'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=100'
-  );
+  const [profileImage, setProfileImage] = useState(initialData.avatar || '');
 
   // Load initialData if editing
   useEffect(() => {
@@ -44,7 +43,7 @@ export default function UserAccountForm({
       setEmail(initialData.email || '');
       setPhone(initialData.phone || '');
       setInstitution(initialData.institution || '');
-      setRole(initialData.role || 'Researcher');
+      setRole(initialData.role || 'RESEARCHER');
       setStatus(initialData.status || 'Active');
       if (initialData.avatar) {
         setProfileImage(initialData.avatar);
@@ -61,26 +60,26 @@ export default function UserAccountForm({
 
     // Common validations
     if (!email.trim() || !role) {
-      setError('Vui lòng điền đầy đủ các trường thông tin bắt buộc.');
+      setError('Vui lÃ²ng Ä‘iá»n Ä‘áº§y Ä‘á»§ cÃ¡c trÆ°á»ng thÃ´ng tin báº¯t buá»™c.');
       return;
     }
 
     // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      setError('Địa chỉ email không hợp lệ.');
+      setError('Äá»‹a chá»‰ email khÃ´ng há»£p lá»‡.');
       return;
     }
 
     // Name validations
     if (isEdit) {
       if (!fullName.trim()) {
-        setError('Họ và tên là bắt buộc.');
+        setError('Há» vÃ  tÃªn lÃ  báº¯t buá»™c.');
         return;
       }
     } else {
       if (!firstName.trim() || !lastName.trim()) {
-        setError('Họ và Tên là bắt buộc.');
+        setError('Há» vÃ  TÃªn lÃ  báº¯t buá»™c.');
         return;
       }
     }
@@ -88,17 +87,17 @@ export default function UserAccountForm({
     // Password validation (only if added or if new password was keyed during edit)
     if (!isEdit || newPassword || confirmPassword) {
       if (!isEdit && !newPassword) {
-        setError('Mật khẩu là bắt buộc.');
+        setError('Máº­t kháº©u lÃ  báº¯t buá»™c.');
         return;
       }
 
       if (newPassword.length < 8) {
-        setError('Mật khẩu phải chứa ít nhất 8 ký tự.');
+        setError('Máº­t kháº©u pháº£i chá»©a Ã­t nháº¥t 8 kÃ½ tá»±.');
         return;
       }
 
       if (newPassword !== confirmPassword) {
-        setError('Mật khẩu xác nhận không khớp.');
+        setError('Máº­t kháº©u xÃ¡c nháº­n khÃ´ng khá»›p.');
         return;
       }
     }
@@ -132,25 +131,12 @@ export default function UserAccountForm({
     onSubmit(payload);
   };
 
-  /**
-   * Simulated change/upload profile picture handler.
-   */
   const handlePhotoUpload = () => {
-    const randomAvatars = [
-      'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=100',
-      'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=100',
-      'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80&w=100',
-      'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?auto=format&fit=crop&q=80&w=100'
-    ];
-    const newPic = randomAvatars[Math.floor(Math.random() * randomAvatars.length)];
-    setProfileImage(newPic);
+    setError('Chưa có API upload ảnh đại diện user. Đã xóa dữ liệu mock khỏi khu vực này.');
   };
 
-  /**
-   * Simulated remove profile picture handler.
-   */
   const handlePhotoRemove = () => {
-    setProfileImage('https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&q=80&w=100'); // Default avatar
+    setProfileImage('');
   };
 
   return (
@@ -175,8 +161,8 @@ export default function UserAccountForm({
             />
           </div>
           <div>
-            <div className="fw-bold text-main mb-1" style={{ fontSize: '1rem' }}>{fullName || 'Elena Smith'}</div>
-            <div className="text-muted-custom small mb-2">Member since Oct 2023</div>
+            <div className="fw-bold text-main mb-1" style={{ fontSize: '1rem' }}>{fullName || 'Chưa có tên người dùng'}</div>
+            <div className="text-muted-custom small mb-2">Chưa có API ngày tham gia user. Đã xóa dữ liệu mock khỏi khu vực này.</div>
             <div className="d-flex gap-2.5">
               <Button 
                 type="button" 
@@ -207,7 +193,7 @@ export default function UserAccountForm({
       <div>
         <h6 className="fw-bold d-flex align-items-center gap-2 mb-3.5 tracking-wider text-uppercase" style={{ fontSize: '0.85rem', color: '#ea580c', letterSpacing: '0.03em' }}>
           <Icon icon="lucide:user" width="16" style={{ color: '#ea580c' }} />
-          THÔNG TIN CÁ NHÂN
+          THÃ”NG TIN CÃ NHÃ‚N
         </h6>
         
         <Row className="g-3">
@@ -216,11 +202,11 @@ export default function UserAccountForm({
             <Col xs={12} md={6}>
               <Form.Group controlId="fullName">
                 <Form.Label className="account-form-label">
-                  Họ và tên <span className="text-danger">*</span>
+                  Há» vÃ  tÃªn <span className="text-danger">*</span>
                 </Form.Label>
                 <Form.Control
                   type="text"
-                  placeholder="Ví dụ: Nguyễn Văn A"
+                  placeholder="VÃ­ dá»¥: Nguyá»…n VÄƒn A"
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
                   required
@@ -234,11 +220,11 @@ export default function UserAccountForm({
               <Col xs={12} md={6}>
                 <Form.Group controlId="firstName">
                   <Form.Label className="account-form-label">
-                    Họ <span className="text-danger">*</span>
+                    Há» <span className="text-danger">*</span>
                   </Form.Label>
                   <Form.Control
                     type="text"
-                    placeholder="Ví dụ: Nguyễn"
+                    placeholder="VÃ­ dá»¥: Nguyá»…n"
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
                     required
@@ -249,11 +235,11 @@ export default function UserAccountForm({
               <Col xs={12} md={6}>
                 <Form.Group controlId="lastName">
                   <Form.Label className="account-form-label">
-                    Tên <span className="text-danger">*</span>
+                    TÃªn <span className="text-danger">*</span>
                   </Form.Label>
                   <Form.Control
                     type="text"
-                    placeholder="Ví dụ: Văn A"
+                    placeholder="VÃ­ dá»¥: VÄƒn A"
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
                     required
@@ -268,7 +254,7 @@ export default function UserAccountForm({
           <Col xs={12} md={6}>
             <Form.Group controlId="emailAddress">
               <Form.Label className="account-form-label">
-                Địa chỉ Email <span className="text-danger">*</span>
+                Äá»‹a chá»‰ Email <span className="text-danger">*</span>
               </Form.Label>
               <Form.Control
                 type="email"
@@ -285,7 +271,7 @@ export default function UserAccountForm({
           <Col xs={12} md={6}>
             <Form.Group controlId="phoneNumber">
               <Form.Label className="account-form-label">
-                Số điện thoại
+                Sá»‘ Ä‘iá»‡n thoáº¡i
               </Form.Label>
               <Form.Control
                 type="text"
@@ -302,7 +288,7 @@ export default function UserAccountForm({
             <Col xs={12} md={6}>
               <Form.Group controlId="institution">
                 <Form.Label className="account-form-label">
-                  Đơn vị / Trường đại học
+                  ÄÆ¡n vá»‹ / TrÆ°á»ng Ä‘áº¡i há»c
                 </Form.Label>
                 <Form.Control
                   type="text"
@@ -321,7 +307,7 @@ export default function UserAccountForm({
       <div className="py-3 border-top">
         <h6 className="fw-bold d-flex align-items-center gap-2 mb-3.5 tracking-wider text-uppercase" style={{ fontSize: '0.85rem', color: '#ea580c', letterSpacing: '0.03em' }}>
           <Icon icon="lucide:shield" width="16" style={{ color: '#ea580c' }} />
-          VAI TRÒ & TRẠNG THÁI
+          VAI TRÃ’ & TRáº NG THÃI
         </h6>
 
         <Row className="g-3 align-items-center">
@@ -329,7 +315,7 @@ export default function UserAccountForm({
           <Col xs={12} md={6}>
             <Form.Group controlId="platformRole">
               <Form.Label className="account-form-label">
-                Vai trò trên nền tảng <span className="text-danger">*</span>
+                Vai trÃ² trÃªn ná»n táº£ng <span className="text-danger">*</span>
               </Form.Label>
               <Form.Select
                 value={role}
@@ -338,7 +324,7 @@ export default function UserAccountForm({
                 style={{ cursor: 'pointer' }}
                 required
               >
-                <option value="" disabled hidden>Chọn vai trò...</option>
+                <option value="" disabled hidden>Chá»n vai trÃ²...</option>
                 {SYSTEM_ROLES.map((r) => (
                   <option key={r.value} value={r.value}>
                     {r.label}
@@ -358,7 +344,7 @@ export default function UserAccountForm({
                 marginTop: '28px' // Align vertical alignment with label spacing
               }}
             >
-              <span className="small fw-semibold text-muted-custom" style={{ fontSize: '0.85rem' }}>Trạng thái tài khoản</span>
+              <span className="small fw-semibold text-muted-custom" style={{ fontSize: '0.85rem' }}>Tráº¡ng thÃ¡i tÃ i khoáº£n</span>
               <div className="d-flex align-items-center gap-2.5 orange-switch-toggle">
                 <Form.Check 
                   type="switch"
@@ -366,7 +352,7 @@ export default function UserAccountForm({
                   checked={status === 'Active'}
                   onChange={(e) => setStatus(e.target.checked ? 'Active' : 'Inactive')}
                 />
-                <span className="small fw-bold text-main" style={{ fontSize: '0.85rem' }}>{status === 'Active' ? 'Hoạt động' : 'Vô hiệu hóa'}</span>
+                <span className="small fw-bold text-main" style={{ fontSize: '0.85rem' }}>{status === 'Active' ? 'Hoáº¡t Ä‘á»™ng' : 'VÃ´ hiá»‡u hÃ³a'}</span>
               </div>
             </div>
           </Col>
@@ -377,7 +363,7 @@ export default function UserAccountForm({
       <div className="py-3 border-top">
         <h6 className="fw-bold d-flex align-items-center gap-2 mb-3.5 tracking-wider text-uppercase" style={{ fontSize: '0.85rem', color: '#ea580c', letterSpacing: '0.03em' }}>
           <Icon icon="lucide:lock" width="16" style={{ color: '#ea580c' }} />
-          THÔNG TIN ĐĂNG NHẬP
+          THÃ”NG TIN ÄÄ‚NG NHáº¬P
         </h6>
         
         <Row className="g-3">
@@ -386,11 +372,11 @@ export default function UserAccountForm({
             <Col xs={12} md={4}>
               <Form.Group controlId="currentPassword">
                 <Form.Label className="account-form-label">
-                  Mật khẩu hiện tại
+                  Máº­t kháº©u hiá»‡n táº¡i
                 </Form.Label>
                 <Form.Control
                   type="password"
-                  placeholder="••••••••"
+                  placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
                   value={currentPassword}
                   onChange={(e) => setCurrentPassword(e.target.value)}
                   className="account-form-input"
@@ -403,7 +389,7 @@ export default function UserAccountForm({
           <Col xs={12} md={isEdit ? 4 : 6}>
             <Form.Group controlId="newPassword">
               <Form.Label className="account-form-label">
-                {isEdit ? 'Mật khẩu mới' : 'Mật khẩu mới *'}
+                {isEdit ? 'Máº­t kháº©u má»›i' : 'Máº­t kháº©u má»›i *'}
               </Form.Label>
               <Form.Control
                 type="password"
@@ -420,7 +406,7 @@ export default function UserAccountForm({
           <Col xs={12} md={isEdit ? 4 : 6}>
             <Form.Group controlId="confirmPassword">
               <Form.Label className="account-form-label">
-                {isEdit ? 'Xác nhận mật khẩu' : 'Xác nhận mật khẩu *'}
+                {isEdit ? 'XÃ¡c nháº­n máº­t kháº©u' : 'XÃ¡c nháº­n máº­t kháº©u *'}
               </Form.Label>
               <Form.Control
                 type="password"
@@ -436,7 +422,7 @@ export default function UserAccountForm({
 
         {/* Password complexity helper note */}
         <div className="form-text text-muted-custom mt-2.5 small" style={{ fontSize: '0.78rem' }}>
-          Mật khẩu phải chứa ít nhất 8 ký tự, bao gồm cả chữ hoa, chữ thường và chữ số.
+          Máº­t kháº©u pháº£i chá»©a Ã­t nháº¥t 8 kÃ½ tá»±, bao gá»“m cáº£ chá»¯ hoa, chá»¯ thÆ°á»ng vÃ  chá»¯ sá»‘.
         </div>
       </div>
 
@@ -448,23 +434,29 @@ export default function UserAccountForm({
           className="bg-transparent border rounded-pill px-4 py-2 text-muted-custom fw-semibold"
           style={{ borderColor: '#cbd5e1', color: '#64748b', fontSize: '0.88rem' }}
         >
-          Hủy
+          Há»§y
         </Button>
         
         <Button 
           type="submit" 
           className="btn-primary-glow border-0 rounded-pill px-4 py-2 d-flex align-items-center gap-2"
           style={{ fontSize: '0.88rem' }}
+          disabled={submitting}
         >
-          {isEdit ? (
+          {submitting ? (
+            <>
+              <Icon icon="lucide:loader-2" width="16" />
+              <span>Äang xá»­ lÃ½...</span>
+            </>
+          ) : isEdit ? (
             <>
               <Icon icon="lucide:save" width="16" />
-              <span>Lưu thay đổi</span>
+              <span>LÆ°u thay Ä‘á»•i</span>
             </>
           ) : (
             <>
               <Icon icon="lucide:user-plus" width="16" />
-              <span>Thêm tài khoản</span>
+              <span>ThÃªm tÃ i khoáº£n</span>
             </>
           )}
         </Button>

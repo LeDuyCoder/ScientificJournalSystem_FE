@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import { useState, useRef } from 'react';
 import { Button, Alert, ProgressBar } from 'react-bootstrap';
 import Icon from '../../../../shared/components/Icon';
 
@@ -172,7 +172,7 @@ export default function PdfDropzone({
                   {selectedFile.name}
                 </div>
                 <div className="text-muted-custom small">
-                  {formatBytes(selectedFile.size)} • PDF Document
+                  {formatBytes(selectedFile.size)} â€¢ PDF Document
                 </div>
               </div>
             </div>
@@ -192,13 +192,13 @@ export default function PdfDropzone({
             </button>
           </div>
 
-          {/* Progress bar mock */}
+          {/* Submission status */}
           <div className="mt-4 pt-2 border-top">
             <div className="d-flex justify-content-between small text-muted-custom mb-1.5">
-              <span>Ready for Submission</span>
-              <span className="fw-semibold" style={{ color: 'var(--primary)' }}>100%</span>
+              <span>Chưa có API upload PDF article. Đã xóa dữ liệu mock khỏi khu vực này.</span>
+              <span className="fw-semibold" style={{ color: 'var(--primary)' }}>N/A</span>
             </div>
-            <ProgressBar now={100} style={{ height: '4px', '--bs-progress-bar-bg': 'var(--primary)' }} />
+            <ProgressBar now={0} style={{ height: '4px', '--bs-progress-bar-bg': 'var(--primary)' }} />
           </div>
         </div>
       )}

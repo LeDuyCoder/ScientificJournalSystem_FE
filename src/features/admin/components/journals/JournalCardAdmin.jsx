@@ -1,5 +1,4 @@
-import React from 'react';
-import { Card, Col, Row, Button } from 'react-bootstrap';
+﻿import { Card, Col, Row, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 
@@ -12,23 +11,12 @@ export default function JournalCardAdmin({ journal }) {
   const id = journal.id || journal.journal_id;
   const title = journal.title || journal.display_name;
 
-  // Dynamic route base path detection
   const isPreview = window.location.pathname.startsWith('/admin-preview');
   const basePath = isPreview ? '/admin-preview' : '/admin';
 
-  // Get index clean representation
   const idStr = id ? String(id) : '';
   const cleanId = idStr.replace(/\D/g, '') || '101';
   const displayId = `ID: #${cleanId}`;
-
-  // Avatar selector fallback
-  const mockAvatars = [
-    "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=100",
-    "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=100",
-    "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=100"
-  ];
-  const charSum = journal.editorInChief ? journal.editorInChief.split('').reduce((acc, c) => acc + c.charCodeAt(0), 0) : 0;
-  const avatarUrl = mockAvatars[charSum % mockAvatars.length];
 
   const isPublished = journal.status === 'Active' || journal.status === 'Published';
   const isReview = journal.status === 'Under Review' || journal.status === 'Draft';
@@ -52,8 +40,6 @@ export default function JournalCardAdmin({ journal }) {
         }}
       >
         <Card.Body className="d-flex flex-column p-4 text-start">
-          
-          {/* Header Row: ID & Category Badge */}
           <div className="d-flex justify-content-between align-items-center mb-3">
             <span className="text-muted-custom small fw-semibold font-monospace">{displayId}</span>
             <span className="badge bg-dark text-white px-2.5 py-1 text-uppercase text-xs fw-bold">
@@ -61,7 +47,6 @@ export default function JournalCardAdmin({ journal }) {
             </span>
           </div>
 
-          {/* Title and ISSN */}
           <Card.Title className="font-display fw-bold text-main mb-1 line-clamp-2 h5">
             {title}
           </Card.Title>
@@ -69,7 +54,6 @@ export default function JournalCardAdmin({ journal }) {
             ISSN: {journal.issn || '—'}
           </div>
 
-          {/* Metadata Grid (2x2 Grid) */}
           <div className="bg-light p-3 rounded-3 mb-3" style={{ backgroundColor: 'var(--bg-chip)', fontSize: '0.8rem' }}>
             <Row className="g-2">
               <Col xs={6} className="border-end border-bottom pb-1.5" style={{ borderColor: 'var(--border)' }}>
@@ -91,7 +75,6 @@ export default function JournalCardAdmin({ journal }) {
             </Row>
           </div>
 
-          {/* Open Access tag list */}
           <div className="d-flex gap-1.5 mb-3 flex-wrap">
             <span className="badge admin-status-badge admin-status-badge--accent text-xs py-1 px-2.5 rounded-pill">
               OPEN ACCESS
@@ -101,38 +84,35 @@ export default function JournalCardAdmin({ journal }) {
             </span>
           </div>
 
-          {/* Editor-in-Chief Profile */}
           <div className="d-flex align-items-center gap-2.5 bg-light p-2.5 rounded-3 mb-4 mt-auto" style={{ backgroundColor: 'var(--bg-chip)' }}>
-            <img 
-              src={avatarUrl} 
-              alt={journal.editorInChief} 
-              className="rounded-circle"
-              style={{ width: '36px', height: '36px', objectFit: 'cover' }}
-            />
+            <div
+              className="rounded-circle d-inline-flex align-items-center justify-content-center text-muted-custom"
+              style={{ width: '36px', height: '36px', backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)', flexShrink: 0 }}
+              aria-hidden="true"
+            >
+              <Icon icon="lucide:building-2" width="16" />
+            </div>
             <div className="text-truncate">
               <span className="fw-bold text-main d-block text-truncate" style={{ fontSize: '0.85rem' }}>
-                {journal.editorInChief || 'Chưa chỉ định'}
+                {journal.publisher || 'Chưa chỉ định'}
               </span>
               <span className="text-muted-custom text-xs text-uppercase fw-semibold" style={{ fontSize: '0.65rem', letterSpacing: '0.02em' }}>
-                Editor-in-Chief
+                Publisher
               </span>
             </div>
           </div>
 
-          {/* Footer status & Admin Controls */}
           <div className="d-flex justify-content-between align-items-center pt-3 border-top w-100" style={{ borderColor: 'var(--border)' }}>
-            {/* Status Dot */}
             <div className="d-flex align-items-center gap-1.5">
               <span className={statusClass} />
               <span className="fw-bold text-uppercase text-main" style={{ fontSize: '0.75rem' }}>
                 {journal.status || 'Draft'}
               </span>
             </div>
-            
-            {/* Control Actions */}
+
             <div className="d-flex gap-1.5">
-              <Button 
-                variant="light" 
+              <Button
+                variant="light"
                 size="sm"
                 className="btn-custom-sm d-inline-flex align-items-center justify-content-center p-2 rounded-2 border"
                 onClick={(event) => {
@@ -143,8 +123,8 @@ export default function JournalCardAdmin({ journal }) {
               >
                 <Icon icon="lucide:eye" width="14" />
               </Button>
-              <Button 
-                variant="outline-dark" 
+              <Button
+                variant="outline-dark"
                 size="sm"
                 className="btn-custom-sm d-inline-flex align-items-center justify-content-center p-2 rounded-2"
                 onClick={(event) => {
@@ -157,7 +137,6 @@ export default function JournalCardAdmin({ journal }) {
               </Button>
             </div>
           </div>
-
         </Card.Body>
       </Card>
     </Col>

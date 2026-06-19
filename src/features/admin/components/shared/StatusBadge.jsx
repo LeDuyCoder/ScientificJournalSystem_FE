@@ -1,5 +1,5 @@
-import { VOLUME_STATUS_STYLE } from '../constants/volumeStatus';
-import { ARTICLE_REVIEW_STATUS_STYLE } from '../constants/articleStatus';
+import { VOLUME_STATUS_STYLE } from '../../constants/volumeStatus';
+import { ARTICLE_REVIEW_STATUS_STYLE } from '../../constants/articleStatus';
 
 // Combine both status maps into a single lookup table.
 // Article statuses are checked first since they cover more cases;

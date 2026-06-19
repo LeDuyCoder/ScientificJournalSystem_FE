@@ -1,8 +1,13 @@
 import Icon from '../../../shared/components/Icon';
-import { mockAdminUser } from '../data/mockAdminUser';
+import { useAuthStore } from '../../../app/store/authStore';
 
 export default function AdminHeader() {
-  const { name, role, avatarUrl, notificationCount } = mockAdminUser;
+  const user = useAuthStore((state) => state.user);
+  
+  const name = user ? `${user.first_name || ''} ${user.last_name || ''}`.trim() : 'Admin User';
+  const role = user?.role || 'Administrator';
+  const avatarUrl = 'https://ui-avatars.com/api/?name=' + encodeURIComponent(name) + '&background=random';
+  const notificationCount = 0;
 
   return (
     <header className="admin-header">

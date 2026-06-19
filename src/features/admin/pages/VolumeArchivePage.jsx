@@ -3,7 +3,7 @@ import { Row, Col, Card, Button, Form, InputGroup } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import { useJournalManagement } from '../../journal/hooks/useJournalManagement';
-import Pagination from '../components/Pagination';
+import Pagination from '../components/shared/Pagination';
 import SwitchJournalModal from '../components/modals/SwitchJournalModal';
 
 /**

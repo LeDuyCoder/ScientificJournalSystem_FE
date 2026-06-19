@@ -83,7 +83,7 @@ export default function RepositoryManagementPage() {
               {currentJournal?.issn}
             </span>{" "}
             | Người phụ trách:{" "}
-            <span className="fw-medium">{currentJournal?.editorInChief}</span>
+            <span className="fw-medium">{currentJournal?.publisher}</span>
           </p>
         </div>
 

@@ -1,4 +1,3 @@
-import React from 'react';
 
 /**
  * RoleBadge Component
@@ -10,34 +9,36 @@ import React from 'react';
 export default function RoleBadge({ role }) {
   // Define styling map matching SCImago / mockup aesthetics
   const styles = {
-    Researcher: {
+    RESEARCHER: {
       backgroundColor: '#fff0e8',
       color: '#ff7a33',
       border: '1px solid rgba(255, 122, 51, 0.2)'
     },
-    Lecturer: {
+    LECTURER: {
       backgroundColor: '#fff0f5',
       color: '#db2777',
       border: '1px solid rgba(219, 39, 119, 0.2)'
     },
-    Student: {
+    STUDENT: {
       backgroundColor: '#f1f5f9',
       color: '#475569',
       border: '1px solid rgba(71, 85, 105, 0.2)'
     },
-    Editor: {
-      backgroundColor: '#f5f3ff',
-      color: '#7c3aed',
-      border: '1px solid rgba(124, 58, 237, 0.2)'
-    },
-    Admin: {
+    ADMINISTRATOR: {
       backgroundColor: '#ecfdf5',
       color: '#059669',
       border: '1px solid rgba(5, 150, 105, 0.2)'
     }
   };
 
-  const currentStyle = styles[role] || styles.Researcher;
+  const labels = {
+    RESEARCHER: 'Researcher',
+    LECTURER: 'Lecturer',
+    STUDENT: 'Student',
+    ADMINISTRATOR: 'Administrator',
+  };
+
+  const currentStyle = styles[role] || styles.RESEARCHER;
 
   return (
     <span 
@@ -48,7 +49,7 @@ export default function RoleBadge({ role }) {
         ...currentStyle
       }}
     >
-      {role}
+      {labels[role] || role}
     </span>
   );
 }

@@ -1,4 +1,3 @@
-import React from 'react';
 import { ListGroup, Badge, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';
@@ -10,7 +9,7 @@ import { Icon } from '@iconify/react';
  * @param {string} selectedVolumeId - ID của Volume đang được chọn để xem Issue
  * @param {function} onSelectVolume - Hàm callback kích hoạt khi Admin bấm chọn một Volume
  */
-export default function VolumeList({ volumes, selectedVolumeId, onSelectVolume }) {
+export default function VolumeList({ volumes, selectedVolumeId, onSelectVolume, volumeStatsById = {} }) {
   const navigate = useNavigate();
 
   // Dynamic route base path detection
@@ -36,6 +35,9 @@ export default function VolumeList({ volumes, selectedVolumeId, onSelectVolume }
         {sortedVolumes.map((vol, index) => {
           const isSelected = vol.id === selectedVolumeId;
           const isNewest = index === 0; // The newest volume is "Current", others are "Archived"
+          const volumeStats = volumeStatsById[vol.id] || {};
+          const issueCount = volumeStats.issueCount ?? 0;
+          const articleCount = volumeStats.articleCount;
           
           return (
             <ListGroup.Item
@@ -72,7 +74,9 @@ export default function VolumeList({ volumes, selectedVolumeId, onSelectVolume }
                   </span>
                 </div>
                 <small className={isSelected ? 'text-white-50 font-monospace' : 'text-muted-custom font-monospace'}>
-                  {vol.totalIssues || 0} Issues • {vol.totalArticles || 0} Articles
+                  {issueCount} Issues • {typeof articleCount === 'number'
+                    ? `${articleCount} Articles`
+                    : 'Chưa có API Article theo issue_id. Đã xóa dữ liệu mock khỏi khu vực này.'}
                 </small>
               </div>
               

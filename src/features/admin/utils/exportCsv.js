@@ -1,4 +1,4 @@
-// Header cột tương ứng với các field hiển thị trên table
+﻿// Header cột tương ứng với các field hiển thị trên table
 const CSV_HEADERS = ['Volume', 'Total Issues', 'Publication Date', 'Status', 'Progress'];
 
 /**
@@ -15,7 +15,7 @@ function escapeCsvValue(value) {
 }
 
 /**
- * Xuất danh sách Volume & Issue Status thành file CSV và trigger download
+ * Xuất danh sách Volume & Issue Overview thành file CSV và trigger download
  * ngay trên browser (không cần gọi API).
  *
  * @param {Array} volumeStatusList - mảng item giống mockVolumeStatus

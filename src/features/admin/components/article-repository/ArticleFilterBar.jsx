@@ -4,7 +4,9 @@
  * - onApply: handler nút "Apply Search Filters".
  * - onClear: handler link "Clear all" (reset cả draft và applied filters).
  */
-import { JOURNAL_FILTER_OPTIONS, STATUS_FILTER_OPTIONS } from '../../constants/articleListFilters';
+import React, { useState, useEffect } from 'react';
+import { searchJournalsApi } from '../../../journal/api/journalApi';
+import { STATUS_FILTER_OPTIONS } from '../../constants/articleListFilters';
 
 export default function ArticleFilterBar({
   journal,
@@ -16,6 +18,25 @@ export default function ArticleFilterBar({
   onApply,
   onClear,
 }) {
+  const [journalOptions, setJournalOptions] = useState(['All Journals']);
+  
+  useEffect(() => {
+    const fetchJournals = async () => {
+      try {
+        const response = await searchJournalsApi({ page: 1, limit: 100 });
+        const items = response.data?.data?.items || response.data?.data || [];
+        // Map to display_name (since the page client-filters by article.journal string)
+        const journalNames = items.map(j => j.display_name || j.title);
+        // Only keep unique names to avoid duplicates, just in case
+        const uniqueNames = [...new Set(journalNames)].filter(Boolean);
+        setJournalOptions(['All Journals', ...uniqueNames]);
+      } catch (err) {
+        console.error('Error fetching journals for filter:', err);
+      }
+    };
+    fetchJournals();
+  }, []);
+
   return (
     <div className="admin-card admin-filter-bar">
       {/* Label nhỏ phía trên - giống "REPOSITORY FILTERS" trong Figma */}
@@ -39,7 +60,7 @@ export default function ArticleFilterBar({
             value={journal}
             onChange={(e) => onChangeJournal(e.target.value)}
           >
-            {JOURNAL_FILTER_OPTIONS.map((option) => (
+            {journalOptions.map((option) => (
               <option key={option} value={option}>
                 {option}
               </option>

@@ -18,7 +18,7 @@ export default function AddJournalModal({ show, handleClose }) {
     publisher: '',
     subjectCategory: '',
     subjectArea: '',
-    editorInChief: ''
+    publisher: ''
   });
 
   // State lưu trữ thông báo lỗi khi validate dữ liệu đầu vào
@@ -60,7 +60,7 @@ export default function AddJournalModal({ show, handleClose }) {
       publisher: '',
       subjectCategory: '',
       subjectArea: '',
-      editorInChief: ''
+      publisher: ''
     });
     handleClose();
   };
@@ -167,13 +167,13 @@ export default function AddJournalModal({ show, handleClose }) {
             </Col>
           </Row>
 
-          {/* Tổng biên tập */}
+          {/* Nhà xuất bản */}
           <Form.Group className="mb-0">
-            <Form.Label className="fw-medium small text-main">Tổng biên tập phụ trách (Editor-in-Chief)</Form.Label>
+            <Form.Label className="fw-medium small text-main">Nhà xuất bản (Publisher)</Form.Label>
             <Form.Control
               type="text"
-              name="editorInChief"
-              value={formData.editorInChief}
+              name="publisher"
+              value={formData.publisher}
               placeholder="Nhập tên Giáo sư / Tiến sĩ..."
             />
           </Form.Group>

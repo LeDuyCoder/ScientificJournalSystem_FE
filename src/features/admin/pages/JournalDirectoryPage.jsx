@@ -1,17 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Row } from 'react-bootstrap';
 import { useJournalManagement } from '../../journal/hooks/useJournalManagement';
-import JournalFilterBar from '../components/JournalFilterBar';
-import JournalTableAdmin from '../components/JournalTableAdmin';
-import JournalCardAdmin from '../components/JournalCardAdmin';
+import JournalFilterBar from '../components/journals/JournalFilterBar';
+import JournalTableAdmin from '../components/journals/JournalTableAdmin';
+import JournalCardAdmin from '../components/journals/JournalCardAdmin';
 import AddJournalModal from '../components/modals/AddJournalModal';
-import ArticlePagination from '../components/article-repository/Pagination';
+import Pagination from '../components/shared/Pagination';
 
 /**
  * JournalDirectoryPage - Màn hình chính quản lý thư mục các Tạp chí dành cho Admin.
  */
 export default function JournalDirectoryPage() {
-  const { journals, fetchInitialData, loading } = useJournalManagement();
+  const { journals, fetchInitialData, loading, error } = useJournalManagement();
 
   // Filters state
   const [search, setSearch] = useState('');
@@ -22,11 +22,11 @@ export default function JournalDirectoryPage() {
 
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
-  const [limit, setLimit] = useState(10);
+  const limit = 5;
 
-  // Fetch initial data on mount
+  // Fetch fresh backend data on mount so stale mock/store data cannot remain visible.
   useEffect(() => {
-    fetchInitialData();
+    fetchInitialData({ force: true });
   }, [fetchInitialData]);
 
   // Reset page to 1 when filters change
@@ -89,6 +89,10 @@ export default function JournalDirectoryPage() {
               <span className="visually-hidden">Loading journals...</span>
             </div>
           </div>
+        ) : error ? (
+          <div className="alert alert-danger border-0 rounded-3 small mb-0">
+            {error}
+          </div>
         ) : filteredJournals.length === 0 ? (
           <div className="text-center py-5 bg-white rounded-3 border" style={{ borderColor: 'var(--border)' }}>
             <p className="text-muted-custom mb-0">No journals match the selected filters.</p>
@@ -100,27 +104,14 @@ export default function JournalDirectoryPage() {
               page={safePage}
               limit={limit}
             />
-            <div className="admin-journal-pagination-bar">
-              <span className="text-muted-custom small">
-                Showing <strong className="text-main">{filteredJournals.length === 0 ? 0 : (safePage - 1) * limit + 1}</strong> to{' '}
-                <strong className="text-main">{Math.min(safePage * limit, filteredJournals.length)}</strong> of{' '}
-                <strong className="text-main">{filteredJournals.length}</strong> journals
-              </span>
-              <select
-                className="admin-form-input admin-form-select admin-pagination-limit"
-                value={limit}
-                onChange={(event) => {
-                  setLimit(Number(event.target.value));
-                  setCurrentPage(1);
-                }}
-                aria-label="Rows per page"
-              >
-                <option value={5}>5 / page</option>
-                <option value={10}>10 / page</option>
-                <option value={20}>20 / page</option>
-                <option value={50}>50 / page</option>
-              </select>
-              <ArticlePagination currentPage={safePage} totalPages={totalPages} onPageChange={setCurrentPage} />
+            <div className="px-3 pb-3">
+              <Pagination
+                totalItems={filteredJournals.length}
+                currentPage={safePage}
+                limit={limit}
+                onPageChange={setCurrentPage}
+                entityName="journals"
+              />
             </div>
           </div>
         ) : (
@@ -130,27 +121,14 @@ export default function JournalDirectoryPage() {
                 <JournalCardAdmin key={j.id || j.journal_id} journal={j} />
               ))}
             </Row>
-            <div className="admin-journal-pagination-bar bg-white border rounded-3">
-              <span className="text-muted-custom small">
-                Showing <strong className="text-main">{filteredJournals.length === 0 ? 0 : (safePage - 1) * limit + 1}</strong> to{' '}
-                <strong className="text-main">{Math.min(safePage * limit, filteredJournals.length)}</strong> of{' '}
-                <strong className="text-main">{filteredJournals.length}</strong> journals
-              </span>
-              <select
-                className="admin-form-input admin-form-select admin-pagination-limit"
-                value={limit}
-                onChange={(event) => {
-                  setLimit(Number(event.target.value));
-                  setCurrentPage(1);
-                }}
-                aria-label="Rows per page"
-              >
-                <option value={5}>5 / page</option>
-                <option value={10}>10 / page</option>
-                <option value={20}>20 / page</option>
-                <option value={50}>50 / page</option>
-              </select>
-              <ArticlePagination currentPage={safePage} totalPages={totalPages} onPageChange={setCurrentPage} />
+            <div className="bg-white border rounded-3 px-3 pb-3">
+              <Pagination
+                totalItems={filteredJournals.length}
+                currentPage={safePage}
+                limit={limit}
+                onPageChange={setCurrentPage}
+                entityName="journals"
+              />
             </div>
           </div>
         )}

@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import {
   PrimaryInformationSection,
   MetadataSection,
@@ -6,113 +5,116 @@ import {
   ReviewStatusPanel,
   DeleteArticleModal,
 } from '../components/update-article';
-import {
-  mockArticleDetail,
-  mockJournalOptions,
-  mockManuscriptFiles,
-  mockReviewStatus,
-} from '../data/mockUpdateArticle';
 import { toast } from '../../../shared/utils/toast';
+import useUpdateArticle from '../hooks/useUpdateArticle';
 
 export default function UpdateArticlePage() {
-  // Form state cho Primary Information - khởi tạo từ mock data cố định.
-  // Khi có API, sẽ khởi tạo bằng dữ liệu fetch theo :id từ URL.
-  const [title, setTitle] = useState(mockArticleDetail.title);
-  const [leadAuthor, setLeadAuthor] = useState(mockArticleDetail.leadAuthor);
-  const [journal, setJournal] = useState(mockArticleDetail.journal);
+  const {
+    id,
+    loading,
+    error,
+    submitting,
+    title,
+    setTitle,
+    leadAuthor,
+    setLeadAuthor,
+    journal,
+    setJournal,
+    abstract,
+    setAbstract,
+    keywords,
+    setKeywords,
+    submissionDate,
+    setSubmissionDate,
+    status,
+    setStatus,
+    stats,
+    originalData,
+    showDeleteModal,
+    setShowDeleteModal,
+    handleUpdate,
+    handleCancel,
+    handleConfirmDelete,
+  } = useUpdateArticle();
 
-  // Form state cho Metadata - khởi tạo từ mock data cố định.
-  // submissionId không có setter vì là field read-only (mã hệ thống).
-  const [abstract, setAbstract] = useState(mockArticleDetail.abstract);
-  const [keywords, setKeywords] = useState(mockArticleDetail.keywords);
-  const [submissionDate, setSubmissionDate] = useState(mockArticleDetail.submissionDate);
+  if (loading) {
+    return (
+      <div className="admin-state-card">
+        <span className="admin-state-dot" />
+        <span>Loading article details from API...</span>
+      </div>
+    );
+  }
 
-  // State cho Review Status - dropdown "Update Status" và badge "Current Status"
-  // dùng chung 1 giá trị "status" để preview ngay khi đổi dropdown.
-  const [status, setStatus] = useState(mockReviewStatus.status);
-
-  // State điều khiển hiển thị Delete Article confirm modal
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-
-  // Xử lý nút "Update Article" - chỉ UI ở bước này (không gọi API thật).
-  // Khi tích hợp API: gọi PATCH /admin/articles/{id}/review-status (status)
-  // cùng PUT /articles/{id} cho Primary Information/Metadata.
-  const handleUpdate = () => {
-    toast.success('Article updated (mock) - chưa kết nối API thật.');
-  };
-
-  // Xử lý nút "Cancel Changes" - reset toàn bộ field về giá trị mock ban đầu.
-  const handleCancel = () => {
-    setTitle(mockArticleDetail.title);
-    setLeadAuthor(mockArticleDetail.leadAuthor);
-    setJournal(mockArticleDetail.journal);
-    setAbstract(mockArticleDetail.abstract);
-    setKeywords(mockArticleDetail.keywords);
-    setSubmissionDate(mockArticleDetail.submissionDate);
-    setStatus(mockReviewStatus.status);
-    toast.info('Changes have been reverted.');
-  };
-
-  // Xử lý xác nhận xóa article trong DeleteArticleModal.
-  // Chỉ UI ở bước này (sẽ là DELETE /api/v1/articles/{id} khi tích hợp API).
-  const handleConfirmDelete = () => {
-    setShowDeleteModal(false);
-    toast.success('Article deleted (mock) - chưa kết nối API thật.');
-  };
+  if (error) {
+    return (
+      <div className="admin-state-card admin-state-card--error">
+        <span className="admin-state-dot" />
+        <span>{error}</span>
+      </div>
+    );
+  }
 
   return (
     <>
-      {/* Breadcrumb - chỉ UI, chưa gắn link điều hướng thật */}
       <p className="admin-breadcrumb">
         Management / Articles / <span className="admin-breadcrumb__current">Update Article</span>
       </p>
 
-      {/* Page title + description - h2 tự áp dụng font-display theo index.css */}
-      <h2 className="mb-1">Update Article (Cập nhật Bài báo)</h2>
-      <p className="admin-page-description">
-        Modify the manuscript details, metadata, and associated files for the selected submission.
-        Changes will be logged for version control.
-      </p>
+      <div className="admin-page-header">
+        <div className="admin-page-header__copy">
+          <p className="admin-page-kicker">Article Operations</p>
+          <h1 className="admin-page-title">Update Article</h1>
+          <p className="admin-page-lede">
+            Modify manuscript details, metadata, and publication status for the selected research record.
+          </p>
+        </div>
+      </div>
 
-      {/* Layout 2 cột: main content (trái) + review status panel (phải) */}
-      <div className="admin-update-article-row">
-        {/* Cột trái: các section form */}
+      <div className={`admin-update-article-row${submitting ? ' admin-form-disabled' : ''}`}>
         <div className="admin-update-article-main">
           <PrimaryInformationSection
             title={title}
             leadAuthor={leadAuthor}
             journal={journal}
-            journalOptions={mockJournalOptions}
+            journalOptions={originalData ? [originalData.journal] : [journal]}
             onChangeTitle={setTitle}
-            onChangeLeadAuthor={setLeadAuthor}
-            onChangeJournal={setJournal}
+            onChangeLeadAuthor={(val) => {
+              // This is UI only for now, since BE authors update needs author IDs
+              setLeadAuthor(val);
+              toast.info('Chỉnh sửa Lead Author chỉ có tác dụng hiển thị ở UI hiện tại.');
+            }}
+            onChangeJournal={(val) => {
+              // Same here, BE requires issue_id to change journals
+              setJournal(val);
+            }}
           />
 
           <MetadataSection
             abstract={abstract}
             keywords={keywords}
-            submissionId={mockArticleDetail.submissionId}
+            submissionId={`ART-${id}`}
             submissionDate={submissionDate}
             onChangeAbstract={setAbstract}
             onChangeKeywords={setKeywords}
-            onChangeSubmissionDate={setSubmissionDate}
+            onChangeSubmissionDate={(val) => {
+              setSubmissionDate(val);
+            }}
           />
 
-          <ManuscriptFilesSection files={mockManuscriptFiles} />
+          <ManuscriptFilesSection files={[]} />
         </div>
 
-        {/* Cột phải: Review Status Panel */}
         <ReviewStatusPanel
           status={status}
           onChangeStatus={setStatus}
-          stats={mockReviewStatus}
+          stats={stats}
           onUpdate={handleUpdate}
           onCancel={handleCancel}
           onDelete={() => setShowDeleteModal(true)}
         />
       </div>
 
-      {/* Delete Article confirm modal */}
       <DeleteArticleModal
         show={showDeleteModal}
         onClose={() => setShowDeleteModal(false)}

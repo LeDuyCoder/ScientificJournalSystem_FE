@@ -1,7 +1,7 @@
-/**
+﻿/**
  * Mục đích:
  * - Thanh tiến trình hiển thị % hoàn thành của 1 Volume trong bảng
- *   Volume & Issue Status.
+ *   Volume & Issue Overview.
  * - Khác với shared/components/ProgressBar.jsx (dùng cho countdown với
  *   props current/total), component này nhận trực tiếp "percentage"
  *   (0-100) - phù hợp với mock data (progress: 100, 25...).

@@ -1,20 +1,80 @@
-import React, { useState } from 'react';
-import { Row, Col, Card, ProgressBar, Button, Pagination, Badge } from 'react-bootstrap';
-import { useNavigate, Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Row, Col, Card, ProgressBar, Button } from 'react-bootstrap';
+import Pagination from '../../components/shared/Pagination';
+import { useNavigate } from 'react-router-dom';
 import Icon from '../../../../shared/components/Icon';
 import UserTable from '../../components/account/UserTable';
 import UserFilterBar from '../../components/account/UserFilterBar';
-import PendingRequestCard from '../../components/account/PendingRequestCard';
-import { useAdminStore } from '../../../../app/store/adminStore';
+import { getAdminUsers } from '../../api/adminUsers.api';
 import ROUTES from '../../../../app/routes/routePaths';
+
+const ITEMS_PER_PAGE = 10;
+
+const getApiErrorMessage = (error) => {
+  if (error.response?.status === 403) {
+    return 'Backend từ chối quyền admin: token hiện tại không có role ADMINISTRATOR.';
+  }
+
+  return error.response?.data?.message || 'Không thể tải danh sách người dùng.';
+};
+
+const extractUsers = (payload) => {
+  if (Array.isArray(payload)) return payload;
+  if (Array.isArray(payload?.items)) return payload.items;
+  if (Array.isArray(payload?.rows)) return payload.rows;
+  if (Array.isArray(payload?.users)) return payload.users;
+  return [];
+};
+
+const extractTotal = (payload, fallback) => {
+  return Number(
+    payload?.total ||
+      payload?.totalItems ||
+      payload?.pagination?.total ||
+      payload?.meta?.total ||
+      fallback
+  );
+};
+
+const ROLE_LABELS = {
+  RESEARCHER: 'Researcher',
+  LECTURER: 'Lecturer',
+  STUDENT: 'Student',
+  ADMINISTRATOR: 'Administrator',
+};
+
+const toRoleLabel = (role = 'RESEARCHER') => ROLE_LABELS[role] || role;
+
+const toTitleCaseEnum = (value = '') => {
+  return String(value)
+    .toLowerCase()
+    .split('_')
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(' ');
+};
+
+const normalizeUser = (user = {}) => {
+  const firstName = user.first_name || user.firstName || '';
+  const lastName = user.last_name || user.lastName || '';
+  const fullName = user.name || [firstName, lastName].filter(Boolean).join(' ').trim();
+
+  return {
+    id: user.id || user.user_id || user.uuid,
+    name: fullName || user.email || 'Unnamed user',
+    email: user.email || 'No email',
+    role: user.role || 'RESEARCHER',
+    roleLabel: toRoleLabel(user.role || 'RESEARCHER'),
+    status: toTitleCaseEnum(user.status || 'INACTIVE'),
+    avatar: user.avatar || user.avatar_url || '',
+  };
+};
 
 /**
  * UserDirectoryPage Component
- * Renders the administrator's account directory page (Page 3).
+ * Renders the administrator's account directory page with real admin users API data.
  */
 export default function UserDirectoryPage() {
   const navigate = useNavigate();
-  const { users, pendingRequests, approveRequest, declineRequest, deleteUser } = useAdminStore();
 
   // Search and filter states
   const [search, setSearch] = useState('');
@@ -23,50 +83,69 @@ export default function UserDirectoryPage() {
 
   // Pagination states
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 3; // Match the mockup showing "Showing 1 to 3 of 28 users"
+  const [totalItems, setTotalItems] = useState(0);
+
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const fetchUsers = async () => {
+      try {
+        setLoading(true);
+        setError('');
+
+        const response = await getAdminUsers({
+          page: currentPage,
+          limit: ITEMS_PER_PAGE,
+          search: search || undefined,
+          role: selectedRole === 'all' ? undefined : selectedRole,
+          status: selectedStatus === 'all' ? undefined : selectedStatus.toUpperCase(),
+          sortBy: 'email',
+          sortOrder: 'asc',
+        });
+
+        const payload = response.data?.data;
+        const rawUsers = extractUsers(payload);
+
+        if (!isMounted) return;
+        setUsers(rawUsers.map(normalizeUser));
+        setTotalItems(extractTotal(payload, rawUsers.length));
+      } catch (apiError) {
+        if (!isMounted) return;
+        setUsers([]);
+        setTotalItems(0);
+        setError(getApiErrorMessage(apiError));
+      } finally {
+        if (isMounted) setLoading(false);
+      }
+    };
+
+    fetchUsers();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [currentPage, search, selectedRole, selectedStatus]);
+
+
 
   /**
-   * Filter users list based on criteria.
-   */
-  const filteredUsers = users.filter((u) => {
-    const matchesSearch = 
-      u.name.toLowerCase().includes(search.toLowerCase()) ||
-      u.email.toLowerCase().includes(search.toLowerCase());
-    
-    const matchesRole = selectedRole === 'all' || u.role === selectedRole;
-    const matchesStatus = selectedStatus === 'all' || u.status === selectedStatus;
-
-    return matchesSearch && matchesRole && matchesStatus;
-  });
-
-  // Calculate paging indexes
-  const totalItems = filteredUsers.length;
-  const totalPages = Math.ceil(totalItems / itemsPerPage) || 1;
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = filteredUsers.slice(indexOfFirstItem, indexOfLastItem);
-
-  /**
-   * Handle pagination click.
+   * Pagination is API-driven, so changing page triggers a fresh request.
    */
   const handlePageChange = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
 
-  /**
-   * Handle Approve button click.
-   */
-  const handleApprove = (id) => {
-    approveRequest(id);
-    alert('Approved role request successfully!');
+  const handleFilterChange = (setter) => (value) => {
+    setter(value);
+    setCurrentPage(1);
   };
 
-  /**
-   * Handle Decline button click.
-   */
-  const handleDecline = (id) => {
-    declineRequest(id);
-    alert('Declined role request successfully.');
+  const handleUnavailableDelete = () => {
+    alert('BE hiện chưa có API xóa user. Cần bổ sung DELETE /api/v1/admin/users/:id trước khi bật chức năng này.');
   };
 
   return (
@@ -106,54 +185,40 @@ export default function UserDirectoryPage() {
             {/* Filter controls */}
             <UserFilterBar 
               search={search}
-              onSearchChange={(val) => { setSearch(val); setCurrentPage(1); }}
+              onSearchChange={handleFilterChange(setSearch)}
               selectedRole={selectedRole}
-              onRoleChange={(val) => { setSelectedRole(val); setCurrentPage(1); }}
+              onRoleChange={handleFilterChange(setSelectedRole)}
               selectedStatus={selectedStatus}
-              onStatusChange={(val) => { setSelectedStatus(val); setCurrentPage(1); }}
+              onStatusChange={handleFilterChange(setSelectedStatus)}
               totalCount={totalItems}
             />
 
-            {/* User Directory Table grid - Sử dụng hằng số định tuyến có tham số ID */}
-            <UserTable 
-              users={currentItems}
-              onEdit={(id) => navigate(ROUTES.ADMIN_USERS_EDIT.replace(':id', id))}
-              onDelete={deleteUser}
-            />
+            {loading ? (
+              <div className="text-center py-5 text-muted-custom small">Đang tải danh sách người dùng...</div>
+            ) : error ? (
+              <div className="text-center py-5 border rounded-3 bg-white">
+                <Icon icon="lucide:shield-alert" width="48" className="text-danger mb-2 opacity-75" />
+                <h6 className="text-main fw-bold">Không thể tải người dùng</h6>
+                <p className="text-muted-custom small mb-0">{error}</p>
+              </div>
+            ) : (
+              <UserTable 
+                users={users}
+                onEdit={(id) => navigate(ROUTES.ADMIN_USERS_EDIT.replace(':id', id))}
+                onDelete={handleUnavailableDelete}
+              />
+            )}
 
-            {/* Pagination Controls matching style in mockup */}
-            {totalPages > 1 && (
-              <div className="d-flex justify-content-between align-items-center mt-4 pt-2">
-                <span className="text-muted-custom small">
-                  Showing {indexOfFirstItem + 1} to {Math.min(indexOfLastItem, totalItems)} of {totalItems} users
-                </span>
-                
-                <Pagination size="sm" className="mb-0 gap-1 pagination-custom">
-                  <Pagination.Prev 
-                    disabled={currentPage === 1}
-                    onClick={() => handlePageChange(currentPage - 1)}
-                    className="border-0 bg-transparent text-muted"
-                  />
-                  {Array.from({ length: totalPages }, (_, i) => (
-                    <Pagination.Item 
-                      key={i + 1} 
-                      active={currentPage === i + 1}
-                      onClick={() => handlePageChange(i + 1)}
-                      style={{
-                        '--bs-pagination-active-bg': 'var(--primary)',
-                        '--bs-pagination-active-border-color': 'var(--primary)',
-                        '--bs-pagination-color': 'var(--text-main)',
-                      }}
-                    >
-                      {i + 1}
-                    </Pagination.Item>
-                  ))}
-                  <Pagination.Next 
-                    disabled={currentPage === totalPages}
-                    onClick={() => handlePageChange(currentPage + 1)}
-                    className="border-0 bg-transparent text-muted"
-                  />
-                </Pagination>
+            {/* Pagination Controls */}
+            {!loading && !error && totalItems > 0 && (
+              <div className="px-3 pb-3 pt-2">
+                <Pagination
+                  totalItems={totalItems}
+                  currentPage={currentPage}
+                  limit={ITEMS_PER_PAGE}
+                  onPageChange={handlePageChange}
+                  entityName="users"
+                />
               </div>
             )}
           </Card>
@@ -191,40 +256,14 @@ export default function UserDirectoryPage() {
             <div className="d-flex align-items-center justify-content-between mb-3.5">
               <div className="d-flex align-items-center gap-2">
                 <h6 className="fw-bold text-main mb-0" style={{ fontSize: '0.925rem' }}>PENDING REQUESTS</h6>
-                {pendingRequests.length > 0 && (
-                  <Badge className="bg-danger rounded-circle d-flex align-items-center justify-content-center px-1" style={{ minWidth: '18px', height: '18px', fontSize: '0.68rem' }}>
-                    {pendingRequests.length}
-                  </Badge>
-                )}
               </div>
             </div>
 
-            {pendingRequests.length === 0 ? (
-              <div className="text-center py-4 text-muted-custom small">
-                <Icon icon="lucide:check-circle-2" width="32" className="admin-accent-text mb-2 opacity-50" />
-                <p className="mb-0">All clear! No pending requests.</p>
-              </div>
-            ) : (
-              <div>
-                {pendingRequests.map((req) => (
-                  <PendingRequestCard 
-                    key={req.id} 
-                    request={req}
-                    onApprove={handleApprove}
-                    onDecline={handleDecline}
-                  />
-                ))}
-
-                <button 
-                  type="button"
-                  onClick={() => alert('Viewing all authorization request queues...')}
-                  className="btn btn-link w-100 p-0 text-center text-decoration-none text-muted-custom hover-primary small fw-semibold pt-1 border-top mt-2"
-                  style={{ fontSize: '0.8rem' }}
-                >
-                  View All Requests
-                </button>
-              </div>
-            )}
+            <div className="text-center py-4 text-muted-custom small">
+              <Icon icon="lucide:check-circle-2" width="32" className="admin-accent-text mb-2 opacity-50" />
+              <p className="mb-1">Chưa có API pending role requests.</p>
+              <p className="mb-0">Đã xóa dữ liệu mock khỏi khu vực này.</p>
+            </div>
           </Card>
 
           {/* Platform Health indicators widget */}
@@ -237,18 +276,18 @@ export default function UserDirectoryPage() {
             <div className="mb-3.5">
               <div className="d-flex justify-content-between small text-muted-custom mb-1.5" style={{ fontSize: '0.825rem' }}>
                 <span>Storage Capacity</span>
-                <strong className="text-main fw-semibold">78%</strong>
+                <strong className="text-main fw-semibold">N/A</strong>
               </div>
-              <ProgressBar now={78} variant="warning" style={{ height: '5px' }} />
+              <ProgressBar now={0} variant="warning" style={{ height: '5px' }} />
             </div>
 
             {/* Active Authors indicator */}
             <div>
               <div className="d-flex justify-content-between small text-muted-custom mb-1.5" style={{ fontSize: '0.825rem' }}>
                 <span>Active Authors</span>
-                <strong className="text-main fw-semibold">1.2k</strong>
+                <strong className="text-main fw-semibold">N/A</strong>
               </div>
-              <ProgressBar now={55} style={{ height: '5px', backgroundColor: '#e2e8f0', '--bs-progress-bar-bg': 'var(--btn-dark)' }} />
+              <ProgressBar now={0} style={{ height: '5px', backgroundColor: '#e2e8f0', '--bs-progress-bar-bg': 'var(--btn-dark)' }} />
             </div>
           </Card>
         </Col>

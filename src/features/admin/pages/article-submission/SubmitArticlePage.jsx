@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import { useState } from 'react';
 import { Card, Button, Row, Col, Modal, Form } from 'react-bootstrap';
 import { useNavigate, Link } from 'react-router-dom';
 import Icon from '../../../../shared/components/Icon';
@@ -49,17 +49,61 @@ export default function SubmitArticlePage() {
   };
 
   /**
-   * Submits the article. Triggers client-side checks and starts fake loader.
+   * Submits the article. Triggers client-side checks and uses available APIs only.
    */
-  const handleSubmitArticle = (e) => {
+  const handleSubmitArticle = async (e) => {
     e.preventDefault();
 
     if (activeTab === 'manual') {
       // Validate manual form fields
-      const { title, abstract, author, journalId, categoryId } = manualFormData;
+      const { title, abstract, author, journalId, categoryId, keywords } = manualFormData;
       if (!title || !abstract || !author || !journalId || !categoryId) {
         alert('Please fill in all required fields in the Manual Entry form.');
         return;
+      }
+
+      setIsSubmitting(true);
+      try {
+        const { getAuthorsApi, createAuthorApi } = await import('../../../../features/author/api/author.api');
+        const { createArticleApi } = await import('../../../../features/article/api/articleApi');
+        
+        // Resolve author
+        const authorNames = author.split(',').map(n => n.trim()).filter(Boolean);
+        const authorIds = [];
+        for (const name of authorNames) {
+          const searchRes = await getAuthorsApi({ search: name, limit: 1 });
+          const items = searchRes.data?.data?.items || searchRes.data?.data || [];
+          if (items.length > 0 && items[0].display_name.toLowerCase() === name.toLowerCase()) {
+            authorIds.push(items[0].author_id || items[0].id);
+          } else {
+            const createRes = await createAuthorApi({ display_name: name });
+            authorIds.push(createRes.data?.data?.author_id || createRes.data?.data?.id);
+          }
+        }
+        
+        // Prepare article payload
+        const payload = {
+          title,
+          abstract,
+          issue_id: null,
+          publication_year: new Date().getFullYear(),
+          primary_topic: parseInt(categoryId),
+          authors: authorIds,
+          keywords: keywords || []
+        };
+        
+        await createArticleApi(payload);
+
+        setIsSubmitting(false);
+        setSuccessInfo({
+          mode: 'manual',
+          title: title,
+          author: author,
+        });
+        setShowSuccessModal(true);
+      } catch (err) {
+        setIsSubmitting(false);
+        alert('Error submitting article: ' + (err.response?.data?.message || err.message));
       }
     } else {
       // Validate PDF upload file selection
@@ -67,21 +111,13 @@ export default function SubmitArticlePage() {
         alert('Please select or drop a valid PDF manuscript to submit.');
         return;
       }
-    }
-
-    // Start simulation
-    setIsSubmitting(true);
-    
-    setTimeout(() => {
+      
+      setIsSubmitting(true);
       setIsSubmitting(false);
-      setSuccessInfo({
-        mode: activeTab,
-        title: activeTab === 'manual' ? manualFormData.title : selectedFile.name,
-        author: activeTab === 'manual' ? manualFormData.author : 'Extracted from PDF (OCR)',
-      });
-      setShowSuccessModal(true);
-    }, 1500);
+      alert('ChÆ°a cÃ³ API submit PDF article. ÄÃ£ xÃ³a dá»¯ liá»‡u mock khá»i khu vá»±c nÃ y.');
+    }
   };
+
 
   /**
    * Reset form and file values.
@@ -200,7 +236,7 @@ export default function SubmitArticlePage() {
         </Card>
       </div>
 
-      {/* Mock Successful Submission Overlay modal */}
+      {/* Success modal */}
       <Modal 
         show={showSuccessModal} 
         onHide={() => setShowSuccessModal(false)}

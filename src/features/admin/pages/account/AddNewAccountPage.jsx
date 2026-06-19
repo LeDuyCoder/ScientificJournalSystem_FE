@@ -1,10 +1,26 @@
-import React from 'react';
-import { Card, Row, Col } from 'react-bootstrap';
+import React, { useState } from 'react';
+import { Alert, Card, Row, Col } from 'react-bootstrap';
 import { useNavigate, Link } from 'react-router-dom';
 import Icon from '../../../../shared/components/Icon';
 import UserAccountForm from '../../components/account/UserAccountForm';
-import { useAdminStore } from '../../../../app/store/adminStore';
+import { createAdminUser } from '../../api/adminUsers.api';
 import ROUTES from '../../../../app/routes/routePaths';
+
+const getApiErrorMessage = (error) => {
+  if (error.response?.status === 403) {
+    return 'Backend từ chối quyền admin: token hiện tại không có role ADMINISTRATOR.';
+  }
+
+  return error.response?.data?.message || 'Không thể tạo tài khoản mới.';
+};
+
+const toApiEnum = (value = '') => String(value).trim().toUpperCase().replace(/\s+/g, '_');
+
+const buildCreateUserPayload = (payload) => ({
+  ...payload,
+  role: toApiEnum(payload.role),
+  status: toApiEnum(payload.status),
+});
 
 /**
  * AddNewAccountPage Component
@@ -12,16 +28,24 @@ import ROUTES from '../../../../app/routes/routePaths';
  */
 export default function AddNewAccountPage() {
   const navigate = useNavigate();
-  const { addUser } = useAdminStore();
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState('');
 
   /**
-   * Hàm callback được gọi sau khi submit form thêm tài khoản thành công.
-   * Thêm người dùng mới vào kho lưu trữ Zustand và quay trở lại trang danh mục.
+   * Gọi API tạo tài khoản thay vì lưu mock trong Zustand.
    */
-  const handleFormSubmit = (payload) => {
-    addUser(payload);
-    alert('Thêm tài khoản mới thành công!');
-    navigate(ROUTES.ADMIN_USERS);
+  const handleFormSubmit = async (payload) => {
+    try {
+      setSubmitting(true);
+      setSubmitError('');
+      await createAdminUser(buildCreateUserPayload(payload));
+      alert('Thêm tài khoản mới thành công!');
+      navigate(ROUTES.ADMIN_USERS);
+    } catch (error) {
+      setSubmitError(getApiErrorMessage(error));
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -48,23 +72,26 @@ export default function AddNewAccountPage() {
       <div className="mx-auto" style={{ maxWidth: '820px' }}>
         {/* Core Account Form card */}
         <Card className="p-4 p-md-5 rounded-4 border bg-white shadow-sm mb-4">
+          {submitError && (
+            <Alert variant="danger" className="border-0 rounded-3 small">
+              {submitError}
+            </Alert>
+          )}
+
           <UserAccountForm 
             isEdit={false}
             onSubmit={handleFormSubmit}
             onCancel={() => navigate(ROUTES.ADMIN_USERS)}
+            submitting={submitting}
           />
         </Card>
 
         {/* Informational Feature Highlights (Page 17 bottom cards) */}
         <Row className="g-3 mb-5">
-          {/* Card 1: Thông báo tự động */}
           <Col xs={12} md={4}>
             <Card className="p-4 border h-100 rounded-3" style={{ backgroundColor: '#fef2f2', borderColor: '#fee2e2', boxShadow: 'none' }}>
               <div className="d-flex flex-column align-items-start gap-3">
-                <div 
-                  className="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0"
-                  style={{ width: '32px', height: '32px', backgroundColor: '#fee2e2', color: '#ef4444' }}
-                >
+                <div className="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" style={{ width: '32px', height: '32px', backgroundColor: '#fee2e2', color: '#ef4444' }}>
                   <Icon icon="lucide:mail" width="16" />
                 </div>
                 <div>
@@ -77,19 +104,15 @@ export default function AddNewAccountPage() {
             </Card>
           </Col>
 
-          {/* Card 2: Phân quyền thông minh */}
           <Col xs={12} md={4}>
-            <Card className="p-4 border h-100 rounded-3" style={{ backgroundColor: '#f0f9ff', borderColor: '#e0f2fe', boxShadow: 'none' }}>
+            <Card className="p-4 border h-100 rounded-3" style={{ backgroundColor: '#fff7ed', borderColor: '#fed7aa', boxShadow: 'none' }}>
               <div className="d-flex flex-column align-items-start gap-3">
-                <div 
-                  className="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0"
-                  style={{ width: '32px', height: '32px', backgroundColor: '#e0f2fe', color: '#0ea5e9' }}
-                >
+                <div className="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" style={{ width: '32px', height: '32px', backgroundColor: '#ffedd5', color: '#ea580c' }}>
                   <Icon icon="lucide:shield-check" width="16" />
                 </div>
                 <div>
-                  <h6 className="fw-bold mb-1.5" style={{ fontSize: '0.85rem', color: '#0c4a6e' }}>Phân quyền thông minh</h6>
-                  <p className="small mb-0 lh-sm" style={{ fontSize: '0.78rem', color: '#075985', opacity: 0.95 }}>
+                  <h6 className="fw-bold mb-1.5" style={{ fontSize: '0.85rem', color: '#9a3412' }}>Phân quyền thông minh</h6>
+                  <p className="small mb-0 lh-sm" style={{ fontSize: '0.78rem', color: '#9a3412', opacity: 0.95 }}>
                     Vai trò xác định các quyền truy cập vào dữ liệu dự án và các báo cáo khoa học quan trọng.
                   </p>
                 </div>
@@ -97,14 +120,10 @@ export default function AddNewAccountPage() {
             </Card>
           </Col>
 
-          {/* Card 3: Lịch sử thao tác */}
           <Col xs={12} md={4}>
             <Card className="p-4 border h-100 rounded-3" style={{ backgroundColor: '#f8fafc', borderColor: '#e2e8f0', boxShadow: 'none' }}>
               <div className="d-flex flex-column align-items-start gap-3">
-                <div 
-                  className="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0"
-                  style={{ width: '32px', height: '32px', backgroundColor: '#e2e8f0', color: '#64748b' }}
-                >
+                <div className="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" style={{ width: '32px', height: '32px', backgroundColor: '#e2e8f0', color: '#64748b' }}>
                   <Icon icon="lucide:clock" width="16" />
                 </div>
                 <div>

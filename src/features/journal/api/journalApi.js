@@ -1,4 +1,4 @@
-﻿/**
+/**
  * File source thuộc hệ thống FE ResearchPulse.
  *
  * File: features\journal\api\journalApi.js
@@ -42,6 +42,24 @@ export const getCatalogIssuesApi = (params) => {
 };
 
 /**
+ * Get authenticated volumes list for admin/repository management.
+ * @param {Object} params - Query params (page, limit, journal_id, search, sort_by, sort_order)
+ * @returns {Promise} Axios promise
+ */
+export const getVolumesApi = (params = {}) => {
+  return api.get('/volumes', { params });
+};
+
+/**
+ * Get issues list for admin/repository management.
+ * @param {Object} params - Query params (page, limit, journal_id, volume_id)
+ * @returns {Promise} Axios promise
+ */
+export const getIssuesApi = (params = {}) => {
+  return api.get('/issues', { params });
+};
+
+/**
  * Get recent articles for a journal (filterable by journal_id)
  * @param {Object} params - { journal_id }
  * @returns {Promise} Axios promise
@@ -77,3 +95,38 @@ export const addJournalToProjectApi = (projectId, journalId) => {
 export const searchJournalsApi = (params) => {
   return api.get('/journal/', { params });
 };
+
+export const createJournalApi = (data) => {
+  return api.post('/journal', data);
+};
+
+export const updateJournalApi = (id, data) => {
+  return api.put(`/journal/${id}`, data);
+};
+
+export const deleteJournalApi = (id) => {
+  return api.delete(`/journal/${id}`);
+};
+
+export const createVolumeApi = (data) => {
+  return api.post('/volumes', data);
+};
+
+export const createIssueApi = (data) => {
+  return api.post('/issues', data);
+};
+
+export const getPublishersApi = (params) => {
+  return api.get('/publishers', { params });
+};
+
+export const getSubjectAreasApi = (params = {}) => {
+  return api.get('/subject-areas', { params });
+};
+
+export const getSubjectCategoriesApi = (params = {}) => {
+  return api.get('/subject-categories', { params });
+};
+
+
+

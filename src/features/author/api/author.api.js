@@ -56,3 +56,13 @@ export const getAuthorsApi = (params) => {
 export const getAuthorDetailApi = (id) => {
   return api.get(`/author/${id}`);
 };
+
+/**
+ * Tạo mới một tác giả
+ * @param {Object} data - Dữ liệu tác giả (display_name)
+ * @returns {Promise} Axios promise
+ */
+export const createAuthorApi = (data) => {
+  return api.post('/author', data);
+};
+

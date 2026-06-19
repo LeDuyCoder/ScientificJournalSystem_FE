@@ -9,11 +9,10 @@
  * Dùng cho các dropdown phân quyền, hiển thị badge và thiết lập form.
  */
 export const SYSTEM_ROLES = [
-  { value: 'Researcher', label: 'Researcher' },
-  { value: 'Lecturer', label: 'Lecturer' },
-  { value: 'Student', label: 'Student' },
-  { value: 'Editor', label: 'Editor' },
-  { value: 'Admin', label: 'Admin' }
+  { value: 'RESEARCHER', label: 'Researcher' },
+  { value: 'LECTURER', label: 'Lecturer' },
+  { value: 'STUDENT', label: 'Student' },
+  { value: 'ADMINISTRATOR', label: 'Administrator' }
 ];
 
 /**

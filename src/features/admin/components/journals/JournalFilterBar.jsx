@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Row, Col, Form, Button, InputGroup } from 'react-bootstrap';
 import { Icon } from '@iconify/react';
+import { getSubjectAreasApi } from '../../../journal/api/journalApi';
 
 /**
  * Component JournalFilterBar - Thanh công cụ lọc, tìm kiếm và chuyển đổi giao diện hiển thị.
@@ -26,6 +27,30 @@ export default function JournalFilterBar({
   onViewModeChange,
   onOpenAddModal
 }) {
+  const [subjectAreas, setSubjectAreas] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    let ignore = false;
+    const fetchSubjectAreas = async () => {
+      setLoading(true);
+      try {
+        const response = await getSubjectAreasApi({ page: 1, limit: 100 });
+        if (ignore) return;
+        const items = response.data?.data?.items || response.data?.data || [];
+        setSubjectAreas(items);
+      } catch (err) {
+        console.error('Failed to fetch subject areas for filter:', err);
+      } finally {
+        if (!ignore) setLoading(false);
+      }
+    };
+    fetchSubjectAreas();
+    return () => {
+      ignore = true;
+    };
+  }, []);
+
   return (
     <div className="bg-white p-4 rounded-3 border mb-4 text-start" style={{ borderColor: 'var(--border)' }}>
       <Row className="align-items-end g-3">
@@ -78,12 +103,17 @@ export default function JournalFilterBar({
               value={subjectFilter}
               onChange={(e) => onSubjectChange(e.target.value)}
               style={{ backgroundColor: 'var(--bg-chip)', borderColor: 'var(--border)', fontSize: '0.9rem', cursor: 'pointer' }}
+              disabled={loading}
             >
               <option value="All">All Subject Areas</option>
-              <option value="Computer Science">Computer Science</option>
-              <option value="Environmental Science">Environmental Science</option>
-              <option value="Medical Science">Medical Science</option>
-              <option value="Social Sciences">Social Sciences</option>
+              {subjectAreas.map((area) => {
+                const val = area.display_name || area.name;
+                return (
+                  <option key={area.subject_area_id || area.id || val} value={val}>
+                    {val}
+                  </option>
+                );
+              })}
             </Form.Select>
           </Form.Group>
         </Col>
