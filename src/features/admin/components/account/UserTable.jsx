@@ -46,22 +46,17 @@ export default function UserTable({ users = [], onEdit, onDelete }) {
                 <div className="d-flex align-items-center gap-3">
                   {/* User profile picture */}
                   <div 
-                    className="rounded-circle overflow-hidden d-flex align-items-center justify-content-center flex-shrink-0"
+                    className="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0 text-white fw-bold"
                     style={{
                       width: '42px',
                       height: '42px',
-                      backgroundColor: 'var(--bg-section)',
+                      background: 'linear-gradient(135deg, #fb923c 0%, #ea580c 100%)',
+                      fontSize: '0.95rem',
+                      boxShadow: '0 8px 18px rgba(234, 88, 12, 0.14)'
                     }}
+                    aria-label={`Avatar chữ cái đầu của ${user.name || user.email || 'người dùng'}`}
                   >
-                    <img 
-                      src={user.avatar} 
-                      alt={user.name} 
-                      style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                      onError={(e) => {
-                        // Display Initials fallback if image fails to load
-                        e.target.style.display = 'none';
-                      }}
-                    />
+                    {String(user.name || user.email || 'U').trim().charAt(0).toUpperCase() || 'U'}
                   </div>
                   <div>
                     <div className="fw-bold text-main" style={{ fontSize: '0.9rem' }}>{user.name}</div>

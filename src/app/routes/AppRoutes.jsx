@@ -14,6 +14,7 @@ import ProfilePage from '../../features/profile/pages/ProfilePage';
 import VerifyEmailPage from '../../features/auth/pages/VerifyEmailPage';
 
 import ProtectedRoute from './ProtectedRoute';
+import AdminRoute from './AdminRoute';
 import PublicRoute from './PublicRoute';
 import AuthLayoutWithUser from '../layouts/AuthLayoutWithUser';
 
@@ -94,21 +95,23 @@ export default function AppRoutes() {
           />
 
           {/* Admin layouts & pages (Quản trị viên) - thống nhất namespace /admin/... */}
-          <Route element={<AdminLayout />}>
-            <Route path="/admin/dashboard" element={<AdminDashboardPage />} />
-            <Route path="/admin/users" element={<UserDirectoryPage />} />
-            <Route path="/admin/users/create" element={<AddNewAccountPage />} />
-            <Route path="/admin/users/:id/edit" element={<UpdateUserAccountPage />} />
+          <Route element={<AdminRoute />}>
+            <Route element={<AdminLayout />}>
+              <Route path="/admin/dashboard" element={<AdminDashboardPage />} />
+              <Route path="/admin/users" element={<UserDirectoryPage />} />
+              <Route path="/admin/users/create" element={<AddNewAccountPage />} />
+              <Route path="/admin/users/:id/edit" element={<UpdateUserAccountPage />} />
 
-            <Route path="/admin/articles" element={<ArticleRepositoryPage />} />
-            <Route path="/admin/articles/create" element={<SubmitArticlePage />} />
-            <Route path="/admin/articles/:id" element={<UpdateArticlePage />} />
+              <Route path="/admin/articles" element={<ArticleRepositoryPage />} />
+              <Route path="/admin/articles/create" element={<SubmitArticlePage />} />
+              <Route path="/admin/articles/:id" element={<UpdateArticlePage />} />
 
-            {/* Quản lý cấu trúc tạp chí dành cho Admin (Issue #76) */}
-            <Route path="/admin/journals" element={<JournalDirectoryPage />} />
-            <Route path="/admin/journals/repository" element={<RepositoryManagementPage />} />
-            <Route path="/admin/journals/archive" element={<VolumeArchivePage />} />
-            <Route path="/admin/journals/:id/edit" element={<EditJournalPage />} />
+              {/* Quản lý cấu trúc tạp chí dành cho Admin (Issue #76) */}
+              <Route path="/admin/journals" element={<JournalDirectoryPage />} />
+              <Route path="/admin/journals/repository" element={<RepositoryManagementPage />} />
+              <Route path="/admin/journals/archive" element={<VolumeArchivePage />} />
+              <Route path="/admin/journals/:id/edit" element={<EditJournalPage />} />
+            </Route>
           </Route>
         </Route>
 

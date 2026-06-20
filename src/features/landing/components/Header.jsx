@@ -26,6 +26,8 @@ export default function Header() {
   const auth = useAuth?.() ?? { logout: () => {} };
   const { logout } = auth;
   const email = useUserStore((state) => state.email);
+  const userRole = auth.user?.role;
+  const accountManagementRoute = userRole === 'ADMINISTRATOR' ? ROUTES.ADMIN_USERS : ROUTES.PROFILE;
   const language = i18n.language || "vi";
 
   const [isScrolled, setIsScrolled] = useState(false);
@@ -314,18 +316,7 @@ export default function Header() {
                       <span>Bảng điều khiển</span>
                     </Dropdown.Item>
                     <Dropdown.Item
-                      onClick={() => navigate(ROUTES.ARTICLE_SUBMIT)}
-                      className="d-flex align-items-center gap-2 text-xs py-2 text-main"
-                    >
-                      <Icon
-                        icon="lucide:file-text"
-                        width="14"
-                        className="text-muted-custom"
-                      />
-                      <span>Nộp bài báo (Submit)</span>
-                    </Dropdown.Item>
-                    <Dropdown.Item
-                      onClick={() => navigate(ROUTES.ADMIN_USERS)}
+                      onClick={() => navigate(accountManagementRoute)}
                       className="d-flex align-items-center gap-2 text-xs py-2 text-main"
                     >
                       <Icon

@@ -3,6 +3,11 @@ import { Row, Col, Form, Button } from 'react-bootstrap';
 import Icon from '../../../../shared/components/Icon';
 import { SYSTEM_ROLES } from '../../../../shared/constants/systemConstants';
 
+const getUserInitial = (name = '', email = '') => {
+  const source = String(name || email || 'U').trim();
+  return source.charAt(0).toUpperCase() || 'U';
+};
+
 /**
  * UserAccountForm Component
  * Unified form for adding new user accounts or updating profile details.
@@ -32,7 +37,6 @@ export default function UserAccountForm({
   
   // Validation / status feedback
   const [error, setError] = useState('');
-  const [profileImage, setProfileImage] = useState(initialData.avatar || '');
 
   // Load initialData if editing
   useEffect(() => {
@@ -45,14 +49,11 @@ export default function UserAccountForm({
       setInstitution(initialData.institution || '');
       setRole(initialData.role || 'RESEARCHER');
       setStatus(initialData.status || 'Active');
-      if (initialData.avatar) {
-        setProfileImage(initialData.avatar);
-      }
     }
   }, [isEdit, initialData]);
 
   /**
-   * Handle form submit with clientside validation.
+   * Handle form submit with client-side validation.
    */
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -60,26 +61,26 @@ export default function UserAccountForm({
 
     // Common validations
     if (!email.trim() || !role) {
-      setError('Vui lÃ²ng Ä‘iá»n Ä‘áº§y Ä‘á»§ cÃ¡c trÆ°á»ng thÃ´ng tin báº¯t buá»™c.');
+      setError('Vui lòng điền đầy đủ các trường thông tin bắt buộc.');
       return;
     }
 
     // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      setError('Äá»‹a chá»‰ email khÃ´ng há»£p lá»‡.');
+      setError('Địa chỉ email không hợp lệ.');
       return;
     }
 
     // Name validations
     if (isEdit) {
       if (!fullName.trim()) {
-        setError('Há» vÃ  tÃªn lÃ  báº¯t buá»™c.');
+        setError('Họ và tên là bắt buộc.');
         return;
       }
     } else {
       if (!firstName.trim() || !lastName.trim()) {
-        setError('Há» vÃ  TÃªn lÃ  báº¯t buá»™c.');
+        setError('Họ và Tên là bắt buộc.');
         return;
       }
     }
@@ -87,17 +88,17 @@ export default function UserAccountForm({
     // Password validation (only if added or if new password was keyed during edit)
     if (!isEdit || newPassword || confirmPassword) {
       if (!isEdit && !newPassword) {
-        setError('Máº­t kháº©u lÃ  báº¯t buá»™c.');
+        setError('Mật khẩu là bắt buộc.');
         return;
       }
 
       if (newPassword.length < 8) {
-        setError('Máº­t kháº©u pháº£i chá»©a Ã­t nháº¥t 8 kÃ½ tá»±.');
+        setError('Mật khẩu phải chứa ít nhất 8 ký tự.');
         return;
       }
 
       if (newPassword !== confirmPassword) {
-        setError('Máº­t kháº©u xÃ¡c nháº­n khÃ´ng khá»›p.');
+        setError('Mật khẩu xác nhận không khớp.');
         return;
       }
     }
@@ -108,8 +109,7 @@ export default function UserAccountForm({
       phone: phone.trim(),
       institution: institution.trim(),
       role,
-      status,
-      avatar: profileImage
+      status
     };
 
     if (isEdit) {
@@ -131,13 +131,8 @@ export default function UserAccountForm({
     onSubmit(payload);
   };
 
-  const handlePhotoUpload = () => {
-    setError('Chưa có API upload ảnh đại diện user. Đã xóa dữ liệu mock khỏi khu vực này.');
-  };
-
-  const handlePhotoRemove = () => {
-    setProfileImage('');
-  };
+  const displayName = isEdit ? fullName : `${firstName} ${lastName}`.trim();
+  const avatarInitial = getUserInitial(displayName, email);
 
   return (
     <Form onSubmit={handleSubmit} className="d-flex flex-column gap-4">
@@ -147,44 +142,25 @@ export default function UserAccountForm({
         </div>
       )}
 
-      {/* Profile Image upload section - Page 13 specific */}
+      {/* Profile identity section */}
       {isEdit && (
         <div className="d-flex align-items-center gap-4 py-3 border-bottom">
           <div 
-            className="rounded-4 overflow-hidden position-relative"
-            style={{ width: '80px', height: '80px', backgroundColor: 'var(--bg-section)' }}
+            className="rounded-4 d-flex align-items-center justify-content-center text-white fw-bold flex-shrink-0"
+            style={{
+              width: '80px',
+              height: '80px',
+              background: 'linear-gradient(135deg, #fb923c 0%, #ea580c 100%)',
+              fontSize: '2rem',
+              boxShadow: '0 12px 24px rgba(234, 88, 12, 0.18)'
+            }}
+            aria-label={`Avatar chữ cái đầu của ${displayName || email || 'người dùng'}`}
           >
-            <img 
-              src={profileImage} 
-              alt="Profile avatar" 
-              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-            />
+            {avatarInitial}
           </div>
           <div>
             <div className="fw-bold text-main mb-1" style={{ fontSize: '1rem' }}>{fullName || 'Chưa có tên người dùng'}</div>
-            <div className="text-muted-custom small mb-2">Chưa có API ngày tham gia user. Đã xóa dữ liệu mock khỏi khu vực này.</div>
-            <div className="d-flex gap-2.5">
-              <Button 
-                type="button" 
-                variant="outline-secondary" 
-                size="sm" 
-                onClick={handlePhotoUpload}
-                className="px-3 border"
-                style={{ fontSize: '0.8rem', fontWeight: 600, color: 'var(--text-main)' }}
-              >
-                Change Photo
-              </Button>
-              <Button 
-                type="button" 
-                variant="link" 
-                size="sm" 
-                onClick={handlePhotoRemove}
-                className="text-decoration-none text-danger p-0 fw-semibold"
-                style={{ fontSize: '0.8rem' }}
-              >
-                Remove
-              </Button>
-            </div>
+            <div className="text-muted-custom small mb-0">Hiển thị avatar bằng chữ cái đầu của người dùng.</div>
           </div>
         </div>
       )}
@@ -193,7 +169,7 @@ export default function UserAccountForm({
       <div>
         <h6 className="fw-bold d-flex align-items-center gap-2 mb-3.5 tracking-wider text-uppercase" style={{ fontSize: '0.85rem', color: '#ea580c', letterSpacing: '0.03em' }}>
           <Icon icon="lucide:user" width="16" style={{ color: '#ea580c' }} />
-          THÃ”NG TIN CÃ NHÃ‚N
+          THÔNG TIN CÁ NHÂN
         </h6>
         
         <Row className="g-3">
@@ -202,11 +178,11 @@ export default function UserAccountForm({
             <Col xs={12} md={6}>
               <Form.Group controlId="fullName">
                 <Form.Label className="account-form-label">
-                  Há» vÃ  tÃªn <span className="text-danger">*</span>
+                  Họ và tên <span className="text-danger">*</span>
                 </Form.Label>
                 <Form.Control
                   type="text"
-                  placeholder="VÃ­ dá»¥: Nguyá»…n VÄƒn A"
+                  placeholder="Ví dụ: Nguyễn Văn A"
                   value={fullName}
                   onChange={(e) => setFullName(e.target.value)}
                   required
@@ -220,11 +196,11 @@ export default function UserAccountForm({
               <Col xs={12} md={6}>
                 <Form.Group controlId="firstName">
                   <Form.Label className="account-form-label">
-                    Há» <span className="text-danger">*</span>
+                    Họ <span className="text-danger">*</span>
                   </Form.Label>
                   <Form.Control
                     type="text"
-                    placeholder="VÃ­ dá»¥: Nguyá»…n"
+                    placeholder="Ví dụ: Nguyễn"
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
                     required
@@ -235,11 +211,11 @@ export default function UserAccountForm({
               <Col xs={12} md={6}>
                 <Form.Group controlId="lastName">
                   <Form.Label className="account-form-label">
-                    TÃªn <span className="text-danger">*</span>
+                    Tên <span className="text-danger">*</span>
                   </Form.Label>
                   <Form.Control
                     type="text"
-                    placeholder="VÃ­ dá»¥: VÄƒn A"
+                    placeholder="Ví dụ: Văn A"
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
                     required
@@ -254,7 +230,7 @@ export default function UserAccountForm({
           <Col xs={12} md={6}>
             <Form.Group controlId="emailAddress">
               <Form.Label className="account-form-label">
-                Äá»‹a chá»‰ Email <span className="text-danger">*</span>
+                Địa chỉ Email <span className="text-danger">*</span>
               </Form.Label>
               <Form.Control
                 type="email"
@@ -271,7 +247,7 @@ export default function UserAccountForm({
           <Col xs={12} md={6}>
             <Form.Group controlId="phoneNumber">
               <Form.Label className="account-form-label">
-                Sá»‘ Ä‘iá»‡n thoáº¡i
+                Số điện thoại
               </Form.Label>
               <Form.Control
                 type="text"
@@ -288,7 +264,7 @@ export default function UserAccountForm({
             <Col xs={12} md={6}>
               <Form.Group controlId="institution">
                 <Form.Label className="account-form-label">
-                  ÄÆ¡n vá»‹ / TrÆ°á»ng Ä‘áº¡i há»c
+                  Đơn vị / Trường đại học
                 </Form.Label>
                 <Form.Control
                   type="text"
@@ -307,7 +283,7 @@ export default function UserAccountForm({
       <div className="py-3 border-top">
         <h6 className="fw-bold d-flex align-items-center gap-2 mb-3.5 tracking-wider text-uppercase" style={{ fontSize: '0.85rem', color: '#ea580c', letterSpacing: '0.03em' }}>
           <Icon icon="lucide:shield" width="16" style={{ color: '#ea580c' }} />
-          VAI TRÃ’ & TRáº NG THÃI
+          VAI TRÒ & TRẠNG THÁI
         </h6>
 
         <Row className="g-3 align-items-center">
@@ -315,7 +291,7 @@ export default function UserAccountForm({
           <Col xs={12} md={6}>
             <Form.Group controlId="platformRole">
               <Form.Label className="account-form-label">
-                Vai trÃ² trÃªn ná»n táº£ng <span className="text-danger">*</span>
+                Vai trò trên nền tảng <span className="text-danger">*</span>
               </Form.Label>
               <Form.Select
                 value={role}
@@ -324,7 +300,7 @@ export default function UserAccountForm({
                 style={{ cursor: 'pointer' }}
                 required
               >
-                <option value="" disabled hidden>Chá»n vai trÃ²...</option>
+                <option value="" disabled hidden>Chọn vai trò...</option>
                 {SYSTEM_ROLES.map((r) => (
                   <option key={r.value} value={r.value}>
                     {r.label}
@@ -344,7 +320,7 @@ export default function UserAccountForm({
                 marginTop: '28px' // Align vertical alignment with label spacing
               }}
             >
-              <span className="small fw-semibold text-muted-custom" style={{ fontSize: '0.85rem' }}>Tráº¡ng thÃ¡i tÃ i khoáº£n</span>
+              <span className="small fw-semibold text-muted-custom" style={{ fontSize: '0.85rem' }}>Trạng thái tài khoản</span>
               <div className="d-flex align-items-center gap-2.5 orange-switch-toggle">
                 <Form.Check 
                   type="switch"
@@ -352,7 +328,7 @@ export default function UserAccountForm({
                   checked={status === 'Active'}
                   onChange={(e) => setStatus(e.target.checked ? 'Active' : 'Inactive')}
                 />
-                <span className="small fw-bold text-main" style={{ fontSize: '0.85rem' }}>{status === 'Active' ? 'Hoáº¡t Ä‘á»™ng' : 'VÃ´ hiá»‡u hÃ³a'}</span>
+                <span className="small fw-bold text-main" style={{ fontSize: '0.85rem' }}>{status === 'Active' ? 'Hoạt động' : 'Vô hiệu hóa'}</span>
               </div>
             </div>
           </Col>
@@ -363,7 +339,7 @@ export default function UserAccountForm({
       <div className="py-3 border-top">
         <h6 className="fw-bold d-flex align-items-center gap-2 mb-3.5 tracking-wider text-uppercase" style={{ fontSize: '0.85rem', color: '#ea580c', letterSpacing: '0.03em' }}>
           <Icon icon="lucide:lock" width="16" style={{ color: '#ea580c' }} />
-          THÃ”NG TIN ÄÄ‚NG NHáº¬P
+          THÔNG TIN ĐĂNG NHẬP
         </h6>
         
         <Row className="g-3">
@@ -372,11 +348,11 @@ export default function UserAccountForm({
             <Col xs={12} md={4}>
               <Form.Group controlId="currentPassword">
                 <Form.Label className="account-form-label">
-                  Máº­t kháº©u hiá»‡n táº¡i
+                  Mật khẩu hiện tại
                 </Form.Label>
                 <Form.Control
                   type="password"
-                  placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
+                  placeholder="••••••••"
                   value={currentPassword}
                   onChange={(e) => setCurrentPassword(e.target.value)}
                   className="account-form-input"
@@ -389,7 +365,7 @@ export default function UserAccountForm({
           <Col xs={12} md={isEdit ? 4 : 6}>
             <Form.Group controlId="newPassword">
               <Form.Label className="account-form-label">
-                {isEdit ? 'Máº­t kháº©u má»›i' : 'Máº­t kháº©u má»›i *'}
+                {isEdit ? 'Mật khẩu mới' : 'Mật khẩu mới *'}
               </Form.Label>
               <Form.Control
                 type="password"
@@ -406,7 +382,7 @@ export default function UserAccountForm({
           <Col xs={12} md={isEdit ? 4 : 6}>
             <Form.Group controlId="confirmPassword">
               <Form.Label className="account-form-label">
-                {isEdit ? 'XÃ¡c nháº­n máº­t kháº©u' : 'XÃ¡c nháº­n máº­t kháº©u *'}
+                {isEdit ? 'Xác nhận mật khẩu' : 'Xác nhận mật khẩu *'}
               </Form.Label>
               <Form.Control
                 type="password"
@@ -422,7 +398,7 @@ export default function UserAccountForm({
 
         {/* Password complexity helper note */}
         <div className="form-text text-muted-custom mt-2.5 small" style={{ fontSize: '0.78rem' }}>
-          Máº­t kháº©u pháº£i chá»©a Ã­t nháº¥t 8 kÃ½ tá»±, bao gá»“m cáº£ chá»¯ hoa, chá»¯ thÆ°á»ng vÃ  chá»¯ sá»‘.
+          Mật khẩu phải chứa ít nhất 8 ký tự, bao gồm cả chữ hoa, chữ thường và chữ số.
         </div>
       </div>
 
@@ -434,7 +410,7 @@ export default function UserAccountForm({
           className="bg-transparent border rounded-pill px-4 py-2 text-muted-custom fw-semibold"
           style={{ borderColor: '#cbd5e1', color: '#64748b', fontSize: '0.88rem' }}
         >
-          Há»§y
+          Hủy
         </Button>
         
         <Button 
@@ -446,17 +422,17 @@ export default function UserAccountForm({
           {submitting ? (
             <>
               <Icon icon="lucide:loader-2" width="16" />
-              <span>Äang xá»­ lÃ½...</span>
+              <span>Đang xử lý...</span>
             </>
           ) : isEdit ? (
             <>
               <Icon icon="lucide:save" width="16" />
-              <span>LÆ°u thay Ä‘á»•i</span>
+              <span>Lưu thay đổi</span>
             </>
           ) : (
             <>
               <Icon icon="lucide:user-plus" width="16" />
-              <span>ThÃªm tÃ i khoáº£n</span>
+              <span>Thêm tài khoản</span>
             </>
           )}
         </Button>
