@@ -9,8 +9,8 @@ import api from '../../../shared/services/api';
  * Gọi API lấy danh sách các subject area học thuật.
  * @returns {Promise} Axios promise
  */
-export const getSubjectAreasApi = () => {
-  return api.get('/subject-areas');
+export const getSubjectAreasApi = (params = {}) => {
+  return api.get('/subject-areas', { params: { limit: 100, ...params } });
 };
 
 /**
@@ -27,8 +27,8 @@ export const getAuthorAreasBreakdownApi = (id) => {
  * @param {number|string} id - ID của tác giả
  * @returns {Promise} Axios promise
  */
-export const getAuthorArticlesApi = (id) => {
-  return api.get(`/author/${id}/articles`);
+export const getAuthorArticlesApi = (id, params = {}) => {
+  return api.get(`/author/${id}/articles`, { params });
 };
 
 /**
