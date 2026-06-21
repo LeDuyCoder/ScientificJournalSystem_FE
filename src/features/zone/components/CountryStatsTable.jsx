@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from 'react';
-import { Table, Pagination, InputGroup, Form } from 'react-bootstrap';
+import { Table, InputGroup, Form } from 'react-bootstrap';
 import { Icon } from '@iconify/react';
+import AdminPagination from '../../../shared/components/Pagination';
 
 export default function CountryStatsTable({ 
   countries = [], 
@@ -51,7 +52,8 @@ export default function CountryStatsTable({
 
   // Pagination calculations
   const totalPages = Math.ceil(sortedCountries.length / itemsPerPage) || 1;
-  const startIndex = (currentPage - 1) * itemsPerPage;
+  const safeCurrentPage = Math.min(currentPage, totalPages);
+  const startIndex = (safeCurrentPage - 1) * itemsPerPage;
   const paginatedCountries = sortedCountries.slice(startIndex, startIndex + itemsPerPage);
 
   const handlePageChange = (pageNumber) => {
@@ -65,32 +67,6 @@ export default function CountryStatsTable({
       setSortKey(key);
       setSortOrder('desc'); // Default to descending for numbers, or ascending for names can be adjusted
     }
-  };
-
-  // Render Pagination buttons
-  const renderPaginationItems = () => {
-    const items = [];
-    const maxButtons = 5;
-    let startPage = Math.max(1, currentPage - Math.floor(maxButtons / 2));
-    let endPage = Math.min(totalPages, startPage + maxButtons - 1);
-
-    if (endPage - startPage + 1 < maxButtons) {
-      startPage = Math.max(1, endPage - maxButtons + 1);
-    }
-
-    for (let p = startPage; p <= endPage; p++) {
-      items.push(
-        <Pagination.Item 
-          key={p} 
-          active={p === currentPage}
-          onClick={() => handlePageChange(p)}
-          className="mx-0.5"
-        >
-          {p}
-        </Pagination.Item>
-      );
-    }
-    return items;
   };
 
   return (
@@ -244,18 +220,14 @@ export default function CountryStatsTable({
 
       {/* Pagination Controls */}
       {sortedCountries.length > 0 && totalPages > 1 && (
-        <div className="d-flex justify-content-center mt-3 pt-3 border-top border-light">
-          <Pagination className="mb-0 custom-pagination gap-1">
-            <Pagination.Prev 
-              disabled={currentPage === 1}
-              onClick={() => handlePageChange(currentPage - 1)}
-            />
-            {renderPaginationItems()}
-            <Pagination.Next 
-              disabled={currentPage === totalPages}
-              onClick={() => handlePageChange(currentPage + 1)}
-            />
-          </Pagination>
+        <div className="mt-3 pt-3 border-top border-light">
+          <AdminPagination
+            totalItems={sortedCountries.length}
+            currentPage={safeCurrentPage}
+            limit={itemsPerPage}
+            onPageChange={handlePageChange}
+            entityName="quốc gia"
+          />
         </div>
       )}
     </div>

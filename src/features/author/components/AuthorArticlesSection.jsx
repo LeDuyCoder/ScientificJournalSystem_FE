@@ -4,11 +4,12 @@
  */
 
 import { useState } from 'react';
-import { Card, Form, Pagination } from 'react-bootstrap';
+import { Card, Form } from 'react-bootstrap';
 import AuthorArticleRow from './AuthorArticleRow';
 import LoadingSkeleton from '../../../shared/components/LoadingSkeleton';
 import EmptyState from '../../../shared/components/EmptyState';
 import ErrorState from '../../../shared/components/ErrorState';
+import AdminPagination from '../../../shared/components/Pagination';
 
 export default function AuthorArticlesSection({
   articles = [],
@@ -100,17 +101,13 @@ export default function AuthorArticlesSection({
           ))}
 
           {totalPages > 1 && (
-            <div className="d-flex justify-content-center mt-4">
-              <Pagination className="author-articles-pagination m-0 pagination-sm">
-                <Pagination.Prev disabled={currentPage === 1} onClick={() => handlePageChange(currentPage - 1)} />
-                {Array.from({ length: totalPages }).map((_, idx) => (
-                  <Pagination.Item key={idx + 1} active={currentPage === idx + 1} onClick={() => handlePageChange(idx + 1)}>
-                    {idx + 1}
-                  </Pagination.Item>
-                ))}
-                <Pagination.Next disabled={currentPage === totalPages} onClick={() => handlePageChange(currentPage + 1)} />
-              </Pagination>
-            </div>
+            <AdminPagination
+              totalItems={sortedArticles.length}
+              currentPage={currentPage}
+              limit={itemsPerPage}
+              onPageChange={handlePageChange}
+              entityName="bài báo"
+            />
           )}
         </div>
       )}

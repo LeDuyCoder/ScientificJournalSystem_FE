@@ -3,7 +3,7 @@
  *
  * File: features\catalog\pages\CatalogSearchPage.jsx
  */
-import { Container, Row, Col, Form, Button, InputGroup, Pagination, Dropdown, Breadcrumb } from 'react-bootstrap';
+import { Container, Row, Col, Form, Button, InputGroup, Dropdown, Breadcrumb } from 'react-bootstrap';
 import { Icon } from '@iconify/react';
 import { useNavigate } from 'react-router-dom';
 import { useCatalogSearch } from '../hooks/useCatalogSearch';
@@ -13,6 +13,7 @@ import LoadingSkeleton from '../../../shared/components/LoadingSkeleton';
 import AuthRequiredModal from '../../../shared/components/AuthRequiredModal';
 import Header from '../../landing/components/Header';
 import useAuth from '../../auth/hooks/useAuth';
+import AdminPagination from '../../../shared/components/Pagination';
 import '../components/CatalogSearch.css';
 
 export default function CatalogSearchPage() {
@@ -58,73 +59,8 @@ export default function CatalogSearchPage() {
     fetchJournals
   } = useCatalogSearch(user);
 
-  const totalPages = Math.ceil(total / 10) || 1;
-
-  // Pagination giống trang Article List (ellipsis + sliding window)
-  const renderPagination = () => {
-    if (totalPages <= 1) return null;
-    const items = [];
-
-    // Nút Trước
-    items.push(
-      <Pagination.Prev 
-        key="prev" 
-        disabled={page === 1}
-        onClick={() => handlePageChange(page - 1)}
-        className="mx-0.5"
-      />
-    );
-
-    const maxButtons = 5;
-    let startPage = Math.max(1, page - Math.floor(maxButtons / 2));
-    let endPage = Math.min(totalPages, startPage + maxButtons - 1);
-    if (endPage - startPage + 1 < maxButtons) {
-      startPage = Math.max(1, endPage - maxButtons + 1);
-    }
-
-    // Trang 1 nếu có ellipsis
-    if (startPage > 1) {
-      items.push(
-        <Pagination.Item key={1} active={1 === page} onClick={() => handlePageChange(1)}>1</Pagination.Item>
-      );
-      if (startPage > 2) {
-        items.push(<Pagination.Ellipsis key="ellipsis-start" disabled />);
-      }
-    }
-
-    // Các trang ở giữa
-    for (let p = startPage; p <= endPage; p++) {
-      items.push(
-        <Pagination.Item key={p} active={p === page} onClick={() => handlePageChange(p)}>{p}</Pagination.Item>
-      );
-    }
-
-    // Trang cuối nếu có ellipsis
-    if (endPage < totalPages) {
-      if (endPage < totalPages - 1) {
-        items.push(<Pagination.Ellipsis key="ellipsis-end" disabled />);
-      }
-      items.push(
-        <Pagination.Item key={totalPages} active={totalPages === page} onClick={() => handlePageChange(totalPages)}>{totalPages}</Pagination.Item>
-      );
-    }
-
-    // Nút Tiếp
-    items.push(
-      <Pagination.Next 
-        key="next" 
-        disabled={page === totalPages}
-        onClick={() => handlePageChange(page + 1)}
-        className="mx-0.5"
-      />
-    );
-
-    return (
-      <Pagination className="justify-content-center m-0 catalog-pagination">
-        {items}
-      </Pagination>
-    );
-  };
+  const pageLimit = 10;
+  const totalPages = Math.ceil(total / pageLimit) || 1;
 
   return (
     <div className="min-vh-100 text-main catalog-search-page">
@@ -303,8 +239,14 @@ export default function CatalogSearchPage() {
 
           {/* Pagination Controls */}
           {totalPages > 1 && !loadingJournals && (
-            <div className="d-flex justify-content-center mt-5">
-              {renderPagination()}
+            <div className="mt-5">
+              <AdminPagination
+                totalItems={total}
+                currentPage={page}
+                limit={pageLimit}
+                onPageChange={handlePageChange}
+                entityName="journals"
+              />
             </div>
           )}
         </div>

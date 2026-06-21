@@ -3,48 +3,20 @@
  *
  * File: features\keywords\components\KeywordList.jsx
  */
-import { Row, Col, Pagination } from 'react-bootstrap';
+import { Row, Col } from 'react-bootstrap';
 import { Icon } from '@iconify/react';
 import LoadingSkeleton from '../../../shared/components/LoadingSkeleton';
+import AdminPagination from '../../../shared/components/Pagination';
 import KeywordListItem from './KeywordListItem';
 
 /**
  * Danh sách keyword kèm loading, empty, error và pagination.
  */
 export default function KeywordList({ keywords, loading, error, pagination, onPageChange, onViewArticles, onRetry }) {
-  const totalPages = pagination?.total_pages || 1;
+  const totalItems = pagination?.total || pagination?.total_items || pagination?.totalItems || 0;
   const currentPage = pagination?.page || 1;
+  const limit = pagination?.limit || pagination?.page_size || 10;
 
-  const renderPagination = () => {
-    if (totalPages <= 1) return null;
-    const items = [];
-    const maxButtons = 5;
-    let startPage = Math.max(1, currentPage - Math.floor(maxButtons / 2));
-    let endPage = Math.min(totalPages, startPage + maxButtons - 1);
-    if (endPage - startPage + 1 < maxButtons) {
-      startPage = Math.max(1, endPage - maxButtons + 1);
-    }
-
-    items.push(<Pagination.Prev key="prev" disabled={currentPage === 1} onClick={() => onPageChange(currentPage - 1)} />);
-    if (startPage > 1) {
-      items.push(<Pagination.Item key={1} onClick={() => onPageChange(1)}>1</Pagination.Item>);
-      if (startPage > 2) items.push(<Pagination.Ellipsis key="start-ellipsis" disabled />);
-    }
-    Array.from({ length: endPage - startPage + 1 }, (_, index) => startPage + index).forEach((pageNumber) => {
-      items.push(
-        <Pagination.Item key={pageNumber} active={pageNumber === currentPage} onClick={() => onPageChange(pageNumber)}>
-          {pageNumber}
-        </Pagination.Item>
-      );
-    });
-    if (endPage < totalPages) {
-      if (endPage < totalPages - 1) items.push(<Pagination.Ellipsis key="end-ellipsis" disabled />);
-      items.push(<Pagination.Item key={totalPages} onClick={() => onPageChange(totalPages)}>{totalPages}</Pagination.Item>);
-    }
-    items.push(<Pagination.Next key="next" disabled={currentPage === totalPages} onClick={() => onPageChange(currentPage + 1)} />);
-
-    return <Pagination className="keyword-pagination justify-content-center mt-4 mb-0">{items}</Pagination>;
-  };
 
   if (loading) {
     return (
@@ -93,7 +65,15 @@ export default function KeywordList({ keywords, loading, error, pagination, onPa
           </Col>
         ))}
       </Row>
-      {renderPagination()}
+      {totalItems > limit && (
+        <AdminPagination
+          totalItems={totalItems}
+          currentPage={currentPage}
+          limit={limit}
+          onPageChange={onPageChange}
+          entityName="keywords"
+        />
+      )}
     </>
   );
 }

@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import Icon from '../../../../shared/components/Icon';
 import StatusBadge from '../shared/StatusBadge';
 import AdminProgressBar from '../layout/AdminProgressBar';
-import Pagination from '../shared/Pagination';
+import Pagination from '../../../../shared/components/Pagination';
 import { exportAdminVolumeIssueStatusCsv } from '../../api/adminDashboard.api';
 
 export default function VolumeIssueTable({

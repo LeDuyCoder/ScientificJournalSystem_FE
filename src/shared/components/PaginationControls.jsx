@@ -1,11 +1,13 @@
 /**
- * - currentPage:  trang hiện tại (1-indexed).
- * - totalPages:   tổng số trang.
- * - onPageChange: handler khi click 1 số trang / Previous / Next.
+ * Low-level numbered pagination controls shared across admin and public pages.
+ *
+ * - currentPage: current page number (1-indexed)
+ * - totalPages: total number of pages
+ * - onPageChange: called when user clicks a page, Previous, or Next
  */
-import Icon from '../../../../shared/components/Icon';
+import Icon from './Icon';
 
-// Tính danh sách item hiển thị: số trang (number) hoặc dấu "..." (string 'ellipsis-left'/'ellipsis-right')
+// Build visible items as page numbers or a single ellipsis between distant ranges.
 function buildPageItems(currentPage, totalPages) {
   const items = [];
 
@@ -16,7 +18,6 @@ function buildPageItems(currentPage, totalPages) {
     if (isEdge || isNearCurrent) {
       items.push(page);
     } else if (items[items.length - 1] !== 'ellipsis') {
-      // Chỉ thêm 1 dấu "..." liên tiếp, tránh "... ..."
       items.push('ellipsis');
     }
   }
@@ -24,15 +25,13 @@ function buildPageItems(currentPage, totalPages) {
   return items;
 }
 
-export default function Pagination({ currentPage, totalPages, onPageChange }) {
-  // Không cần hiển thị pagination nếu chỉ có 1 trang hoặc ít hơn
+export default function PaginationControls({ currentPage, totalPages, onPageChange }) {
   if (totalPages <= 1) return null;
 
   const pageItems = buildPageItems(currentPage, totalPages);
 
   return (
     <nav className="admin-pagination" aria-label="Pagination">
-      {/* Nút Previous - disable ở trang đầu */}
       <button
         type="button"
         className="admin-pagination__btn"
@@ -43,7 +42,6 @@ export default function Pagination({ currentPage, totalPages, onPageChange }) {
         <Icon icon="lucide:chevron-left" />
       </button>
 
-      {/* Các số trang / dấu "..." */}
       {pageItems.map((item, index) =>
         item === 'ellipsis' ? (
           <span key={`ellipsis-${index}`} className="admin-pagination__ellipsis">
@@ -61,7 +59,6 @@ export default function Pagination({ currentPage, totalPages, onPageChange }) {
         )
       )}
 
-      {/* Nút Next - disable ở trang cuối */}
       <button
         type="button"
         className="admin-pagination__btn"

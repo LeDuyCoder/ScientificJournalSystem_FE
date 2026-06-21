@@ -1,15 +1,13 @@
-import ArticlePagination from '../article-repository/Pagination';
+import PaginationControls from './PaginationControls';
 
 /**
- * Reusable Pagination Component for Admin features.
- * Uses the Article Repository pagination UI as the visual standard
- * while preserving summary text and optional rows-per-page control.
+ * Reusable Pagination Component for data lists.
+ * Uses the admin pagination visual standard while keeping summary text consistent.
  *
  * @param {number} totalItems - Total count of items
  * @param {number} currentPage - Active page number (1-indexed)
  * @param {number} limit - Items per page
  * @param {function} onPageChange - Callback when page changes
- * @param {function} onLimitChange - Callback when limit changes (optional)
  * @param {string} entityName - Singular/plural name for display (default: 'items')
  */
 export default function Pagination({
@@ -17,7 +15,7 @@ export default function Pagination({
   currentPage,
   limit,
   onPageChange,
-  entityName = 'journals'
+  entityName = 'items'
 }) {
   const totalPages = Math.max(1, Math.ceil(totalItems / limit));
   const startItem = totalItems === 0 ? 0 : (currentPage - 1) * limit + 1;
@@ -36,7 +34,7 @@ export default function Pagination({
       </div>
 
       <div className="admin-pagination-bar__center">
-        <ArticlePagination
+        <PaginationControls
           currentPage={currentPage}
           totalPages={totalPages}
           onPageChange={onPageChange}

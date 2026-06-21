@@ -3,10 +3,10 @@ import { Icon } from '@iconify/react';
 import {
   ArticleFilterBar,
   ArticleTable,
-  Pagination,
   EditorInsightsCard,
   PeerMatchingPromoCard,
 } from '../components/article-repository';
+import Pagination from '../../../shared/components/Pagination';
 import useAdminArticleRepository from '../hooks/useAdminArticleRepository';
 import ROUTES from '../../../app/routes/routePaths';
 
@@ -24,13 +24,13 @@ export default function ArticleRepositoryPage() {
     pageItems,
     insights,
     totalItems,
-    totalPages,
     loading,
     error,
     currentPage,
     setCurrentPage,
     startIndex,
     endIndex,
+    pageSize,
   } = useAdminArticleRepository();
 
   return (
@@ -84,7 +84,13 @@ export default function ArticleRepositoryPage() {
             endIndex={endIndex}
           />
 
-          <Pagination currentPage={currentPage} totalPages={totalPages} onPageChange={setCurrentPage} />
+          <Pagination
+            totalItems={totalItems}
+            currentPage={currentPage}
+            limit={pageSize}
+            onPageChange={setCurrentPage}
+            entityName="articles"
+          />
         </>
       )}
 

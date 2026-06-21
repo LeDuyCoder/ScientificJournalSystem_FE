@@ -4,11 +4,12 @@
  * File: features\topic\pages\TopicDetailPage.jsx
  */
 import { useEffect, useMemo, useState } from 'react';
-import { Container, Row, Col, Card, Button, Badge, Spinner, Alert, Pagination } from 'react-bootstrap';
+import { Container, Row, Col, Card, Button, Badge, Spinner, Alert } from 'react-bootstrap';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import Header from '../../landing/components/Header';
 import { getTopicByIdApi, getTopicArticlesApi } from '../api/topic.api';
+import AdminPagination from '../../../shared/components/Pagination';
 import './TopicDetailPage.css';
 
 const PAGE_SIZE = 10;
@@ -98,33 +99,6 @@ export default function TopicDetailPage() {
     } finally {
       setLoading(false);
     }
-  };
-
-  const renderPagination = () => {
-    if (totalPages <= 1) return null;
-
-    const items = [];
-    for (let page = 1; page <= totalPages; page += 1) {
-      items.push(
-        <Pagination.Item
-          key={page}
-          active={page === pagination.page}
-          onClick={() => handlePageChange(page)}
-        >
-          {page}
-        </Pagination.Item>
-      );
-    }
-
-    return (
-      <div className="d-flex justify-content-center mt-4">
-        <Pagination className="topic-detail-pagination">
-          <Pagination.Prev onClick={() => handlePageChange(pagination.page - 1)} disabled={pagination.page <= 1} />
-          {items}
-          <Pagination.Next onClick={() => handlePageChange(pagination.page + 1)} disabled={pagination.page >= totalPages} />
-        </Pagination>
-      </div>
-    );
   };
 
   return (
@@ -272,7 +246,15 @@ export default function TopicDetailPage() {
           </div>
         )}
 
-        {renderPagination()}
+        {articles.length > 0 && totalPages > 1 && (
+          <AdminPagination
+            totalItems={pagination.total}
+            currentPage={pagination.page}
+            limit={pagination.limit}
+            onPageChange={handlePageChange}
+            entityName="bài báo"
+          />
+        )}
       </Container>
     </div>
   );

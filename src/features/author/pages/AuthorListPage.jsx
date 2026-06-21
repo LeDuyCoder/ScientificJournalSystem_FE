@@ -5,7 +5,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import { Container, Row, Col, Form, InputGroup, Card, Button, Pagination } from 'react-bootstrap';
+import { Container, Row, Col, Form, InputGroup, Card, Button } from 'react-bootstrap';
 import Icon from '../../../shared/components/Icon';
 import Header from '../../landing/components/Header';
 import useAuthors from '../hooks/useAuthors';
@@ -13,6 +13,7 @@ import AuthorTable from '../components/AuthorTable';
 import AuthorCard from '../components/AuthorCard';
 import LoadingSkeleton from '../../../shared/components/LoadingSkeleton';
 import AuthorNavigationTabs from '../components/AuthorNavigationTabs';
+import AdminPagination from '../../../shared/components/Pagination';
 import './AuthorListPage.css';
 
 export default function AuthorListPage() {
@@ -109,43 +110,6 @@ export default function AuthorListPage() {
   const featuredAuthorsCount = authors.filter((author) => Number(author.h_index ?? author.hindex ?? 0) >= 30).length;
   const totalWorksCount = authors.reduce((sum, author) => sum + (Number(author.works_count ?? author.article_count ?? 0) || 0), 0);
   const totalCitationCount = authors.reduce((sum, author) => sum + (Number(author.cited_by_count ?? author.citation_count ?? 0) || 0), 0);
-
-  const renderPagination = () => {
-    if (totalPagesCount <= 1) return null;
-
-    const items = [];
-    items.push(
-      <Pagination.Prev key="prev" disabled={pageVal === 1} onClick={() => handlePageChange(pageVal - 1)} className="mx-0.5" />
-    );
-
-    const maxButtons = 7;
-    let startPage = Math.max(1, pageVal - Math.floor(maxButtons / 2));
-    let endPage = Math.min(totalPagesCount, startPage + maxButtons - 1);
-
-    if (endPage - startPage + 1 < maxButtons) {
-      startPage = Math.max(1, endPage - maxButtons + 1);
-    }
-
-    if (startPage > 1) {
-      items.push(<Pagination.Item key={1} active={1 === pageVal} onClick={() => handlePageChange(1)}>1</Pagination.Item>);
-      if (startPage > 2) items.push(<Pagination.Ellipsis key="ellipsis-start" disabled />);
-    }
-
-    for (let p = startPage; p <= endPage; p += 1) {
-      items.push(<Pagination.Item key={p} active={p === pageVal} onClick={() => handlePageChange(p)}>{p}</Pagination.Item>);
-    }
-
-    if (endPage < totalPagesCount) {
-      if (endPage < totalPagesCount - 1) items.push(<Pagination.Ellipsis key="ellipsis-end" disabled />);
-      items.push(<Pagination.Item key={totalPagesCount} active={totalPagesCount === pageVal} onClick={() => handlePageChange(totalPagesCount)}>{totalPagesCount}</Pagination.Item>);
-    }
-
-    items.push(
-      <Pagination.Next key="next" disabled={pageVal === totalPagesCount} onClick={() => handlePageChange(pageVal + 1)} className="mx-0.5" />
-    );
-
-    return <Pagination className="author-pagination justify-content-center m-0">{items}</Pagination>;
-  };
 
   const statCards = [
     { label: 'Tổng tác giả', value: formatLocalNumber(totalAuthors), icon: 'lucide:users', desc: 'Tổng tác giả trong hệ thống' },
@@ -321,7 +285,15 @@ export default function AuthorListPage() {
           )}
         </div>
 
-        {renderPagination()}
+        {authors.length > 0 && totalPagesCount > 1 && (
+          <AdminPagination
+            totalItems={totalAuthors}
+            currentPage={pageVal}
+            limit={limitVal}
+            onPageChange={handlePageChange}
+            entityName="tác giả"
+          />
+        )}
       </Container>
     </div>
   );

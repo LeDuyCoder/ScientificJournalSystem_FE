@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Row, Col, Card, ProgressBar, Button } from 'react-bootstrap';
-import Pagination from '../../components/shared/Pagination';
+import Pagination from '../../../../shared/components/Pagination';
 import { useNavigate } from 'react-router-dom';
 import Icon from '../../../../shared/components/Icon';
 import UserTable from '../../components/account/UserTable';

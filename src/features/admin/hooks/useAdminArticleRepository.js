@@ -155,5 +155,6 @@ export default function useAdminArticleRepository() {
     setCurrentPage,
     startIndex,
     endIndex,
+    pageSize: PAGE_SIZE,
   };
 }

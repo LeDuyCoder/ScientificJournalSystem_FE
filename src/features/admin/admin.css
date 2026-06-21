@@ -4,9 +4,10 @@
 
 /* Container tổng, full height, nền trắng theo --bg-main */
 .admin-layout {
+  --admin-card-radius: 1rem;
   display: flex;
   min-height: 100vh;
-  background-color: var(--bg-main);
+  background-color: #ffffff;
   color: var(--text-main);
   font-family: var(--font-sans);
 }
@@ -19,11 +20,11 @@
   min-width: 0; /* tránh overflow khi table quá rộng */
 }
 
-/* Vùng nội dung chính, có padding và bg-section nhạt để tách lớp với card trắng */
+/* Vùng nội dung chính, có padding và nền trắng */
 .admin-content {
   flex: 1;
   padding: 24px;
-  background-color: var(--bg-section);
+  background: #ffffff;
 }
 
 /* ───────────────────────────────────────────────────────────────
@@ -389,7 +390,7 @@
 .admin-card {
   background-color: var(--bg-card);
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: var(--admin-card-radius);
   padding: 18px 20px;
   align-items:start;
 }
@@ -1640,23 +1641,19 @@
 
 .admin-layout {
   min-height: 100vh;
-  background-color: var(--bg-main);
+  background-color: #ffffff;
 }
 
 .admin-main {
   min-width: 0;
-  background-color: var(--bg-main);
+  background-color: #ffffff;
 }
 
 .admin-content {
   min-height: calc(100vh - 140px);
   padding: 28px;
-  background-color: var(--bg-section);
-  background-image:
-    linear-gradient(var(--border) 1px, transparent 1px),
-    linear-gradient(90deg, var(--border) 1px, transparent 1px);
-  background-size: 44px 44px;
-  background-position: center top;
+  background-color: #ffffff;
+  background-image: none;
 }
 
 .admin-sidebar {
@@ -1781,7 +1778,7 @@
 
 .admin-card,
 .admin-review-panel {
-  border-radius: 14px;
+  border-radius: var(--admin-card-radius);
   border-color: var(--border);
   background-color: var(--bg-card);
   box-shadow: none;
@@ -2127,9 +2124,7 @@
  * ─────────────────────────────────────────────────────────────── */
 .admin-content {
   padding: 28px;
-  background:
-    linear-gradient(180deg, var(--bg-main) 0%, var(--bg-section) 220px),
-    var(--bg-section);
+  background: #ffffff;
 }
 
 .admin-sidebar {
@@ -2228,8 +2223,13 @@
 .admin-card,
 .admin-stat-card {
   border-color: var(--border);
+  border-radius: var(--admin-card-radius);
   background-color: var(--bg-card);
   box-shadow: 0 1px 0 rgba(15, 23, 42, 0.03);
+}
+
+.admin-content .card {
+  border-radius: var(--admin-card-radius) !important;
 }
 
 .admin-stat-card {
