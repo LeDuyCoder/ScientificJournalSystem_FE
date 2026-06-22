@@ -9,8 +9,8 @@ import api from '../../../shared/services/api';
  * Get catalog academic subject areas list
  * @returns {Promise} Axios promise
  */
-export const getSubjectAreasApi = () => {
-  return api.get('/subject-areas');
+export const getSubjectAreasApi = (params = { limit: 100 }) => {
+  return api.get('/subject-areas', { params });
 };
 
 /**
@@ -18,7 +18,7 @@ export const getSubjectAreasApi = () => {
  * @param {Object} params - Query params (e.g. limit, page)
  * @returns {Promise} Axios promise
  */
-export const getSubjectCategoriesApi = (params) => {
+export const getSubjectCategoriesApi = (params = { limit: 5000 }) => {
   return api.get('/subject-categories', { params });
 };
 
