@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import ROUTES from '../../../app/routes/routePaths';
 import useProjects from '../hooks/useProjects';
 import { Icon } from '@iconify/react';
 import { getSubjectAreasApi, getSubjectCategoriesApi } from '../../catalog/api/catalogApi';
@@ -38,9 +39,18 @@ const CreateProjectPage = () => {
           searchJournalsApi({ limit: 200 }) // Load initial batch of journals
         ]);
         
-        if (areasRes?.data) setAreas(areasRes.data.data || areasRes.data);
-        if (catsRes?.data) setCategories(catsRes.data.data || catsRes.data);
-        if (journalsRes?.data) setJournals(journalsRes.data.data || journalsRes.data);
+        if (areasRes?.data) {
+          const rawAreas = areasRes.data.data || areasRes.data;
+          setAreas(Array.isArray(rawAreas) ? rawAreas : (rawAreas?.items || []));
+        }
+        if (catsRes?.data) {
+          const rawCats = catsRes.data.data || catsRes.data;
+          setCategories(Array.isArray(rawCats) ? rawCats : (rawCats?.items || []));
+        }
+        if (journalsRes?.data) {
+          const rawJournals = journalsRes.data.data || journalsRes.data;
+          setJournals(Array.isArray(rawJournals) ? rawJournals : (rawJournals?.items || []));
+        }
       } catch (err) {
         console.error('Lỗi tải danh mục:', err);
         setError('Không thể tải dữ liệu danh mục. Vui lòng tải lại trang.');
@@ -52,13 +62,13 @@ const CreateProjectPage = () => {
   }, []);
 
   // Format data for MultiSelect
-  const categoryOptions = categories
-    .filter(c => !subjectAreaId || String(c.subject_area_id) === String(subjectAreaId))
-    .map(c => ({ value: c.id || c.subject_category_id, label: c.name || c.category_name }));
+  const categoryOptions = (Array.isArray(categories) ? categories : [])
+    .filter(c => c && (!subjectAreaId || String(c.subject_area_id) === String(subjectAreaId)))
+    .map(c => ({ value: c.id || c.subject_category_id, label: c.name || c.category_name || c.display_name || '' }));
     
-  const journalOptions = journals
-    .filter(j => !subjectAreaId || String(j.subject_area_id) === String(subjectAreaId))
-    .map(j => ({ value: j.id || j.journal_id, label: j.name || j.title }));
+  const journalOptions = (Array.isArray(journals) ? journals : [])
+    .filter(j => j && (!subjectAreaId || String(j.subject_area_id) === String(subjectAreaId)))
+    .map(j => ({ value: j.id || j.journal_id, label: j.name || j.title || j.display_name || '' }));
 
   // Handle Area Change
   const handleAreaChange = (e) => {
@@ -88,7 +98,7 @@ const CreateProjectPage = () => {
       const response = await createProject(payload);
       if (response && response.success !== false) {
         const projectId = response.data?.project_id || response.data?.id || response.project_id;
-        navigate(projectId ? `/projects/${projectId}` : '/projects');
+        navigate(projectId ? ROUTES.PROJECT_DETAIL.replace(':id', projectId) : ROUTES.PROJECTS);
       } else {
         setError(response?.message || 'Tạo dự án thất bại');
       }
@@ -105,8 +115,8 @@ const CreateProjectPage = () => {
       <div className="container mx-auto" style={{ maxWidth: '650px', marginTop: '20px' }}>
         <nav aria-label="breadcrumb" className="mb-4">
           <ol className="breadcrumb mb-2 text-muted-custom small">
-            <li className="breadcrumb-item"><Link to="/dashboard" className="text-decoration-none text-muted-custom hover-primary">Tổng quan</Link></li>
-            <li className="breadcrumb-item"><Link to="/projects" className="text-decoration-none text-muted-custom hover-primary">Dự án theo dõi</Link></li>
+            <li className="breadcrumb-item"><Link to={ROUTES.DASHBOARD} className="text-decoration-none text-muted-custom hover-primary">Tổng quan</Link></li>
+            <li className="breadcrumb-item"><Link to={ROUTES.PROJECTS} className="text-decoration-none text-muted-custom hover-primary">Dự án theo dõi</Link></li>
             <li className="breadcrumb-item active" aria-current="page">Tạo dự án mới</li>
           </ol>
         </nav>

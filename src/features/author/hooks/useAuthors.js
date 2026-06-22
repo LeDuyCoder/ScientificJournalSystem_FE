@@ -329,6 +329,27 @@ const enrichLeaderboardAuthors = (authors = [], breakdownMap = {}) => {
   });
 };
 
+const extractItemsFromCollectionPayload = (payload) => {
+  if (Array.isArray(payload)) return payload;
+  if (Array.isArray(payload?.items)) return payload.items;
+  if (Array.isArray(payload?.data)) return payload.data;
+  if (Array.isArray(payload?.rows)) return payload.rows;
+  return [];
+};
+
+const extractPaginationFromPayload = (responseData, payload = {}) => {
+  return responseData?.pagination || payload?.pagination || {};
+};
+
+const normalizeSubjectAreaItems = (payload) => {
+  const items = extractItemsFromCollectionPayload(payload);
+  return items.map((item) => ({
+    ...item,
+    subject_area_id: item?.subject_area_id ?? item?.id ?? '',
+    display_name: item?.display_name ?? item?.name ?? '',
+  }));
+};
+
 /**
  * Hook quản lý trạng thái tùy chỉnh chính cho mô-đun Tác giả.
  * 
@@ -379,13 +400,9 @@ export default function useAuthors() {
       // Xác thực phản hồi. Kiểm tra trường hợp dự phòng của Axios/Vite (ví dụ: trả về index.html)
       if (response.data && typeof response.data === 'object' && response.data.success !== false) {
         const payload = response.data.data;
-        const items = Array.isArray(payload)
-          ? payload
-          : Array.isArray(payload?.items)
-            ? payload.items
-            : [];
+        const items = extractItemsFromCollectionPayload(payload);
         const normalizedItems = items.map(normalizeAuthorRecord);
-        const pagination = response.data.pagination || payload?.pagination || {};
+        const pagination = extractPaginationFromPayload(response.data, payload);
         const total = pagination.total ?? payload?.total ?? normalizedItems.length;
         const limit = pagination.limit ?? (parseInt(params.limit || '1', 10) || normalizedItems.length || 1);
 
@@ -484,14 +501,15 @@ export default function useAuthors() {
    * @param {string|number} authorId - Mã định danh duy nhất của tác giả.
    * @returns {Promise<void>}
    */
-  const fetchAuthorArticles = useCallback(async (authorId) => {
+  const fetchAuthorArticles = useCallback(async (authorId, params = {}) => {
     if (!authorId) return;
     setLoadingArticles(true);
     setErrorArticles(null);
     try {
-      const response = await getAuthorArticlesApi(authorId);
+      const response = await getAuthorArticlesApi(authorId, params);
       if (response.data && typeof response.data === 'object' && response.data.success !== false) {
-        setAuthorArticles(response.data.data || []);
+        const payload = response.data.data;
+        setAuthorArticles(extractItemsFromCollectionPayload(payload));
       } else {
         throw new Error(response.data?.message || 'Failed to fetch author articles');
       }
@@ -531,14 +549,14 @@ export default function useAuthors() {
     }
   }, []);
 
-  const fetchSubjectAreas = useCallback(async () => {
+  const fetchSubjectAreas = useCallback(async (params = {}) => {
     setLoadingSubjectAreas(true);
     setErrorSubjectAreas(null);
     try {
-      const response = await getSubjectAreasApi();
+      const response = await getSubjectAreasApi(params);
       if (response.data && typeof response.data === 'object' && response.data.success !== false) {
-        const payload = response.data.data || {};
-        setSubjectAreas(Array.isArray(payload.items) ? payload.items : payload.items || []);
+        const payload = response.data.data;
+        setSubjectAreas(normalizeSubjectAreaItems(payload));
       } else {
         throw new Error(response.data?.message || 'Failed to fetch subject areas');
       }

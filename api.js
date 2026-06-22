@@ -1,4 +1,4 @@
-﻿/**
+/**
  * File source thuộc hệ thống FE ResearchPulse.
  *
  * File: shared\services\api.js
@@ -22,6 +22,20 @@ const api = axios.create({
   },
   withCredentials: true
 });
+
+// Interceptor gửi token kèm request
+api.interceptors.request.use(
+  (config) => {
+    const token = useAuthStore.getState().token;
+    if (token) {
+      config.headers['Authorization'] = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
 
 // Interceptor xử lý response và tự động refresh token khi gặp lỗi 401
 api.interceptors.response.use(

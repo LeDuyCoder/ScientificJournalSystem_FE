@@ -33,6 +33,14 @@ pnpm-debug.log*
 FRONTEND_STRUCTURE_REVIEW_GUIDE_UPDATED.md
 DESIGN_SYSTEM.md
 scratch
+tasks
+.agents
+query_users.js
+skills-lock.json
+test_api_call.js
+update_password_and_login.js
+AGENTS.md
+
 # coverage
 coverage
 

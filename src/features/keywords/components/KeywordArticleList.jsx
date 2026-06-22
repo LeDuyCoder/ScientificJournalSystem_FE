@@ -3,36 +3,18 @@
  *
  * File: features\keywords\components\KeywordArticleList.jsx
  */
-import { Pagination } from 'react-bootstrap';
 import { Icon } from '@iconify/react';
 import LoadingSkeleton from '../../../shared/components/LoadingSkeleton';
+import AdminPagination from '../../../shared/components/Pagination';
 import KeywordArticleItem from './KeywordArticleItem';
 
 /**
  * Danh sách bài báo theo keyword với trạng thái và phân trang.
  */
 export default function KeywordArticleList({ articles, loading, error, pagination, onPageChange, onViewDetail, onRetry }) {
-  const totalPages = pagination?.total_pages || 1;
+  const totalItems = pagination?.total || pagination?.total_items || pagination?.totalItems || 0;
   const currentPage = pagination?.page || 1;
-
-  const renderPagination = () => {
-    if (totalPages <= 1) return null;
-    const pages = [];
-    const start = Math.max(1, currentPage - 2);
-    const end = Math.min(totalPages, currentPage + 2);
-
-    pages.push(<Pagination.Prev key="prev" disabled={currentPage === 1} onClick={() => onPageChange(currentPage - 1)} />);
-    if (start > 1) pages.push(<Pagination.Item key={1} onClick={() => onPageChange(1)}>1</Pagination.Item>);
-    if (start > 2) pages.push(<Pagination.Ellipsis key="start" disabled />);
-    Array.from({ length: end - start + 1 }, (_, index) => start + index).forEach((pageNumber) => {
-      pages.push(<Pagination.Item key={pageNumber} active={pageNumber === currentPage} onClick={() => onPageChange(pageNumber)}>{pageNumber}</Pagination.Item>);
-    });
-    if (end < totalPages - 1) pages.push(<Pagination.Ellipsis key="end" disabled />);
-    if (end < totalPages) pages.push(<Pagination.Item key={totalPages} onClick={() => onPageChange(totalPages)}>{totalPages}</Pagination.Item>);
-    pages.push(<Pagination.Next key="next" disabled={currentPage === totalPages} onClick={() => onPageChange(currentPage + 1)} />);
-
-    return <Pagination className="keyword-article-pagination justify-content-center mt-4 mb-0">{pages}</Pagination>;
-  };
+  const limit = pagination?.limit || pagination?.page_size || 10;
 
   if (loading) {
     return (
@@ -77,7 +59,15 @@ export default function KeywordArticleList({ articles, loading, error, paginatio
           <KeywordArticleItem key={article.article_id} article={article} onViewDetail={onViewDetail} />
         ))}
       </div>
-      {renderPagination()}
+      {totalItems > limit && (
+        <AdminPagination
+          totalItems={totalItems}
+          currentPage={currentPage}
+          limit={limit}
+          onPageChange={onPageChange}
+          entityName="bài báo"
+        />
+      )}
     </>
   );
 }

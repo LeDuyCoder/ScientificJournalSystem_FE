@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import Icon from '../../../shared/components/Icon';
+import ROUTES from '../../../app/routes/routePaths';
 
 export default function ForgotPasswordSuccess({ onResend, isLoading }) {
   const [countdown, setCountdown] = useState(60);
@@ -58,7 +59,7 @@ export default function ForgotPasswordSuccess({ onResend, isLoading }) {
         <div className="w-100" style={{ height: '1px', background: 'var(--border)' }} />
 
         <Link 
-          to="/login" 
+          to={ROUTES.LOGIN} 
           className="text-decoration-none text-sm font-semibold py-2" 
           style={{ color: 'var(--btn-dark)' }}
         >

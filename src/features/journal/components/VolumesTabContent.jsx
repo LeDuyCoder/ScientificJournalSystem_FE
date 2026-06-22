@@ -8,6 +8,7 @@ import { Spinner, Button } from 'react-bootstrap';
 import { Icon } from '@iconify/react';
 import { useNavigate } from 'react-router-dom';
 import LoadingSkeleton from '../../../shared/components/LoadingSkeleton';
+import AdminPagination from '../../../shared/components/Pagination';
 
 const MONTH_NAMES = [
   '', 'Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4',
@@ -49,38 +50,22 @@ export default function VolumesTabContent({
     navigate(`/articles?${query.toString()}`);
   };
 
-  /** Render compact pagination controls. */
-  const renderPagination = (pagination, onPageChange, prefix) => {
-    const totalPages = pagination?.total_pages || 1;
+  /** Render shared pagination controls with API pagination metadata. */
+  const renderPagination = (pagination, onPageChange, entityName) => {
+    const totalItems = pagination?.total || pagination?.total_items || pagination?.totalItems || 0;
     const currentPage = pagination?.page || 1;
-    if (totalPages <= 1) return null;
+    const limit = pagination?.limit || pagination?.page_size || 10;
 
-    const pages = [];
-    const startPage = Math.max(1, currentPage - 1);
-    const endPage = Math.min(totalPages, currentPage + 1);
-
-    if (startPage > 1) pages.push(1);
-    if (startPage > 2) pages.push('ellipsis-start');
-    for (let page = startPage; page <= endPage; page += 1) pages.push(page);
-    if (endPage < totalPages - 1) pages.push('ellipsis-end');
-    if (endPage < totalPages) pages.push(totalPages);
+    if (totalItems <= limit) return null;
 
     return (
-      <div className="d-flex align-items-center justify-content-center gap-1 flex-wrap mt-3">
-        <button className="journal-page-btn" type="button" disabled={currentPage <= 1} onClick={() => onPageChange(currentPage - 1)}>
-          <Icon icon="lucide:chevron-left" width="14" />
-        </button>
-        {pages.map((page) => page.toString().startsWith('ellipsis') ? (
-          <span key={`${prefix}-${page}`} className="px-1 text-muted-custom">...</span>
-        ) : (
-          <button key={`${prefix}-${page}`} className={`journal-page-btn ${page === currentPage ? 'is-active' : ''}`} type="button" onClick={() => onPageChange(page)}>
-            {page}
-          </button>
-        ))}
-        <button className="journal-page-btn" type="button" disabled={currentPage >= totalPages} onClick={() => onPageChange(currentPage + 1)}>
-          <Icon icon="lucide:chevron-right" width="14" />
-        </button>
-      </div>
+      <AdminPagination
+        totalItems={totalItems}
+        currentPage={currentPage}
+        limit={limit}
+        onPageChange={onPageChange}
+        entityName={entityName}
+      />
     );
   };
 
@@ -196,7 +181,7 @@ export default function VolumesTabContent({
                     {renderPagination(
                       issuePagination,
                       (nextPage) => onIssuePageChange && onIssuePageChange(volumeId, nextPage),
-                      `issue-${volumeId}`
+                      'issue'
                     )}
                   </div>
                 )}

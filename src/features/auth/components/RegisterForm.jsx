@@ -1,4 +1,4 @@
-﻿/**
+/**
  * File source thuộc hệ thống FE ResearchPulse.
  *
  * File: features\auth\components\RegisterForm.jsx
@@ -6,6 +6,7 @@
 import { useState } from 'react';
 import { Form, Row, Col } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import ROUTES from '../../../app/routes/routePaths';
 import InputField from '../../../shared/components/InputField';
 import PasswordInput from './PasswordInput';
 import DateInput from './DateInput';
@@ -274,7 +275,7 @@ export default function RegisterForm({ onSubmit, isLoading, apiError }) {
       {/* Link Redirect to Login */}
       <div className="text-center mt-4 text-sm font-medium">
         <span className="text-muted-custom" style={{ color: '#94a3b8 !important' }}>Đã có tài khoản? </span>
-        <Link to="/login" className="text-decoration-none" style={{ color: 'var(--primary)', fontWeight: 600 }}>
+        <Link to={ROUTES.LOGIN} className="text-decoration-none" style={{ color: 'var(--primary)', fontWeight: 600 }}>
           Đăng nhập
         </Link>
       </div>

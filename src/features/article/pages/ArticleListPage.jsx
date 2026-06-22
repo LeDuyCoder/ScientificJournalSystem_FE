@@ -3,7 +3,7 @@
  *
  * File: features\article\pages\ArticleListPage.jsx
  */
-import { Container, Pagination, Modal, Button, Breadcrumb } from 'react-bootstrap';
+import { Container, Modal, Button, Breadcrumb } from 'react-bootstrap';
 import { Icon } from '@iconify/react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../../landing/components/Header';
@@ -11,6 +11,7 @@ import useArticleList from '../hooks/useArticleList';
 import ArticleStatsCards from '../components/ArticleStatsCards';
 import ArticleFilterBar from '../components/ArticleFilterBar';
 import ArticleTable from '../components/ArticleTable';
+import AdminPagination from '../../../shared/components/Pagination';
 import './ArticleListPage.css';
 
 export default function ArticleListPage() {
@@ -32,81 +33,6 @@ export default function ArticleListPage() {
     handleAuthRedirect
   } = useArticleList();
 
-  // Render pagination items custom
-  const renderPagination = () => {
-    if (totalPages <= 1) return null;
-    const items = [];
-
-    // Nút Trước
-    items.push(
-      <Pagination.Prev
-        key="prev"
-        disabled={currentPage === 1}
-        onClick={() => handlePageChange(currentPage - 1)}
-      />
-    );
-
-    // Xác định khoảng trang hiển thị
-    const maxButtons = 5;
-    let startPage = Math.max(1, currentPage - Math.floor(maxButtons / 2));
-    let endPage = Math.min(totalPages, startPage + maxButtons - 1);
-
-    if (endPage - startPage + 1 < maxButtons) {
-      startPage = Math.max(1, endPage - maxButtons + 1);
-    }
-
-    // Trang 1 nếu có ellipsis
-    if (startPage > 1) {
-      items.push(
-        <Pagination.Item key={1} active={1 === currentPage} onClick={() => handlePageChange(1)}>
-          1
-        </Pagination.Item>
-      );
-      if (startPage > 2) {
-        items.push(<Pagination.Ellipsis key="ellipsis-start" disabled />);
-      }
-    }
-
-    // Các trang ở giữa
-    for (let p = startPage; p <= endPage; p++) {
-      items.push(
-        <Pagination.Item
-          key={p}
-          active={p === currentPage}
-          onClick={() => handlePageChange(p)}
-        >
-          {p}
-        </Pagination.Item>
-      );
-    }
-
-    // Trang cuối nếu có ellipsis
-    if (endPage < totalPages) {
-      if (endPage < totalPages - 1) {
-        items.push(<Pagination.Ellipsis key="ellipsis-end" disabled />);
-      }
-      items.push(
-        <Pagination.Item key={totalPages} active={totalPages === currentPage} onClick={() => handlePageChange(totalPages)}>
-          {totalPages}
-        </Pagination.Item>
-      );
-    }
-
-    // Nút Tiếp
-    items.push(
-      <Pagination.Next
-        key="next"
-        disabled={currentPage === totalPages}
-        onClick={() => handlePageChange(currentPage + 1)}
-      />
-    );
-
-    return (
-      <Pagination className="justify-content-center m-0 article-pagination">
-        {items}
-      </Pagination>
-    );
-  };
 
   return (
     <div className="article-list-page grid-bg">
@@ -191,9 +117,15 @@ export default function ArticleListPage() {
         />
 
         {/* Phân trang */}
-        <div className="mt-4">
-          {renderPagination()}
-        </div>
+        {total > 0 && totalPages > 1 && (
+          <AdminPagination
+            totalItems={total}
+            currentPage={currentPage}
+            limit={10}
+            onPageChange={handlePageChange}
+            entityName="bài báo"
+          />
+        )}
       </Container>
 
       {/* Warning Auth Modal */}

@@ -1,9 +1,3 @@
-/**
- * File source thuộc hệ thống FE ResearchPulse.
- *
- * File: app/routes/AppRoutes.jsx
- */
-
 import { Routes, Route } from 'react-router-dom';
 
 import LandingPage from '../../features/landing/pages/LandingPage';
@@ -20,6 +14,7 @@ import ProfilePage from '../../features/profile/pages/ProfilePage';
 import VerifyEmailPage from '../../features/auth/pages/VerifyEmailPage';
 
 import ProtectedRoute from './ProtectedRoute';
+import AdminRoute from './AdminRoute';
 import PublicRoute from './PublicRoute';
 import AuthLayoutWithUser from '../layouts/AuthLayoutWithUser';
 
@@ -27,6 +22,12 @@ import ProjectListPage from '../../features/project/pages/ProjectListPage';
 import CreateProjectPage from '../../features/project/pages/CreateProjectPage';
 import EditProjectPage from '../../features/project/pages/EditProjectPage';
 import ProjectDetailPage from '../../features/project/pages/ProjectDetailPage';
+
+import AdminLayout from '../layouts/AdminLayout';
+import UserDirectoryPage from '../../features/admin/pages/account/UserDirectoryPage';
+import AddNewAccountPage from '../../features/admin/pages/account/AddNewAccountPage';
+import UpdateUserAccountPage from '../../features/admin/pages/account/UpdateUserAccountPage';
+import SubmitArticlePage from '../../features/admin/pages/article-submission/SubmitArticlePage';
 
 import {
   KeywordListPage,
@@ -38,11 +39,20 @@ import AuthorDetailPage from '../../features/author/pages/AuthorDetailPage';
 import AuthorListPage from '../../features/author/pages/AuthorListPage';
 
 import TopicDetailPage from '../../features/topic/pages/TopicDetailPage';
+import AdminDashboardPage from '../../features/admin/pages/AdminDashboardPage';
+import UpdateArticlePage from '../../features/admin/pages/UpdateArticlePage';
+import ArticleRepositoryPage from '../../features/admin/pages/ArticleRepositoryPage';
 
 import ForgotPasswordPage from '../../features/auth/pages/ForgotPasswordPage';
 import ResetPasswordPage from '../../features/auth/pages/ResetPasswordPage';
 
 import GeographyPage from '../../features/zone/pages/GeographyPage';
+
+// --- ĐỒNG BỘ ĐƯỜNG DẪN IMPORT THEO CHUẨN CỦA NHÓM ---
+import JournalDirectoryPage from '../../features/admin/pages/JournalDirectoryPage';
+import RepositoryManagementPage from '../../features/admin/pages/RepositoryManagementPage';
+import EditJournalPage from '../../features/admin/pages/EditJournalPage';
+import VolumeArchivePage from '../../features/admin/pages/VolumeArchivePage';
 
 /**
  * Nơi khai báo route chính của ứng dụng.
@@ -57,7 +67,11 @@ export default function AppRoutes() {
     <Routes>
       <Route path="/" element={<LandingPage />} />
 
-      {/* Public routes */}
+      <Route element={<ProtectedRoute />}>
+        <Route path="/dashboard" element={<DashboardPage />} />
+        <Route path="/authors/leaderboard" element={<AuthorLeaderboardPage />} />
+      </Route>
+
       <Route element={<PublicRoute />}>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
@@ -65,10 +79,11 @@ export default function AppRoutes() {
 
       {/* Routes sử dụng layout chung */}
       <Route element={<AuthLayoutWithUser />}>
-        {/* Protected routes */}
+        
+        {/* 🔐 Tuyến đường yêu cầu bảo mật (Đã đăng nhập) */}
         <Route element={<ProtectedRoute />}>
           <Route path="/dashboard" element={<DashboardPage />} />
-
+          
           <Route path="/projects" element={<ProjectListPage />} />
           <Route path="/projects/create" element={<CreateProjectPage />} />
           <Route path="/projects/:id/edit" element={<EditProjectPage />} />
@@ -78,6 +93,26 @@ export default function AppRoutes() {
             path="/authors/leaderboard"
             element={<AuthorLeaderboardPage />}
           />
+
+          {/* Admin layouts & pages (Quản trị viên) - thống nhất namespace /admin/... */}
+          <Route element={<AdminRoute />}>
+            <Route element={<AdminLayout />}>
+              <Route path="/admin/dashboard" element={<AdminDashboardPage />} />
+              <Route path="/admin/users" element={<UserDirectoryPage />} />
+              <Route path="/admin/users/create" element={<AddNewAccountPage />} />
+              <Route path="/admin/users/:id/edit" element={<UpdateUserAccountPage />} />
+
+              <Route path="/admin/articles" element={<ArticleRepositoryPage />} />
+              <Route path="/admin/articles/create" element={<SubmitArticlePage />} />
+              <Route path="/admin/articles/:id" element={<UpdateArticlePage />} />
+
+              {/* Quản lý cấu trúc tạp chí dành cho Admin (Issue #76) */}
+              <Route path="/admin/journals" element={<JournalDirectoryPage />} />
+              <Route path="/admin/journals/repository" element={<RepositoryManagementPage />} />
+              <Route path="/admin/journals/archive" element={<VolumeArchivePage />} />
+              <Route path="/admin/journals/:id/edit" element={<EditJournalPage />} />
+            </Route>
+          </Route>
         </Route>
 
         {/* Public pages inside layout */}
@@ -111,6 +146,19 @@ export default function AppRoutes() {
         <Route path="/geography" element={<GeographyPage />} />
 
         <Route path="/topics/:topicId" element={<TopicDetailPage />} />
+      </Route>
+
+      <Route path="/topics/:topicId" element={<TopicDetailPage />} />
+
+      {/* TODO: route tạm để preview UI Admin không cần login.
+          Xóa route này khi vấn đề đăng nhập đã được xử lý xong. */}
+      <Route element={<AdminLayout />}>
+        <Route path="/admin-preview" element={<AdminDashboardPage />} />
+        <Route path="/admin-preview/articles/:id" element={<UpdateArticlePage />} />
+        <Route path="/admin-preview/journals" element={<JournalDirectoryPage />} />
+        <Route path="/admin-preview/journals/repository" element={<RepositoryManagementPage />} />
+        <Route path="/admin-preview/journals/archive" element={<VolumeArchivePage />} />
+        <Route path="/admin-preview/journals/:id/edit" element={<EditJournalPage />} />
       </Route>
 
       <Route path="*" element={<LandingPage />} />

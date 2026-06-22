@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link, useParams } from 'react-router-dom';
+import ROUTES from '../../../app/routes/routePaths';
 import projectService from '../services/projectService';
 import { Icon } from '@iconify/react';
 import { getSubjectAreasApi, getSubjectCategoriesApi } from '../../catalog/api/catalogApi';
@@ -38,9 +39,18 @@ const EditProjectPage = () => {
           projectService.getProjectById(id)
         ]);
         
-        if (areasRes?.data) setAreas(areasRes.data.data || areasRes.data);
-        if (catsRes?.data) setCategories(catsRes.data.data || catsRes.data);
-        if (journalsRes?.data) setJournals(journalsRes.data.data || journalsRes.data);
+        if (areasRes?.data) {
+          const rawAreas = areasRes.data.data || areasRes.data;
+          setAreas(Array.isArray(rawAreas) ? rawAreas : (rawAreas?.items || []));
+        }
+        if (catsRes?.data) {
+          const rawCats = catsRes.data.data || catsRes.data;
+          setCategories(Array.isArray(rawCats) ? rawCats : (rawCats?.items || []));
+        }
+        if (journalsRes?.data) {
+          const rawJournals = journalsRes.data.data || journalsRes.data;
+          setJournals(Array.isArray(rawJournals) ? rawJournals : (rawJournals?.items || []));
+        }
 
         // Pre-fill
         if (projectRes?.data) {
@@ -63,13 +73,13 @@ const EditProjectPage = () => {
   }, [id]);
 
   // Format data for MultiSelect
-  const categoryOptions = categories
-    .filter(c => !subjectAreaId || String(c.subject_area_id) === String(subjectAreaId))
-    .map(c => ({ value: c.id || c.subject_category_id, label: c.name || c.category_name }));
+  const categoryOptions = (Array.isArray(categories) ? categories : [])
+    .filter(c => c && (!subjectAreaId || String(c.subject_area_id) === String(subjectAreaId)))
+    .map(c => ({ value: c.id || c.subject_category_id, label: c.name || c.category_name || c.display_name || '' }));
     
-  const journalOptions = journals
-    .filter(j => !subjectAreaId || String(j.subject_area_id) === String(subjectAreaId))
-    .map(j => ({ value: j.id || j.journal_id, label: j.name || j.title }));
+  const journalOptions = (Array.isArray(journals) ? journals : [])
+    .filter(j => j && (!subjectAreaId || String(j.subject_area_id) === String(subjectAreaId)))
+    .map(j => ({ value: j.id || j.journal_id, label: j.name || j.title || j.display_name || '' }));
 
   // Handle Area Change
   const handleAreaChange = (e) => {
@@ -98,7 +108,7 @@ const EditProjectPage = () => {
       
       const response = await projectService.updateProject(id, payload);
       if (response && response.success !== false) {
-        navigate(`/projects/${id}`);
+        navigate(ROUTES.PROJECT_DETAIL.replace(':id', id));
       } else {
         setError(response?.message || 'Cập nhật dự án thất bại');
       }
@@ -123,9 +133,9 @@ const EditProjectPage = () => {
       <div className="container mx-auto" style={{ maxWidth: '650px', marginTop: '20px' }}>
         <nav aria-label="breadcrumb" className="mb-4">
           <ol className="breadcrumb mb-2 text-muted-custom small">
-            <li className="breadcrumb-item"><Link to="/dashboard" className="text-decoration-none text-muted-custom hover-primary">Tổng quan</Link></li>
-            <li className="breadcrumb-item"><Link to="/projects" className="text-decoration-none text-muted-custom hover-primary">Dự án theo dõi</Link></li>
-            <li className="breadcrumb-item"><Link to={`/projects/${id}`} className="text-decoration-none text-muted-custom hover-primary">{title || 'Dự án'}</Link></li>
+            <li className="breadcrumb-item"><Link to={ROUTES.DASHBOARD} className="text-decoration-none text-muted-custom hover-primary">Tổng quan</Link></li>
+            <li className="breadcrumb-item"><Link to={ROUTES.PROJECTS} className="text-decoration-none text-muted-custom hover-primary">Dự án theo dõi</Link></li>
+            <li className="breadcrumb-item"><Link to={ROUTES.PROJECT_DETAIL.replace(':id', id)} className="text-decoration-none text-muted-custom hover-primary">{title || 'Dự án'}</Link></li>
             <li className="breadcrumb-item active" aria-current="page">Chỉnh sửa</li>
           </ol>
         </nav>

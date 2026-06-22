@@ -18,8 +18,8 @@
 
   --primary: #ff7a33; /* Accent / link cam */
   --primary-light: #fff0e8; /* Light tint của cam */
-  --btn-dark: #071a1c; /* Button đen xanh */
-  --q1-color: #2fc646; /* Q1 badge xanh lá */
+  --btn-dark: #071a1c; /* Button đen đậm */
+  --q1-color: #ff7a33; /* Q1 badge dùng accent cam */
 
   /* Compatibility aliases */
   --dark-bg: var(--bg-main);
@@ -455,3 +455,79 @@ th,
 .auth-required-register-btn:active {
   transform: translateY(0);
 }
+
+/* --- Account Module Form custom styling --- */
+.account-form-input {
+  background-color: #f1f5f9 !important;
+  border: none !important;
+  border-radius: 8px !important;
+  font-size: 0.88rem !important;
+  padding: 0.65rem 1rem !important;
+  color: var(--text-main) !important;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out !important;
+}
+
+input.account-form-input,
+select.account-form-input {
+  height: 46px !important;
+}
+
+.account-form-input::placeholder {
+  color: #94a3b8 !important;
+  opacity: 1 !important;
+}
+
+.account-form-input:focus {
+  background-color: #f1f5f9 !important;
+  outline: 0 !important;
+  box-shadow: 0 0 0 2px rgba(255, 122, 51, 0.25) !important;
+}
+
+.account-form-label {
+  font-size: 0.825rem !important;
+  font-weight: 600 !important;
+  color: #334155 !important;
+  margin-bottom: 6px !important;
+}
+
+.orange-switch-toggle .form-check-input {
+  cursor: pointer;
+  scale: 1.15;
+}
+
+.orange-switch-toggle .form-check-input:checked {
+  background-color: #ea580c !important;
+  border-color: #ea580c !important;
+}
+
+/* --- Premium Dropzone styling --- */
+.premium-dropzone {
+  border: 1.5px dashed #fdba74 !important;
+  background-color: #fafafa !important;
+  transition: all 0.2s ease-in-out !important;
+  min-height: 280px;
+  cursor: pointer;
+}
+.premium-dropzone.drag-active {
+  border: 2px dashed #ea580c !important;
+  background-color: #fff0e8 !important;
+}
+.premium-dropzone-icon-wrapper {
+  width: 56px;
+  height: 56px;
+  background-color: #fff0e8 !important;
+  color: #ea580c !important;
+}
+.premium-dropzone-btn {
+  border: 1px solid #ea580c !important;
+  color: #ea580c !important;
+  background-color: #ffffff !important;
+  font-size: 0.85rem !important;
+  font-weight: 700 !important;
+  transition: all 0.2s ease-in-out !important;
+}
+.premium-dropzone-btn:hover {
+  background-color: #ea580c !important;
+  color: #ffffff !important;
+}
+

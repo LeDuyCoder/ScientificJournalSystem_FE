@@ -1,6 +1,7 @@
 import React from 'react';
-import { Table, Card, Pagination, Button } from 'react-bootstrap';
+import { Table, Card, Button } from 'react-bootstrap';
 import { Icon } from '@iconify/react';
+import AdminPagination from '../../../shared/components/Pagination';
 
 export default function GeographyArticleList({ 
   articles = [], 
@@ -75,93 +76,7 @@ export default function GeographyArticleList({
     </tbody>
   );
 
-  // Custom pagination renderer
-  const renderPagination = () => {
-    if (totalPages <= 1) return null;
-    const items = [];
 
-    items.push(
-      <Pagination.Prev 
-        key="prev" 
-        disabled={page === 1}
-        onClick={() => onPageChange(page - 1)}
-        className="mx-0.5"
-      />
-    );
-
-    const maxButtons = 5;
-    let startPage = Math.max(1, page - Math.floor(maxButtons / 2));
-    let endPage = Math.min(totalPages, startPage + maxButtons - 1);
-
-    if (endPage - startPage + 1 < maxButtons) {
-      startPage = Math.max(1, endPage - maxButtons + 1);
-    }
-
-    if (startPage > 1) {
-      items.push(
-        <Pagination.Item key={1} active={1 === page} onClick={() => onPageChange(1)}>
-          1
-        </Pagination.Item>
-      );
-      if (startPage > 2) {
-        items.push(<Pagination.Ellipsis key="ellipsis-start" disabled />);
-      }
-    }
-
-    for (let p = startPage; p <= endPage; p++) {
-      items.push(
-        <Pagination.Item 
-          key={p} 
-          active={p === page} 
-          onClick={() => onPageChange(p)}
-        >
-          {p}
-        </Pagination.Item>
-      );
-    }
-
-    if (endPage < totalPages) {
-      if (endPage < totalPages - 1) {
-        items.push(<Pagination.Ellipsis key="ellipsis-end" disabled />);
-      }
-      items.push(
-        <Pagination.Item key={totalPages} active={totalPages === page} onClick={() => onPageChange(totalPages)}>
-          {totalPages}
-        </Pagination.Item>
-      );
-    }
-
-    items.push(
-      <Pagination.Next 
-        key="next" 
-        disabled={page === totalPages}
-        onClick={() => onPageChange(page + 1)}
-        className="mx-0.5"
-      />
-    );
-
-    return (
-      <Pagination 
-        className="justify-content-center m-0 custom-pagination mt-4"
-        style={{
-          '--bs-pagination-bg': 'var(--bg-card)',
-          '--bs-pagination-border-color': 'var(--border)',
-          '--bs-pagination-color': 'var(--text-muted)',
-          '--bs-pagination-hover-color': 'var(--primary)',
-          '--bs-pagination-hover-bg': 'var(--bg-main)',
-          '--bs-pagination-hover-border-color': 'var(--border)',
-          '--bs-pagination-active-bg': 'var(--primary)',
-          '--bs-pagination-active-border-color': 'var(--primary)',
-          '--bs-pagination-active-color': '#ffffff',
-          '--bs-pagination-disabled-bg': 'var(--bg-main)',
-          '--bs-pagination-disabled-color': 'var(--text-muted)',
-          '--bs-pagination-disabled-border-color': 'var(--border)'
-        }}
-      >
-        {items}
-      </Pagination>
-    );
-  };
 
   return (
     <div className="mt-4 p-4 journal-dark-card">
@@ -389,8 +304,15 @@ export default function GeographyArticleList({
             </div>
           </div>
 
-          {/* Render pagination */}
-          {renderPagination()}
+          {total > 0 && totalPages > 1 && (
+            <AdminPagination
+              totalItems={total}
+              currentPage={page}
+              limit={10}
+              onPageChange={onPageChange}
+              entityName="bài báo"
+            />
+          )}
         </>
       )}
     </div>

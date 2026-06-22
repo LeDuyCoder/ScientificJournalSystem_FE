@@ -3,13 +3,14 @@
  *
  * File: features\journal\pages\JournalListPage.jsx
  */
-import { Container, Pagination } from 'react-bootstrap';
+import { Container } from 'react-bootstrap';
 import { Icon } from '@iconify/react';
 import Header from '../../landing/components/Header';
 import JournalStatsCards from '../components/JournalStatsCards';
 import JournalSearchBar from '../components/JournalSearchBar';
 import JournalTable from '../components/JournalTable';
 import useJournalList from '../hooks/useJournalList';
+import AdminPagination from '../../../shared/components/Pagination';
 import './JournalListPage.css';
 
 export default function JournalListPage() {
@@ -39,32 +40,6 @@ export default function JournalListPage() {
     setIsOpenAccess('all');
     // Force reset page and refetch via hook states indirectly
     window.location.reload();
-  };
-
-  // Build Pagination list items
-  const renderPaginationItems = () => {
-    const items = [];
-    const maxPageButtons = 5;
-    let startPage = Math.max(1, pagination.page - Math.floor(maxPageButtons / 2));
-    let endPage = Math.min(totalPages, startPage + maxPageButtons - 1);
-
-    if (endPage - startPage + 1 < maxPageButtons) {
-      startPage = Math.max(1, endPage - maxPageButtons + 1);
-    }
-
-    for (let p = startPage; p <= endPage; p++) {
-      items.push(
-        <Pagination.Item 
-          key={p} 
-          active={p === pagination.page}
-          onClick={() => handlePageChange(p)}
-          className="mx-0.5"
-        >
-          {p}
-        </Pagination.Item>
-      );
-    }
-    return items;
   };
 
   return (
@@ -145,19 +120,13 @@ export default function JournalListPage() {
 
             {/* Pagination Controls */}
             {journals.length > 0 && totalPages > 1 && (
-              <div className="d-flex justify-content-center mt-4">
-                <Pagination className="journal-pagination mb-0 gap-1">
-                  <Pagination.Prev 
-                    disabled={pagination.page === 1}
-                    onClick={() => handlePageChange(pagination.page - 1)}
-                  />
-                  {renderPaginationItems()}
-                  <Pagination.Next 
-                    disabled={pagination.page === totalPages}
-                    onClick={() => handlePageChange(pagination.page + 1)}
-                  />
-                </Pagination>
-              </div>
+              <AdminPagination
+                totalItems={pagination.total}
+                currentPage={pagination.page}
+                limit={pagination.limit}
+                onPageChange={handlePageChange}
+                entityName="tạp chí"
+              />
             )}
           </>
         )}
