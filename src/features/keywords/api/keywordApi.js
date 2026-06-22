@@ -1,4 +1,4 @@
-﻿/**
+/**
  * File source thuộc hệ thống FE ResearchPulse.
  *
  * File: features\keywords\api\keywordApi.js
@@ -39,6 +39,16 @@ const keywordApi = {
    */
   getArticlesByKeyword(keywordId, params) {
     return api.get(`/keywords/${keywordId}/articles`, { params });
+  },
+
+  /**
+   * Tạo từ khóa mới.
+   *
+   * @param {Object} data - Dữ liệu từ khóa.
+   * @returns {Promise} Axios response từ backend.
+   */
+  createKeyword(data) {
+    return api.post(`/keywords`, data);
   },
 };
 

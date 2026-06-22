@@ -3,9 +3,11 @@ import { useNavigate, Link, useParams } from 'react-router-dom';
 import ROUTES from '../../../app/routes/routePaths';
 import projectService from '../services/projectService';
 import { Icon } from '@iconify/react';
-import { getSubjectAreasApi, getSubjectCategoriesApi } from '../../catalog/api/catalogApi';
-import { searchJournalsApi } from '../../journal/api/journalApi';
-import MultiSelectDropdown from '../../../shared/components/Select/MultiSelectDropdown';
+import { getSubjectAreasApi } from '../../catalog/api/catalogApi';
+import keywordApi from '../../keywords/api/keywordApi';
+import keywordService from '../../keyword/services/keywordService';
+import SearchableKeywordInput from '../../../shared/components/Input/SearchableKeywordInput';
+import Header from '../../landing/components/Header';
 
 const EditProjectPage = () => {
   const { id } = useParams();
@@ -14,51 +16,49 @@ const EditProjectPage = () => {
   // Form State
   const [title, setTitle] = useState('');
   const [subjectAreaId, setSubjectAreaId] = useState('');
-  const [subjectCategoryIds, setSubjectCategoryIds] = useState([]);
-  const [journalIds, setJournalIds] = useState([]);
+  const [keywords, setKeywords] = useState([]);
   
   // API Data State
   const [areas, setAreas] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [journals, setJournals] = useState([]);
+  const [suggestedKeywords, setSuggestedKeywords] = useState([]);
   
   // Loading States
   const [loading, setLoading] = useState(false);
   const [loadingData, setLoadingData] = useState(true);
+  const [loadingSuggestions, setLoadingSuggestions] = useState(false);
   const [error, setError] = useState(null);
 
-  // Initial Data Fetch
   useEffect(() => {
     const fetchData = async () => {
       setLoadingData(true);
       try {
-        const [areasRes, catsRes, journalsRes, projectRes] = await Promise.all([
+        const [areasRes, projectRes] = await Promise.all([
           getSubjectAreasApi(),
-          getSubjectCategoriesApi(),
-          searchJournalsApi({ limit: 500 }),
           projectService.getProjectById(id)
         ]);
         
-        if (areasRes?.data) {
-          const rawAreas = areasRes.data.data || areasRes.data;
-          setAreas(Array.isArray(rawAreas) ? rawAreas : (rawAreas?.items || []));
-        }
-        if (catsRes?.data) {
-          const rawCats = catsRes.data.data || catsRes.data;
-          setCategories(Array.isArray(rawCats) ? rawCats : (rawCats?.items || []));
-        }
-        if (journalsRes?.data) {
-          const rawJournals = journalsRes.data.data || journalsRes.data;
-          setJournals(Array.isArray(rawJournals) ? rawJournals : (rawJournals?.items || []));
-        }
+        if (areasRes?.data) setAreas(areasRes.data?.data?.items || areasRes.data?.data || areasRes.data || []);
 
         // Pre-fill
-        if (projectRes?.data) {
+        if (projectRes && projectRes.data) {
           const p = projectRes.data;
           setTitle(p.title || '');
           setSubjectAreaId(p.subject_area?.subject_area_id || p.subject_area || '');
-          setSubjectCategoryIds(p.subject_categories?.map(c => c.subject_category_id || c.id) || []);
-          setJournalIds(p.journals?.map(j => j.journal_id || j.id) || p.journal_ids || []);
+          
+          if (p.watched_keywords && Array.isArray(p.watched_keywords) && p.watched_keywords.length > 0) {
+            setKeywords(p.watched_keywords);
+          } else {
+            try {
+              const trendingList = await keywordService.getTrendingKeywords(id, 100);
+              if (trendingList && trendingList.length > 0) {
+                setKeywords(trendingList.map(t => t.keyword || t.display_name));
+              } else if (p.project_keywords) {
+                setKeywords(p.project_keywords.map(pk => pk.keyword_text || pk.keyword || pk));
+              }
+            } catch (e) {
+              console.error('Error fetching trending keywords:', e);
+            }
+          }
         }
       } catch (err) {
         console.error('Lỗi tải dữ liệu dự án:', err);
@@ -72,20 +72,39 @@ const EditProjectPage = () => {
     }
   }, [id]);
 
-  // Format data for MultiSelect
-  const categoryOptions = (Array.isArray(categories) ? categories : [])
-    .filter(c => c && (!subjectAreaId || String(c.subject_area_id) === String(subjectAreaId)))
-    .map(c => ({ value: c.id || c.subject_category_id, label: c.name || c.category_name || c.display_name || '' }));
-    
-  const journalOptions = (Array.isArray(journals) ? journals : [])
-    .filter(j => j && (!subjectAreaId || String(j.subject_area_id) === String(subjectAreaId)))
-    .map(j => ({ value: j.id || j.journal_id, label: j.name || j.title || j.display_name || '' }));
+  useEffect(() => {
+    const fetchSuggestions = async () => {
+      setLoadingSuggestions(true);
+      try {
+        const res = await keywordApi.getKeywords({ limit: 10 });
+        const items = res?.data?.data?.items || res?.data?.data || res?.data || [];
+        setSuggestedKeywords(Array.isArray(items) ? items.map(k => k.display_name || k.name).filter(Boolean) : []);
+      } catch (err) {
+        console.error('Lỗi tải gợi ý từ khóa:', err);
+      } finally {
+        setLoadingSuggestions(false);
+      }
+    };
+    fetchSuggestions();
+  }, []);
+
+  const selectedAreaObj = areas.find(a => String(a.id || a.subject_area_id) === String(subjectAreaId));
+  const selectedAreaName = selectedAreaObj ? (selectedAreaObj.display_name || selectedAreaObj.name || selectedAreaObj.area_name) : '';
+
+
+  const removeKeyword = (kw) => {
+    setKeywords(keywords.filter(k => k !== kw));
+  };
+  
+  const addSuggestedKeyword = (kw) => {
+    if (!keywords.includes(kw)) {
+      setKeywords([...keywords, kw]);
+    }
+  };
 
   // Handle Area Change
   const handleAreaChange = (e) => {
     setSubjectAreaId(e.target.value);
-    setSubjectCategoryIds([]);
-    setJournalIds([]);
   };
 
   const handleSubmit = async (e) => {
@@ -99,18 +118,20 @@ const EditProjectPage = () => {
     setError(null);
 
     try {
-      const payload = {
+      // 1. Cập nhật thông tin dự án (không kèm keywords vì BE đã revert)
+      const res = await projectService.updateProject(id, {
         title: title.trim(),
         subject_area_id: parseInt(subjectAreaId, 10),
-        subject_category_ids: subjectCategoryIds.map(id => parseInt(id, 10)),
-        journal_ids: journalIds.map(id => parseInt(id, 10))
-      };
-      
-      const response = await projectService.updateProject(id, payload);
-      if (response && response.success !== false) {
-        navigate(ROUTES.PROJECT_DETAIL.replace(':id', id));
+        subject_category_ids: [],
+        journal_ids: [],
+      });
+
+      // 2. Đồng bộ keywords từ Frontend
+      if (res && res.success !== false) {
+        await keywordService.syncProjectKeywordsFEOnly(id, keywords);
+        navigate(`/projects/${id}`);
       } else {
-        setError(response?.message || 'Cập nhật dự án thất bại');
+        setError(res?.message || 'Cập nhật dự án thất bại');
       }
     } catch (err) {
       console.error('Error updating project:', err);
@@ -129,21 +150,23 @@ const EditProjectPage = () => {
   }
 
   return (
-    <div className="container-fluid py-4 grid-bg min-vh-100">
-      <div className="container mx-auto" style={{ maxWidth: '650px', marginTop: '20px' }}>
+    <div className="container-fluid pb-4 grid-bg min-vh-100 position-relative overflow-hidden" style={{ paddingTop: '80px' }}>
+      <div className="position-absolute w-100 h-100 radial-fade pe-none" style={{ top: 0, left: 0, zIndex: 0 }} />
+      <Header />
+      <div className="container mx-auto position-relative z-1" style={{ maxWidth: '650px', marginTop: '40px' }}>
         <nav aria-label="breadcrumb" className="mb-4">
           <ol className="breadcrumb mb-2 text-muted-custom small">
-            <li className="breadcrumb-item"><Link to={ROUTES.DASHBOARD} className="text-decoration-none text-muted-custom hover-primary">Tổng quan</Link></li>
-            <li className="breadcrumb-item"><Link to={ROUTES.PROJECTS} className="text-decoration-none text-muted-custom hover-primary">Dự án theo dõi</Link></li>
-            <li className="breadcrumb-item"><Link to={ROUTES.PROJECT_DETAIL.replace(':id', id)} className="text-decoration-none text-muted-custom hover-primary">{title || 'Dự án'}</Link></li>
-            <li className="breadcrumb-item active" aria-current="page">Chỉnh sửa</li>
+            <li className="breadcrumb-item"><Link to="/dashboard" className="text-decoration-none text-muted-custom hover-primary">Tổng quan</Link></li>
+            <li className="breadcrumb-item"><Link to="/projects" className="text-decoration-none text-muted-custom hover-primary">Dự án theo dõi</Link></li>
+            <li className="breadcrumb-item"><Link to={`/projects/${id}`} className="text-decoration-none text-muted-custom hover-primary">{title || 'Dự án'}</Link></li>
+            <li className="breadcrumb-item active" aria-current="page">Quản lý từ khóa</li>
           </ol>
         </nav>
 
-        <div className="glass-card p-4 p-md-5 rounded-4 shadow-sm border">
-          <div className="mb-4 text-center">
-            <h2 className="font-display fw-bold text-main mb-2">Chỉnh sửa dự án</h2>
-            <p className="text-muted-custom small mb-0">Cập nhật thông tin và lĩnh vực theo dõi của dự án nghiên cứu.</p>
+        <div className="glass-card p-4 p-md-5 rounded-4 shadow-sm border bg-white">
+          <div className="mb-4">
+            <h2 className="font-display fw-bold text-main mb-2" style={{ fontSize: '1.75rem' }}>Quản lý từ khóa theo dõi</h2>
+            <p className="text-muted-custom small mb-0">Thêm hoặc xóa các cụm từ khóa nghiên cứu để tối ưu hóa nguồn bài báo và cảnh báo liên quan.</p>
           </div>
 
           {error && (
@@ -154,72 +177,45 @@ const EditProjectPage = () => {
           )}
 
           <form onSubmit={handleSubmit}>
-            <div className="mb-4">
-              <label htmlFor="projectTitle" className="form-label fw-semibold text-main mb-2 small text-uppercase tracking-wider">
-                Tên Dự án <span className="text-danger">*</span>
-              </label>
-              <input
-                type="text"
-                className="form-control form-control-lg journal-dark-input"
-                id="projectTitle"
-                placeholder="Ví dụ: Nghiên cứu ứng dụng Deep Learning trong Y học"
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                disabled={loading}
-                required
-                style={{ backgroundColor: 'var(--bg-main)', color: 'var(--text-main)', borderColor: 'var(--border)' }}
-              />
-            </div>
-
-            <div className="mb-4">
-              <label htmlFor="subjectArea" className="form-label fw-semibold text-main mb-2 small text-uppercase tracking-wider">
-                Lĩnh vực nghiên cứu chính <span className="text-danger">*</span>
-              </label>
-              <select
-                className="form-select form-control-lg journal-dark-input"
-                id="subjectArea"
-                value={subjectAreaId}
-                onChange={handleAreaChange}
-                disabled={loading}
-                required
-                style={{ backgroundColor: 'var(--bg-main)', color: 'var(--text-main)', borderColor: 'var(--border)' }}
-              >
-                <option value="">-- Chọn lĩnh vực nghiên cứu --</option>
-                {areas.map(area => (
-                  <option key={area.id || area.subject_area_id} value={area.id || area.subject_area_id}>
-                    {area.name || area.area_name}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div className="mb-4">
-              <label className="form-label fw-semibold text-main mb-2 small text-uppercase tracking-wider">
-                Chuyên ngành (Subject Categories)
-              </label>
-              <MultiSelectDropdown
-                options={categoryOptions}
-                value={subjectCategoryIds}
-                onChange={setSubjectCategoryIds}
-                placeholder={!subjectAreaId ? "Vui lòng chọn lĩnh vực trước..." : "Chọn chuyên ngành..."}
-                disabled={!subjectAreaId || loading}
-              />
-            </div>
-
             <div className="mb-5">
-              <label className="form-label fw-semibold text-main mb-2 small text-uppercase tracking-wider">
-                Tạp chí theo dõi (Journals)
+              <label className="form-label fw-semibold text-muted-custom mb-2 small text-uppercase tracking-wider">
+                TỪ KHÓA ĐANG THEO DÕI
               </label>
-              <MultiSelectDropdown
-                options={journalOptions}
-                value={journalIds}
-                onChange={setJournalIds}
-                placeholder={!subjectAreaId ? "Vui lòng chọn lĩnh vực trước..." : "Chọn tạp chí..."}
-                disabled={!subjectAreaId || loading}
+              <SearchableKeywordInput
+                keywords={keywords}
+                placeholder="-- Chọn từ khóa theo dõi --"
+                disabled={loading}
+                onAddKeyword={(val) => {
+                  if (val && !keywords.includes(val)) {
+                    setKeywords([...keywords, val]);
+                  }
+                }}
+                onRemoveKeyword={removeKeyword}
               />
+
+              {suggestedKeywords.length > 0 && (
+                <div className="mt-3 small">
+                  <span className="text-muted-custom">Gợi ý từ khóa nổi bật: </span>
+                  {loadingSuggestions ? (
+                    <span className="text-muted-custom ms-2">Đang tải...</span>
+                  ) : (
+                    <div className="d-flex flex-wrap gap-2 mt-2">
+                      {suggestedKeywords.filter(k => !keywords.includes(k)).map(sugg => (
+                        <span 
+                          key={sugg} 
+                          className="badge rounded-pill bg-light text-dark border cursor-pointer hover-primary"
+                          onClick={() => addSuggestedKeyword(sugg)}
+                        >
+                          + {sugg}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
 
-            <div className="d-flex gap-3 justify-content-end pt-3 border-top">
+            <div className="d-flex gap-3 justify-content-end pt-4 mt-4 border-top">
               <button
                 type="button"
                 className="btn btn-light px-4 py-2 border fw-medium rounded-pill"
@@ -227,12 +223,12 @@ const EditProjectPage = () => {
                 disabled={loading}
                 style={{ color: 'var(--text-muted)' }}
               >
-                Hủy
+                Quay lại
               </button>
               <button
                 type="submit"
                 className="btn btn-primary px-4 py-2 btn-primary-glow fw-medium d-flex align-items-center justify-content-center gap-2 rounded-pill"
-                disabled={loading || !title.trim() || !subjectAreaId}
+                disabled={loading}
               >
                 {loading ? (
                   <>

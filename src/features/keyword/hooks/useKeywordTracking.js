@@ -12,6 +12,49 @@ export const useKeywordTracking = (projectId) => {
   const [error, setError] = useState(null);
   const [actionLoading, setActionLoading] = useState(false);
 
+  const [watchArticlesPagination, setWatchArticlesPagination] = useState({ page: 1, limit: 10, total: 0, totalPages: 1 });
+  
+  const [keywordArticles, setKeywordArticles] = useState([]);
+  const [keywordArticlesPagination, setKeywordArticlesPagination] = useState({ page: 1, limit: 10, total: 0, totalPages: 1 });
+
+  const fetchWatchArticles = useCallback(async (page = 1) => {
+    if (!projectId) return;
+    try {
+      const res = await keywordService.getWatchedKeywordArticles(projectId, page, 10, 'all');
+      const dataArr = res?.data || res?.articles || [];
+      setWatchArticles(Array.isArray(dataArr) ? dataArr : []);
+      if (res?.pagination) {
+        setWatchArticlesPagination({
+          page: res.pagination.page || 1,
+          limit: res.pagination.limit || 10,
+          total: res.pagination.total || 0,
+          totalPages: res.pagination.total_pages || 1,
+        });
+      }
+    } catch (err) {
+      console.error("Error fetching watch articles", err);
+    }
+  }, [projectId]);
+
+  const fetchKeywordArticles = useCallback(async (page = 1) => {
+    if (!projectId) return;
+    try {
+      const res = await keywordService.getWatchedKeywordArticles(projectId, page, 10, 'keyword');
+      const dataArr = res?.data || res?.articles || [];
+      setKeywordArticles(Array.isArray(dataArr) ? dataArr : []);
+      if (res?.pagination) {
+        setKeywordArticlesPagination({
+          page: res.pagination.page || 1,
+          limit: res.pagination.limit || 10,
+          total: res.pagination.total || 0,
+          totalPages: res.pagination.total_pages || 1,
+        });
+      }
+    } catch (err) {
+      console.error("Error fetching keyword articles", err);
+    }
+  }, [projectId]);
+
   /**
    * Lấy toàn bộ dữ liệu cần thiết cho màn hình Keyword Tracking
    */
@@ -36,8 +79,10 @@ export const useKeywordTracking = (projectId) => {
       setTrendingKeywords(Array.isArray(tData) ? tData : []);
 
       // 3. Get Watch Articles
-      const aData = await keywordService.getWatchedKeywordArticles(projectId);
-      setWatchArticles(Array.isArray(aData) ? aData : []);
+      await Promise.all([
+        fetchWatchArticles(1),
+        fetchKeywordArticles(1)
+      ]);
 
     } catch (err) {
       console.error("Error fetching keyword tracking data", err);
@@ -45,7 +90,7 @@ export const useKeywordTracking = (projectId) => {
     } finally {
       setLoading(false);
     }
-  }, [projectId]);
+  }, [projectId, fetchWatchArticles, fetchKeywordArticles]);
 
   useEffect(() => {
     fetchAllData();
@@ -91,12 +136,17 @@ export const useKeywordTracking = (projectId) => {
     project,
     trendingKeywords,
     watchArticles,
+    keywordArticles,
     watchedKeywords,
+    watchArticlesPagination,
+    keywordArticlesPagination,
     loading,
     error,
     actionLoading,
     addKeywordWatch,
     removeKeywordWatch,
-    refetch: fetchAllData
+    refetch: fetchAllData,
+    fetchWatchArticles,
+    fetchKeywordArticles
   };
 };

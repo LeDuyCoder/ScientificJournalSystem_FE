@@ -1,4 +1,4 @@
-﻿/**
+/**
  * File source thuộc hệ thống FE ResearchPulse.
  *
  * File: features\project\api\project.api.js
@@ -89,8 +89,10 @@ export const getTrendingKeywordsApi = (id, limit = 20, sortBy = 'count') => {
  * @param {number|string} id - Project ID
  * @returns {Promise} Axios promise
  */
-export const getWatchedKeywordArticlesApi = (id) => {
-  return api.get(`/projects/${id}/keywords/watch/articles`);
+export const getWatchedKeywordArticlesApi = (id, page = 1, limit = 10, filter = 'all') => {
+  return api.get(`/projects/${id}/keywords/watch/articles`, {
+    params: { page, limit, filter }
+  });
 };
 
 /**
@@ -100,7 +102,7 @@ export const getWatchedKeywordArticlesApi = (id) => {
  * @returns {Promise} Axios promise
  */
 export const watchKeywordsApi = (id, keywords) => {
-  return api.post(`/projects/${id}/keywords/watch`, { keywords });
+  return api.post(`/projects/${id}/keywords/watch`, { keyword_ids: keywords });
 };
 
 /**
@@ -110,7 +112,7 @@ export const watchKeywordsApi = (id, keywords) => {
  * @returns {Promise} Axios promise
  */
 export const updateWatchedKeywordsApi = (id, keywords) => {
-  return api.put(`/projects/${id}/keywords/watch`, { keywords });
+  return api.put(`/projects/${id}/keywords/watch`, { keyword_ids: keywords });
 };
 
 /**

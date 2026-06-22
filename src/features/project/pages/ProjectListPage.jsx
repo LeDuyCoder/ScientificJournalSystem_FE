@@ -6,6 +6,7 @@ import ProjectCard from '../components/ProjectCard';
 import EmptyState from '../../../shared/components/EmptyState';
 import LoadingSkeleton from '../../../shared/components/LoadingSkeleton';
 import { Icon } from '@iconify/react';
+import Header from '../../landing/components/Header';
 
 const ProjectListPage = () => {
   const navigate = useNavigate();
@@ -24,8 +25,10 @@ const ProjectListPage = () => {
   };
 
   return (
-    <div className="container-fluid py-4 grid-bg min-vh-100">
-      <div className="container mx-auto" style={{ maxWidth: '1200px', marginTop: '20px' }}>
+    <div className="container-fluid pb-4 grid-bg min-vh-100 position-relative overflow-hidden" style={{ paddingTop: '80px' }}>
+      <div className="position-absolute w-100 h-100 radial-fade pe-none" style={{ top: 0, left: 0, zIndex: 0 }} />
+      <Header />
+      <div className="container mx-auto position-relative z-1" style={{ maxWidth: '1200px', marginTop: '40px' }}>
         {/* Breadcrumb */}
         <nav aria-label="breadcrumb" className="mb-4">
           <ol className="breadcrumb mb-2 text-muted-custom small">
