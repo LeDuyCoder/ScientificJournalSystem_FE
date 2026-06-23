@@ -1,4 +1,4 @@
-﻿/**
+/**
  * File source thuộc hệ thống FE ResearchPulse.
  *
  * File: features\dashboard\components\QuickAccessGrid.jsx
@@ -24,19 +24,19 @@ export default function QuickAccessGrid() {
 
   return (
     <div
-      className="rounded-3 p-4"
+      className="h-100 rounded-3 p-4 d-flex flex-column"
       style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)' }}
     >
       {/* Header */}
       <div className="d-flex align-items-center gap-2 mb-4">
         <Icon icon="lucide:zap" width={16} style={{ color: 'var(--primary)' }} />
         <span className="font-display fw-bold text-main" style={{ fontSize: '0.9rem' }}>
-          ⚡ Truy cập nhanh
+          Truy cập nhanh
         </span>
       </div>
 
       {/* Grid */}
-      <div className="row g-3">
+      <div className="row g-3 flex-grow-1 align-content-center">
         {QUICK_ACCESS_ITEMS.map((item) => (
           <div className="col-6 col-md-3" key={item.label}>
             <button
@@ -46,7 +46,7 @@ export default function QuickAccessGrid() {
                 backgroundColor: 'var(--bg-section)',
                 cursor: 'pointer',
                 transition: 'all 0.2s ease',
-                minHeight: 80,
+                aspectRatio: '1 / 1',
               }}
               onMouseEnter={e => {
                 e.currentTarget.style.backgroundColor = `${item.color}15`;

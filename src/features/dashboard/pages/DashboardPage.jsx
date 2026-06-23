@@ -147,7 +147,7 @@ export default function DashboardPage() {
                 letterSpacing: "-0.02em",
               }}
             >
-              Chào mừng bạn đến với ResearchPulse! 👋
+              Chào mừng bạn đến với ResearchPulse!
             </h1>
             <p
               className="text-muted-custom mb-0"

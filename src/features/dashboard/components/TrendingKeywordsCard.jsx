@@ -1,4 +1,4 @@
-﻿/**
+/**
  * File source thuộc hệ thống FE ResearchPulse.
  *
  * File: features\dashboard\components\TrendingKeywordsCard.jsx
@@ -51,14 +51,15 @@ function KeywordTag({ keyword, index, onClick }) {
 export default function TrendingKeywordsCard({ keywords, loading, error, onKeywordClick, onViewMore }) {
   return (
     <div
-      className="rounded-3 p-4"
+      className="h-100 rounded-3 p-4"
       style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)' }}
     >
       {/* Header */}
       <div className="d-flex align-items-center justify-content-between mb-4">
         <div className="d-flex align-items-center gap-2">
+          <Icon icon="lucide:flame" width={16} style={{ color: 'var(--primary)' }} />
           <span className="font-display fw-bold text-main" style={{ fontSize: '0.9rem' }}>
-            🔥 Trending Keywords
+            Trending Keywords
           </span>
         </div>
         {onViewMore && (

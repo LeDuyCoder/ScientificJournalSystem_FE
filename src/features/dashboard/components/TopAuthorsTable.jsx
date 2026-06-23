@@ -1,4 +1,4 @@
-﻿/**
+/**
  * File source thuộc hệ thống FE ResearchPulse.
  *
  * File: features\dashboard\components\TopAuthorsTable.jsx
@@ -79,16 +79,18 @@ export default function TopAuthorsTable({ authors, loading, error, onAuthorClick
       <div className="d-flex align-items-center justify-content-between px-4 py-3" style={{ borderBottom: '1px solid var(--border)' }}>
         <div className="d-flex align-items-center gap-2">
           <span className="font-display fw-bold text-main" style={{ fontSize: '0.9rem' }}>
-            🏆 Top Authors — Tuần này
+            Top Authors — Tuần này
           </span>
         </div>
-        <button
-          className="btn btn-link p-0 text-decoration-none"
-          onClick={onViewAll ?? (() => navigate('/authors'))}
-          style={{ fontSize: '0.75rem', color: 'var(--primary)' }}
-        >
-          Xem bảng xếp hạng đầy đủ →
-        </button>
+        {onViewAll && (
+          <button
+            className="btn btn-link p-0 text-decoration-none"
+            onClick={onViewAll}
+            style={{ fontSize: '0.75rem', color: 'var(--primary)' }}
+          >
+            Bảng xếp hạng →
+          </button>
+        )}
       </div>
 
       {/* Body */}

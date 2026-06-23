@@ -1,4 +1,4 @@
-﻿/**
+/**
  * File source thuộc hệ thống FE ResearchPulse.
  *
  * File: features\dashboard\components\RecentProjectsCard.jsx
@@ -8,10 +8,10 @@ import { truncate } from '../../../shared/utils/formatNumber';
 
 /** Status badge config */
 const STATUS_CONFIG = {
-  active:    { label: 'Hoạt động', bg: 'rgba(47,198,70,0.12)', color: '#2FC646', border: 'rgba(47,198,70,0.3)' },
-  new:       { label: 'New',       bg: 'rgba(255,122,51,0.12)', color: 'var(--primary)', border: 'rgba(255,122,51,0.3)' },
-  paused:    { label: 'Tạm dừng', bg: 'rgba(107,107,107,0.12)', color: 'var(--text-muted)', border: 'var(--border)' },
-  archived:  { label: 'Lưu trữ',  bg: 'rgba(107,107,107,0.12)', color: 'var(--text-muted)', border: 'var(--border)' },
+  active: { label: 'Hoạt động', bg: 'rgba(47,198,70,0.12)', color: '#2FC646', border: 'rgba(47,198,70,0.3)' },
+  new: { label: 'New', bg: 'rgba(255,122,51,0.12)', color: 'var(--primary)', border: 'rgba(255,122,51,0.3)' },
+  paused: { label: 'Tạm dừng', bg: 'rgba(107,107,107,0.12)', color: 'var(--text-muted)', border: 'var(--border)' },
+  archived: { label: 'Lưu trữ', bg: 'rgba(107,107,107,0.12)', color: 'var(--text-muted)', border: 'var(--border)' },
 };
 
 function ProjectStatusBadge({ status }) {
@@ -34,15 +34,16 @@ function ProjectStatusBadge({ status }) {
  * RecentProjectItem — một row project trong danh sách
  */
 function RecentProjectItem({ project, onClick }) {
-  const name         = project.project_name ?? project.name ?? 'Untitled';
+  const name = project.project_name ?? project.name ?? project.title ?? 'Untitled';
   const journalCount = project.journal_count ?? project.journals?.length ?? 0;
   const articleCount = project.article_count ?? 0;
-  const status       = project.status ?? 'active';
+  const status = project.status ?? 'active';
 
-  // Avatar initials from name
+  // Avatar initials from name (Up to 3 letters)
   const initials = name
     .split(' ')
-    .slice(0, 2)
+    .filter(w => w.length > 0)
+    .slice(0, 3)
     .map(w => w[0]?.toUpperCase() ?? '')
     .join('');
 
@@ -64,7 +65,7 @@ function RecentProjectItem({ project, onClick }) {
         style={{
           width: 40, height: 40, borderRadius: 10,
           background: 'var(--btn-dark)',
-          fontSize: '0.75rem', fontWeight: 700,
+          fontSize: initials.length >= 3 ? '0.65rem' : '0.75rem', fontWeight: 700,
         }}
       >
         {initials}
