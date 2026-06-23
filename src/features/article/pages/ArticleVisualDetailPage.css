@@ -154,6 +154,12 @@
   position: relative;
 }
 
+.article-connected-middle iframe {
+  width: 100%;
+  flex-grow: 1; /* Allow iframe to take up remaining vertical space */
+  border: none; /* Remove default iframe border */
+}
+
 @media (max-width: 991.98px) {
   .article-connected-middle {
     height: 400px;
