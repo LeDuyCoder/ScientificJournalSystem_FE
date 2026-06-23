@@ -3,6 +3,7 @@
 // Tất cả API call đều đi qua đây — không ai gọi axios trực tiếp.
 
 import axios from 'axios';
+import { useAuthStore } from '../../app/store/authStore';
 
 const httpClient = axios.create({
   // Tự động phân giải base URL của API từ biến môi trường.
@@ -15,13 +16,14 @@ const httpClient = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  withCredentials: true,
 });
 
 // ─── Request Interceptor ───────────────────────────────────────────────────
 // Tự động đính kèm token vào header mỗi request (nếu có)
 httpClient.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('accessToken');
+    const token = useAuthStore.getState().token;
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }

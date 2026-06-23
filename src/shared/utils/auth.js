@@ -18,10 +18,7 @@ import { jwtDecode } from 'jwt-decode';
  * giúp logout hoặc xử lý phiên hết hạn sạch hơn.
  */
 export const removeToken = () => {
-  localStorage.removeItem('token');
-  sessionStorage.removeItem('token');
-  localStorage.removeItem('researchpulse_token');
-  sessionStorage.removeItem('researchpulse_token');
+  // Trống, vì Zustand xử lý việc xóa RAM và cookie do BE xử lý
 };
 
 /**
@@ -70,7 +67,6 @@ export const isAuthenticated = async () => {
   } catch (error) {
     // Nếu dính lỗi 401 triệt để (kể cả sau khi Axios Interceptor đã cố Refresh thất bại)
     useAuthStore.getState().logout(); // Đảm bảo clear sạch Zustand cũ nếu có
-    localStorage.removeItem('researchpulse_token');
     return false;
   }
 };

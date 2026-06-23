@@ -86,7 +86,6 @@ api.interceptors.response.use(
         // Refresh failed, clear everything
         const { logout } = useAuthStore.getState();
         logout();
-        localStorage.removeItem('researchpulse_token');
         return Promise.reject(refreshError);
       }
     }
@@ -95,7 +94,6 @@ api.interceptors.response.use(
     if (error.response && error.response.status === 401) {
       const { logout } = useAuthStore.getState();
       logout();
-      localStorage.removeItem('researchpulse_token');
     }
 
     return Promise.reject(error);

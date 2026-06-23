@@ -14,11 +14,10 @@ import { create } from 'zustand';
  * - `user`: thông tin user khôi phục từ `/users/me` khi cookie còn hợp lệ.
  */
 export const useAuthStore = create((set) => {
-  const initialToken = localStorage.getItem('researchpulse_token') || null;
 
   return {
-    token: initialToken,
-    isAuthenticated: Boolean(initialToken),
+    token: null,
+    isAuthenticated: false,
     user: null,
     isLoading: false,
     error: null,
@@ -32,9 +31,6 @@ export const useAuthStore = create((set) => {
      */
     loginSuccess: (token = null, user = null) => set((state) => {
       const targetToken = token ?? state.token;
-      if (targetToken) {
-        localStorage.setItem('researchpulse_token', targetToken);
-      }
       return {
         token: targetToken,
         user: user ?? state.user,
@@ -52,7 +48,6 @@ export const useAuthStore = create((set) => {
      * Việc xóa token trong localStorage/sessionStorage nằm ở `removeToken`.
      */
     logout: () => {
-      localStorage.removeItem('researchpulse_token');
       return set({
         token: null,
         isAuthenticated: false,
