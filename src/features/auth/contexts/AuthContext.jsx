@@ -1,4 +1,4 @@
-﻿/**
+/**
  * File source thuộc hệ thống FE ResearchPulse.
  *
  * File: features\auth\contexts\AuthContext.jsx
@@ -78,7 +78,6 @@ export function AuthProvider({ children }) {
       console.error('Fetch profile error:', err);
       setError(err.response?.data?.message || err.message);
       setUser(null);
-      localStorage.removeItem('researchpulse_token');
     } finally {
       setIsLoading(false);
     }
