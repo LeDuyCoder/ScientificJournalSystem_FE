@@ -154,12 +154,6 @@
   position: relative;
 }
 
-.article-connected-middle iframe {
-  width: 100%;
-  flex-grow: 1; /* Allow iframe to take up remaining vertical space */
-  border: none; /* Remove default iframe border */
-}
-
 @media (max-width: 991.98px) {
   .article-connected-middle {
     height: 400px;
@@ -522,4 +516,61 @@
 
 .reference-item-label {
   font-weight: 500;
+}
+
+/* === IFRAME CONTAINER & STATES === */
+.iframe-container {
+  position: relative;
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--bg-main);
+  overflow: hidden;
+}
+
+.article-graph-iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+  transition: opacity 0.3s ease-in-out;
+  opacity: 1;
+}
+
+.article-graph-iframe.is-hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.iframe-state-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  background-color: var(--bg-main);
+  z-index: 5;
+  padding: 1rem;
+  text-align: center;
+}
+
+.iframe-state-overlay.is-error {
+  gap: 1rem;
+  color: var(--danger);
+  background-color: var(--bg-card); /* Đổi nền lỗi sang màu nền thẻ trắng */
+}
+
+.iframe-state-overlay.is-error .text-xs {
+  color: var(--text-muted);
 }

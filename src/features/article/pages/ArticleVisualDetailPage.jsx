@@ -3,7 +3,7 @@
  *
  * File: features\article\pages\ArticleVisualDetailPage.jsx
  */
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Container, Button, Modal } from 'react-bootstrap';
 import { Icon } from '@iconify/react';
@@ -21,6 +21,7 @@ import { getArticleDetailApi, bookmarkArticleApi, getArticlesListApi } from '../
 import ArticleDetailSkeleton from '../components/ArticleDetailSkeleton';
 import ArticleDetailEmpty from '../components/ArticleDetailEmpty';
 import ArticleDetailError from '../components/ArticleDetailError';
+import ErrorState from '../../../shared/components/ErrorState';
 import AuthRequiredModal from '../../../shared/components/AuthRequiredModal';
 import { toast } from '../../../shared/utils/toast';
 import { getDoiUrl, normalizeArticleDetail } from '../utils/articleFormatters';
@@ -419,6 +420,14 @@ export default function ArticleVisualDetailPage() {
   const [recommendedArticles, setRecommendedArticles] = useState([]);
   const [isRecommendedLoading, setIsRecommendedLoading] = useState(false);
   const [selectedArticleId, setSelectedArticleId] = useState(id);
+  // State để quản lý trạng thái của iframe: 'loading', 'loaded', 'error'
+  const [iframeStatus, setIframeStatus] = useState('loading');
+  // State để trigger việc re-mount iframe khi cần tải lại
+  const [iframeReloadKey, setIframeReloadKey] = useState(Date.now());
+
+  const [isIframeLoading, setIsIframeLoading] = useState(true);
+  const [iframeError, setIframeError] = useState(false);
+  const iframeRef = useRef(null);
 
   useEffect(() => {
     setSelectedArticleId(id);
@@ -474,13 +483,91 @@ export default function ArticleVisualDetailPage() {
     fetchOriginArticleDetail();
   }, [fetchOriginArticleDetail]);
 
+  // Logic mới: Ping server trước khi render iframe
   useEffect(() => {
+    // Chỉ chạy khi có originArticle
+    if (!originArticle) return;
+
+    let isMounted = true;
+    setIframeStatus('loading');
+
+    const iframeUrl = `${import.meta.env.VITE_ORIGIN_URL || 'http://localhost:5174'}/embed/article-graph?keyword=${encodeURIComponent(originArticle.title)}&limit=50`;
+    const origin = import.meta.env.VITE_ORIGIN_URL || 'http://localhost:5174';
+
+    const checkServiceAvailability = async () => {
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 5000);
+
+        await fetch(origin, { mode: 'no-cors', signal: controller.signal });
+
+        clearTimeout(timeoutId);
+
+        if (isMounted) {
+          setIframeStatus('content-loading');
+        }
+      } catch (error) {
+        console.error('[Parent] Iframe service is not available:', error.name, error.message);
+        if (isMounted) {
+          setIframeStatus('error');
+        }
+      }
+    };
+
+    checkServiceAvailability();
+
+    const handleMessage = (event) => {
+      if (event.origin !== origin) return;
+    };
+
+    window.addEventListener('message', handleMessage);
+
+    return () => {
+      isMounted = false;
+      window.removeEventListener('message', handleMessage);
+    };
+  }, [originArticle, iframeReloadKey]);
+
+  useEffect(() => {
+    setIframeStatus('loading');
+
+    const timeoutId = setTimeout(() => {
+      setIframeStatus((currentStatus) => {
+        if (currentStatus === 'loading') {
+          console.warn('[Parent] Iframe load timed out.');
+          return 'error';
+        }
+        return currentStatus;
+      });
+    }, 10000);
+
+    setIsIframeLoading(true);
+    setIframeError(false);
+
+    const iframeLoadTimeout = setTimeout(() => {
+      // Nếu iframe không gửi message 'graph-ready' trong 10s, coi như lỗi
+      if (isIframeLoading) {
+        console.warn('[Parent] Iframe load timed out after 10 seconds.');
+        setIframeError(true);
+        setIsIframeLoading(false);
+      }
+    }, 10000); // 10 giây timeout
+
+    // Xử lý message từ iframe
     const handleMessage = (event) => {
       const allowedOrigin = import.meta.env.VITE_ORIGIN_URL || 'http://localhost:5174';
       if (event.origin !== allowedOrigin) return;
 
       const message = event.data;
       if (message?.source !== 'article-graph-widget') return;
+
+      if (message.type === 'GRAPH_READY') {
+        console.log('[Parent] Received GRAPH_READY message from iframe.');
+        setIframeStatus('loaded'); // Đánh dấu đã tải xong nếu nhận được message
+        clearTimeout(iframeLoadTimeout);
+        setIsIframeLoading(false);
+        setIframeError(false);
+      }
 
       if (message.type === 'NODE_CLICK') {
         console.log('[Parent] Node clicked, received payload:', message.payload);
@@ -505,11 +592,21 @@ export default function ArticleVisualDetailPage() {
     };
 
     window.addEventListener('message', handleMessage);
-    return () => window.removeEventListener('message', handleMessage);
-  }, []);
+    return () => {
+      clearTimeout(timeoutId);
+      window.removeEventListener('message', handleMessage);
+      clearTimeout(iframeLoadTimeout);
+    };
+  }, [id, originArticle?.title, iframeReloadKey]); // Re-run effect khi id, title, hoặc key tải lại thay đổi
 
   const handleTitleClick = (articleId) => {
     navigate(`/articles/${articleId}`);
+  };
+
+  // Hàm để thử tải lại iframe
+  const handleReloadIframe = () => {
+    setIframeStatus('loading'); // Reset trạng thái về loading
+    setIframeReloadKey(Date.now()); // Thay đổi key để re-mount iframe
   };
 
   if (isLoading) {
@@ -592,9 +689,41 @@ export default function ArticleVisualDetailPage() {
               <span className="panel-title font-display fw-bold text-main">Interactive Network Graph</span>
               <span className="text-muted-custom text-xs">Concentric Radar Plot</span>
             </div>
-            <iframe src={`${import.meta.env.VITE_ORIGIN_URL || 'http://localhost:5174'}/embed/article-graph?keyword=${encodeURIComponent(originArticle.title)}&limit=50`} />
-          </section>
+            <div className="iframe-container" style={{ background: 'var(--bg-main)' }}>
+              {/* Giao diện Loading ban đầu (khi đang ping) */}
+              {iframeStatus === 'loading' && (
+                <div className="iframe-state-overlay">
+                  <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                  Đang kiểm tra dịch vụ biểu đồ...
+                </div>
+              )}
 
+              {/* Chỉ render iframe khi dịch vụ đã được xác nhận là có sẵn */}
+              {iframeStatus === 'content-loading' && (
+                <iframe
+                  key={iframeReloadKey}
+                  src={`${import.meta.env.VITE_ORIGIN_URL || 'http://localhost:5174'}/embed/article-graph?keyword=${encodeURIComponent(originArticle.title)}&limit=50`}
+                  title="Interactive Article Graph"
+                  className="article-graph-iframe"
+                  // Sự kiện onLoad này vẫn hữu ích để ẩn spinner nếu iframe tải xong
+                  // nhưng không gửi postMessage.
+                  onLoad={() => console.log('[Parent] Iframe content loaded.')}
+                  onError={() => setIframeStatus('error')}
+                />
+              )}
+
+              {iframeStatus === 'error' && (
+                <ErrorState
+                  className="border-0"
+                  icon="lucide:server-off"
+                  title="Không thể tải biểu đồ"
+                  message="Dịch vụ nhúng có thể đang không hoạt động hoặc đã xảy ra lỗi kết nối. Vui lòng thử lại."
+                  onRetry={handleReloadIframe}
+                  retryLabel=" Tải lại biểu đồ"
+                />
+              )}
+            </div>
+          </section>
           {/* Right Column: Active Article details */}
           <aside className="article-connected-right">
             {selectedArticleId && <ArticleDetailPane articleId={selectedArticleId} onTitleClick={handleTitleClick} />}

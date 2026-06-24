@@ -23,7 +23,27 @@ export default function ErrorState({
   onRetry = null, // Hàm xử lý sự kiện khi bấm nút thử lại
   retryLabel = 'Thử lại', // Nhãn nút thử lại
   className = ''
-}) {
+}) {  
+  const handleRetryClick = (event) => {
+    const button = event.currentTarget;
+    const ripple = document.createElement('span');
+    const rect = button.getBoundingClientRect();
+    const size = Math.max(rect.width, rect.height);
+    
+    ripple.style.width = ripple.style.height = `${size}px`;
+    ripple.style.left = `${event.clientX - rect.left - size / 2}px`;
+    ripple.style.top = `${event.clientY - rect.top - size / 2}px`;
+    ripple.classList.add('ripple-effect');
+
+    // Clean up previous ripples
+    const existingRipple = button.querySelector('.ripple-effect');
+    if (existingRipple) existingRipple.remove();
+    
+    button.appendChild(ripple);
+
+    if (onRetry) onRetry(event);
+  };
+
   return (
     <div 
       className={`d-flex flex-column align-items-center justify-content-center text-center py-5 px-4 rounded-3 border ${className}`}
@@ -62,11 +82,10 @@ export default function ErrorState({
         {message}
       </p>
       
-      {/* Nút bấm để thực hiện tải lại dữ liệu (Retry) */}
       {onRetry && (
         <Button 
-          className="btn-dark-solid rounded-pill px-4 py-2 text-xs font-bold"
-          onClick={onRetry}
+          className="btn-dark-solid btn-ripple rounded-pill px-4 py-2 text-xs font-bold"
+          onClick={handleRetryClick}
         >
           <Icon icon="lucide:rotate-cw" width="12" className="me-1.5" />
           {retryLabel}
