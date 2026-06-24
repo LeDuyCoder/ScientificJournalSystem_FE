@@ -11,6 +11,7 @@ import Header from '../../landing/components/Header';
 import useAuthors from '../hooks/useAuthors';
 import AuthorLeaderboardTable from '../components/AuthorLeaderboardTable';
 import AuthorNavigationTabs from '../components/AuthorNavigationTabs';
+import AdminPagination from '../../../shared/components/Pagination';
 import './AuthorLeaderboardPage.css';
 
 export default function AuthorLeaderboardPage() {
@@ -20,18 +21,34 @@ export default function AuthorLeaderboardPage() {
     leaderboard,
     loadingLeaderboard,
     errorLeaderboard,
-    fetchLeaderboard
+    fetchLeaderboard,
+    totalLeaderboard,
+    leaderboardTotalPages
   } = useAuthors();
 
   const [selectedArea, setSelectedArea] = useState('');
   const [selectedPeriod, setSelectedPeriod] = useState('all');
+  const [currentPage, setCurrentPage] = useState(1);
+  const limit = 10;
 
   useEffect(() => {
     fetchLeaderboard({
       subject_area: selectedArea,
-      period: selectedPeriod
+      period: selectedPeriod,
+      page: currentPage,
+      limit: limit
     });
-  }, [selectedArea, selectedPeriod, fetchLeaderboard]);
+  }, [selectedArea, selectedPeriod, currentPage, fetchLeaderboard]);
+
+  const handleAreaChange = (e) => {
+    setSelectedArea(e.target.value);
+    setCurrentPage(1);
+  };
+
+  const handlePeriodChange = (e) => {
+    setSelectedPeriod(e.target.value);
+    setCurrentPage(1);
+  };
 
   return (
     <div className="author-leaderboard-page">
@@ -89,7 +106,7 @@ export default function AuthorLeaderboardPage() {
                 <Form.Select
                   size="sm"
                   value={selectedArea}
-                  onChange={e => setSelectedArea(e.target.value)}
+                  onChange={handleAreaChange}
                   className="author-leaderboard-select"
                 >
                   <option value="">Tất cả lĩnh vực</option>
@@ -107,7 +124,7 @@ export default function AuthorLeaderboardPage() {
                 <Form.Select
                   size="sm"
                   value={selectedPeriod}
-                  onChange={e => setSelectedPeriod(e.target.value)}
+                  onChange={handlePeriodChange}
                   className="author-leaderboard-select"
                 >
                   <option value="all">Tất cả thời gian</option>
@@ -123,8 +140,18 @@ export default function AuthorLeaderboardPage() {
           authors={leaderboard}
           loading={loadingLeaderboard}
           error={errorLeaderboard}
-          onRetry={() => fetchLeaderboard({ subject_area: selectedArea, period: selectedPeriod })}
+          onRetry={() => fetchLeaderboard({ subject_area: selectedArea, period: selectedPeriod, page: currentPage, limit: limit })}
         />
+
+        {leaderboard.length > 0 && leaderboardTotalPages > 1 && (
+          <AdminPagination
+            totalItems={totalLeaderboard}
+            currentPage={currentPage}
+            limit={limit}
+            onPageChange={setCurrentPage}
+            entityName="tác giả"
+          />
+        )}
       </Container>
     </div>
   );

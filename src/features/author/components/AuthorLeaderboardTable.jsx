@@ -84,7 +84,7 @@ export default function AuthorLeaderboardTable({
               const field = author.subject_area ?? author.primary_subject_area ?? author.field ?? author.area ?? '—';
               const articles = author.article_count ?? author.papers ?? author.works_count ?? 0;
               const citations = author.citation_count ?? author.citations ?? author.cited_by_count ?? 0;
-              const rank = idx + 1;
+              const rank = author.final_rank ?? (idx + 1);
               const avatarColor = author.avatar_color ?? (rank === 1 ? '#FF7A33' : rank === 2 ? '#6366F1' : rank === 3 ? '#0EA5E9' : '#071A1C');
 
               return (
