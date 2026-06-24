@@ -87,7 +87,7 @@ export default function GeographyArticleList({
             Danh sách bài báo khoa học tại {countryName}
           </h3>
           {!loading && articles.length > 0 && (
-            <p className="text-muted-custom mb-0 text-xs font-sans">
+            <p className="text-muted-custom mb-0 text-xs font-display">
               Hiển thị bài báo thứ <span className="fw-semibold text-main">{(page - 1) * 10 + 1}</span> - <span className="fw-semibold text-main">{Math.min(page * 10, total)}</span> trong tổng số <span className="fw-semibold text-main">{total}</span> bài báo.
             </p>
           )}
@@ -134,7 +134,7 @@ export default function GeographyArticleList({
             <Icon icon="lucide:file-x" width="24" height="24" />
           </div>
           <h5 className="text-main font-weight-bold mb-1 font-display" style={{ fontSize: '1rem' }}>Không có bài báo nào</h5>
-          <p className="text-muted-custom mb-0 text-xs max-w-md font-sans">
+          <p className="text-muted-custom mb-0 text-xs max-w-md font-display">
             Hiện tại chưa có bài báo khoa học nào thuộc các tạp chí tại quốc gia này được lưu trữ trong hệ thống.
           </p>
         </div>
@@ -170,7 +170,7 @@ export default function GeographyArticleList({
                       onClick={() => onDetailClick(article.article_id)}
                       className="align-middle geography-article-row"
                     >
-                      <td className="text-muted-custom ps-3 font-sans" style={{ fontSize: '0.8rem' }}>
+                      <td className="text-muted-custom ps-3 font-display" style={{ fontSize: '0.8rem' }}>
                         {(page - 1) * 10 + index + 1}
                       </td>
                       <td style={{ maxWidth: '380px' }} className="py-3">
@@ -178,22 +178,22 @@ export default function GeographyArticleList({
                           {article.title}
                         </div>
                         {article.abstract && (
-                          <div className="text-muted-custom mt-1 text-xs text-truncate font-sans">
+                          <div className="text-muted-custom mt-1 text-xs text-truncate font-display">
                             {article.abstract}
                           </div>
                         )}
                       </td>
                       <td style={{ maxWidth: '180px' }}>
-                        <div className="text-main text-sm text-truncate font-sans" style={{ fontWeight: 500 }}>
+                        <div className="text-main text-sm text-truncate font-display" style={{ fontWeight: 500 }}>
                           {article.journal_name}
                         </div>
                       </td>
-                      <td className="text-center font-sans" style={{ color: 'var(--text-muted)' }}>
+                      <td className="text-center font-display" style={{ color: 'var(--text-muted)' }}>
                         {article.publication_year}
                       </td>
                       <td style={{ maxWidth: '140px' }}>
                         {article.doi ? (
-                          <div className="d-flex align-items-center gap-1 font-sans">
+                          <div className="d-flex align-items-center gap-1 font-display">
                             <span className="text-muted-custom text-xs text-truncate" style={{ fontSize: '0.75rem' }}>
                               {article.doi}
                             </span>
@@ -207,7 +207,7 @@ export default function GeographyArticleList({
                             </Button>
                           </div>
                         ) : (
-                          <span className="text-muted text-xs font-sans">—</span>
+                          <span className="text-muted text-xs font-display">—</span>
                         )}
                       </td>
                       <td>
@@ -257,7 +257,7 @@ export default function GeographyArticleList({
                   >
                     <Card.Body className="p-3">
                       <div className="d-flex align-items-center justify-content-between mb-2">
-                        <span className="text-muted-custom text-xs font-sans">#{(page - 1) * 10 + index + 1}</span>
+                        <span className="text-muted-custom text-xs font-display">#{(page - 1) * 10 + index + 1}</span>
                         <div className="d-flex gap-1.5 align-items-center">
                           <span 
                             className="geography-topic-badge" 
@@ -285,10 +285,10 @@ export default function GeographyArticleList({
 
                       <div className="pt-2 border-top border-light d-flex align-items-center justify-content-between flex-wrap gap-2">
                         <div>
-                          <div className="text-primary text-xs font-weight-semibold font-sans" style={{ fontSize: '0.75rem' }}>
+                          <div className="text-primary text-xs font-weight-semibold font-display" style={{ fontSize: '0.75rem' }}>
                             {article.journal_name}
                           </div>
-                          <div className="text-muted-custom text-xs font-sans mt-0.5" style={{ fontSize: '0.7rem' }}>
+                          <div className="text-muted-custom text-xs font-display mt-0.5" style={{ fontSize: '0.7rem' }}>
                             Năm: {article.publication_year} {article.doi ? ` · DOI: ${article.doi}` : ''}
                           </div>
                         </div>

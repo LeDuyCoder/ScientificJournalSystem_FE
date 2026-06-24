@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { Modal, Button, Form, ListGroup } from 'react-bootstrap';
+import { useState, useEffect } from 'react';
+import { Modal, Form, ListGroup } from 'react-bootstrap';
 import { Icon } from '@iconify/react';
+import PrimaryButton from '../../../../shared/components/Button/PrimaryButton';
 import { useJournalManagement } from '../../../journal/hooks/useJournalManagement';
 
 /**
@@ -120,21 +121,18 @@ export default function SwitchJournalModal({ show, handleClose }) {
       </Modal.Body>
 
       <Modal.Footer className="border-top-0 pt-0 d-flex justify-content-end align-items-center gap-3">
-        <Button 
-          variant="link" 
-          onClick={handleClose} 
-          className="text-decoration-none text-muted-custom fw-semibold font-sans py-2 px-3"
-          style={{ fontSize: '0.9rem' }}
+        <PrimaryButton 
+          variant="outline" 
+          onClick={handleClose}
         >
           Cancel
-        </Button>
-        <Button 
-          onClick={handleConfirmSelect} 
-          className="btn-primary-glow font-sans py-2 px-4"
+        </PrimaryButton>
+        <PrimaryButton 
+          onClick={handleConfirmSelect}
           disabled={!tempSelectedId}
         >
           Select Journal
-        </Button>
+        </PrimaryButton>
       </Modal.Footer>
     </Modal>
   );

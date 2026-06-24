@@ -46,9 +46,9 @@ export default function GeographyRankingTable({ data = [], loading = false, sele
         <table className="table table-hover align-middle mb-0 geography-table" style={{ fontSize: '0.85rem' }}>
           <thead style={{ position: 'sticky', top: 0, backgroundColor: 'var(--bg-card)', zIndex: 1 }}>
             <tr>
-              <th className="py-2 text-main font-sans fw-bold border-bottom" style={{ width: '60px' }}>Hạng</th>
-              <th className="py-2 text-main font-sans fw-bold border-bottom">Quốc gia</th>
-              <th className="py-2 text-end text-main font-sans fw-bold border-bottom" style={{ width: '80px' }}>Article</th>
+              <th className="py-2 text-main font-display fw-bold border-bottom" style={{ width: '60px' }}>Hạng</th>
+              <th className="py-2 text-main font-display fw-bold border-bottom">Quốc gia</th>
+              <th className="py-2 text-end text-main font-display fw-bold border-bottom" style={{ width: '80px' }}>Article</th>
             </tr>
           </thead>
           <tbody>
@@ -73,13 +73,13 @@ export default function GeographyRankingTable({ data = [], loading = false, sele
                   onClick={() => onSelectCountry?.(item)}
                   className={`geography-ranking-row ${selectedCountry?.zone_id === item.zone_id ? 'is-active' : ''}`}
                 >
-                  <td className="py-3 text-main fw-bold font-sans">
+                  <td className="py-3 text-main fw-bold font-display">
                     {item.rank}
                   </td>
-                  <td className="py-3 text-main fw-semibold font-sans">
+                  <td className="py-3 text-main fw-semibold font-display">
                     {item.name || '—'}
                   </td>
-                  <td className="py-3 text-end text-main font-sans">
+                  <td className="py-3 text-end text-main font-display">
                     {Number(item.article_count || 0).toLocaleString()}
                   </td>
                 </tr>

@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Row, Col, Form, Button, InputGroup } from 'react-bootstrap';
 import { Icon } from '@iconify/react';
 import { getSubjectAreasApi } from '../../../journal/api/journalApi';
+import PrimaryButton from '../../../../shared/components/Button/PrimaryButton';
 
 /**
  * Component JournalFilterBar - Thanh công cụ lọc, tìm kiếm và chuyển đổi giao diện hiển thị.
@@ -154,13 +155,13 @@ export default function JournalFilterBar({
           {/* Add Journal Button */}
           <div className="d-flex flex-column">
             <span className="mb-2 d-none d-md-inline" style={{ height: '18px' }}></span>
-            <Button 
-              className="btn-primary-glow d-flex align-items-center gap-1.5 py-2 px-3 text-nowrap"
+            <PrimaryButton
+              className="py-2 px-3 text-nowrap"
               onClick={onOpenAddModal}
             >
               <Icon icon="lucide:plus" width="16" />
               <span>Create New Journal</span>
-            </Button>
+            </PrimaryButton>
           </div>
         </Col>
       </Row>

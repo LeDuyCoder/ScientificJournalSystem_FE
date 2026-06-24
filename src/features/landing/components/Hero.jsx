@@ -78,22 +78,21 @@ export default function Hero() {
           {/* Start Searching Button */}
           <Button
             href="#search-sandbox"
-            className="btn-primary-glow rounded-pill px-5 py-3 d-flex align-items-center justify-content-center gap-2"
-            style={{ fontSize: '0.875rem', letterSpacing: '0.03em' }}
+            className="btn-primary-glow d-flex align-items-center gap-2 px-5 py-3 rounded-pill border-0 text-white"
           >
             <Icon icon="lucide:rocket" className="fs-5" />
             <span>{t('ctaSearch')}</span>
           </Button>
 
           {/* View Trends Button */}
-<Button
-  href="#features"
-  variant="outline-secondary"
-  className="btn-view-trends rounded-pill px-5 py-3 d-flex align-items-center justify-content-center gap-2"
->
-  <Icon icon="lucide:bar-chart-2" className="fs-5 btn-view-trends-icon" />
-  <span>{t('ctaTrends')}</span>
-</Button>
+          <Button
+            href="#features"
+            variant="outline-secondary"
+            className="d-flex align-items-center gap-2 px-5 py-3 rounded-pill"
+          >
+            <Icon icon="lucide:bar-chart-2" className="fs-5" />
+            <span>{t('ctaTrends')}</span>
+          </Button>
         </div>
       </Container>
 

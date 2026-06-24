@@ -10,9 +10,9 @@ import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
-import Button from "react-bootstrap/Button";
 import Offcanvas from "react-bootstrap/Offcanvas";
 import Dropdown from "react-bootstrap/Dropdown";
+import Button from "react-bootstrap/Button";
 import Icon from "../../../shared/components/Icon";
 import useAuth from "../../auth/hooks/useAuth";
 import { useUserStore } from "../../../app/store/userStore";
@@ -338,14 +338,14 @@ export default function Header() {
               ) : (
                 <>
                   <Button
-                    variant="link"
-                    className="text-muted-custom hover:text-main text-xs font-semibold text-decoration-none"
+                    variant="outline-secondary"
+                    className="text-xs rounded-pill px-3"
                     onClick={handleAuthLogin}
                   >
                     {t("signIn")}
                   </Button>
                   <Button
-                    className="btn-primary-glow rounded-pill px-4 py-2 text-xs font-bold"
+                    className="btn-primary-glow border-0 text-white text-xs rounded-pill px-3"
                     onClick={handleAuthRegister}
                   >
                     {t("signUp")}
@@ -563,7 +563,7 @@ export default function Header() {
                   </div>
                 </div>
                 <Button
-                  variant="outline-danger"
+                  variant="danger"
                   className="w-100 rounded-pill py-2 text-xs font-bold"
                   onClick={() => {
                     logout();
@@ -576,8 +576,8 @@ export default function Header() {
             ) : (
               <div className="d-flex flex-column gap-2">
                 <Button
-                  variant="outline-secondary"
-                  className="w-100 rounded-pill py-2.5 text-xs text-main border-secondary hover:bg-light"
+                  variant="outline-primary"
+                  className="w-100 rounded-pill py-2.5 text-xs font-bold"
                   onClick={() => {
                     setShowMobileMenu(false);
                     handleAuthLogin();
@@ -586,7 +586,7 @@ export default function Header() {
                   {t("signIn")}
                 </Button>
                 <Button
-                  className="btn-primary-glow w-100 rounded-pill py-2.5 text-xs font-bold"
+                  className="btn-primary-glow w-100 rounded-pill py-2.5 text-xs font-bold border-0 text-white"
                   onClick={() => {
                     setShowMobileMenu(false);
                     handleAuthRegister();

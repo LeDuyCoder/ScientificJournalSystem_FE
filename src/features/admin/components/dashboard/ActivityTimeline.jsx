@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Modal, Button } from 'react-bootstrap';
+import { Modal } from 'react-bootstrap';
+import PrimaryButton from '../../../../shared/components/Button/PrimaryButton';
 
 export default function ActivityTimeline({ items = [], loading = false, error = '' }) {
   const [showAll, setShowAll] = useState(false);
@@ -64,9 +65,9 @@ export default function ActivityTimeline({ items = [], loading = false, error = 
           )}
         </Modal.Body>
         <Modal.Footer className="border-top-0 pt-0">
-          <Button className="btn-primary-glow px-4" onClick={() => setShowAll(false)}>
+          <PrimaryButton className="px-4" onClick={() => setShowAll(false)}>
             Done
-          </Button>
+          </PrimaryButton>
         </Modal.Footer>
       </Modal>
     </div>

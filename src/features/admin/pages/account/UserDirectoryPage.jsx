@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
-import { Row, Col, Card, ProgressBar, Button } from 'react-bootstrap';
+import { Row, Col, Card, ProgressBar } from 'react-bootstrap';
 import Pagination from '../../../../shared/components/Pagination';
 import { useNavigate } from 'react-router-dom';
 import Icon from '../../../../shared/components/Icon';
+import PrimaryButton from '../../../../shared/components/Button/PrimaryButton';
 import UserTable from '../../components/account/UserTable';
 import UserFilterBar from '../../components/account/UserFilterBar';
 import { getAdminUsers } from '../../api/adminUsers.api';
@@ -168,14 +169,14 @@ export default function UserDirectoryPage() {
         </div>
         
         {/* Submit New Account button (leads to Page 17) - Sử dụng hằng số định tuyến */}
-        <Button 
+        <PrimaryButton
           onClick={() => navigate(ROUTES.ADMIN_USERS_CREATE)}
-          className="btn-primary-glow border-0 d-flex align-items-center gap-2 rounded-pill px-4 py-2"
+          icon="lucide:plus-circle"
+          className="px-4 py-2"
           style={{ fontSize: '0.88rem' }}
         >
-          <Icon icon="lucide:plus-circle" width="18" />
           <span>Submit New Account</span>
-        </Button>
+        </PrimaryButton>
       </div>
 
       <Row className="g-4">

@@ -331,7 +331,7 @@ const ArticleDetailPane = ({ articleId, onTitleClick }) => {
       <section className="article-section-connected">
         <h3 className="section-title-connected mb-2 font-display">Abstract</h3>
         {(article.abstract || 'No abstract is available for this article.').split('\n').filter(Boolean).map((paragraph, index) => (
-          <p key={index} className="abstract-text-connected font-sans">{paragraph}</p>
+          <p key={index} className="abstract-text-connected font-display">{paragraph}</p>
         ))}
       </section>
 
@@ -365,7 +365,7 @@ const ArticleDetailPane = ({ articleId, onTitleClick }) => {
               return (
                 <a key={`${referenceUrl}-${absoluteIndex}`} href={referenceUrl} target="_blank" rel="noreferrer" className="reference-link-item p-2 rounded">
                   <div className="reference-item-index text-xs text-muted-custom">Reference {absoluteIndex + 1}</div>
-                  <div className="reference-item-label text-sm text-truncate text-main font-sans">{formatReferenceLabel(referenceUrl, absoluteIndex)}</div>
+                  <div className="reference-item-label text-sm text-truncate text-main font-display">{formatReferenceLabel(referenceUrl, absoluteIndex)}</div>
                 </a>
               );
             })}
@@ -373,14 +373,14 @@ const ArticleDetailPane = ({ articleId, onTitleClick }) => {
               <div className="d-flex align-items-center justify-content-between mt-2 pt-2 border-top">
                 <span className="text-xs text-muted-custom">Trang {referencePage}/{referenceTotalPages}</span>
                 <div className="d-flex gap-1">
-                  <button disabled={referencePage <= 1} onClick={() => setReferencePage((page) => Math.max(1, page - 1))} className="btn btn-xs btn-outline-secondary py-0 px-2 font-sans" style={{ fontSize: '0.7rem' }}>Trước</button>
-                  <button disabled={referencePage >= referenceTotalPages} onClick={() => setReferencePage((page) => Math.min(referenceTotalPages, page + 1))} className="btn btn-xs btn-outline-secondary py-0 px-2 font-sans" style={{ fontSize: '0.7rem' }}>Sau</button>
+                  <button disabled={referencePage <= 1} onClick={() => setReferencePage((page) => Math.max(1, page - 1))} className="btn btn-xs btn-outline-secondary py-0 px-2 font-display" style={{ fontSize: '0.7rem' }}>Trước</button>
+                  <button disabled={referencePage >= referenceTotalPages} onClick={() => setReferencePage((page) => Math.min(referenceTotalPages, page + 1))} className="btn btn-xs btn-outline-secondary py-0 px-2 font-display" style={{ fontSize: '0.7rem' }}>Sau</button>
                 </div>
               </div>
             )}
           </div>
         ) : (
-          <span className="text-xs text-muted-custom font-sans">Không có tài liệu tham khảo chi tiết.</span>
+          <span className="text-xs text-muted-custom font-display">Không có tài liệu tham khảo chi tiết.</span>
         )}
       </section>
       
@@ -392,13 +392,13 @@ const ArticleDetailPane = ({ articleId, onTitleClick }) => {
             <div className="font-display fw-bold" style={{ fontSize: '2rem', color: 'var(--text-main)' }}>{(article?.citations ?? 0).toLocaleString('en-US')}</div>
           </div>
           <p className="text-muted-custom mb-3" style={{ lineHeight: 1.7 }}><strong style={{ color: 'var(--text-main)' }}>Citations</strong> là số lượng bài báo hoặc công trình khác đã nhắc tới / trích dẫn lại bài báo này.</p>
-          <div className="d-grid gap-2 font-sans" style={{ fontSize: '0.94rem' }}>
+          <div className="d-grid gap-2 font-display" style={{ fontSize: '0.94rem' }}>
             <div><strong>DOI:</strong> mã định danh cố định của bài báo.</div>
             <div><strong>References:</strong> danh sách tài liệu mà bài báo này trích dẫn.</div>
             <div><strong>Citations / Cited by:</strong> số công trình khác trích dẫn lại bài báo này.</div>
           </div>
         </Modal.Body>
-        <Modal.Footer><Button variant="outline-secondary" onClick={() => setShowCitationsModal(false)} className="font-sans">Đóng</Button></Modal.Footer>
+        <Modal.Footer><Button variant="outline-secondary" onClick={() => setShowCitationsModal(false)} className="font-display">Đóng</Button></Modal.Footer>
       </Modal>
 
       <AuthRequiredModal show={showLoginModal} onHide={() => setShowLoginModal(false)} />
@@ -653,12 +653,12 @@ export default function ArticleVisualDetailPage() {
             <div className="related-paper-card is-origin px-3 py-3">
               <div className="d-flex align-items-center justify-content-between mb-1">
                 <span className="origin-badge">Active</span>
-                <span className="paper-year font-sans">{originArticle.publication_year || '—'}</span>
+                <span className="paper-year font-display">{originArticle.publication_year || '—'}</span>
               </div>
-              <h3 className="paper-title font-sans" onClick={() => handleTitleClick(originArticle.article_id)} title="Xem chi tiết bài báo">
+              <h3 className="paper-title font-display" onClick={() => handleTitleClick(originArticle.article_id)} title="Xem chi tiết bài báo">
                 {originArticle.title}
               </h3>
-              <div className="paper-authors font-sans mt-2">{formatAuthorsLine(originArticle.authors, 3)}</div>
+              <div className="paper-authors font-display mt-2">{formatAuthorsLine(originArticle.authors, 3)}</div>
             </div>
             <div className="section-header-tag px-3 pt-4 pb-2 text-uppercase fw-bold text-muted-custom border-top">Related Papers ({recommendedArticles.length})</div>
             <div className="related-papers-list">
@@ -668,15 +668,15 @@ export default function ArticleVisualDetailPage() {
                   Loading recommendations...
                 </div>
               ) : recommendedArticles.length === 0 ? (
-                <div className="p-3 text-center text-muted-custom font-sans">No related papers found.</div>
+                <div className="p-3 text-center text-muted-custom font-display">No related papers found.</div>
               ) : (
                 recommendedArticles.map((rec) => (
                   <div key={rec.article_id} className="related-paper-card px-3 py-3" onClick={() => navigate(`/articles/${rec.article_id}/visual`)}>
                     <div className="d-flex align-items-center justify-content-between mb-1">
-                      <span className="paper-year font-sans">{rec.publication_year}</span>
+                      <span className="paper-year font-display">{rec.publication_year}</span>
                     </div>
-                    <h4 className="paper-title font-sans">{rec.title}</h4>
-                    <div className="paper-authors font-sans mt-2">{rec.authors}</div>
+                    <h4 className="paper-title font-display">{rec.title}</h4>
+                    <div className="paper-authors font-display mt-2">{rec.authors}</div>
                   </div>
                 ))
               )}

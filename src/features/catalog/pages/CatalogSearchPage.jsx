@@ -3,7 +3,7 @@
  *
  * File: features\catalog\pages\CatalogSearchPage.jsx
  */
-import { Container, Row, Col, Form, Button, InputGroup, Dropdown, Breadcrumb } from 'react-bootstrap';
+import { Container, Row, Col, Form, InputGroup, Dropdown, Breadcrumb } from 'react-bootstrap';
 import { Icon } from '@iconify/react';
 import { useNavigate } from 'react-router-dom';
 import { useCatalogSearch } from '../hooks/useCatalogSearch';
@@ -14,6 +14,7 @@ import AuthRequiredModal from '../../../shared/components/AuthRequiredModal';
 import Header from '../../landing/components/Header';
 import useAuth from '../../auth/hooks/useAuth';
 import AdminPagination from '../../../shared/components/Pagination';
+import PrimaryButton from '../../../shared/components/Button/PrimaryButton';
 import '../components/CatalogSearch.css';
 
 export default function CatalogSearchPage() {
@@ -110,13 +111,12 @@ export default function CatalogSearchPage() {
                     onChange={(e) => setSearchInput(e.target.value)}
                     className="bg-transparent border-0 py-2 px-3 fs-6 catalog-search-input"
                   />
-                  <Button
+                  <PrimaryButton
                     type="submit"
-                    className="catalog-search-btn"
+                    icon="lucide:search"
                   >
-                    <Icon icon="lucide:search" width="15" />
                     Tìm kiếm
-                  </Button>
+                  </PrimaryButton>
                 </InputGroup>
               </Col>
             </Row>
@@ -210,13 +210,13 @@ export default function CatalogSearchPage() {
               </h2>
               <p className="text-muted-custom mb-4">{error}</p>
               {error?.includes('đăng nhập') ? (
-                <Button onClick={() => window.location.href = '/login'} className="catalog-outline-btn">
+                <PrimaryButton onClick={() => window.location.href = '/login'} variant="outline">
                   Đăng nhập
-                </Button>
+                </PrimaryButton>
               ) : (
-                <Button onClick={() => fetchJournals()} className="catalog-outline-btn">
+                <PrimaryButton onClick={() => fetchJournals()} variant="outline">
                   Thử lại
-                </Button>
+                </PrimaryButton>
               )}
             </section>
           ) : journals.length === 0 ? (
@@ -225,9 +225,9 @@ export default function CatalogSearchPage() {
               <Icon icon="lucide:folder-search" className="catalog-state-icon" width="44" />
               <h2 className="catalog-state-title">Không tìm thấy journal phù hợp</h2>
               <p className="text-muted-custom mb-4">Hãy thử thay đổi từ khóa tìm kiếm hoặc đặt lại bộ lọc.</p>
-              <Button onClick={handleClearAll} className="catalog-outline-btn">
+              <PrimaryButton onClick={handleClearAll} variant="outline">
                 Xóa bộ lọc
-              </Button>
+              </PrimaryButton>
             </section>
           ) : (
             <JournalTable

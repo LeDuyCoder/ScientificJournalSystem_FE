@@ -129,7 +129,7 @@ export default function PublicationTrendsChart({
                       textAnchor="middle"
                       fontSize="11"
                       fill="var(--text-muted)"
-                      fontFamily="var(--font-sans)"
+                      fontFamily="var(--font-display)"
                     >
                       {item.year || monthLabel}
                     </text>

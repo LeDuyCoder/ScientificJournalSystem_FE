@@ -71,7 +71,7 @@ export default function JournalTableAdmin({ journals, page = 1, limit = 10 }) {
 
                 {/* Lĩnh vực và chuyên mục phân loại nghiên cứu */}
                 <td>
-                  <span className="badge bg-light text-dark border font-sans px-2 py-1">
+                  <span className="badge bg-light text-dark border font-display px-2 py-1">
                     {journal.subjectCategory || 'Phân loại chung'}
                   </span>
                   <div className="small text-muted-custom mt-1 text-truncate" style={{ maxWidth: '180px' }}>

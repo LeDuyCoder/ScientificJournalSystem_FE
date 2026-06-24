@@ -9,7 +9,7 @@
   min-height: 100vh;
   background-color: #ffffff;
   color: var(--text-main);
-  font-family: var(--font-sans);
+  font-family: var(--font-display);
 }
 
 /* Cột phải: header + content + footer */
@@ -86,7 +86,7 @@
   gap: 12px;
   padding: 10px 12px;
   border-radius: 8px;
-  font-family: var(--font-sans);
+  font-family: var(--font-display);
   font-weight: 500;
   font-size: 0.9rem;
   color: var(--text-muted);
@@ -167,7 +167,7 @@
   border: none;
   outline: none;
   background: transparent;
-  font-family: var(--font-sans);
+  font-family: var(--font-display);
   font-size: 0.9rem;
   color: var(--text-main);
 }
@@ -239,14 +239,14 @@
 }
 
 .admin-header__profile-name {
-  font-family: var(--font-sans);
+  font-family: var(--font-display);
   font-weight: 600;
   font-size: 0.85rem;
   color: var(--text-main);
 }
 
 .admin-header__profile-role {
-  font-family: var(--font-sans);
+  font-family: var(--font-display);
   font-weight: 400;
   font-size: 0.75rem;
   color: var(--text-muted);
@@ -346,7 +346,7 @@
 }
 
 .admin-stat-card__label {
-  font-family: var(--font-sans);
+  font-family: var(--font-display);
   font-weight: 500;
   font-size: 0.85rem;
   color: var(--text-muted);
@@ -377,7 +377,7 @@
 
 /* Dòng note nhỏ phía dưới - màu được set inline theo noteType */
 .admin-stat-card__note {
-  font-family: var(--font-sans);
+  font-family: var(--font-display);
   font-weight: 500;
   font-size: 0.78rem;
 }
@@ -405,7 +405,7 @@
 }
 
 .admin-card__subtitle {
-  font-family: var(--font-sans);
+  font-family: var(--font-display);
   font-weight: 400;
   font-size: 0.8rem;
   color: var(--text-muted);
@@ -426,7 +426,7 @@
 
 /* Year selector - style giống .bg-chip, bo tròn nhẹ */
 .admin-year-select {
-  font-family: var(--font-sans);
+  font-family: var(--font-display);
   font-weight: 500;
   font-size: 0.8rem;
   color: var(--text-main);
@@ -464,7 +464,7 @@
   display: flex;
   align-items: center;
   gap: 6px;
-  font-family: var(--font-sans);
+  font-family: var(--font-display);
   font-size: 0.78rem;
   color: var(--text-muted);
 }
@@ -544,7 +544,7 @@
 }
 
 .admin-activity-item__title {
-  font-family: var(--font-sans);
+  font-family: var(--font-display);
   font-weight: 600;
   font-size: 0.85rem;
   color: var(--text-main);
@@ -552,7 +552,7 @@
 }
 
 .admin-activity-item__description {
-  font-family: var(--font-sans);
+  font-family: var(--font-display);
   font-weight: 400;
   font-size: 0.8rem;
   color: var(--text-muted);
@@ -560,7 +560,7 @@
 }
 
 .admin-activity-item__time {
-  font-family: var(--font-sans);
+  font-family: var(--font-display);
   font-weight: 400;
   font-size: 0.72rem;
   color: var(--text-muted);
@@ -570,7 +570,7 @@
 .admin-activity-card__view-all {
   margin-top: auto;
   padding-top: 14px;
-  font-family: var(--font-sans);
+  font-family: var(--font-display);
   font-weight: 500;
   font-size: 0.82rem;
   color: var(--primary);
@@ -591,7 +591,7 @@
   align-items: center;
   padding: 3px 10px;
   border-radius: 999px;
-  font-family: var(--font-sans);
+  font-family: var(--font-display);
   font-weight: 500;
   font-size: 0.72rem;
   text-transform: uppercase;
@@ -671,7 +671,7 @@
   border: 1px solid var(--border);
   background-color: var(--bg-chip);
   color: var(--text-main);
-  font-family: var(--font-sans);
+  font-family: var(--font-display);
   font-weight: 500;
   font-size: 0.82rem;
   cursor: pointer;
@@ -693,7 +693,7 @@
 .admin-table {
   width: 100%;
   border-collapse: collapse;
-  font-family: var(--font-sans);
+  font-family: var(--font-display);
   font-size: 0.85rem;
 }
 
@@ -758,7 +758,7 @@
 
 /* Breadcrumb trên cùng trang Update Article */
 .admin-breadcrumb {
-  font-family: var(--font-sans);
+  font-family: var(--font-display);
   font-size: 0.8rem;
   color: var(--text-muted);
   margin-bottom: 6px;
@@ -771,7 +771,7 @@
 
 /* Mô tả ngay dưới page title */
 .admin-page-description {
-  font-family: var(--font-sans);
+  font-family: var(--font-display);
   font-size: 0.85rem;
   color: var(--text-muted);
   margin: 4px 0 20px;
@@ -831,7 +831,7 @@
 }
 
 .admin-form-label {
-  font-family: var(--font-sans);
+  font-family: var(--font-display);
   font-weight: 500;
   font-size: 0.78rem;
   text-transform: uppercase;
@@ -847,7 +847,7 @@
   border-radius: 8px;
   background-color: var(--bg-main);
   color: var(--text-main);
-  font-family: var(--font-sans);
+  font-family: var(--font-display);
   font-size: 0.88rem;
   outline: none;
   transition: border-color 0.15s ease, box-shadow 0.15s ease;
@@ -894,7 +894,7 @@
   border-radius: 6px;
   background-color: var(--primary-light);
   color: var(--primary);
-  font-family: var(--font-sans);
+  font-family: var(--font-display);
   font-weight: 500;
   font-size: 0.78rem;
   text-transform: uppercase;
@@ -966,14 +966,14 @@
 }
 
 .admin-file-item__name {
-  font-family: var(--font-sans);
+  font-family: var(--font-display);
   font-weight: 600;
   font-size: 0.85rem;
   color: var(--text-main);
 }
 
 .admin-file-item__meta {
-  font-family: var(--font-sans);
+  font-family: var(--font-display);
   font-weight: 400;
   font-size: 0.76rem;
   color: var(--text-muted);
@@ -993,7 +993,7 @@
   border: 1px solid var(--primary);
   background-color: var(--bg-card);
   color: var(--primary);
-  font-family: var(--font-sans);
+  font-family: var(--font-display);
   font-weight: 500;
   font-size: 0.78rem;
   cursor: pointer;
@@ -1014,7 +1014,7 @@
   width: 100%;
   padding: 10px 16px;
   border-radius: 8px;
-  font-family: var(--font-sans);
+  font-family: var(--font-display);
   font-weight: 600;
   font-size: 0.85rem;
   cursor: pointer;
@@ -1091,7 +1091,7 @@
 }
 
 .admin-review-panel__current-status-label {
-  font-family: var(--font-sans);
+  font-family: var(--font-display);
   font-weight: 500;
   font-size: 0.7rem;
   text-transform: uppercase;
@@ -1122,7 +1122,7 @@
 }
 
 .admin-review-panel__stats-title {
-  font-family: var(--font-sans);
+  font-family: var(--font-display);
   font-weight: 500;
   font-size: 0.72rem;
   text-transform: uppercase;
@@ -1135,7 +1135,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-family: var(--font-sans);
+  font-family: var(--font-display);
   font-size: 0.85rem;
 }
 
@@ -1152,7 +1152,7 @@
 .admin-review-panel__last-updated {
   margin: 0;
   text-align: center;
-  font-family: var(--font-sans);
+  font-family: var(--font-display);
   font-size: 0.72rem;
   color: var(--text-muted);
 }
@@ -1174,7 +1174,7 @@
   align-items: center;
   text-align: center;
   padding: 28px 24px;
-  font-family: var(--font-sans);
+  font-family: var(--font-display);
 }
 
 /* Icon cảnh báo tròn, nền đỏ nhạt */
@@ -1250,7 +1250,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-family: var(--font-sans);
+  font-family: var(--font-display);
   font-weight: 500;
   font-size: 0.72rem;
   text-transform: uppercase;
@@ -1263,7 +1263,7 @@
   border: none;
   background: transparent;
   color: var(--primary);
-  font-family: var(--font-sans);
+  font-family: var(--font-display);
   font-weight: 500;
   font-size: 0.75rem;
   text-transform: none;
@@ -1323,14 +1323,14 @@
 }
 
 .admin-article-cell__title {
-  font-family: var(--font-sans);
+  font-family: var(--font-display);
   font-weight: 600;
   font-size: 0.85rem;
   color: var(--primary);
 }
 
 .admin-article-cell__meta {
-  font-family: var(--font-sans);
+  font-family: var(--font-display);
   font-weight: 400;
   font-size: 0.72rem;
   color: var(--text-muted);
@@ -1364,7 +1364,7 @@
 .admin-article-table-card__summary {
   margin: 12px 0 0;
   text-align: right;
-  font-family: var(--font-sans);
+  font-family: var(--font-display);
   font-size: 0.78rem;
   color: var(--text-muted);
 }
@@ -1392,7 +1392,7 @@
   border: 1px solid var(--border);
   background-color: var(--bg-card);
   color: var(--text-main);
-  font-family: var(--font-sans);
+  font-family: var(--font-display);
   font-weight: 500;
   font-size: 0.8rem;
   cursor: pointer;
@@ -1497,7 +1497,7 @@
   border-radius: 999px;
   background-color: var(--primary-light);
   color: var(--primary);
-  font-family: var(--font-sans);
+  font-family: var(--font-display);
   font-weight: 500;
   font-size: 0.7rem;
   text-transform: uppercase;
@@ -1506,7 +1506,7 @@
 }
 
 .admin-insights-card__summary {
-  font-family: var(--font-sans);
+  font-family: var(--font-display);
   font-size: 0.85rem;
   line-height: 1.6;
   color: var(--text-muted);
@@ -1535,7 +1535,7 @@
 }
 
 .admin-insights-stat__label {
-  font-family: var(--font-sans);
+  font-family: var(--font-display);
   font-weight: 500;
   font-size: 0.72rem;
   text-transform: uppercase;
@@ -1551,7 +1551,7 @@
 }
 
 .admin-insights-stat__trend {
-  font-family: var(--font-sans);
+  font-family: var(--font-display);
   font-weight: 500;
   font-size: 0.74rem;
 }
@@ -1592,7 +1592,7 @@
   padding: 3px 10px;
   border-radius: 999px;
   background-color: rgba(255, 255, 255, 0.18);
-  font-family: var(--font-sans);
+  font-family: var(--font-display);
   font-weight: 500;
   font-size: 0.7rem;
   text-transform: uppercase;
@@ -1608,7 +1608,7 @@
 }
 
 .admin-promo-card__description {
-  font-family: var(--font-sans);
+  font-family: var(--font-display);
   font-size: 0.8rem;
   line-height: 1.5;
   color: rgba(255, 255, 255, 0.9);
@@ -1623,7 +1623,7 @@
   border: none;
   background-color: #ffffff;
   color: var(--primary);
-  font-family: var(--font-sans);
+  font-family: var(--font-display);
   font-weight: 600;
   font-size: 0.85rem;
   cursor: pointer;
@@ -1945,7 +1945,7 @@
 /* Admin neutral/accent status utilities for admin surfaces */
 .admin-status-badge {
   border: 1px solid var(--border);
-  font-family: var(--font-sans);
+  font-family: var(--font-display);
   font-weight: 700;
   letter-spacing: 0.03em;
 }
@@ -2024,7 +2024,7 @@
   border-radius: 999px !important;
   padding: 0.65rem 1rem !important;
   font-weight: 700;
-  font-family: var(--font-sans);
+  font-family: var(--font-display);
   white-space: nowrap;
 }
 
@@ -2194,7 +2194,7 @@
 
 .admin-page-kicker {
   margin: 0 0 6px;
-  font-family: var(--font-sans);
+  font-family: var(--font-display);
   font-size: 0.74rem;
   font-weight: 600;
   letter-spacing: 0.08em;
@@ -2214,7 +2214,7 @@
 .admin-page-lede {
   max-width: 760px;
   margin: 8px 0 0;
-  font-family: var(--font-sans);
+  font-family: var(--font-display);
   font-size: 0.92rem;
   line-height: 1.65;
   color: var(--text-muted);
@@ -2270,7 +2270,7 @@
   border-radius: 12px;
   background-color: var(--bg-card);
   color: var(--text-muted);
-  font-family: var(--font-sans);
+  font-family: var(--font-display);
 }
 
 .admin-state-card--error,

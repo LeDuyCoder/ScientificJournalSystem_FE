@@ -19,6 +19,7 @@ import TrendingKeywordsCard from "../components/TrendingKeywordsCard";
 import QuickAccessGrid from "../components/QuickAccessGrid";
 import TopAuthorsTable from "../components/TopAuthorsTable";
 import AuthRequiredModal from "../../../shared/components/AuthRequiredModal";
+import PrimaryButton from "../../../shared/components/Button/PrimaryButton";
 
 /**
  * DashboardPage — Trang Tổng quan / Dashboard
@@ -156,19 +157,13 @@ export default function DashboardPage() {
               Khám phá xu hướng tạp chí và các bài báo khoa học mới nhất.
             </p>
           </div>
-          <button
-            className="btn btn-primary-glow d-flex align-items-center gap-2 px-4 py-2 border-0 flex-shrink-0"
+          <PrimaryButton
+            className="px-4 py-2 flex-shrink-0"
             onClick={handleCreateProject}
-            style={{
-              borderRadius: 10,
-              fontWeight: 600,
-              fontSize: "0.85rem",
-              whiteSpace: "nowrap",
-            }}
           >
             <Icon icon="lucide:plus" width={16} />
             Tạo Project mới
-          </button>
+          </PrimaryButton>
         </div>
 
         {/* ── Stat Cards ──────────────────────────────────────────── */}

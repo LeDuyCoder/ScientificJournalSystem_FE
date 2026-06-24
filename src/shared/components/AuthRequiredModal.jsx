@@ -3,9 +3,10 @@
  *
  * File: shared\components\AuthRequiredModal.jsx
  */
-import { Modal, Button } from 'react-bootstrap';
+import { Modal } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';
+import PrimaryButton from './Button/PrimaryButton';
 
 export default function AuthRequiredModal({ show, onHide }) {
   const navigate = useNavigate();
@@ -47,31 +48,18 @@ export default function AuthRequiredModal({ show, onHide }) {
 
       <Modal.Footer className="border-0 pt-0" style={{ backgroundColor: 'var(--bg-card)', gap: '8px' }}>
 
-        <Button
-          variant="outline-dark"
+        <PrimaryButton
+          variant="outline"
           onClick={handleRegisterClick}
-          className="auth-required-register-btn"
-          style={{
-            borderRadius: '6px',
-            fontSize: '0.9rem',
-            fontWeight: 600,
-            transition: 'all 0.18s ease',
-          }}
         >
           Đăng ký
-        </Button>
+        </PrimaryButton>
 
-        <Button
+        <PrimaryButton
           onClick={handleLoginClick}
-          className="btn-primary-glow border-0 text-white"
-          style={{
-            borderRadius: '6px',
-            fontSize: '0.9rem',
-            fontWeight: 600
-          }}
         >
           Đăng nhập
-        </Button>
+        </PrimaryButton>
       </Modal.Footer>
     </Modal>
   );

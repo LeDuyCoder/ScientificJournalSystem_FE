@@ -48,12 +48,12 @@ export default function IssueTable({ issues, articleCountsByIssueId = {} }) {
                   <div className="fw-bold text-main font-monospace">
                     {getIssueNumber(issue)}
                   </div>
-                  <small className="text-muted-custom font-sans">
+                  <small className="text-muted-custom font-display">
                     issue_number
                   </small>
                 </td>
 
-                <td className="text-muted-custom font-sans small">
+                <td className="text-muted-custom font-display small">
                   {getIssueYear(issue) || '—'}
                 </td>
 

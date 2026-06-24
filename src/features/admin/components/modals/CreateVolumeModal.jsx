@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Modal, Button, Form, Row, Col } from 'react-bootstrap';
+import { Modal, Form, Row, Col } from 'react-bootstrap';
 import { useJournalManagement } from '../../../journal/hooks/useJournalManagement';
+import PrimaryButton from '../../../../shared/components/Button/PrimaryButton';
 
 /**
  * Component CreateVolumeModal - Cửa sổ Modal bật lên để Admin tạo Tập (Volume) mới.
@@ -169,12 +170,12 @@ export default function CreateVolumeModal({ show, handleClose }) {
 
         </Modal.Body>
         <Modal.Footer className="border-top-0 pt-0">
-          <Button variant="light" onClick={handleClose} className="btn-custom-sm text-main border">
+          <PrimaryButton variant="outline" onClick={handleClose} className="px-3">
             Cancel
-          </Button>
-          <Button type="submit" className="btn-primary-glow px-3">
+          </PrimaryButton>
+          <PrimaryButton type="submit" className="px-3">
             Create Volume
-          </Button>
+          </PrimaryButton>
         </Modal.Footer>
       </Form>
     </Modal>

@@ -13,8 +13,8 @@ const ManageKeywordsModal = ({ show, onHide, watchedKeywords, onRemove, actionLo
             <Table hover className="align-middle">
               <thead>
                 <tr>
-                  <th className="text-muted-custom font-sans fw-medium">Keyword</th>
-                  <th className="text-muted-custom font-sans fw-medium text-end">Hành động</th>
+                  <th className="text-muted-custom font-display fw-medium">Keyword</th>
+                  <th className="text-muted-custom font-display fw-medium text-end">Hành động</th>
                 </tr>
               </thead>
               <tbody>

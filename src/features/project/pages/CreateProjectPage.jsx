@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import ROUTES from '../../../app/routes/routePaths';
 import useProjects from '../hooks/useProjects';
@@ -9,6 +9,7 @@ import keywordService from '../../keyword/services/keywordService';
 import SearchableSelect from '../../../shared/components/Select/SearchableSelect';
 import SearchableKeywordInput from '../../../shared/components/Input/SearchableKeywordInput';
 import Header from '../../landing/components/Header';
+import PrimaryButton from '../../../shared/components/Button/PrimaryButton';
 
 const CreateProjectPage = () => {
   const navigate = useNavigate();
@@ -232,18 +233,18 @@ const CreateProjectPage = () => {
             </div>
 
             <div className="d-flex gap-3 justify-content-end pt-3 border-top">
-              <button
+              <PrimaryButton
                 type="button"
-                className="btn btn-light px-4 py-2 border fw-medium rounded-pill"
+                variant="outline"
+                className="px-4 py-2"
                 onClick={() => navigate(-1)}
                 disabled={loading}
-                style={{ color: 'var(--text-muted)' }}
               >
                 Hủy
-              </button>
-              <button
+              </PrimaryButton>
+              <PrimaryButton
                 type="submit"
-                className="btn btn-primary px-4 py-2 btn-primary-glow fw-medium d-flex align-items-center justify-content-center gap-2 rounded-pill"
+                className="px-4 py-2"
                 disabled={loading || !title.trim() || !subjectAreaId}
               >
                 {loading ? (
@@ -257,7 +258,7 @@ const CreateProjectPage = () => {
                     Tạo dự án
                   </>
                 )}
-              </button>
+              </PrimaryButton>
             </div>
           </form>
         </div>

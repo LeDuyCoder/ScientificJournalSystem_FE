@@ -4,8 +4,9 @@
  * File: features\journal\pages\JournalDetailPage.jsx
  */
 import { useParams, useNavigate } from 'react-router-dom';
-import { Container, Breadcrumb, Button } from 'react-bootstrap';
+import { Container, Breadcrumb } from 'react-bootstrap';
 import { Icon } from '@iconify/react';
+import PrimaryButton from '../../../shared/components/Button/PrimaryButton';
 
 // Shared Layout Header
 import Header from '../../landing/components/Header';
@@ -73,13 +74,12 @@ export default function JournalDetailPage() {
             <p className="text-muted-custom mb-4">
               Tạp chí bạn đang tìm kiếm không tồn tại hoặc dữ liệu chưa được cập nhật trong hệ thống.
             </p>
-            <Button 
-              className="btn-primary-glow border-0 px-4 py-2 text-white" 
+            <PrimaryButton
+              className="px-4 py-2"
               onClick={() => navigate('/')}
-              style={{ borderRadius: '6px' }}
             >
               Quay lại Trang chủ
-            </Button>
+            </PrimaryButton>
           </div>
         </Container>
       </div>

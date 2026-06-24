@@ -1,11 +1,12 @@
-﻿/**
+/**
  * File source thuộc hệ thống FE ResearchPulse.
  *
  * File: features\article\components\ArticleDetailEmpty.jsx
  */
-import { Card, Button } from 'react-bootstrap';
+import { Card } from 'react-bootstrap';
 import { Icon } from '@iconify/react';
 import { useNavigate } from 'react-router-dom';
+import PrimaryButton from '../../../shared/components/Button/PrimaryButton';
 
 export default function ArticleDetailEmpty({ articleId }) {
   const navigate = useNavigate();
@@ -28,20 +29,19 @@ export default function ArticleDetailEmpty({ articleId }) {
         Bài báo với mã số ID <strong>{articleId}</strong> không tồn tại hoặc đã bị xóa khỏi hệ thống cơ sở dữ liệu Scientific Journal.
       </p>
       <div className="d-flex justify-content-center gap-3">
-        <Button 
-          variant="outline-secondary"
-          className="px-4 py-2 font-semibold text-xs rounded-pill text-main border-secondary"
+        <PrimaryButton
+          variant="outline"
+          className="px-4 py-2 font-semibold text-xs"
           onClick={() => navigate('/dashboard')}
-          style={{ backgroundColor: 'transparent' }}
         >
           Về Dashboard
-        </Button>
-        <Button 
-          className="btn-primary-glow border-0 px-4 py-2 font-semibold text-xs rounded-pill text-white"
+        </PrimaryButton>
+        <PrimaryButton
+          className="px-4 py-2 font-semibold text-xs"
           onClick={() => navigate('/articles')}
         >
           Xem danh sách bài báo
-        </Button>
+        </PrimaryButton>
       </div>
     </Card>
   );

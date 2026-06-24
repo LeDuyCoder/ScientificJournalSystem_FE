@@ -5,7 +5,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import { Container, Row, Col, Form, InputGroup, Card, Button } from 'react-bootstrap';
+import { Container, Row, Col, Form, InputGroup, Card } from 'react-bootstrap';
 import Icon from '../../../shared/components/Icon';
 import Header from '../../landing/components/Header';
 import useAuthors from '../hooks/useAuthors';
@@ -14,6 +14,7 @@ import AuthorCard from '../components/AuthorCard';
 import LoadingSkeleton from '../../../shared/components/LoadingSkeleton';
 import AuthorNavigationTabs from '../components/AuthorNavigationTabs';
 import AdminPagination from '../../../shared/components/Pagination';
+import PrimaryButton from '../../../shared/components/Button/PrimaryButton';
 import './AuthorListPage.css';
 
 export default function AuthorListPage() {
@@ -241,9 +242,9 @@ export default function AuthorListPage() {
               </Col>
 
               <Col xs={12} sm={6} lg={1} className="d-flex gap-2">
-                <Button type="submit" className="author-filter-submit w-100 py-2">
+                <PrimaryButton type="submit" className="w-100 py-2">
                   Tìm
-                </Button>
+                </PrimaryButton>
               </Col>
             </Row>
           </Form>

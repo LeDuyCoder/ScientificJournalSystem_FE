@@ -4,13 +4,14 @@
  */
 
 import { useEffect, useState } from 'react';
-import { Container, Row, Col, Card, Form, Button } from 'react-bootstrap';
+import { Container, Row, Col, Card, Form } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import Icon from '../../../shared/components/Icon';
 import Header from '../../landing/components/Header';
 import useAuthors from '../hooks/useAuthors';
 import AuthorLeaderboardTable from '../components/AuthorLeaderboardTable';
 import AuthorNavigationTabs from '../components/AuthorNavigationTabs';
+import PrimaryButton from '../../../shared/components/Button/PrimaryButton';
 import './AuthorLeaderboardPage.css';
 
 export default function AuthorLeaderboardPage() {
@@ -68,14 +69,14 @@ export default function AuthorLeaderboardPage() {
                 Các tác giả nổi bật nhất hệ thống được xếp hạng theo số bài báo, citations và tầm ảnh hưởng nghiên cứu.
               </p>
             </div>
-            <Button
-              variant="link"
+            <PrimaryButton
+              variant="outline"
               onClick={() => navigate('/authors')}
-              className="author-leaderboard-back p-0 d-flex align-items-center gap-2"
+              className="px-3 py-2"
+              icon="lucide:arrow-left"
             >
-              <Icon icon="lucide:arrow-left" width="18" />
               <span>Quay lại danh sách tác giả</span>
-            </Button>
+            </PrimaryButton>
           </div>
         </section>
 

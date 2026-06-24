@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { Modal, Button, Form, Row, Col } from 'react-bootstrap';
+import { Modal, Form, Row, Col } from 'react-bootstrap';
 import { useJournalManagement } from '../../../journal/hooks/useJournalManagement';
+import PrimaryButton from '../../../../shared/components/Button/PrimaryButton';
 
 /**
  * Component CreateIssueModal - Cửa sổ Modal bật lên để Admin thêm Số phát hành (Issue) mới vào Volume đang chọn.
@@ -129,12 +130,12 @@ export default function CreateIssueModal({ show, handleClose }) {
 
         </Modal.Body>
         <Modal.Footer className="border-top-0 pt-0">
-          <Button variant="light" onClick={handleClose} className="btn-custom-sm text-main border">
+          <PrimaryButton variant="outline" onClick={handleClose} className="px-3">
             Hủy
-          </Button>
-          <Button type="submit" className="btn-primary-glow px-3">
+          </PrimaryButton>
+          <PrimaryButton type="submit" className="px-3">
             Tạo Issue
-          </Button>
+          </PrimaryButton>
         </Modal.Footer>
       </Form>
     </Modal>

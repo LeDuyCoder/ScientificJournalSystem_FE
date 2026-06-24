@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Row, Col, Card, Button } from 'react-bootstrap';
+import { Row, Col, Card } from 'react-bootstrap';
 import { Icon } from '@iconify/react';
 import { useJournalManagement } from '../../journal/hooks/useJournalManagement';
 import { getJournalArticlesApi } from '../../journal/api/journalApi';
@@ -9,6 +9,7 @@ import IssueTable from '../components/repository/IssueTable';
 import SwitchJournalModal from '../components/modals/SwitchJournalModal';
 import CreateVolumeModal from '../components/modals/CreateVolumeModal';
 import CreateIssueModal from '../components/modals/CreateIssueModal';
+import PrimaryButton from '../../../shared/components/Button/PrimaryButton';
 
 /**
  * RepositoryManagementPage - Admin repository coordinator for selected journal volumes and issues.
@@ -180,13 +181,13 @@ export default function RepositoryManagementPage() {
             Manage volumes and publication issues for your active journals.
           </p>
         </div>
-        <Button
-          className="btn-primary-glow d-flex align-items-center gap-1.5 py-2 px-3"
+        <PrimaryButton
+          className="py-2 px-3"
           onClick={() => setShowVolumeModal(true)}
         >
           <Icon icon="lucide:plus" width="16" />
           <span>New Volume</span>
-        </Button>
+        </PrimaryButton>
       </div>
 
       <div className="bg-white p-4 rounded-3 border d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-2" style={{ borderColor: 'var(--border)' }}>
@@ -200,7 +201,7 @@ export default function RepositoryManagementPage() {
             </div>
             <h5 className="font-display fw-bold text-main m-0 d-flex align-items-center gap-2">
               {currentJournal ? currentJournal.title : 'No active journal selected'}
-              <span className="badge admin-status-badge admin-status-badge--accent text-xs font-sans rounded px-2 py-0.5">
+              <span className="badge admin-status-badge admin-status-badge--accent text-xs font-display rounded px-2 py-0.5">
                 ACTIVE
               </span>
             </h5>
@@ -209,14 +210,14 @@ export default function RepositoryManagementPage() {
             </small>
           </div>
         </div>
-        <Button
-          variant="outline-dark"
-          className="d-flex align-items-center gap-1.5 py-2 px-3 btn-custom-sm font-sans"
+        <PrimaryButton
+          variant="outline"
+          className="py-2 px-3 btn-custom-sm"
           onClick={() => setShowSwitchModal(true)}
         >
           <Icon icon="lucide:refresh-cw" width="14" />
           <span>Switch Journal</span>
-        </Button>
+        </PrimaryButton>
       </div>
 
       {summaryError && (
@@ -293,14 +294,14 @@ export default function RepositoryManagementPage() {
                   Published: {activeVolObj?.frequency || 'Quarterly'} • Frequency: Q1, Q2, Q3, Q4
                 </small>
               </div>
-              <Button
-                className="btn-primary-glow btn-custom-sm d-flex align-items-center gap-1 px-3 py-2"
+              <PrimaryButton
+                className="btn-custom-sm px-3 py-2"
                 disabled={!selectedVolume}
                 onClick={() => setShowIssueModal(true)}
               >
                 <Icon icon="lucide:plus-circle" width="14" />
                 <span>Add Issue</span>
-              </Button>
+              </PrimaryButton>
             </div>
 
             <IssueTable issues={currentIssues} articleCountsByIssueId={articleCountsByIssueId} />

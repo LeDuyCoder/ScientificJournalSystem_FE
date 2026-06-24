@@ -6,6 +6,7 @@
 import { Row, Col, Button, Spinner } from 'react-bootstrap';
 import { Icon } from '@iconify/react';
 import { useNavigate } from 'react-router-dom';
+import PrimaryButton from '../../../shared/components/Button/PrimaryButton';
 
 export default function JournalHero({
   journal,
@@ -153,11 +154,10 @@ export default function JournalHero({
               )}
             </Button>
 
-            <Button
+            <PrimaryButton
               onClick={onAddToProject}
               disabled={isAddingToProject}
-              className="btn-primary-glow d-flex align-items-center gap-2 px-3 py-2 text-white border-0"
-              style={{ borderRadius: '6px' }}
+              className="gap-2 px-3 py-2"
             >
               {isAddingToProject ? (
                 <Spinner animation="border" size="sm" variant="light" />
@@ -167,7 +167,7 @@ export default function JournalHero({
                   Thêm vào Project
                 </>
               )}
-            </Button>
+            </PrimaryButton>
           </div>
         </Col>
       </Row>

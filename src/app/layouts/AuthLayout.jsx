@@ -12,7 +12,7 @@ export default function AuthLayout({ banner, children }) {
       style={{ 
         backgroundColor: 'var(--bg-main)',
         color: 'var(--text-main)',
-        fontFamily: 'var(--font-sans)'
+        fontFamily: 'var(--font-display)'
       }}
     >
       <Row className="g-0 w-100 min-vh-100">

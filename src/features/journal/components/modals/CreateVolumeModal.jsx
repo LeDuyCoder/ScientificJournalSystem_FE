@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { Modal, Button, Form, Row, Col } from 'react-bootstrap';
+import { useState } from 'react';
+import { Modal, Form, Row, Col } from 'react-bootstrap';
+import PrimaryButton from '../../../../shared/components/Button/PrimaryButton';
 import { useJournalManagement } from '../../hooks/useJournalManagement';
 
 /**
@@ -128,8 +129,8 @@ export default function CreateVolumeModal({ show, handleClose }) {
 
         </Modal.Body>
         <Modal.Footer className="border-top-0 pt-0">
-          <Button variant="light" onClick={handleClose} className="btn-custom-sm text-main">Hủy</Button>
-          <Button type="submit" className="btn-primary-glow px-3">Tạo Volume</Button>
+          <PrimaryButton variant="outline" onClick={handleClose}>Hủy</PrimaryButton>
+          <PrimaryButton type="submit">Tạo Volume</PrimaryButton>
         </Modal.Footer>
       </Form>
     </Modal>

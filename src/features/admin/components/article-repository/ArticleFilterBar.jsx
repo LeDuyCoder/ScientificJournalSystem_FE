@@ -4,9 +4,10 @@
  * - onApply: handler nút "Apply Search Filters".
  * - onClear: handler link "Clear all" (reset cả draft và applied filters).
  */
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { searchJournalsApi } from '../../../journal/api/journalApi';
 import { STATUS_FILTER_OPTIONS } from '../../constants/articleListFilters';
+import PrimaryButton from '../../../../shared/components/Button/PrimaryButton';
 
 export default function ArticleFilterBar({
   journal,
@@ -101,9 +102,9 @@ export default function ArticleFilterBar({
 
         {/* Nút Apply - căn theo chiều cao input, không cần label phía trên */}
         <div className="admin-form-group admin-filter-bar__apply-group">
-          <button type="button" className="btn-primary-glow admin-btn-consistent" onClick={onApply}>
+          <PrimaryButton type="button" className="admin-btn-consistent" onClick={onApply}>
             Apply Search Filters
-          </button>
+          </PrimaryButton>
         </div>
       </div>
     </div>

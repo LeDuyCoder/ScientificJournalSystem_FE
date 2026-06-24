@@ -19,7 +19,7 @@
 .journal-breadcrumb .breadcrumb-item,
 .journal-breadcrumb .breadcrumb-item a {
   color: var(--text-muted) !important;
-  font-family: var(--font-sans) !important;
+  font-family: var(--font-display) !important;
   font-size: 0.85rem;
   font-weight: 500;
   text-decoration: none;
@@ -79,7 +79,7 @@
   border: 1px solid var(--border);
   background: var(--bg-chip);
   color: var(--text-muted);
-  font-family: var(--font-sans);
+  font-family: var(--font-display);
   font-size: 0.78rem;
   font-weight: 600;
   line-height: 1;
@@ -116,7 +116,7 @@
 
 .journal-description {
   color: var(--text-muted);
-  font-family: var(--font-sans);
+  font-family: var(--font-display);
   font-size: 1rem;
   line-height: 1.75;
   max-width: 72ch;
@@ -136,7 +136,7 @@
   background: var(--bg-chip);
   color: var(--text-main);
   cursor: pointer;
-  font-family: var(--font-sans);
+  font-family: var(--font-display);
   font-size: 0.84rem;
   font-weight: 500;
   padding: 0.38rem 0.75rem;
@@ -165,7 +165,7 @@
 
 .journal-metric-value {
   color: var(--text-main);
-  font-family: var(--font-sans);
+  font-family: var(--font-display);
   font-size: clamp(2.4rem, 5vw, 4rem);
   font-variant-numeric: tabular-nums;
   font-weight: 700;
@@ -174,7 +174,7 @@
 
 .journal-metric-label {
   color: var(--text-muted);
-  font-family: var(--font-sans);
+  font-family: var(--font-display);
   font-size: 0.78rem;
   font-weight: 600;
   letter-spacing: 0.06em;
@@ -196,7 +196,7 @@
   align-items: center;
   border-radius: 6px !important;
   display: inline-flex;
-  font-family: var(--font-sans) !important;
+  font-family: var(--font-display) !important;
   font-size: 0.88rem !important;
   font-weight: 600 !important;
   gap: 0.45rem;
@@ -242,7 +242,7 @@
 
 .journal-meta-label {
   color: var(--text-muted);
-  font-family: var(--font-sans);
+  font-family: var(--font-display);
   font-size: 0.72rem;
   font-weight: 600;
   letter-spacing: 0.08em;
@@ -252,7 +252,7 @@
 
 .journal-meta-value {
   color: var(--text-main);
-  font-family: var(--font-sans);
+  font-family: var(--font-display);
   font-size: 0.98rem;
   font-weight: 600;
   line-height: 1.45;
@@ -269,7 +269,7 @@
   border: 0 !important;
   border-bottom: 2px solid transparent !important;
   color: var(--text-muted) !important;
-  font-family: var(--font-sans) !important;
+  font-family: var(--font-display) !important;
   font-size: 0.92rem;
   font-weight: 600 !important;
   padding: 0.9rem 0.6rem !important;
@@ -332,7 +332,7 @@
 }
 
 .journal-number {
-  font-family: var(--font-sans);
+  font-family: var(--font-display);
   font-variant-numeric: tabular-nums;
   font-weight: 700;
 }
@@ -375,7 +375,7 @@
 
 .journal-volume-title {
   color: var(--text-main);
-  font-family: var(--font-sans);
+  font-family: var(--font-display);
   font-size: 0.98rem;
   font-weight: 700;
 }
@@ -407,7 +407,7 @@
 .journal-issue-title,
 .journal-article-title {
   color: var(--text-main);
-  font-family: var(--font-sans);
+  font-family: var(--font-display);
   font-weight: 700;
 }
 

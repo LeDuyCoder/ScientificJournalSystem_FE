@@ -1,11 +1,12 @@
-﻿/**
+/**
  * File source thuộc hệ thống FE ResearchPulse.
  *
  * File: features\article\components\ArticleDetailError.jsx
  */
-import { Card, Button } from 'react-bootstrap';
+import { Card } from 'react-bootstrap';
 import { Icon } from '@iconify/react';
 import { useNavigate } from 'react-router-dom';
+import PrimaryButton from '../../../shared/components/Button/PrimaryButton';
 
 export default function ArticleDetailError({ errorMsg, onRetry }) {
   const navigate = useNavigate();
@@ -29,21 +30,20 @@ export default function ArticleDetailError({ errorMsg, onRetry }) {
       </p>
       <div className="d-flex justify-content-center gap-3">
         {onRetry && (
-          <Button 
-            className="btn-primary-glow border-0 px-4 py-2 font-semibold text-xs rounded-pill text-white"
+          <PrimaryButton
+            className="px-4 py-2 font-semibold text-xs"
             onClick={onRetry}
           >
             Thử tải lại
-          </Button>
+          </PrimaryButton>
         )}
-        <Button 
-          variant="outline-secondary"
-          className="px-4 py-2 font-semibold text-xs rounded-pill text-main border-secondary"
+        <PrimaryButton
+          variant="outline"
+          className="px-4 py-2 font-semibold text-xs"
           onClick={() => navigate('/articles')}
-          style={{ backgroundColor: 'transparent' }}
         >
           Về danh sách bài báo
-        </Button>
+        </PrimaryButton>
       </div>
     </Card>
   );

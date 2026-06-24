@@ -44,7 +44,7 @@ export default function AuthorRankBadge({ rank }) {
         fontSize: '0.8rem',
         fontWeight: 700,
         boxShadow: rankNum <= 3 ? '0 4px 10px rgba(0,0,0,0.1)' : 'none',
-        fontFamily: 'var(--font-sans)'
+        fontFamily: 'var(--font-display)'
       }}
     >
       {/* Hiển thị Icon vương miện cho vị trí số 1, các vị trí khác hiển thị số */}

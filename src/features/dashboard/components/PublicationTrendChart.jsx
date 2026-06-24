@@ -47,7 +47,7 @@ function SimpleSvgChart({ years, series }) {
       {/* X axis labels */}
       {years.map((yr, i) => (
         <text key={yr} x={xScale(i)} y={H - 4} textAnchor="middle"
-          style={{ fontSize: 9, fill: 'var(--text-muted)', fontFamily: 'Inter' }}>
+          style={{ fontSize: 9, fill: 'var(--text-muted)', fontFamily: 'var(--font-display)' }}>
           {yr}
         </text>
       ))}

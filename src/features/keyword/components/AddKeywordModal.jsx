@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { Modal, Button, Form } from 'react-bootstrap';
+import { useState } from 'react';
+import { Modal, Form } from 'react-bootstrap';
+import PrimaryButton from '../../../shared/components/Button/PrimaryButton';
 
 const AddKeywordModal = ({ show, onHide, onAdd, actionLoading }) => {
   const [keyword, setKeyword] = useState('');
@@ -36,12 +37,12 @@ const AddKeywordModal = ({ show, onHide, onAdd, actionLoading }) => {
             />
           </Form.Group>
           <div className="d-flex justify-content-end gap-2 mt-4">
-            <Button variant="light" className="text-muted-custom border" onClick={onHide} disabled={actionLoading}>
+            <PrimaryButton variant="outline" onClick={onHide} disabled={actionLoading}>
               Hủy
-            </Button>
-            <Button type="submit" variant="primary" className="btn-primary-glow" disabled={actionLoading || !keyword.trim()}>
+            </PrimaryButton>
+            <PrimaryButton type="submit" disabled={actionLoading || !keyword.trim()}>
               {actionLoading ? 'Đang thêm...' : 'Thêm Keyword'}
-            </Button>
+            </PrimaryButton>
           </div>
         </Form>
       </Modal.Body>
