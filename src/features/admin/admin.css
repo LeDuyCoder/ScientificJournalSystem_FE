@@ -2413,3 +2413,40 @@
   width: min(560px, calc(100vw - 32px));
   max-width: min(560px, calc(100vw - 32px));
 }
+
+/* === CUSTOM BUTTON STYLES === */
+
+/* Nút màu đen đặc */
+.btn-dark-solid {
+  background-color: var(--btn-dark) !important;
+  border-color: var(--btn-dark) !important;
+  color: #ffffff !important;
+  transition: background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.btn-dark-solid:hover {
+  background-color: var(--text-main) !important;
+  border-color: var(--text-main) !important;
+}
+
+/* Hiệu ứng Ripple/Splash */
+.btn-ripple {
+  position: relative;
+  overflow: hidden;
+}
+
+.ripple-effect {
+  position: absolute;
+  border-radius: 50%;
+  background-color: var(--primary);
+  transform: scale(0);
+  animation: ripple-animation 600ms linear;
+  pointer-events: none;
+}
+
+@keyframes ripple-animation {
+  to {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
