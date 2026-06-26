@@ -155,7 +155,7 @@ export default function RankingTabContent({ rankingHistory = [], metricName = 'I
           </h2>
 
           <div className="table-responsive">
-            <Table borderless hover className="journal-ranking-table align-middle mb-0 text-start">
+            <Table borderless className="journal-ranking-table align-middle mb-0 text-start">
               <thead>
                 <tr>
                   <th>Năm</th>

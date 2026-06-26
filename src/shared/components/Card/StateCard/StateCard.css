@@ -1,0 +1,70 @@
+/**
+ * File source thuộc hệ thống FE ResearchPulse.
+ *
+ * File: shared\components\Card\StateCard.css
+ */
+
+.shared-state-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 2rem 1.25rem;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  background: var(--bg-card);
+  color: var(--text-main);
+  text-align: center;
+  font-family: var(--font-display);
+}
+
+.shared-state-card__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 999px;
+  background: var(--primary-light);
+  color: var(--primary);
+}
+
+.shared-state-card__title {
+  margin: 0;
+  color: var(--text-main);
+  font-size: 1.15rem;
+  font-weight: 750;
+  line-height: 1.3;
+}
+
+.shared-state-card__description {
+  max-width: 34rem;
+  margin: 0;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.shared-state-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+.shared-state-card--info .shared-state-card__icon {
+  background: var(--primary-light);
+  color: var(--primary);
+}
+
+.shared-state-card--warning .shared-state-card__icon {
+  background: rgba(245, 158, 11, 0.12);
+  color: #b45309;
+}
+
+.shared-state-card--error .shared-state-card__icon {
+  background: rgba(220, 53, 69, 0.12);
+  color: #b02a37;
+}

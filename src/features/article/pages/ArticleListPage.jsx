@@ -13,7 +13,7 @@ import ArticleFilterBar from '../components/ArticleFilterBar';
 import ArticleTable from '../components/ArticleTable';
 import AdminPagination from '../../../shared/components/Pagination';
 import PrimaryButton from '../../../shared/components/Button/PrimaryButton';
-import './ArticleListPage.css';
+import '../Article.css';
 
 export default function ArticleListPage() {
   const navigate = useNavigate();

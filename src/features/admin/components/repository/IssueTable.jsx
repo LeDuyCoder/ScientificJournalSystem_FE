@@ -1,5 +1,7 @@
-﻿import { Table } from 'react-bootstrap';
+import { Table } from 'react-bootstrap';
 import { Icon } from '@iconify/react';
+
+import { StateCard } from '../../../../shared/components/Card';
 
 const getIssueId = (issue) => issue.issue_id || issue.id;
 const getIssueNumber = (issue) => issue.issue_number ?? issue.issueNumber ?? '—';
@@ -16,11 +18,13 @@ const getIssueStatus = (issue) => issue.is_deleted ? 'Deleted' : (issue.status |
 export default function IssueTable({ issues, articleCountsByIssueId = {} }) {
   if (!issues || issues.length === 0) {
     return (
-      <div className="text-center py-5 glass-card border-dashed">
-        <Icon icon="lucide:calendar-dashed" width="40" className="text-muted-custom mb-2" />
-        <h6 className="text-main fw-bold">No issues found</h6>
-        <p className="text-muted-custom small mb-0">This volume does not have any issues created yet.</p>
-      </div>
+      <StateCard
+        variant="neutral"
+        icon="lucide:calendar-dashed"
+        title="No issues found"
+        description="This volume does not have any issues created yet."
+        className="my-4 border-dashed"
+      />
     );
   }
 

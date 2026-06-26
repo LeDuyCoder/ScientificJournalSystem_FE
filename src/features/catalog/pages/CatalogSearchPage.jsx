@@ -3,7 +3,7 @@
  *
  * File: features\catalog\pages\CatalogSearchPage.jsx
  */
-import { Container, Row, Col, Form, InputGroup, Dropdown, Breadcrumb } from 'react-bootstrap';
+import { Container, Dropdown, Breadcrumb } from 'react-bootstrap';
 import { Icon } from '@iconify/react';
 import { useNavigate } from 'react-router-dom';
 import { useCatalogSearch } from '../hooks/useCatalogSearch';
@@ -96,37 +96,13 @@ export default function CatalogSearchPage() {
           </p>
         </section>
 
-        {/* Search Input Panel */}
-        <section className="catalog-surface catalog-search-panel text-start">
-          <Form onSubmit={handleSearchSubmit}>
-            <Row className="g-3">
-              <Col xs={12}>
-                <InputGroup className="catalog-search-group">
-                  <InputGroup.Text className="bg-transparent border-0 pe-0 py-2 ps-3">
-                    <Icon icon="lucide:search" width="18" />
-                  </InputGroup.Text>
-                  <Form.Control
-                    placeholder="Tìm journal, tác giả, ISSN..."
-                    value={searchInput}
-                    onChange={(e) => setSearchInput(e.target.value)}
-                    className="bg-transparent border-0 py-2 px-3 fs-6 catalog-search-input"
-                  />
-                  <PrimaryButton
-                    type="submit"
-                    icon="lucide:search"
-                  >
-                    Tìm kiếm
-                  </PrimaryButton>
-                </InputGroup>
-              </Col>
-            </Row>
-          </Form>
-        </section>
-
         {/* Catalog Main Layout */}
         <div className="w-100">
-          {/* Horizontal Top Filter Panel */}
+          {/* Toolbar Filter Panel */}
           <FilterPanel
+            searchInput={searchInput}
+            setSearchInput={setSearchInput}
+            onSearchSubmit={handleSearchSubmit}
             subjectAreas={subjectAreas}
             subjectCategories={subjectCategories}
             selectedAreas={selectedAreas}

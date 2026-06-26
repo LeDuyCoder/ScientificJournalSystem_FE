@@ -8,8 +8,8 @@ import { useNavigate } from "react-router-dom";
 import Container from "react-bootstrap/Container";
 import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
-import Spinner from "react-bootstrap/Spinner";
 import Button from "react-bootstrap/Button";
+import Spinner from "react-bootstrap/Spinner";
 import Icon from "../../../shared/components/Icon";
 import useSandboxSearch from "../hooks/useSandboxSearch";
 
@@ -157,7 +157,8 @@ export default function Sandbox() {
                 <Button
                   type="submit"
                   disabled={isLoading}
-                  className="btn-primary-glow d-flex align-items-center gap-2 px-4 py-2 rounded-pill border-0 text-white me-1"
+                  className="btn-primary-glow rounded-pill px-4 py-2 text-xs font-bold border-0 d-flex align-items-center gap-2 me-1"
+                  style={{ fontSize: "0.8rem" }}
                 >
                   {isLoading ? (
                     <>

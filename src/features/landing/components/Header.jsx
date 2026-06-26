@@ -9,7 +9,6 @@ import { useNavigate, useLocation } from "react-router-dom";
 import Container from "react-bootstrap/Container";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
-import NavDropdown from "react-bootstrap/NavDropdown";
 import Offcanvas from "react-bootstrap/Offcanvas";
 import Dropdown from "react-bootstrap/Dropdown";
 import Button from "react-bootstrap/Button";
@@ -55,6 +54,29 @@ export default function Header() {
   };
   const handleAuthRegister = () => {
     navigate(ROUTES.REGISTER);
+  };
+
+  const navItems = [
+    { label: "Tổng quan", icon: "lucide:layout-dashboard", path: ROUTES.DASHBOARD },
+    { label: "Dự án", icon: "lucide:folder", path: ROUTES.PROJECTS },
+    { label: t("search"), icon: "lucide:search", path: ROUTES.CATALOG },
+    { label: "Bài báo", icon: "lucide:file-text", path: ROUTES.ARTICLES },
+    { label: "Tác Giả", icon: "lucide:users", path: ROUTES.AUTHORS },
+  ];
+
+  const navLinkStyle = {
+    borderBottom: "2px solid transparent",
+    color: "var(--text-muted)",
+    transition: "color 0.18s ease, border-color 0.18s ease",
+    fontWeight: 600,
+  };
+
+  const dropdownMenuStyle = {
+    minWidth: "190px",
+    "--bs-dropdown-link-active-bg": "rgba(0, 0, 0, 0.06)",
+    "--bs-dropdown-link-active-color": "var(--text-main)",
+    "--bs-dropdown-link-hover-bg": "rgba(0, 0, 0, 0.04)",
+    "--bs-dropdown-link-hover-color": "var(--text-main)",
   };
 
   return (
@@ -111,142 +133,29 @@ export default function Header() {
             id="basic-navbar-nav"
             className="d-none d-md-flex justify-content-between align-items-center w-full"
           >
-            <Nav className="mx-auto align-items-center" style={{ gap: "4px" }}>
-              {/* Tổng quan */}
-              <Nav.Link
-                onClick={() => navigate(ROUTES.DASHBOARD)}
-                className="px-3 py-1 text-sm font-semibold d-flex align-items-center gap-1"
-                style={{
-                  borderRadius: '6px',
-                  backgroundColor: (pathname === ROUTES.DASHBOARD || pathname === ROUTES.GEOGRAPHY) ? 'var(--primary-light)' : 'transparent',
-                  color: (pathname === ROUTES.DASHBOARD || pathname === ROUTES.GEOGRAPHY) ? 'var(--primary)' : 'var(--text-muted)',
-                  border: (pathname === ROUTES.DASHBOARD || pathname === ROUTES.GEOGRAPHY) ? '1px solid var(--border)' : '1px solid transparent',
-                  transition: 'all 0.2s',
-                  fontWeight: (pathname === ROUTES.DASHBOARD || pathname === ROUTES.GEOGRAPHY) ? 700 : 500,
-                }}
-              >
-                <Icon icon="lucide:layout-dashboard" width="14" />
-                Tổng quan
-              </Nav.Link>
-
-              {/* Dự án */}
-              <Nav.Link
-                onClick={() => navigate(ROUTES.PROJECTS)}
-                className="px-3 py-1 text-sm font-semibold d-flex align-items-center gap-1"
-                style={{
-                  borderRadius: "6px",
-                  backgroundColor:
-                    pathname.startsWith(ROUTES.PROJECTS)
-                      ? "var(--primary-light)"
-                      : "transparent",
-                  color:
-                    pathname.startsWith(ROUTES.PROJECTS)
-                      ? "var(--primary)"
-                      : "var(--text-muted)",
-                  border:
-                    pathname.startsWith(ROUTES.PROJECTS)
-                      ? "1px solid var(--border)"
-                      : "1px solid transparent",
-                  transition: "all 0.2s",
-                  fontWeight: pathname.startsWith(ROUTES.PROJECTS) ? 700 : 500,
-                }}
-              >
-                <Icon icon="lucide:folder" width="14" />
-                Dự án
-              </Nav.Link>
-              {/* Tìm kiếm */}
-              <Nav.Link
-                onClick={() => navigate(ROUTES.CATALOG)}
-                className="px-3 py-1 text-sm font-semibold d-flex align-items-center gap-1"
-                style={{
-                  borderRadius: "6px",
-                  backgroundColor:
-                    pathname.startsWith(ROUTES.CATALOG) ||
-                    pathname.startsWith(ROUTES.SEARCH)
-                      ? "var(--primary-light)"
-                      : "transparent",
-                  color:
-                    pathname.startsWith(ROUTES.CATALOG) ||
-                    pathname.startsWith(ROUTES.SEARCH)
-                      ? "var(--primary)"
-                      : "var(--text-muted)",
-                  border:
-                    pathname.startsWith(ROUTES.CATALOG) ||
-                    pathname.startsWith(ROUTES.SEARCH)
-                      ? "1px solid var(--border)"
-                      : "1px solid transparent",
-                  transition: "all 0.2s",
-                  fontWeight:
-                    pathname.startsWith(ROUTES.CATALOG) ||
-                    pathname.startsWith(ROUTES.SEARCH)
-                      ? 700
-                      : 500,
-                }}
-              >
-                <Icon icon="lucide:search" width="14" />
-                {t("search")}
-              </Nav.Link>
-
-              {/* Bài báo */}
-              <Nav.Link
-                onClick={() => navigate(ROUTES.ARTICLES)}
-                className="px-3 py-1 text-sm font-semibold d-flex align-items-center gap-1"
-                style={{
-                  borderRadius: "6px",
-                  backgroundColor: pathname.startsWith(ROUTES.ARTICLES)
-                    ? "var(--primary-light)"
-                    : "transparent",
-                  color: pathname.startsWith(ROUTES.ARTICLES)
-                    ? "var(--primary)"
-                    : "var(--text-muted)",
-                  border: pathname.startsWith(ROUTES.ARTICLES)
-                    ? "1px solid var(--border)"
-                    : "1px solid transparent",
-                  transition: "all 0.2s",
-                  fontWeight: pathname.startsWith(ROUTES.ARTICLES) ? 700 : 500,
-                }}
-              >
-                <Icon icon="lucide:file-text" width="14" />
-                Bài báo
-              </Nav.Link>
-
-              {/* Tác Giả */}
-              <Nav.Link
-                onClick={() => navigate(ROUTES.AUTHORS)}
-                className="px-3 py-1 text-sm font-semibold d-flex align-items-center gap-1"
-                style={{
-                  borderRadius: "6px",
-                  backgroundColor:
-                    pathname.startsWith(ROUTES.AUTHORS) ? "var(--primary-light)" : "transparent",
-                  color:
-                    pathname.startsWith(ROUTES.AUTHORS) ? "var(--primary)" : "var(--text-muted)",
-                  border: pathname.startsWith(ROUTES.AUTHORS)
-                    ? "1px solid var(--border)"
-                    : "1px solid transparent",
-                  transition: "all 0.2s",
-                  fontWeight: pathname.startsWith(ROUTES.AUTHORS) ? 700 : 500,
-                }}
-              >
-                <Icon icon="lucide:file-text" width="14" />
-                Tác Giả
-              </Nav.Link>
-
+            <Nav className="mx-auto align-items-center" style={{ gap: "10px" }}>
+              {navItems.map((item) => (
+                <Nav.Link
+                  key={item.path}
+                  onClick={() => navigate(item.path)}
+                  className="px-2 py-1 text-sm d-flex align-items-center gap-1 bg-transparent"
+                  style={navLinkStyle}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.color = "var(--primary)";
+                    e.currentTarget.style.borderBottomColor = "var(--primary)";
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.color = "var(--text-muted)";
+                    e.currentTarget.style.borderBottomColor = "transparent";
+                  }}
+                >
+                  <Icon icon={item.icon} width="14" />
+                  {item.label}
+                </Nav.Link>
+              ))}
             </Nav>
 
             <div className="d-flex align-items-center gap-3">
-              {/* (Compact) Language selector moved to the far right below */}
-
-              {/* Theme Toggle Sun/Moon Icon */}
-              <div
-                className="text-muted-custom hover:text-main"
-                style={{ cursor: "pointer" }}
-                onClick={() =>
-                  alert("Đang áp dụng giao diện sáng của ResearchPulse")
-                }
-              >
-                <Icon icon="lucide:sun" width="18" className="text-warning" />
-              </div>
-
               {/* Notification icon */}
               {email && (
                 <div
@@ -260,41 +169,72 @@ export default function Header() {
                 </div>
               )}
 
+              <Dropdown align="end">
+                <Dropdown.Toggle
+                  as="button"
+                  type="button"
+                  className="border-0 bg-transparent d-inline-flex align-items-center justify-content-center p-0 text-muted-custom"
+                  style={{ width: "32px", height: "32px", cursor: "pointer" }}
+                  aria-label="Mở cài đặt giao diện"
+                >
+                  <Icon icon="lucide:settings" width="18" />
+                </Dropdown.Toggle>
+                <Dropdown.Menu className="border-0 shadow-sm mt-2" style={dropdownMenuStyle}>
+                  <div className="px-3 py-2 text-xs font-bold text-main border-bottom pb-2 mb-1">
+                    Cài đặt
+                  </div>
+                  <Dropdown.Item
+                    onClick={() => changeLanguage("vi")}
+                    className={`d-flex align-items-center justify-content-between text-xs py-2 ${
+                      language.startsWith("vi") ? "text-primary" : "text-dark"
+                    }`}
+                  >
+                    <span>Tiếng Việt</span>
+                    {language.startsWith("vi") && (
+                      <Icon icon="lucide:check" className="text-primary text-xs ms-2" />
+                    )}
+                  </Dropdown.Item>
+                  <Dropdown.Item
+                    onClick={() => changeLanguage("en")}
+                    className={`d-flex align-items-center justify-content-between text-xs py-2 ${
+                      language.startsWith("en") ? "text-primary" : "text-dark"
+                    }`}
+                  >
+                    <span>English</span>
+                    {language.startsWith("en") && (
+                      <Icon icon="lucide:check" className="text-primary text-xs ms-2" />
+                    )}
+                  </Dropdown.Item>
+                  <Dropdown.Divider />
+                  <Dropdown.Item
+                    onClick={() => alert("Đang áp dụng giao diện sáng của ResearchPulse")}
+                    className="d-flex align-items-center gap-2 text-xs py-2 text-main"
+                  >
+                    <Icon icon="lucide:sun" width="14" className="text-warning" />
+                    <span>Giao diện sáng</span>
+                  </Dropdown.Item>
+                </Dropdown.Menu>
+              </Dropdown>
+
               {/* User Authentication Display/Buttons */}
               {email ? (
                 <Dropdown align="end">
                   <Dropdown.Toggle
-                    as="div"
-                    className="d-flex align-items-center justify-content-center text-white"
+                    as="button"
+                    type="button"
+                    className="border-0 bg-transparent d-inline-flex align-items-center justify-content-center p-0 text-muted-custom hover:text-primary"
                     style={{
                       width: "32px",
                       height: "32px",
-                      borderRadius: "50%",
-                      background: "var(--primary)",
-                      boxShadow: "0 0 8px rgba(255, 122, 51, 0.2)",
                       cursor: "pointer",
-                      transition: "transform 0.15s ease",
+                      transition: "color 0.15s ease",
                     }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.transform = "scale(1.05)";
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.transform = "scale(1)";
-                    }}
+                    aria-label="Tài khoản người dùng"
                   >
-                    <Icon icon="lucide:user" width="16" />
+                    <Icon icon="lucide:user" width="18" />
                   </Dropdown.Toggle>
 
-                  <Dropdown.Menu
-                    className="border-0 shadow-sm mt-2"
-                    style={{
-                      minWidth: "180px",
-                      "--bs-dropdown-link-active-bg": "rgba(0, 0, 0, 0.06)",
-                      "--bs-dropdown-link-active-color": "var(--text-main)",
-                      "--bs-dropdown-link-hover-bg": "rgba(0, 0, 0, 0.04)",
-                      "--bs-dropdown-link-hover-color": "var(--text-main)",
-                    }}
-                  >
+                  <Dropdown.Menu className="border-0 shadow-sm mt-2" style={dropdownMenuStyle}>
                     <div className="px-3 py-2 text-xs font-bold text-main border-bottom pb-2 mb-1">
                       Người dùng
                       <div
@@ -352,48 +292,6 @@ export default function Header() {
                   </Button>
                 </>
               )}
-              {/* Compact language icon on the far right */}
-              <NavDropdown
-                title={
-                  <Icon
-                    icon="lucide:globe"
-                    width="18"
-                    className="text-muted-custom"
-                  />
-                }
-                id="language-nav-compact"
-                align="end"
-                className="bg-transparent border-0"
-              >
-                <NavDropdown.Item
-                  onClick={() => changeLanguage("vi")}
-                  className={`d-flex align-items-center justify-content-between text-xs py-2 ${
-                    language.startsWith("vi") ? "text-primary" : "text-dark"
-                  }`}
-                >
-                  <span>Tiếng Việt</span>
-                  {language.startsWith("vi") && (
-                    <Icon
-                      icon="lucide:check"
-                      className="text-primary text-xs ms-2"
-                    />
-                  )}
-                </NavDropdown.Item>
-                <NavDropdown.Item
-                  onClick={() => changeLanguage("en")}
-                  className={`d-flex align-items-center justify-content-between text-xs py-2 ${
-                    language.startsWith("en") ? "text-primary" : "text-dark"
-                  }`}
-                >
-                  <span>English</span>
-                  {language.startsWith("en") && (
-                    <Icon
-                      icon="lucide:check"
-                      className="text-primary text-xs ms-2"
-                    />
-                  )}
-                </NavDropdown.Item>
-              </NavDropdown>
             </div>
           </Navbar.Collapse>
         </Container>

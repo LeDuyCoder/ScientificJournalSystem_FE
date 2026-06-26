@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
-import { Row, Col, Form, Button, InputGroup } from 'react-bootstrap';
+import { Row, Col, Form, Button } from 'react-bootstrap';
 import { Icon } from '@iconify/react';
 import { getSubjectAreasApi } from '../../../journal/api/journalApi';
 import PrimaryButton from '../../../../shared/components/Button/PrimaryButton';
+import { HeaderFilterCard } from '../../../../shared/components/Card';
+import { FilterSearch, FilterSelect } from '../../../../shared/components/Input';
 
 /**
  * Component JournalFilterBar - Thanh công cụ lọc, tìm kiếm và chuyển đổi giao diện hiển thị.
@@ -53,7 +55,7 @@ export default function JournalFilterBar({
   }, []);
 
   return (
-    <div className="bg-white p-4 rounded-3 border mb-4 text-start" style={{ borderColor: 'var(--border)' }}>
+    <HeaderFilterCard className="mb-4">
       <Row className="align-items-end g-3">
         {/* Search Input */}
         <Col xs={12} md={4}>
@@ -61,18 +63,11 @@ export default function JournalFilterBar({
             <Form.Label className="fw-medium small text-main text-uppercase mb-2" style={{ letterSpacing: '0.05em' }}>
               Search Journals
             </Form.Label>
-            <InputGroup>
-              <InputGroup.Text style={{ backgroundColor: 'var(--bg-chip)', borderColor: 'var(--border)' }}>
-                <Icon icon="lucide:search" width="16" className="text-muted" />
-              </InputGroup.Text>
-              <Form.Control
-                type="text"
-                placeholder="Search by title, ISSN..."
-                value={search}
-                onChange={(e) => onSearchChange(e.target.value)}
-                style={{ backgroundColor: 'var(--bg-chip)', borderColor: 'var(--border)', fontSize: '0.9rem' }}
-              />
-            </InputGroup>
+            <FilterSearch
+              value={search}
+              onChange={(e) => onSearchChange(e.target.value)}
+              placeholder="Search by title, ISSN..."
+            />
           </Form.Group>
         </Col>
 
@@ -82,15 +77,15 @@ export default function JournalFilterBar({
             <Form.Label className="fw-medium small text-main text-uppercase mb-2" style={{ letterSpacing: '0.05em' }}>
               Status
             </Form.Label>
-            <Form.Select
+            <FilterSelect
               value={statusFilter}
               onChange={(e) => onStatusChange(e.target.value)}
-              style={{ backgroundColor: 'var(--bg-chip)', borderColor: 'var(--border)', fontSize: '0.9rem', cursor: 'pointer' }}
-            >
-              <option value="All">All Statuses</option>
-              <option value="Active">Active</option>
-              <option value="Draft">Draft</option>
-            </Form.Select>
+              options={[
+                { value: 'All', label: 'All Statuses' },
+                { value: 'Active', label: 'Active' },
+                { value: 'Draft', label: 'Draft' }
+              ]}
+            />
           </Form.Group>
         </Col>
 
@@ -100,71 +95,60 @@ export default function JournalFilterBar({
             <Form.Label className="fw-medium small text-main text-uppercase mb-2" style={{ letterSpacing: '0.05em' }}>
               Subject Area
             </Form.Label>
-            <Form.Select
+            <FilterSelect
               value={subjectFilter}
               onChange={(e) => onSubjectChange(e.target.value)}
-              style={{ backgroundColor: 'var(--bg-chip)', borderColor: 'var(--border)', fontSize: '0.9rem', cursor: 'pointer' }}
               disabled={loading}
-            >
-              <option value="All">All Subject Areas</option>
-              {subjectAreas.map((area) => {
-                const val = area.display_name || area.name;
-                return (
-                  <option key={area.subject_area_id || area.id || val} value={val}>
-                    {val}
-                  </option>
-                );
-              })}
-            </Form.Select>
+              options={[
+                { value: 'All', label: 'All Subject Areas' },
+                ...subjectAreas.map(area => ({
+                  value: area.display_name || area.name,
+                  label: area.display_name || area.name
+                }))
+              ]}
+            />
           </Form.Group>
         </Col>
 
         {/* View Mode & Add Button */}
-        <Col xs={12} md={3} className="d-flex justify-content-md-end align-items-center gap-3 mt-md-0">
+        <Col xs={12} md={3} className="d-flex justify-content-md-end align-items-end gap-3">
           {/* View Toggle */}
-          <div className="d-flex flex-column align-items-md-end">
-            <span className="fw-medium small text-main text-uppercase mb-2 d-none d-md-inline" style={{ letterSpacing: '0.05em' }}>
-              View
-            </span>
-            <div className="btn-group" role="group">
-              <Button
-                variant="light"
-                onClick={() => onViewModeChange('table')}
-                className={`btn-custom-sm d-flex align-items-center p-2 rounded-start ${
-                  viewMode === 'table' ? 'bg-dark text-white' : 'bg-light text-dark border'
-                }`}
-                style={{ borderRight: 'none' }}
-                title="Table view"
-              >
-                <Icon icon="lucide:layout-list" width="16" />
-              </Button>
-              <Button
-                variant="light"
-                onClick={() => onViewModeChange('card')}
-                className={`btn-custom-sm d-flex align-items-center p-2 rounded-end ${
-                  viewMode === 'card' ? 'bg-dark text-white' : 'bg-light text-dark border'
-                }`}
-                style={{ borderLeft: 'none' }}
-                title="Card view"
-              >
-                <Icon icon="lucide:grid" width="16" />
-              </Button>
-            </div>
+          <div className="btn-group" role="group">
+            <Button
+              variant="light"
+              onClick={() => onViewModeChange('table')}
+              className={`d-flex align-items-center p-2 rounded-start ${
+                viewMode === 'table' ? 'bg-dark text-white' : 'bg-light text-dark border'
+              }`}
+              style={{ borderRight: 'none', height: '40px' }}
+              title="Table view"
+            >
+              <Icon icon="lucide:layout-list" width="16" />
+            </Button>
+            <Button
+              variant="light"
+              onClick={() => onViewModeChange('card')}
+              className={`d-flex align-items-center p-2 rounded-end ${
+                viewMode === 'card' ? 'bg-dark text-white' : 'bg-light text-dark border'
+              }`}
+              style={{ borderLeft: 'none', height: '40px' }}
+              title="Card view"
+            >
+              <Icon icon="lucide:grid" width="16" />
+            </Button>
           </div>
 
           {/* Add Journal Button */}
-          <div className="d-flex flex-column">
-            <span className="mb-2 d-none d-md-inline" style={{ height: '18px' }}></span>
-            <PrimaryButton
-              className="py-2 px-3 text-nowrap"
-              onClick={onOpenAddModal}
-            >
-              <Icon icon="lucide:plus" width="16" />
-              <span>Create New Journal</span>
-            </PrimaryButton>
-          </div>
+          <PrimaryButton
+            className="text-nowrap"
+            onClick={onOpenAddModal}
+            style={{ height: '40px' }}
+          >
+            <Icon icon="lucide:plus" width="16" className="me-2" />
+            <span>Create Journal</span>
+          </PrimaryButton>
         </Col>
       </Row>
-    </div>
+    </HeaderFilterCard>
   );
 }

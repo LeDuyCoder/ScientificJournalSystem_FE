@@ -119,7 +119,7 @@ export default function VolumesTabContent({
                   <span className="journal-volume-title">Volume {vol.volume_number || 'N/A'}</span>
                   <span className="journal-volume-meta">{volumeYear || 'Chưa cập nhật'}</span>
                   {vol.issue_count !== undefined && vol.issue_count > 0 && (
-                    <span className="journal-badge journal-badge--neutral ms-2">
+                    <span className="text-muted-custom small ms-2">
                       {vol.issue_count} issue
                     </span>
                   )}
@@ -165,7 +165,7 @@ export default function VolumesTabContent({
                               </span>
                             )}
                             {issue.article_count !== undefined && (
-                              <span className="journal-badge journal-badge--neutral">
+                              <span className="text-muted-custom small">
                                 {issue.article_count} bài báo
                               </span>
                             )}

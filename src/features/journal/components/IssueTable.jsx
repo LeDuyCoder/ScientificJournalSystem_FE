@@ -2,6 +2,8 @@ import React from 'react';
 import { Table, Badge } from 'react-bootstrap';
 import { Icon } from '@iconify/react';
 
+import { StateCard } from '../../../shared/components/Card';
+
 /**
  * Component IssueTable - Bảng hiển thị toàn bộ các Số phát sóng (Issues) nằm trong một Tập (Volume).
  * @param {Array} issues - Danh sách các Issue đã lọc theo Volume đang chọn
@@ -11,17 +13,19 @@ export default function IssueTable({ issues }) {
   // Trạng thái hiển thị nếu Admin chưa chọn Volume hoặc Volume được chọn chưa có Issue nào
   if (!issues || issues.length === 0) {
     return (
-      <div className="text-center py-5 glass-card border-dashed">
-        <Icon icon="lucide:calendar-dashed" width="40" className="text-muted-custom mb-2" />
-        <h6 className="text-main fw-bold">Kho lưu trữ số trống</h6>
-        <p className="text-muted-custom small mb-0">Tập (Volume) này chưa thiết lập các Số phát sóng (Issues) cụ thể.</p>
-      </div>
+      <StateCard
+        variant="neutral"
+        icon="lucide:calendar-dashed"
+        title="Kho lưu trữ số trống"
+        description="Tập (Volume) này chưa thiết lập các Số phát sóng (Issues) cụ thể."
+        className="my-4 border-dashed"
+      />
     );
   }
 
   return (
-    <div className="table-responsive rounded-3 border shadow-sm">
-      <Table hover className="align-middle mb-0 text-start bg-white">
+    <div className="table-responsive rounded-3 shadow-sm border overflow-hidden">
+      <Table hover className="align-middle mb-0 text-start bg-card">
         <thead className="border-bottom" style={{ fontSize: '0.75rem', letterSpacing: '0.05em' }}>
           <tr>
             <th className="py-3 ps-4" style={{ width: '80px', backgroundColor: '#f8fafc', color: '#64748b' }}>Số hiệu</th>

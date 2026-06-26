@@ -4,7 +4,7 @@
  */
 
 import { useEffect, useState } from 'react';
-import { Container, Row, Col, Card, Form } from 'react-bootstrap';
+import { Container, Row, Col } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import Icon from '../../../shared/components/Icon';
 import Header from '../../landing/components/Header';
@@ -12,6 +12,8 @@ import useAuthors from '../hooks/useAuthors';
 import AuthorLeaderboardTable from '../components/AuthorLeaderboardTable';
 import AuthorNavigationTabs from '../components/AuthorNavigationTabs';
 import PrimaryButton from '../../../shared/components/Button/PrimaryButton';
+import { FilterCard } from '../../../shared/components/Card';
+import { FilterSelect } from '../../../shared/components/Input';
 import './AuthorLeaderboardPage.css';
 
 export default function AuthorLeaderboardPage() {
@@ -82,43 +84,41 @@ export default function AuthorLeaderboardPage() {
 
         <AuthorNavigationTabs activeTab="leaderboard" />
 
-        <Card className="author-leaderboard-filter-card">
+        <FilterCard className="author-leaderboard-filter-card">
           <Row className="g-3 align-items-center">
             <Col xs={12} sm={6} md={4}>
-              <Form.Group className="d-flex align-items-center gap-2">
-                <Form.Label className="author-leaderboard-label m-0 flex-shrink-0">Lĩnh vực:</Form.Label>
-                <Form.Select
-                  size="sm"
+              <div className="author-leaderboard-filter-control">
+                <span className="author-leaderboard-label">Lĩnh vực:</span>
+                <FilterSelect
                   value={selectedArea}
                   onChange={e => setSelectedArea(e.target.value)}
-                  className="author-leaderboard-select"
-                >
-                  <option value="">Tất cả lĩnh vực</option>
-                  <option value="Machine Learning">Machine Learning</option>
-                  <option value="Computer Vision">Computer Vision</option>
-                  <option value="Deep Learning">Deep Learning</option>
-                  <option value="Quantum Optics">Quantum Optics</option>
-                </Form.Select>
-              </Form.Group>
+                  options={[
+                    { value: '', label: 'Tất cả lĩnh vực' },
+                    { value: 'Machine Learning', label: 'Machine Learning' },
+                    { value: 'Computer Vision', label: 'Computer Vision' },
+                    { value: 'Deep Learning', label: 'Deep Learning' },
+                    { value: 'Quantum Optics', label: 'Quantum Optics' }
+                  ]}
+                />
+              </div>
             </Col>
 
             <Col xs={12} sm={6} md={4}>
-              <Form.Group className="d-flex align-items-center gap-2">
-                <Form.Label className="author-leaderboard-label m-0 flex-shrink-0">Thời gian:</Form.Label>
-                <Form.Select
-                  size="sm"
+              <div className="author-leaderboard-filter-control">
+                <span className="author-leaderboard-label">Thời gian:</span>
+                <FilterSelect
                   value={selectedPeriod}
                   onChange={e => setSelectedPeriod(e.target.value)}
-                  className="author-leaderboard-select"
-                >
-                  <option value="all">Tất cả thời gian</option>
-                  <option value="week">Tuần này</option>
-                  <option value="month">Tháng này</option>
-                </Form.Select>
-              </Form.Group>
+                  options={[
+                    { value: 'all', label: 'Tất cả thời gian' },
+                    { value: 'week', label: 'Tuần này' },
+                    { value: 'month', label: 'Tháng này' }
+                  ]}
+                />
+              </div>
             </Col>
           </Row>
-        </Card>
+        </FilterCard>
 
         <AuthorLeaderboardTable
           authors={leaderboard}

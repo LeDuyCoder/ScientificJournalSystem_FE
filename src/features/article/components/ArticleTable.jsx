@@ -67,17 +67,17 @@ export default function ArticleTable({ articles, isLoading, onDetailClick, onCle
   if (isLoading && articles.length === 0) {
     return (
       <div className="article-table-card w-100">
-        <Table responsive hover className="m-0 bg-transparent text-main border-0">
+        <Table responsive hover className="article-table m-0 border-0">
           <thead>
-            <tr style={{ borderBottom: '1px solid var(--border)' }}>
-              <th className="bg-transparent text-muted-custom py-3 ps-3 text-xs" style={{ width: '40px' }}>#</th>
-              <th className="bg-transparent text-muted-custom py-3 text-xs">TÊN BÀI BÁO</th>
-              <th className="bg-transparent text-muted-custom py-3 text-xs">JOURNAL</th>
-              <th className="bg-transparent text-muted-custom py-3 text-xs text-center">NĂM</th>
-              <th className="bg-transparent text-muted-custom py-3 text-xs">DOI</th>
-              <th className="bg-transparent text-muted-custom py-3 text-xs">TOPIC</th>
-              <th className="bg-transparent text-muted-custom py-3 text-xs text-center">OA</th>
-              <th className="bg-transparent text-muted-custom py-3 text-xs text-end pe-3">CHI TIẾT</th>
+            <tr>
+              <th className="px-3 py-3" style={{ width: '40px' }}>#</th>
+              <th className="px-3 py-3">TÊN BÀI BÁO</th>
+              <th className="px-3 py-3">JOURNAL</th>
+              <th className="px-3 py-3 text-center">NĂM</th>
+              <th className="px-3 py-3">DOI</th>
+              <th className="px-3 py-3">TOPIC</th>
+              <th className="px-3 py-3 text-center">OA</th>
+              <th className="px-3 py-3 text-end">CHI TIẾT</th>
             </tr>
           </thead>
           {renderSkeletons()}
@@ -122,17 +122,17 @@ export default function ArticleTable({ articles, isLoading, onDetailClick, onCle
     <>
       {/* 1. TABLE LAYOUT (Desktop & Tablet) */}
       <div className="article-table-card w-100 d-none d-md-block">
-        <Table responsive hover className="m-0 bg-transparent text-main border-0">
+        <Table responsive hover className="article-table m-0 border-0">
           <thead>
-            <tr style={{ borderBottom: '1px solid var(--border)' }}>
-              <th className="bg-transparent text-muted-custom py-3 ps-3 text-xs" style={{ width: '40px', letterSpacing: '0.05em' }}>#</th>
-              <th className="bg-transparent text-muted-custom py-3 text-xs" style={{ letterSpacing: '0.05em' }}>TÊN BÀI BÁO</th>
-              <th className="bg-transparent text-muted-custom py-3 text-xs" style={{ letterSpacing: '0.05em' }}>JOURNAL</th>
-              <th className="bg-transparent text-muted-custom py-3 text-xs text-center" style={{ width: '80px', letterSpacing: '0.05em' }}>NĂM</th>
-              <th className="bg-transparent text-muted-custom py-3 text-xs" style={{ letterSpacing: '0.05em' }}>DOI</th>
-              <th className="bg-transparent text-muted-custom py-3 text-xs" style={{ letterSpacing: '0.05em' }}>TOPIC</th>
-              <th className="bg-transparent text-muted-custom py-3 text-xs text-center" style={{ width: '80px', letterSpacing: '0.05em' }}>OA</th>
-              <th className="bg-transparent text-muted-custom py-3 text-xs text-end pe-3" style={{ width: '80px', letterSpacing: '0.05em' }}>CHI TIẾT</th>
+            <tr>
+              <th className="px-3 py-3" style={{ width: '40px' }}>#</th>
+              <th className="px-3 py-3">TÊN BÀI BÁO</th>
+              <th className="px-3 py-3">JOURNAL</th>
+              <th className="px-3 py-3 text-center">NĂM</th>
+              <th className="px-3 py-3">DOI</th>
+              <th className="px-3 py-3">TOPIC</th>
+              <th className="px-3 py-3 text-center">OA</th>
+              <th className="px-3 py-3 text-end">CHI TIẾT</th>
             </tr>
           </thead>
           <tbody>

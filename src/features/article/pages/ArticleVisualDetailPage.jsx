@@ -25,7 +25,7 @@ import ErrorState from '../../../shared/components/ErrorState';
 import AuthRequiredModal from '../../../shared/components/AuthRequiredModal';
 import { toast } from '../../../shared/utils/toast';
 import { getDoiUrl, normalizeArticleDetail } from '../utils/articleFormatters';
-import './ArticleVisualDetailPage.css';
+import '../Article.css';
 
 const formatAuthorsLine = (authors = [], limit = 3) => {
   if (!authors || authors.length === 0) return 'Đang cập nhật tác giả';

@@ -4,23 +4,24 @@
  * File: features\dashboard\components\RecentProjectsCard.jsx
  */
 import { Icon } from '@iconify/react';
+import { EntityCard } from '../../../shared/components/Card';
 import { truncate } from '../../../shared/utils/formatNumber';
 
 /** Status badge config */
 const STATUS_CONFIG = {
-  active: { label: 'Hoạt động', bg: 'rgba(47,198,70,0.12)', color: '#2FC646', border: 'rgba(47,198,70,0.3)' },
-  new: { label: 'New', bg: 'rgba(255,122,51,0.12)', color: 'var(--primary)', border: 'rgba(255,122,51,0.3)' },
-  paused: { label: 'Tạm dừng', bg: 'rgba(107,107,107,0.12)', color: 'var(--text-muted)', border: 'var(--border)' },
-  archived: { label: 'Lưu trữ', bg: 'rgba(107,107,107,0.12)', color: 'var(--text-muted)', border: 'var(--border)' },
+  active: { label: 'Hoạt động', bg: 'var(--bg-chip)', color: 'var(--text-main)', border: 'var(--border)' },
+  new: { label: 'New', bg: 'var(--primary-light)', color: 'var(--primary)', border: 'transparent' },
+  paused: { label: 'Tạm dừng', bg: 'var(--bg-section)', color: 'var(--text-muted)', border: 'var(--border)' },
+  archived: { label: 'Lưu trữ', bg: 'var(--bg-section)', color: 'var(--text-muted)', border: 'var(--border)' },
 };
 
 function ProjectStatusBadge({ status }) {
   const cfg = STATUS_CONFIG[status?.toLowerCase()] ?? STATUS_CONFIG.active;
   return (
     <span
-      className="d-inline-block px-2 py-1 rounded-pill"
+      className="d-inline-block px-2 py-1 rounded-pill font-display"
       style={{
-        fontSize: '0.65rem', fontWeight: 700,
+        fontSize: '0.7rem', fontWeight: 600,
         backgroundColor: cfg.bg, color: cfg.color,
         border: `1px solid ${cfg.border}`,
       }}
@@ -91,71 +92,74 @@ function RecentProjectItem({ project, onClick }) {
  * RecentProjectsCard — card chứa danh sách 3 project gần đây
  */
 export default function RecentProjectsCard({ projects, loading, error, onViewAll, onProjectClick }) {
-  return (
-    <div
-      className="h-100 rounded-3"
-      style={{
-        backgroundColor: 'var(--bg-card)',
-        border: '1px solid var(--border)',
-        overflow: 'hidden',
+  const actions = onViewAll ? (
+    <button
+      className="btn btn-link p-0 text-decoration-none"
+      onClick={onViewAll}
+      style={{ fontSize: '0.75rem', color: 'var(--primary)' }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.textDecoration = 'underline';
+        e.currentTarget.style.textUnderlineOffset = '4px';
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.textDecoration = 'none';
       }}
     >
-      {/* Header */}
-      <div className="d-flex align-items-center justify-content-between px-4 pt-4 pb-2">
-        <div className="d-flex align-items-center gap-2">
-          <Icon icon="lucide:folder-open" width={16} style={{ color: 'var(--primary)' }} />
-          <span className="font-display fw-bold text-main" style={{ fontSize: '0.9rem' }}>
-            Projects gần đây
-          </span>
-        </div>
-        {onViewAll && (
-          <button
-            className="btn btn-link p-0 text-decoration-none"
-            onClick={onViewAll}
-            style={{ fontSize: '0.75rem', color: 'var(--primary)' }}
-          >
-            Xem tất cả →
-          </button>
-        )}
-      </div>
+      Xem tất cả →
+    </button>
+  ) : null;
 
-      {/* Body */}
-      <div className="px-1">
-        {loading ? (
-          [1, 2, 3].map(i => (
-            <div key={i} className="d-flex align-items-center gap-3 px-3 py-3">
-              <div className="skeleton-shimmer rounded-3" style={{ width: 40, height: 40, flexShrink: 0 }} />
-              <div className="flex-grow-1">
-                <div className="skeleton-shimmer rounded mb-1" style={{ width: '70%', height: 14 }} />
-                <div className="skeleton-shimmer rounded" style={{ width: '50%', height: 11 }} />
-              </div>
+  const description = (
+    <div className="px-1">
+      {loading ? (
+        [1, 2, 3].map(i => (
+          <div key={i} className="d-flex align-items-center gap-3 px-3 py-3">
+            <div className="skeleton-shimmer rounded-3" style={{ width: 40, height: 40, flexShrink: 0 }} />
+            <div className="flex-grow-1">
+              <div className="skeleton-shimmer rounded mb-1" style={{ width: '70%', height: 14 }} />
+              <div className="skeleton-shimmer rounded" style={{ width: '50%', height: 11 }} />
             </div>
-          ))
-        ) : error ? (
-          <div className="text-center py-5 px-3">
-            <Icon icon="lucide:alert-circle" width={32} style={{ color: '#ef4444' }} />
-            <p className="text-muted-custom mt-2 mb-0" style={{ fontSize: '0.8rem' }}>{error}</p>
           </div>
-        ) : projects.length === 0 ? (
-          <div className="text-center py-5 px-3">
-            <Icon icon="lucide:folder-plus" width={36} style={{ color: 'var(--text-muted)' }} />
-            <p className="text-main fw-semibold mt-2 mb-1" style={{ fontSize: '0.85rem' }}>
-              Chưa có project nào
-            </p>
-            <p className="text-muted-custom mb-0" style={{ fontSize: '0.75rem' }}>
-              Tạo project đầu tiên để bắt đầu theo dõi.
-            </p>
-          </div>
-        ) : (
-          projects.slice(0, 3).map((p, i) => (
-            <RecentProjectItem
-              key={p.project_id ?? p.id ?? i}
-              project={p}
-              onClick={() => onProjectClick?.(p)}
-            />
-          ))
-        )}
-      </div>
+        ))
+      ) : error ? (
+        <div className="text-center py-5 px-3">
+          <Icon icon="lucide:alert-circle" width={32} style={{ color: '#ef4444' }} />
+          <p className="text-muted-custom mt-2 mb-0" style={{ fontSize: '0.8rem' }}>{error}</p>
+        </div>
+      ) : projects.length === 0 ? (
+        <div className="text-center py-5 px-3">
+          <Icon icon="lucide:folder-plus" width={36} style={{ color: 'var(--text-muted)' }} />
+          <p className="text-main fw-semibold mt-2 mb-1" style={{ fontSize: '0.85rem' }}>
+            Chưa có project nào
+          </p>
+          <p className="text-muted-custom mb-0" style={{ fontSize: '0.75rem' }}>
+            Tạo project đầu tiên để bắt đầu theo dõi.
+          </p>
+        </div>
+      ) : (
+        projects.slice(0, 3).map((p, i) => (
+          <RecentProjectItem
+            key={p.project_id ?? p.id ?? i}
+            project={p}
+            onClick={() => onProjectClick?.(p)}
+          />
+        ))
+      )}
     </div>
+  );
+
+  return (
+    <EntityCard
+      className="h-100"
+      title={(
+        <span className="d-flex align-items-center gap-2">
+          <Icon icon="lucide:folder-open" width={16} style={{ color: 'var(--primary)' }} />
+          <span>Projects gần đây</span>
+        </span>
+      )}
+      actions={actions}
+      description={description}
+      bodyClassName="flex-column align-items-stretch"
+    />
   );
 }

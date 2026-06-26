@@ -1,7 +1,8 @@
 import React from 'react';
-import { Card, Col, Button } from 'react-bootstrap';
+import { Col, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';
+import { EntityCard } from '../../../shared/components/Card';
 
 /**
  * Component JournalCardAdmin - Hiển thị thông tin tạp chí dưới dạng thẻ khối độc lập dành cho Admin.
@@ -14,11 +15,17 @@ export default function JournalCardAdmin({ journal }) {
 
   return (
     <Col xs={12} sm={6} lg={4}>
-      <Card className="journal-dark-card h-100 shadow-sm border-1 transition-hover">
-        <Card.Body className="d-flex flex-column p-4">
-          
-          {/* Trạng thái phân loại và Badge màu hoạt động */}
-          <div className="d-flex justify-content-between align-items-start mb-3">
+      <EntityCard
+        className="h-100"
+        title={title}
+        subtitle={
+          <div className="text-muted-custom small d-flex align-items-center gap-1">
+            <Icon icon="lucide:building" width="14" />
+            <span className="text-truncate">{journal.publisher || 'Chưa có nhà xuất bản'}</span>
+          </div>
+        }
+        actions={
+          <div className="d-flex gap-2">
             <span className="badge bg-dark text-white px-2 py-1 text-uppercase small">
               {journal.subjectCategory || 'General'}
             </span>
@@ -28,20 +35,9 @@ export default function JournalCardAdmin({ journal }) {
               {journal.status || 'Draft'}
             </span>
           </div>
-
-          {/* Tiêu đề tạp chí lớn */}
-          <Card.Title className="font-display fw-bold text-main mb-2 line-clamp-2 h5">
-            {title}
-          </Card.Title>
-
-          {/* Tên nhà xuất bản đi kèm */}
-          <div className="text-muted-custom small d-flex align-items-center gap-1 mb-3">
-            <Icon icon="lucide:building" width="14" />
-            <span className="text-truncate">{journal.publisher || 'Chưa có nhà xuất bản'}</span>
-          </div>
-
-          {/* Khối thông tin chi tiết (Mã số ISSN, Người đứng đầu) */}
-          <div className="bg-light p-3 rounded-3 mb-4 mt-auto" style={{ backgroundColor: 'var(--bg-chip)' }}>
+        }
+        meta={
+          <div className="bg-light p-3 rounded-3 mt-4" style={{ backgroundColor: 'var(--bg-chip)' }}>
             <div className="d-flex justify-content-between mb-2 small">
               <span className="text-muted-custom">Mã số ISSN:</span>
               <span className="fw-medium text-main font-monospace">{journal.issn || '—'}</span>
@@ -53,8 +49,8 @@ export default function JournalCardAdmin({ journal }) {
               </span>
             </div>
           </div>
-
-          {/* Thanh công cụ quản trị dưới chân thẻ */}
+        }
+        footer={
           <div className="d-flex gap-2 w-100 pt-3 border-top mt-auto" style={{ borderColor: 'var(--border)' }}>
             <Button 
               variant="light" 
@@ -73,9 +69,8 @@ export default function JournalCardAdmin({ journal }) {
               <span>Sửa đổi</span>
             </Button>
           </div>
-
-        </Card.Body>
-      </Card>
+        }
+      />
     </Col>
   );
 }

@@ -66,28 +66,15 @@ export default function JournalHero({
     navigate(`/keywords?keyword=${encodeURIComponent(categoryName)}`);
   };
 
-  const quartileClass = quartile === 'Q1' ? 'journal-badge--q1' : quartile === 'Q2' ? 'journal-badge--accent' : 'journal-badge--neutral';
 
   return (
     <section className="journal-surface journal-hero-card mb-4" aria-labelledby="journal-detail-title">
       <Row className="gy-4 align-items-start journal-hero-content">
         <Col lg={8} md={7}>
-          <div className="journal-badge-row">
-            {quartile && (
-              <span className={`journal-badge ${quartileClass}`}>
-                {quartile}
-              </span>
-            )}
-            {is_open_access && (
-              <span className="journal-badge journal-badge--accent">
-                Open Access
-              </span>
-            )}
-            {publisher_name && (
-              <span className="journal-badge journal-badge--neutral">
-                {publisher_name}
-              </span>
-            )}
+          <div className="journal-meta-line">
+            {quartile && <span>{quartile}</span>}
+            {is_open_access && <span>Open Access</span>}
+            {publisher_name && <span>{publisher_name}</span>}
           </div>
 
           <h1 id="journal-detail-title" className="journal-title">

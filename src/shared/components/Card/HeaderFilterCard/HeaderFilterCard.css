@@ -1,0 +1,55 @@
+/**
+ * File source thuộc hệ thống FE ResearchPulse.
+ *
+ * File: shared\components\Card\HeaderFilterCard\HeaderFilterCard.css
+ */
+
+.header-filter-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.header-filter-card__summary {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.header-filter-card__title {
+  color: var(--text-main);
+  font-size: 1.1rem;
+  font-weight: 700;
+  font-family: var(--font-display);
+}
+
+.header-filter-card__count {
+  display: inline-block;
+  border-radius: 999px;
+  padding: 0.25rem 0.75rem;
+  background-color: var(--primary);
+  color: var(--bg-card);
+  font-size: 0.75rem;
+  line-height: 1.2;
+  font-weight: 600;
+  font-family: var(--font-display);
+}
+
+.header-filter-card__controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.625rem;
+}
+
+@media (min-width: 768px) {
+  .header-filter-card {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}

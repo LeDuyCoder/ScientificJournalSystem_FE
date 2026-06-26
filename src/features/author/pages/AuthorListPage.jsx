@@ -3,9 +3,9 @@
  * @description Trang hiển thị Danh mục Đăng ký Tác giả (`/authors`).
  */
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import { Container, Row, Col, Form, InputGroup, Card } from 'react-bootstrap';
+import { Container, Row, Col, Form, Card } from 'react-bootstrap';
 import Icon from '../../../shared/components/Icon';
 import Header from '../../landing/components/Header';
 import useAuthors from '../hooks/useAuthors';
@@ -15,6 +15,8 @@ import LoadingSkeleton from '../../../shared/components/LoadingSkeleton';
 import AuthorNavigationTabs from '../components/AuthorNavigationTabs';
 import AdminPagination from '../../../shared/components/Pagination';
 import PrimaryButton from '../../../shared/components/Button/PrimaryButton';
+import { FilterCard } from '../../../shared/components/Card';
+import { FilterSearch, FilterSelect } from '../../../shared/components/Input';
 import './AuthorListPage.css';
 
 export default function AuthorListPage() {
@@ -33,8 +35,6 @@ export default function AuthorListPage() {
   } = useAuthors();
 
   const [viewMode] = useState('grid');
-  const [subjectAreaDropdownOpen, setSubjectAreaDropdownOpen] = useState(false);
-  const subjectAreaMenuRef = useRef(null);
 
   const searchVal = searchParams.get('search') || '';
   const pageVal = parseInt(searchParams.get('page') || '1', 10);
@@ -65,16 +65,6 @@ export default function AuthorListPage() {
     }
   }, [subjectAreas, fetchSubjectAreas]);
 
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (subjectAreaMenuRef.current && !subjectAreaMenuRef.current.contains(event.target)) {
-        setSubjectAreaDropdownOpen(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, []);
 
   const handleSearchSubmit = (e) => {
     if (e) e.preventDefault();
@@ -172,73 +162,29 @@ export default function AuthorListPage() {
           ))}
         </Row>
 
-        <Card className="author-filter-card">
+        <FilterCard className="author-filter-card">
           <Form onSubmit={handleSearchSubmit}>
-            <Row className="g-3 align-items-center">
+            <Row className="g-3 align-items-center author-filter-row">
               <Col xs={12} lg={4}>
-                <InputGroup className="author-input-group">
-                  <InputGroup.Text className="author-input-addon pe-1">
-                    <Icon icon="lucide:search" width="16" />
-                  </InputGroup.Text>
-                  <Form.Control
-                    type="text"
-                    placeholder="Tìm theo tên, viện nghiên cứu, từ khóa..."
-                    value={searchInput}
-                    onChange={e => setSearchInput(e.target.value)}
-                    className="author-filter-input"
-                  />
-                </InputGroup>
+                <FilterSearch
+                  value={searchInput}
+                  onChange={e => setSearchInput(e.target.value)}
+                  placeholder="Tìm theo tên, viện nghiên cứu, từ khóa..."
+                />
               </Col>
 
-              <Col xs={12} sm={6} lg={3}>
-                <Form.Group className="position-relative" ref={subjectAreaMenuRef}>
-                  <InputGroup className="author-input-group">
-                    <Form.Control
-                      id="subjectAreaInput"
-                      size="sm"
-                      type="text"
-                      placeholder="Nhập hoặc chọn lĩnh vực"
-                      value={subjectAreaVal}
-                      onChange={e => {
-                        handleFilterChange('subject_area', e.target.value);
-                        setSubjectAreaDropdownOpen(true);
-                      }}
-                      onFocus={() => setSubjectAreaDropdownOpen(true)}
-                      className="author-filter-input"
-                    />
-                    <InputGroup.Text className="author-dropdown-toggle px-3" onClick={() => setSubjectAreaDropdownOpen((prev) => !prev)}>
-                      <Icon icon="lucide:chevron-down" width="16" />
-                    </InputGroup.Text>
-                  </InputGroup>
-
-                  {subjectAreaDropdownOpen && subjectAreas && subjectAreas.length > 0 && (
-                    <div className="author-subject-menu">
-                      <button
-                        type="button"
-                        className="author-subject-option author-subject-option--muted px-3 py-2"
-                        onClick={() => {
-                          handleFilterChange('subject_area', '');
-                          setSubjectAreaDropdownOpen(false);
-                        }}
-                      >
-                        Tất cả lĩnh vực
-                      </button>
-                      {subjectAreas.map((area) => (
-                        <button
-                          key={area.subject_area_id || area.id || area.display_name}
-                          type="button"
-                          className="author-subject-option px-3 py-2"
-                          onClick={() => {
-                            handleFilterChange('subject_area', area.display_name || area.name || '');
-                            setSubjectAreaDropdownOpen(false);
-                          }}
-                        >
-                          {area.display_name || area.name || ''}
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                </Form.Group>
+              <Col xs={12} sm={6} lg={3} className="author-subject-filter-col">
+                <FilterSelect
+                  value={subjectAreaVal}
+                  onChange={e => handleFilterChange('subject_area', e.target.value)}
+                  options={[
+                    { value: '', label: 'Chọn lĩnh vực' },
+                    ...(subjectAreas || []).map((area) => ({
+                      value: area.display_name || area.name || '',
+                      label: area.display_name || area.name || ''
+                    }))
+                  ]}
+                />
               </Col>
 
               <Col xs={12} sm={6} lg={1} className="d-flex gap-2">
@@ -248,7 +194,7 @@ export default function AuthorListPage() {
               </Col>
             </Row>
           </Form>
-        </Card>
+        </FilterCard>
 
         <div className="mb-4">
           {viewMode === 'grid' ? (

@@ -5,6 +5,7 @@
  */
 import { useEffect, useMemo, useState } from 'react';
 import { Container, Row, Col, Card, Badge, Spinner, Alert } from 'react-bootstrap';
+import { StateCard } from '../../../shared/components/Card';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import Header from '../../landing/components/Header';
@@ -202,11 +203,13 @@ export default function TopicDetailPage() {
         ) : (
           <div className="d-grid gap-3">
             {articles.length === 0 ? (
-              <Card className="topic-detail-empty">
-                <Card.Body className="p-4 text-center">
-                  Chưa có bài báo nào cho topic này.
-                </Card.Body>
-              </Card>
+              <StateCard
+                variant="neutral"
+                icon="lucide:file-question"
+                title="Không có dữ liệu"
+                description="Chưa có bài báo nào cho topic này."
+                className="my-4"
+              />
             ) : (
               articles.map((article) => (
                 <Card key={article.id} className="topic-detail-article-card">

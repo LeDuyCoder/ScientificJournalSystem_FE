@@ -58,9 +58,17 @@ const ProjectListPage = () => {
             <Icon icon="lucide:search" width="18" className="position-absolute top-50 translate-middle-y text-muted" style={{ left: '12px' }} />
             <input 
               type="text" 
-              className="form-control rounded-pill ps-5 bg-white border" 
+              className="form-control ps-5 bg-white border" 
               placeholder="Tìm kiếm dự án..." 
-              style={{ fontSize: '0.9rem' }}
+              style={{ fontSize: '0.9rem', borderRadius: '15px', boxShadow: 'none' }}
+              onFocus={(e) => {
+                e.currentTarget.style.borderColor = 'var(--border)';
+                e.currentTarget.style.boxShadow = 'none';
+                e.currentTarget.style.outline = 'none';
+              }}
+              onBlur={(e) => {
+                e.currentTarget.style.borderColor = 'var(--border)';
+              }}
             />
           </div>
           <div className="d-flex gap-4 text-muted-custom small">

@@ -4,7 +4,7 @@
  */
 
 import { useNavigate } from 'react-router-dom';
-import { Card } from 'react-bootstrap';
+import { EntityCard } from '../../../shared/components/Card';
 import AuthorAvatar from './AuthorAvatar';
 
 export default function AuthorCard({ author }) {
@@ -37,51 +37,53 @@ export default function AuthorCard({ author }) {
   };
 
   return (
-    <Card onClick={handleCardClick} className="author-card">
-      <div className="d-flex align-items-start gap-3 mb-3">
-        <AuthorAvatar name={name} url={avatarUrl} size="md" bgColor={avatarColor} className="flex-shrink-0" />
-        <div className="flex-grow-1 min-w-0">
-          <h3 className="author-card-title m-0 text-truncate">{name}</h3>
-          <div className="author-card-institution mt-1 text-truncate">{institution1}</div>
-          {institution2 && <div className="author-card-subinstitution mt-0.5 text-truncate">{institution2}</div>}
+    <EntityCard
+      onClick={handleCardClick}
+      className="h-100"
+      media={<AuthorAvatar name={name} url={avatarUrl} size="md" bgColor={avatarColor} className="flex-shrink-0" />}
+      title={name}
+      subtitle={
+        <>
+          <div className="text-truncate">{institution1}</div>
+          {institution2 && <div className="text-truncate mt-1" style={{ fontSize: '0.85em', opacity: 0.8 }}>{institution2}</div>}
+        </>
+      }
+      meta={
+        <div className="author-card-metrics mt-3">
+          <div>
+            <div className="author-metric-label">H-index</div>
+            <div className="author-metric-value">{hIndex}</div>
+          </div>
+          <div>
+            <div className="author-metric-label">Trích dẫn</div>
+            <div className="author-metric-value">{formatLocalNumber(citations)}</div>
+          </div>
+          <div>
+            <div className="author-metric-label">Bài báo</div>
+            <div className="author-metric-value">{formatLocalNumber(articlesCount)}</div>
+          </div>
         </div>
-      </div>
-
-      <div className="author-card-metrics">
-        <div>
-          <div className="author-metric-label">H-index</div>
-          <div className="author-metric-value">{hIndex}</div>
+      }
+      footer={
+        <div className="d-flex flex-wrap gap-1.5 pt-2 border-top">
+          {tags.length === 0 ? (
+            <span className="author-tag-empty">Chưa cập nhật lĩnh vực</span>
+          ) : (
+            tags.map((tag, idx) => (
+              <span
+                key={idx}
+                className="author-tag"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigate(`/catalog?search=${encodeURIComponent(tag)}`);
+                }}
+              >
+                {tag}
+              </span>
+            ))
+          )}
         </div>
-        <div>
-          <div className="author-metric-label">Trích dẫn</div>
-          <div className="author-metric-value">{formatLocalNumber(citations)}</div>
-        </div>
-        <div>
-          <div className="author-metric-label">Bài báo</div>
-          <div className="author-metric-value">{formatLocalNumber(articlesCount)}</div>
-        </div>
-      </div>
-
-      <hr className="author-card-divider" />
-
-      <div className="d-flex flex-wrap gap-1.5 mt-1">
-        {tags.length === 0 ? (
-          <span className="author-tag-empty">Chưa cập nhật lĩnh vực</span>
-        ) : (
-          tags.map((tag, idx) => (
-            <span
-              key={idx}
-              className="author-tag"
-              onClick={(e) => {
-                e.stopPropagation();
-                navigate(`/catalog?search=${encodeURIComponent(tag)}`);
-              }}
-            >
-              {tag}
-            </span>
-          ))
-        )}
-      </div>
-    </Card>
+      }
+    />
   );
 }
