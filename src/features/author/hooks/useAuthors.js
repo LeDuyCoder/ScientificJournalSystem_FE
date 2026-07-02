@@ -366,6 +366,8 @@ export default function useAuthors() {
   const [subjectAreas, setSubjectAreas] = useState([]);               // Danh sách subject area cho bộ lọc
   const [leaderboard, setLeaderboard] = useState([]);                // Danh sách bảng xếp hạng các tác giả hàng đầu
   const [leaderboardBreakdowns, setLeaderboardBreakdowns] = useState({}); // Breakdown theo tác giả cho leaderboard
+  const [totalLeaderboard, setTotalLeaderboard] = useState(0);              // Tổng số lượng tác giả trong leaderboard
+  const [leaderboardTotalPages, setLeaderboardTotalPages] = useState(1);      // Tổng số trang leaderboard
 
   // ── CÁC TRẠNG THÁI LOADING RIÊNG BIỆT ──────────────────────────────────────
   // Mỗi quá trình tải dữ liệu có cờ loading spinner/skeleton riêng để tránh làm nghẽn giao diện.
@@ -606,24 +608,35 @@ export default function useAuthors() {
         const enrichedList = enrichLeaderboardAuthors(normalizedData, breakdownMap);
         setLeaderboardBreakdowns(breakdownMap);
         setLeaderboard(enrichedList);
+
+        const pagination = response.data.pagination || {};
+        setTotalLeaderboard(pagination.total ?? enrichedList.length);
+        setLeaderboardTotalPages(pagination.total_pages ?? Math.max(1, Math.ceil((pagination.total ?? enrichedList.length) / (pagination.limit || 10))));
       } else {
         throw new Error(response.data?.message || 'Failed to fetch leaderboard');
       }
     } catch (err) {
       console.warn('API error fetching leaderboard, using mock fallback:', err?.message || String(err));
-      let list = [...MOCK_LEADERBOARD];
+      let list = MOCK_LEADERBOARD.map((item, idx) => ({
+        ...item,
+        final_rank: idx + 1
+      }));
       
       const area = (params.subject_area || '').trim().toLowerCase();
       if (area) {
         list = list.filter(item => item.subject_area.toLowerCase().includes(area));
       }
       
-      // Cắt bớt danh sách nếu có cung cấp giới hạn số lượng (ví dụ: tiện ích Dashboard)
-      if (params.limit) {
-        list = list.slice(0, parseInt(params.limit, 10));
-      }
+      const page = parseInt(params.page || '1', 10);
+      const limit = parseInt(params.limit || '10', 10);
+      const total = list.length;
+      
+      const startIndex = (page - 1) * limit;
+      const paginated = list.slice(startIndex, startIndex + limit);
 
-      setLeaderboard(list);
+      setLeaderboard(paginated);
+      setTotalLeaderboard(total);
+      setLeaderboardTotalPages(Math.max(1, Math.ceil(total / limit)));
     } finally {
       setLoadingLeaderboard(false);
     }
@@ -653,6 +666,8 @@ export default function useAuthors() {
     authorBreakdown,
     subjectAreas,
     leaderboard,
+    totalLeaderboard,
+    leaderboardTotalPages,
 
     // Loading states for selective Spinner/Skeleton displays
     loadingAuthors,

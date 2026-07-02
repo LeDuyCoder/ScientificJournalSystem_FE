@@ -1,4 +1,5 @@
 import PaginationControls from './PaginationControls';
+import './Pagination.css';
 
 /**
  * Reusable Pagination Component for data lists.
