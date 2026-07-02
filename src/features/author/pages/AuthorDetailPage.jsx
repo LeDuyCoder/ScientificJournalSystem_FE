@@ -5,13 +5,14 @@
 
 import { useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Container, Row, Col, Button } from 'react-bootstrap';
+import { Container, Row, Col } from 'react-bootstrap';
 import Icon from '../../../shared/components/Icon';
 import Header from '../../landing/components/Header';
 import useAuthors from '../hooks/useAuthors';
 import AuthorProfileHeader from '../components/AuthorProfileHeader';
 import AuthorAreasBreakdown from '../components/AuthorAreasBreakdown';
 import AuthorArticlesSection from '../components/AuthorArticlesSection';
+import PrimaryButton from '../../../shared/components/Button/PrimaryButton';
 import './AuthorDetailPage.css';
 
 export default function AuthorDetailPage() {
@@ -77,14 +78,14 @@ export default function AuthorDetailPage() {
                 Hồ sơ học thuật, phân bổ lĩnh vực nghiên cứu và danh sách công trình công bố của tác giả.
               </p>
             </div>
-            <Button
-              variant="link"
+            <PrimaryButton
+              variant="outline"
               onClick={() => navigate('/authors')}
-              className="author-detail-back p-0 d-flex align-items-center gap-2"
+              className="px-3 py-2"
+              icon="lucide:arrow-left"
             >
-              <Icon icon="lucide:arrow-left" width="16" />
               Quay lại danh sách tác giả
-            </Button>
+            </PrimaryButton>
           </div>
         </section>
 

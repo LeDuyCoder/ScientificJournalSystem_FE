@@ -95,7 +95,7 @@ export default function RegionStatsPanel({
                   <td className="ps-3 text-muted-custom font-monospace" style={{ fontSize: '0.75rem' }}>
                     {index + 1}
                   </td>
-                  <td className="py-2.5 fw-medium text-main font-sans">
+                  <td className="py-2.5 fw-medium text-main font-display">
                     {region.name || '—'}
                   </td>
                   <td className="text-muted-custom font-monospace">

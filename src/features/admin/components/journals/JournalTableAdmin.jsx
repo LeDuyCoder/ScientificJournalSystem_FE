@@ -1,6 +1,8 @@
-﻿import { Table, Button } from 'react-bootstrap';
+import { Table, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';
+
+import { StateCard } from '../../../../shared/components/Card';
 
 /**
  * Component JournalTableAdmin - Bảng hiển thị danh sách tạp chí phục vụ mục đích quản trị.
@@ -12,11 +14,13 @@ export default function JournalTableAdmin({ journals }) {
 
   if (!journals || journals.length === 0) {
     return (
-      <div className="journal-empty-state text-center py-5 glass-card">
-        <Icon icon="lucide:search-x" width="48" className="text-muted-custom mb-3" />
-        <h5 className="journal-empty-title fw-bold font-display text-main">Không tìm thấy tạp chí nào</h5>
-        <p className="text-muted-custom small mb-0">Hãy thử thay đổi từ khóa tìm kiếm hoặc bộ lọc trạng thái của bạn.</p>
-      </div>
+      <StateCard
+        variant="neutral"
+        icon="lucide:search-x"
+        title="Không tìm thấy tạp chí nào"
+        description="Hãy thử thay đổi từ khóa tìm kiếm hoặc bộ lọc trạng thái của bạn."
+        className="my-4 border-dashed"
+      />
     );
   }
 

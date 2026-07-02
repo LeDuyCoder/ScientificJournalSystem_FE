@@ -1,5 +1,6 @@
 import React from 'react';
 import { Row, Col, Form, Button, InputGroup } from 'react-bootstrap';
+import PrimaryButton from '../../../shared/components/Button/PrimaryButton';
 
 /**
  * Component JournalFilterBar - Thanh công cụ lọc, tìm kiếm và chuyển đổi giao diện hiển thị.
@@ -69,12 +70,13 @@ export default function JournalFilterBar({
         </div>
 
         {/* Nút Tạo Tạp chí Mới (Add Journal) */}
-        <Button 
-          className="btn-primary-glow d-flex align-items-center gap-1"
+        <PrimaryButton
+          className="gap-1"
+          icon="bi:plus-circle"
           onClick={onOpenAddModal}
         >
-          <i className="bi bi-plus-circle"></i> Thêm tạp chí
-        </Button>
+          Thêm tạp chí
+        </PrimaryButton>
       </Col>
     </Row>
   );

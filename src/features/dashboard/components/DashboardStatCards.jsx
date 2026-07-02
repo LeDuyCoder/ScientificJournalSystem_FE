@@ -1,4 +1,4 @@
-﻿/**
+/**
  * File source thuộc hệ thống FE ResearchPulse.
  *
  * File: features\dashboard\components\DashboardStatCards.jsx
@@ -14,7 +14,7 @@ export default function DashboardStatCards({ stats, loading }) {
   const cards = [
     {
       icon: 'lucide:folder-open',
-      accentColor: 'var(--primary)',
+      accentColor: 'var(--text-main)',
       value: stats?.projectCount,
       label: 'Projects đang theo dõi',
       growth: null,
@@ -22,7 +22,7 @@ export default function DashboardStatCards({ stats, loading }) {
     },
     {
       icon: 'lucide:hash',
-      accentColor: '#6366f1',
+      accentColor: 'var(--text-main)',
       value: stats?.keywordCount,
       label: 'Keywords đang watch',
       growth: null,
@@ -30,7 +30,7 @@ export default function DashboardStatCards({ stats, loading }) {
     },
     {
       icon: 'lucide:file-text',
-      accentColor: '#0ea5e9',
+      accentColor: 'var(--text-main)',
       value: stats?.articleCount,
       label: 'Bài báo trong projects',
       growth: null,
@@ -38,7 +38,7 @@ export default function DashboardStatCards({ stats, loading }) {
     },
     {
       icon: 'lucide:book-open',
-      accentColor: 'var(--q1-color)',
+      accentColor: 'var(--text-main)',
       value: stats?.journalCount,
       label: 'Journals theo dõi',
       growth: null,

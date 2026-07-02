@@ -8,6 +8,7 @@ import IssueTable from "../components/IssueTable";
 import SwitchJournalModal from "../components/modals/SwitchJournalModal";
 import CreateVolumeModal from "../components/modals/CreateVolumeModal";
 import CreateIssueModal from "../components/modals/CreateIssueModal";
+import PrimaryButton from "../../../shared/components/Button/PrimaryButton";
 
 /**
  * Page RepositoryManagementPage - Màn hình điều phối quản lý Tập (Volume) và Số (Issue) tập trung của Admin.
@@ -169,14 +170,14 @@ export default function RepositoryManagementPage() {
             <h5 className="font-display fw-bold text-main mb-0">
               Số phát hành (Issues) thuộc Tập đã chọn
             </h5>
-            <Button
-              className="btn-primary-glow btn-custom-sm d-flex align-items-center gap-1 px-2.5 py-1.5"
+            <PrimaryButton
+              className="gap-1 px-2.5 py-1.5"
               disabled={!selectedVolume} // Khóa nút lại nếu chưa có Volume nào được chọn
               onClick={() => setShowIssueModal(true)}
             >
               <Icon icon="lucide:plus-circle" width="14" />
               <span>Số phát hành mới</span>
-            </Button>
+            </PrimaryButton>
           </div>
           <IssueTable issues={currentIssues} />
         </Col>

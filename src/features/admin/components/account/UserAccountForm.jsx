@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
-import { Row, Col, Form, Button } from 'react-bootstrap';
+import { Form, Row, Col } from 'react-bootstrap';
 import Icon from '../../../../shared/components/Icon';
+import PrimaryButton from '../../../../shared/components/Button/PrimaryButton';
 import { SYSTEM_ROLES } from '../../../../shared/constants/systemConstants';
 
 const getUserInitial = (name = '', email = '') => {
@@ -404,18 +405,19 @@ export default function UserAccountForm({
 
       {/* Form Action buttons */}
       <div className="d-flex justify-content-end gap-3 pt-3.5 border-top">
-        <Button 
-          type="button" 
+        <PrimaryButton
+          type="button"
+          variant="outline"
           onClick={onCancel}
-          className="bg-transparent border rounded-pill px-4 py-2 text-muted-custom fw-semibold"
-          style={{ borderColor: '#cbd5e1', color: '#64748b', fontSize: '0.88rem' }}
+          className="px-4 py-2"
+          style={{ fontSize: '0.88rem' }}
         >
           Hủy
-        </Button>
+        </PrimaryButton>
         
-        <Button 
-          type="submit" 
-          className="btn-primary-glow border-0 rounded-pill px-4 py-2 d-flex align-items-center gap-2"
+        <PrimaryButton
+          type="submit"
+          className="px-4 py-2"
           style={{ fontSize: '0.88rem' }}
           disabled={submitting}
         >
@@ -435,7 +437,7 @@ export default function UserAccountForm({
               <span>Thêm tài khoản</span>
             </>
           )}
-        </Button>
+        </PrimaryButton>
       </div>
     </Form>
   );

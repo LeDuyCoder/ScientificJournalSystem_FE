@@ -3,7 +3,7 @@
  *
  * File: features\article\pages\ArticleListPage.jsx
  */
-import { Container, Modal, Button, Breadcrumb } from 'react-bootstrap';
+import { Container, Modal, Breadcrumb } from 'react-bootstrap';
 import { Icon } from '@iconify/react';
 import { useNavigate } from 'react-router-dom';
 import Header from '../../landing/components/Header';
@@ -12,7 +12,8 @@ import ArticleStatsCards from '../components/ArticleStatsCards';
 import ArticleFilterBar from '../components/ArticleFilterBar';
 import ArticleTable from '../components/ArticleTable';
 import AdminPagination from '../../../shared/components/Pagination';
-import './ArticleListPage.css';
+import PrimaryButton from '../../../shared/components/Button/PrimaryButton';
+import '../Article.css';
 
 export default function ArticleListPage() {
   const navigate = useNavigate();
@@ -148,25 +149,25 @@ export default function ArticleListPage() {
             Để xem toàn bộ nội dung chi tiết bài báo, bao gồm tóm tắt học thuật đầy đủ, thông tin các tác giả liên kết và liên kết trích dẫn DOI, vui lòng đăng nhập tài khoản ResearchPulse của bạn.
           </p>
           <div className="d-flex align-items-center justify-content-center gap-3">
-            <Button
-              variant="outline-secondary"
+            <PrimaryButton
+              variant="outline"
               onClick={() => setShowAuthModal(false)}
-              className="px-4 py-2 text-xs font-semibold rounded-pill text-main border-secondary"
+              className="px-4 py-2 text-xs"
               style={{
                 fontSize: '0.85rem'
               }}
             >
               Đóng
-            </Button>
-            <Button
-              className="btn-primary-glow border-0 px-4 py-2 text-xs font-semibold rounded-pill text-white"
+            </PrimaryButton>
+            <PrimaryButton
+              className="px-4 py-2 text-xs"
               onClick={handleAuthRedirect}
               style={{
                 fontSize: '0.85rem'
               }}
             >
               Đăng nhập ngay
-            </Button>
+            </PrimaryButton>
           </div>
         </Modal.Body>
       </Modal>

@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Form, Row, Col, Card, Button } from 'react-bootstrap';
+import { Form, Row, Col, Card } from 'react-bootstrap';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import { useJournalManagement } from '../../journal/hooks/useJournalManagement';
+import PrimaryButton from '../../../shared/components/Button/PrimaryButton';
 
 export default function EditJournalPage() {
   const { id } = useParams();
@@ -332,19 +333,20 @@ export default function EditJournalPage() {
 
         {/* Form Actions Footer */}
         <div className="d-flex justify-content-end gap-3 mt-4 pt-3 border-top" style={{ borderColor: 'var(--border)' }}>
-          <Button
-            variant="light"
-            className="py-2.5 px-4 font-sans text-main border btn-custom-sm"
+          <PrimaryButton
+            type="button"
+            variant="outline"
+            className="py-2.5 px-4"
             onClick={() => navigate(`${basePath}/journals`)}
           >
             Cancel Changes
-          </Button>
-          <Button
+          </PrimaryButton>
+          <PrimaryButton
             type="submit"
-            className="btn-primary-glow py-2.5 px-4"
+            className="py-2.5 px-4"
           >
             Update Journal
-          </Button>
+          </PrimaryButton>
         </div>
       </Form>
     </div>

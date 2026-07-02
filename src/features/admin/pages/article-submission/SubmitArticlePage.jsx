@@ -1,4 +1,4 @@
-﻿import { useState } from 'react';
+import { useState } from 'react';
 import { Card, Button, Row, Col, Modal, Form } from 'react-bootstrap';
 import { useNavigate, Link } from 'react-router-dom';
 import Icon from '../../../../shared/components/Icon';
@@ -7,6 +7,7 @@ import ManualArticleForm from '../../components/article-submission/ManualArticle
 import PdfDropzone from '../../components/article-submission/PdfDropzone';
 import UploadFeatureCard from '../../components/article-submission/UploadFeatureCard';
 import { useAdminStore } from '../../../../app/store/adminStore';
+import PrimaryButton from '../../../../shared/components/Button/PrimaryButton';
 
 /**
  * SubmitArticlePage Component
@@ -216,10 +217,10 @@ export default function SubmitArticlePage() {
 
             {/* Bottom-right alignment Submit Action Button */}
             <div className="d-flex justify-content-end pt-3 border-top">
-              <Button 
-                type="submit" 
+              <PrimaryButton
+                type="submit"
                 disabled={isSubmitting}
-                className="btn-primary-glow border-0 rounded-pill px-4.5 py-2"
+                className="px-4.5 py-2"
                 style={{ minWidth: '150px' }}
               >
                 {isSubmitting ? (
@@ -230,7 +231,7 @@ export default function SubmitArticlePage() {
                 ) : (
                   'Submit Article'
                 )}
-              </Button>
+              </PrimaryButton>
             </div>
           </Form>
         </Card>
@@ -284,22 +285,22 @@ export default function SubmitArticlePage() {
           )}
 
           <div className="d-flex flex-column gap-2">
-            <Button 
-              className="btn-primary-glow border-0 rounded-pill py-2.5"
+            <PrimaryButton
+              className="py-2.5"
               onClick={() => {
                 setShowSuccessModal(false);
                 navigate('/dashboard');
               }}
             >
               Go to Dashboard
-            </Button>
-            <Button 
-              variant="light"
-              className="border rounded-pill py-2"
+            </PrimaryButton>
+            <PrimaryButton
+              variant="outline"
+              className="py-2"
               onClick={resetSubmissionForm}
             >
               Submit Another Article
-            </Button>
+            </PrimaryButton>
           </div>
         </Modal.Body>
       </Modal>

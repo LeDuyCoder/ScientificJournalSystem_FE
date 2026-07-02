@@ -71,23 +71,13 @@
 }
 .author-leaderboard-back:hover { color: var(--primary) !important; transform: translateX(-2px); }
 
-.author-leaderboard-filter-card,
 .author-leaderboard-table-shell {
   border: 1px solid var(--border) !important;
   border-radius: 14px !important;
   background: var(--bg-card) !important;
 }
-.author-leaderboard-filter-card { margin-bottom: 1.5rem; padding: 1rem; }
-.author-leaderboard-label { color: var(--text-muted); font-size: .8rem; font-weight: 700; }
-.author-leaderboard-select {
-  border: 1px solid var(--border) !important;
-  border-radius: 10px !important;
-  background-color: var(--bg-card) !important;
-  color: var(--text-main) !important;
-  font-size: .84rem !important;
-  box-shadow: none !important;
-}
-.author-leaderboard-select:focus { border-color: var(--primary) !important; box-shadow: 0 0 0 3px var(--primary-light) !important; }
+.author-leaderboard-filter-control { display: flex; align-items: center; gap: .5rem; }
+.author-leaderboard-label { color: var(--text-muted); font-size: .8rem; font-weight: 700; white-space: nowrap; }
 
 .author-leaderboard-table-shell { overflow: hidden; }
 .author-leaderboard-table thead { background: var(--bg-section); }

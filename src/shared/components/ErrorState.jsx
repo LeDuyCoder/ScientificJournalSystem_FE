@@ -69,7 +69,7 @@ export default function ErrorState({
       {/* Tiêu đề lỗi */}
       <h3 
         className="text-main fw-bold mb-2"
-        style={{ fontSize: '1.1rem', fontFamily: 'var(--font-sans)' }}
+        style={{ fontSize: '1.1rem', fontFamily: 'var(--font-display)' }}
       >
         {title}
       </h3>

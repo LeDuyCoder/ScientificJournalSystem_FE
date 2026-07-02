@@ -1,5 +1,6 @@
 import React from 'react';
-import { Card, Button } from 'react-bootstrap';
+import { Card } from 'react-bootstrap';
+import PrimaryButton from '../../../../shared/components/Button/PrimaryButton';
 
 /**
  * PendingRequestCard Component
@@ -54,21 +55,21 @@ export default function PendingRequestCard({ request, onApprove, onDecline }) {
 
       {/* Action buttons */}
       <div className="d-flex gap-2">
-        <Button 
+        <PrimaryButton
           onClick={() => onApprove(id)}
-          className="btn-primary-glow flex-grow-1 border-0 py-1.5 text-xs fw-semibold rounded-pill"
+          className="flex-grow-1 py-1.5 text-xs"
           style={{ fontSize: '0.8rem' }}
         >
           Approve
-        </Button>
-        <Button 
+        </PrimaryButton>
+        <PrimaryButton
           onClick={() => onDecline(id)}
-          variant="light"
-          className="border flex-grow-1 py-1.5 text-xs fw-semibold rounded-pill"
-          style={{ fontSize: '0.8rem', color: 'var(--text-muted)' }}
+          variant="outline"
+          className="flex-grow-1 py-1.5 text-xs"
+          style={{ fontSize: '0.8rem' }}
         >
           Decline
-        </Button>
+        </PrimaryButton>
       </div>
     </Card>
   );

@@ -1,11 +1,12 @@
-﻿/**
+/**
  * File source thuộc hệ thống FE ResearchPulse.
  *
  * File: features\journal\components\AddToProjectModal.jsx
  */
 import { useState, useEffect } from 'react';
-import { Modal, Button, Form, Spinner, Alert } from 'react-bootstrap';
+import { Modal, Form, Spinner, Alert } from 'react-bootstrap';
 import { Icon } from '@iconify/react';
+import PrimaryButton from '../../../shared/components/Button/PrimaryButton';
 import { getProjectsApi, createProjectApi, getProjectByIdApi, updateProjectApi } from '../../project/api/project.api';
 
 export default function AddToProjectModal({ show, onHide, journalId, onConfirm }) {
@@ -230,32 +231,21 @@ export default function AddToProjectModal({ show, onHide, journalId, onConfirm }
         </Modal.Body>
 
         <Modal.Footer className="border-0 pt-0" style={{ backgroundColor: 'var(--bg-card)', gap: '8px' }}>
-          <Button 
-            variant="outline-secondary" 
+          <PrimaryButton 
+            variant="outline" 
             onClick={onHide}
             disabled={submitting}
-            style={{ 
-              borderRadius: '6px',
-              fontSize: '0.9rem',
-              fontWeight: 600
-            }}
           >
             Hủy
-          </Button>
+          </PrimaryButton>
 
-          <Button 
+          <PrimaryButton 
             type="submit"
             disabled={submitting || (mode === 'select' && projects.length === 0)}
-            className="btn-primary-glow border-0 text-white d-flex align-items-center gap-1.5"
-            style={{ 
-              borderRadius: '6px', 
-              fontSize: '0.9rem', 
-              fontWeight: 600 
-            }}
           >
             {submitting && <Spinner animation="border" size="sm" />}
             <span>Xác nhận</span>
-          </Button>
+          </PrimaryButton>
         </Modal.Footer>
       </Form>
     </Modal>

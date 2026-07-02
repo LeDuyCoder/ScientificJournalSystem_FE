@@ -61,7 +61,7 @@ export default function AuthorAvatar({
         ...currentSize,
         ...bgStyle,
         fontWeight: 700,
-        fontFamily: 'var(--font-sans)',
+        fontFamily: 'var(--font-display)',
         boxShadow: size === 'xl' || size === 'lg' ? '0 10px 25px rgba(0,0,0,0.05)' : 'none',
         overflow: 'hidden'
       }}

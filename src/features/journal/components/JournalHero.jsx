@@ -6,6 +6,7 @@
 import { Row, Col, Button, Spinner } from 'react-bootstrap';
 import { Icon } from '@iconify/react';
 import { useNavigate } from 'react-router-dom';
+import PrimaryButton from '../../../shared/components/Button/PrimaryButton';
 
 export default function JournalHero({
   journal,
@@ -65,28 +66,15 @@ export default function JournalHero({
     navigate(`/keywords?keyword=${encodeURIComponent(categoryName)}`);
   };
 
-  const quartileClass = quartile === 'Q1' ? 'journal-badge--q1' : quartile === 'Q2' ? 'journal-badge--accent' : 'journal-badge--neutral';
 
   return (
     <section className="journal-surface journal-hero-card mb-4" aria-labelledby="journal-detail-title">
       <Row className="gy-4 align-items-start journal-hero-content">
         <Col lg={8} md={7}>
-          <div className="journal-badge-row">
-            {quartile && (
-              <span className={`journal-badge ${quartileClass}`}>
-                {quartile}
-              </span>
-            )}
-            {is_open_access && (
-              <span className="journal-badge journal-badge--accent">
-                Open Access
-              </span>
-            )}
-            {publisher_name && (
-              <span className="journal-badge journal-badge--neutral">
-                {publisher_name}
-              </span>
-            )}
+          <div className="journal-meta-line">
+            {quartile && <span>{quartile}</span>}
+            {is_open_access && <span>Open Access</span>}
+            {publisher_name && <span>{publisher_name}</span>}
           </div>
 
           <h1 id="journal-detail-title" className="journal-title">
@@ -153,11 +141,10 @@ export default function JournalHero({
               )}
             </Button>
 
-            <Button
+            <PrimaryButton
               onClick={onAddToProject}
               disabled={isAddingToProject}
-              className="btn-primary-glow d-flex align-items-center gap-2 px-3 py-2 text-white border-0"
-              style={{ borderRadius: '6px' }}
+              className="gap-2 px-3 py-2"
             >
               {isAddingToProject ? (
                 <Spinner animation="border" size="sm" variant="light" />
@@ -167,7 +154,7 @@ export default function JournalHero({
                   Thêm vào Project
                 </>
               )}
-            </Button>
+            </PrimaryButton>
           </div>
         </Col>
       </Row>

@@ -99,7 +99,7 @@ export default function AuthorMetricsCards({ stats, loading = false }) {
             {/* Giá trị số của chỉ số hiển thị màu cam nổi bật */}
             <div 
               className="fw-bold mt-1.5" 
-              style={{ fontSize: '1.5rem', color: 'var(--primary)', fontFamily: 'var(--font-sans)', lineHeight: '1.1' }}
+              style={{ fontSize: '1.5rem', color: 'var(--primary)', fontFamily: 'var(--font-display)', lineHeight: '1.1' }}
             >
               {item.value}
             </div>

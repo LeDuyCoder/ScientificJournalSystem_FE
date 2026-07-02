@@ -156,7 +156,7 @@ export default function GeographyTerritoryChart({ data = [], loading = false, se
               >
                 {/* Short country code (e.g., GB, US) */}
                 <span 
-                  className="text-main fw-bold font-sans" 
+                  className="text-main fw-bold font-display" 
                   style={{ fontSize: '0.8rem', display: 'block', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap', width: '100%' }}
                   title={item.name}
                 >
@@ -165,7 +165,7 @@ export default function GeographyTerritoryChart({ data = [], loading = false, se
                 
                 {/* Full country name */}
                 <span 
-                  className="text-muted-custom font-sans" 
+                  className="text-muted-custom font-display" 
                   style={{ fontSize: '0.65rem', display: 'block', textOverflow: 'ellipsis', overflow: 'hidden', whiteSpace: 'nowrap', width: '100%', maxWidth: '70px' }}
                   title={item.name}
                 >

@@ -5,6 +5,7 @@ import JournalFilterBar from "../components/JournalFilterBar";
 import JournalTableAdmin from "../components/JournalTableAdmin";
 import JournalCardAdmin from "../components/JournalCardAdmin";
 import AddJournalModal from "../components/modals/AddJournalModal";
+import { StateCard } from "../../../shared/components/Card";
 
 /**
  * Page JournalDirectoryPage - Màn hình chính quản lý thư mục các Tạp chí dành cho Admin.
@@ -81,11 +82,13 @@ export default function JournalDirectoryPage() {
           </div>
         </div>
       ) : filteredJournals.length === 0 ? (
-        <div className="text-center py-5 glass-card">
-          <p className="text-muted-custom mb-0">
-            Không tìm thấy tạp chí nào phù hợp với bộ lọc hiện tại.
-          </p>
-        </div>
+        <StateCard
+          variant="neutral"
+          icon="lucide:search-x"
+          title="Không tìm thấy dữ liệu"
+          description="Không tìm thấy tạp chí nào phù hợp với bộ lọc hiện tại."
+          className="my-4 border-dashed"
+        />
       ) : viewMode === "table" ? (
         /* CHẾ ĐỘ XEM BẢNG DÀNH CHO ADMIN */
         <div className="glass-card p-0 border-0 shadow-none">

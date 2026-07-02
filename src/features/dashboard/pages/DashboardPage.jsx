@@ -19,6 +19,7 @@ import TrendingKeywordsCard from "../components/TrendingKeywordsCard";
 import QuickAccessGrid from "../components/QuickAccessGrid";
 import TopAuthorsTable from "../components/TopAuthorsTable";
 import AuthRequiredModal from "../../../shared/components/AuthRequiredModal";
+import PrimaryButton from "../../../shared/components/Button/PrimaryButton";
 
 /**
  * DashboardPage — Trang Tổng quan / Dashboard
@@ -104,71 +105,61 @@ export default function DashboardPage() {
 
       <Container className="py-4">
         {/* ── Quick Search Bar ────────────────────────────────────── */}
-        <div className="mb-4">
+        <div className="mb-5">
           <div
-            className="d-flex align-items-center gap-2 px-3 py-2 rounded-3"
+            className="d-flex align-items-center px-4"
             style={{
               backgroundColor: "var(--bg-card)",
               border: "1px solid var(--border)",
+              borderRadius: "999px",
               maxWidth: 480,
-              transition: "border-color 0.2s ease",
+              minHeight: "44px",
+              overflow: "hidden"
             }}
-            onFocusCapture={(e) =>
-              (e.currentTarget.style.borderColor = "var(--primary)")
-            }
-            onBlurCapture={(e) =>
-              (e.currentTarget.style.borderColor = "var(--border)")
-            }
           >
             <Icon
               icon="lucide:search"
               width={16}
-              style={{ color: "var(--text-muted)", flexShrink: 0 }}
+              style={{ color: "var(--text-muted)", flexShrink: 0, marginRight: "10px" }}
             />
             <input
               type="text"
-              placeholder="Tìm kiếm nhanh..."
+              placeholder="Tìm kiếm danh mục, bài báo..."
               value={quickSearch}
               onChange={(e) => setQuickSearch(e.target.value)}
               onKeyDown={handleQuickSearch}
               className="border-0 bg-transparent text-main w-100"
-              style={{ outline: "none", fontSize: "0.85rem" }}
+              style={{ outline: "none", fontSize: "0.9rem", fontFamily: "var(--font-display)" }}
             />
           </div>
         </div>
 
         {/* ── Welcome Section ─────────────────────────────────────── */}
-        <div className="d-flex flex-column flex-sm-row align-items-sm-center justify-content-between gap-3 mb-4">
+        <div className="d-flex flex-column flex-sm-row align-items-sm-center justify-content-between gap-4 mb-5">
           <div>
             <h1
-              className="font-display fw-bold text-main mb-1"
+              className="font-display fw-bold text-main mb-2"
               style={{
-                fontSize: "calc(1.4rem + 0.8vw)",
+                fontSize: "calc(1.6rem + 0.8vw)",
                 letterSpacing: "-0.02em",
               }}
             >
               Chào mừng bạn đến với ResearchPulse!
             </h1>
             <p
-              className="text-muted-custom mb-0"
-              style={{ fontSize: "0.88rem" }}
+              className="text-muted-custom mb-0 font-display"
+              style={{ fontSize: "0.95rem" }}
             >
-              Khám phá xu hướng tạp chí và các bài báo khoa học mới nhất.
+              Khám phá xu hướng, xếp hạng tạp chí và các bài báo khoa học.
             </p>
           </div>
-          <button
-            className="btn btn-primary-glow d-flex align-items-center gap-2 px-4 py-2 border-0 flex-shrink-0"
+          <PrimaryButton
+            className="px-4 py-2 flex-shrink-0"
             onClick={handleCreateProject}
-            style={{
-              borderRadius: 10,
-              fontWeight: 600,
-              fontSize: "0.85rem",
-              whiteSpace: "nowrap",
-            }}
           >
             <Icon icon="lucide:plus" width={16} />
-            Tạo Project mới
-          </button>
+            Tạo Project
+          </PrimaryButton>
         </div>
 
         {/* ── Stat Cards ──────────────────────────────────────────── */}

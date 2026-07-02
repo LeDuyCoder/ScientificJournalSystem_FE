@@ -3,7 +3,7 @@
  *
  * File: features\catalog\pages\CatalogSearchPage.jsx
  */
-import { Container, Row, Col, Form, Button, InputGroup, Dropdown, Breadcrumb } from 'react-bootstrap';
+import { Container, Dropdown, Breadcrumb } from 'react-bootstrap';
 import { Icon } from '@iconify/react';
 import { useNavigate } from 'react-router-dom';
 import { useCatalogSearch } from '../hooks/useCatalogSearch';
@@ -14,6 +14,7 @@ import AuthRequiredModal from '../../../shared/components/AuthRequiredModal';
 import Header from '../../landing/components/Header';
 import useAuth from '../../auth/hooks/useAuth';
 import AdminPagination from '../../../shared/components/Pagination';
+import PrimaryButton from '../../../shared/components/Button/PrimaryButton';
 import '../components/CatalogSearch.css';
 
 export default function CatalogSearchPage() {
@@ -95,38 +96,13 @@ export default function CatalogSearchPage() {
           </p>
         </section>
 
-        {/* Search Input Panel */}
-        <section className="catalog-surface catalog-search-panel text-start">
-          <Form onSubmit={handleSearchSubmit}>
-            <Row className="g-3">
-              <Col xs={12}>
-                <InputGroup className="catalog-search-group">
-                  <InputGroup.Text className="bg-transparent border-0 pe-0 py-2 ps-3">
-                    <Icon icon="lucide:search" width="18" />
-                  </InputGroup.Text>
-                  <Form.Control
-                    placeholder="Tìm journal, tác giả, ISSN..."
-                    value={searchInput}
-                    onChange={(e) => setSearchInput(e.target.value)}
-                    className="bg-transparent border-0 py-2 px-3 fs-6 catalog-search-input"
-                  />
-                  <Button
-                    type="submit"
-                    className="catalog-search-btn"
-                  >
-                    <Icon icon="lucide:search" width="15" />
-                    Tìm kiếm
-                  </Button>
-                </InputGroup>
-              </Col>
-            </Row>
-          </Form>
-        </section>
-
         {/* Catalog Main Layout */}
         <div className="w-100">
-          {/* Horizontal Top Filter Panel */}
+          {/* Toolbar Filter Panel */}
           <FilterPanel
+            searchInput={searchInput}
+            setSearchInput={setSearchInput}
+            onSearchSubmit={handleSearchSubmit}
             subjectAreas={subjectAreas}
             subjectCategories={subjectCategories}
             selectedAreas={selectedAreas}
@@ -210,13 +186,13 @@ export default function CatalogSearchPage() {
               </h2>
               <p className="text-muted-custom mb-4">{error}</p>
               {error?.includes('đăng nhập') ? (
-                <Button onClick={() => window.location.href = '/login'} className="catalog-outline-btn">
+                <PrimaryButton onClick={() => window.location.href = '/login'} variant="outline">
                   Đăng nhập
-                </Button>
+                </PrimaryButton>
               ) : (
-                <Button onClick={() => fetchJournals()} className="catalog-outline-btn">
+                <PrimaryButton onClick={() => fetchJournals()} variant="outline">
                   Thử lại
-                </Button>
+                </PrimaryButton>
               )}
             </section>
           ) : journals.length === 0 ? (
@@ -225,9 +201,9 @@ export default function CatalogSearchPage() {
               <Icon icon="lucide:folder-search" className="catalog-state-icon" width="44" />
               <h2 className="catalog-state-title">Không tìm thấy journal phù hợp</h2>
               <p className="text-muted-custom mb-4">Hãy thử thay đổi từ khóa tìm kiếm hoặc đặt lại bộ lọc.</p>
-              <Button onClick={handleClearAll} className="catalog-outline-btn">
+              <PrimaryButton onClick={handleClearAll} variant="outline">
                 Xóa bộ lọc
-              </Button>
+              </PrimaryButton>
             </section>
           ) : (
             <JournalTable

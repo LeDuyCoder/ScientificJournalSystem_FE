@@ -9,6 +9,7 @@ import {
 import Pagination from '../../../shared/components/Pagination';
 import useAdminArticleRepository from '../hooks/useAdminArticleRepository';
 import ROUTES from '../../../app/routes/routePaths';
+import PrimaryButton from '../../../shared/components/Button/PrimaryButton';
 
 export default function ArticleRepositoryPage() {
   const navigate = useNavigate();
@@ -49,14 +50,14 @@ export default function ArticleRepositoryPage() {
             Review submitted articles, filter editorial status, and open manuscript records for operational updates.
           </p>
         </div>
-        <button
+        <PrimaryButton
           type="button"
-          className="btn-primary-glow admin-btn-consistent d-inline-flex align-items-center gap-1.5"
+          className="admin-btn-consistent"
           onClick={() => navigate(ROUTES.ADMIN_ARTICLE_CREATE)}
         >
           <Icon icon="lucide:plus" width="16" />
           <span>Submit New Article</span>
-        </button>
+        </PrimaryButton>
       </div>
 
       {/* Filter bar - filter theo dữ liệu API đang tải */}

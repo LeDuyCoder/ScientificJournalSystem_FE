@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Button, Form, Row, Col } from 'react-bootstrap';
+import { Modal, Form, Row, Col } from 'react-bootstrap';
 import { useJournalManagement } from '../../../journal/hooks/useJournalManagement';
+import PrimaryButton from '../../../../shared/components/Button/PrimaryButton';
 
 export default function AddJournalModal({ show, handleClose }) {
   const { addJournal } = useJournalManagement();
@@ -250,12 +251,12 @@ export default function AddJournalModal({ show, handleClose }) {
 
         </Modal.Body>
         <Modal.Footer className="border-top-0 pt-0">
-          <Button variant="light" onClick={handleClose} className="btn-custom-sm text-main">
+          <PrimaryButton variant="outline" onClick={handleClose} className="px-4">
             Hủy
-          </Button>
-          <Button type="submit" className="btn-primary-glow px-4">
+          </PrimaryButton>
+          <PrimaryButton type="submit" className="px-4">
             + Create Journal
-          </Button>
+          </PrimaryButton>
         </Modal.Footer>
       </Form>
     </Modal>

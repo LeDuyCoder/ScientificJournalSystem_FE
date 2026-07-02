@@ -25,7 +25,7 @@ import ArticlesTabContent from '../../journal/components/ArticlesTabContent';
 import AuthRequiredModal from '../../../shared/components/AuthRequiredModal';
 import { toast } from '../../../shared/utils/toast';
 import { getDoiUrl, normalizeArticleDetail } from '../utils/articleFormatters';
-import './ArticleDetailPage.css';
+import '../Article.css';
 
 const formatAuthorsLine = (authors = [], limit = 3) => {
   if (!authors || authors.length === 0) return 'Đang cập nhật tác giả';

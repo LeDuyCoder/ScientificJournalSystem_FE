@@ -7,6 +7,7 @@ import EmptyState from '../../../shared/components/EmptyState';
 import LoadingSkeleton from '../../../shared/components/LoadingSkeleton';
 import { Icon } from '@iconify/react';
 import Header from '../../landing/components/Header';
+import PrimaryButton from '../../../shared/components/Button/PrimaryButton';
 
 const ProjectListPage = () => {
   const navigate = useNavigate();
@@ -43,12 +44,12 @@ const ProjectListPage = () => {
             <h1 className="font-display fw-bold text-main mb-2">Dự án Nghiên cứu của tôi</h1>
             <p className="text-muted-custom mb-0">Quản lý các keyword watch-lists, phân tích xu hướng xuất bản và giám sát bài báo khoa học.</p>
           </div>
-          <button 
-            className="btn btn-primary btn-primary-glow px-4 py-2 fw-medium d-flex align-items-center gap-2 rounded-pill"
+          <PrimaryButton
+            icon="lucide:plus"
             onClick={() => navigate(ROUTES.PROJECT_CREATE)}
           >
-            <Icon icon="lucide:plus" width="18" /> Tạo dự án mới
-          </button>
+            Tạo dự án mới
+          </PrimaryButton>
         </div>
 
         {/* Filter / Search Bar Placeholder */}
@@ -57,9 +58,17 @@ const ProjectListPage = () => {
             <Icon icon="lucide:search" width="18" className="position-absolute top-50 translate-middle-y text-muted" style={{ left: '12px' }} />
             <input 
               type="text" 
-              className="form-control rounded-pill ps-5 bg-white border" 
+              className="form-control ps-5 bg-white border" 
               placeholder="Tìm kiếm dự án..." 
-              style={{ fontSize: '0.9rem' }}
+              style={{ fontSize: '0.9rem', borderRadius: '15px', boxShadow: 'none' }}
+              onFocus={(e) => {
+                e.currentTarget.style.borderColor = 'var(--border)';
+                e.currentTarget.style.boxShadow = 'none';
+                e.currentTarget.style.outline = 'none';
+              }}
+              onBlur={(e) => {
+                e.currentTarget.style.borderColor = 'var(--border)';
+              }}
             />
           </div>
           <div className="d-flex gap-4 text-muted-custom small">
@@ -76,7 +85,7 @@ const ProjectListPage = () => {
               <h6 className="fw-bold mb-1">Lỗi tải dữ liệu</h6>
               <p className="mb-0 small">{error}</p>
             </div>
-            <button className="btn btn-outline-danger btn-sm ms-auto" onClick={fetchProjects}>Thử lại</button>
+            <PrimaryButton variant="outline" className="ms-auto" onClick={fetchProjects}>Thử lại</PrimaryButton>
           </div>
         ) : isLoading ? (
           <div className="row g-4">

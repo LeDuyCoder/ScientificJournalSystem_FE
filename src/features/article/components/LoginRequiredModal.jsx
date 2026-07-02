@@ -1,4 +1,4 @@
-﻿/**
+/**
  * File source thuộc hệ thống FE ResearchPulse.
  *
  * File: features\article\components\LoginRequiredModal.jsx
@@ -6,6 +6,7 @@
 import { Modal, Button } from 'react-bootstrap';
 import { Icon } from '@iconify/react';
 import { useNavigate } from 'react-router-dom';
+import PrimaryButton from '../../../shared/components/Button/PrimaryButton';
 
 export default function LoginRequiredModal({ show, onHide }) {
   const navigate = useNavigate();
@@ -58,21 +59,20 @@ export default function LoginRequiredModal({ show, onHide }) {
 
         {/* Buttons Grid */}
         <div className="d-flex flex-column gap-2">
-          <Button
-            className="w-full btn-primary-glow border-0 py-2 font-semibold text-sm rounded-pill text-white"
+          <PrimaryButton
+            className="w-100"
             onClick={handleLogin}
           >
             Đăng nhập ngay
-          </Button>
+          </PrimaryButton>
           
-          <Button
-            variant="outline-secondary"
-            className="w-full py-2 font-semibold text-sm text-main rounded-pill border-secondary"
+          <PrimaryButton
+            variant="outline"
+            className="w-100"
             onClick={handleRegister}
-            style={{ backgroundColor: 'transparent' }}
           >
             Đăng ký tài khoản
-          </Button>
+          </PrimaryButton>
 
           <Button
             variant="link"

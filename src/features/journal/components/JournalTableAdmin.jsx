@@ -3,6 +3,8 @@ import { Table, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 
+import { StateCard } from '../../../shared/components/Card';
+
 /**
  * Component JournalTableAdmin - Bảng hiển thị danh sách tạp chí phục vụ mục đích quản trị (Admin View).
  * Đáp ứng Issue #76: Hiển thị Title, ISSN, Publisher, Publisher, Last Updated, Status và các nút Action.
@@ -16,11 +18,13 @@ export default function JournalTableAdmin({ journals, page = 1, limit = 10 }) {
   // Trạng thái trống nếu không tìm thấy dữ liệu phù hợp với bộ lọc
   if (!journals || journals.length === 0) {
     return (
-      <div className="journal-empty-state text-center py-5 glass-card">
-        <Icon icon="lucide:search-x" width="48" className="text-muted-custom mb-3" />
-        <h5 className="journal-empty-title fw-bold font-display text-main">Không tìm thấy tạp chí nào</h5>
-        <p className="text-muted-custom small mb-0">Hãy thử thay đổi từ khóa tìm kiếm hoặc bộ lọc trạng thái của bạn.</p>
-      </div>
+      <StateCard
+        variant="neutral"
+        icon="lucide:search-x"
+        title="Không tìm thấy tạp chí nào"
+        description="Hãy thử thay đổi từ khóa tìm kiếm hoặc bộ lọc trạng thái của bạn."
+        className="my-4 border-dashed"
+      />
     );
   }
 
@@ -71,7 +75,7 @@ export default function JournalTableAdmin({ journals, page = 1, limit = 10 }) {
 
                 {/* Lĩnh vực và chuyên mục phân loại nghiên cứu */}
                 <td>
-                  <span className="badge bg-light text-dark border font-sans px-2 py-1">
+                  <span className="badge bg-light text-dark border font-display px-2 py-1">
                     {journal.subjectCategory || 'Phân loại chung'}
                   </span>
                   <div className="small text-muted-custom mt-1 text-truncate" style={{ maxWidth: '180px' }}>

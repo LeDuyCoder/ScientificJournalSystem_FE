@@ -1,10 +1,8 @@
-/* Import Google Fonts */
-@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;0,8..60,600;0,8..60,700;1,8..60,400&display=swap");
+/* Import Google Font */
+@import url("https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,500;0,8..60,600;0,8..60,700;1,8..60,400&display=swap");
 
 :root {
-  --font-sans: "Inter", sans-serif;
   --font-display: "Source Serif 4", serif;
-  --font-serif: "Source Serif 4", serif;
 
   /* ─── SCImago-style Palette ─── */
   --bg-main: #ffffff; /* Background chính */
@@ -34,7 +32,7 @@ html,
 body {
   background-color: var(--bg-main);
   color: var(--text-main);
-  font-family: var(--font-sans);
+  font-family: var(--font-display);
   font-weight: 400;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
@@ -282,7 +280,7 @@ header.sticky-scrolled {
   border-radius: 12px;
 }
 
-/* --- Font Customizations --- */
+/* --- Font Customizations: m?t token duy nh?t --font-display --- */
 
 /* 1. Logo / tên hệ thống */
 .navbar-brand,
@@ -312,7 +310,7 @@ div,
 input,
 textarea,
 select {
-  font-family: var(--font-sans);
+  font-family: var(--font-display);
   font-weight: 400;
 }
 
@@ -321,7 +319,7 @@ select {
 .sidebar-link,
 .menu-item,
 .nav-item {
-  font-family: var(--font-sans) !important;
+  font-family: var(--font-display) !important;
   font-weight: 500 !important;
 }
 
@@ -329,7 +327,7 @@ select {
 .btn,
 button,
 .btn-custom {
-  font-family: var(--font-sans) !important;
+  font-family: var(--font-display) !important;
   font-weight: 500 !important;
 }
 .btn-fw-600,
@@ -343,7 +341,7 @@ button,
 table,
 td,
 th {
-  font-family: var(--font-sans) !important;
+  font-family: var(--font-display) !important;
   font-weight: 400 !important;
 }
 .table th,
@@ -356,7 +354,7 @@ th,
 .badge,
 .tag,
 .badge-custom {
-  font-family: var(--font-sans) !important;
+  font-family: var(--font-display) !important;
   font-weight: 500 !important;
 }
 

@@ -100,7 +100,7 @@ export default function VolumeArchivePage() {
             </div>
             <Button
               variant="outline-dark"
-              className="d-flex align-items-center gap-1.5 py-2 px-3 btn-custom-sm font-sans"
+              className="d-flex align-items-center gap-1.5 py-2 px-3 btn-custom-sm font-display"
               onClick={() => setShowSwitchModal(true)}
             >
               <Icon icon="lucide:refresh-cw" width="14" />
@@ -213,14 +213,14 @@ export default function VolumeArchivePage() {
                         </div>
                         <div className="d-flex justify-content-between align-items-center pb-1">
                           <span className="text-muted-custom small">Period</span>
-                          <span className="fw-bold text-main small font-sans">{vol.period || `Jan — Dec ${vol.publicationYear}`}</span>
+                          <span className="fw-bold text-main small font-display">{vol.period || `Jan — Dec ${vol.publicationYear}`}</span>
                         </div>
                       </div>
 
                       {/* Actions */}
                       <div className="d-flex gap-2 w-100 mt-auto pt-3 border-top" style={{ borderColor: 'var(--border)' }}>
                         <Button 
-                          className="w-100 font-sans fw-semibold btn-custom-sm admin-btn-outline-accent d-flex align-items-center justify-content-center gap-1.5 py-2"
+                          className="w-100 font-display fw-semibold btn-custom-sm admin-btn-outline-accent d-flex align-items-center justify-content-center gap-1.5 py-2"
                           onClick={() => handleViewDetails(vol.id)}
                         >
                           <span>View Details</span>

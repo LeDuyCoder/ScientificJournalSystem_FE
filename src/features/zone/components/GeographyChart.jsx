@@ -29,7 +29,7 @@ function SimpleSvgBarChart({ data, labelKey = 'name', valueKey = 'article_count'
         return (
           <g key={t}>
             <line x1={PAD.left} x2={PAD.left + chartW} y1={y} y2={y} stroke="var(--border)" strokeWidth={1} strokeDasharray="4 4" />
-            <text x={PAD.left - 8} y={y + 4} textAnchor="end" style={{ fontSize: 10, fill: 'var(--text-muted)', fontFamily: 'Inter' }}>
+            <text x={PAD.left - 8} y={y + 4} textAnchor="end" style={{ fontSize: 10, fill: 'var(--text-muted)', fontFamily: 'var(--font-display)' }}>
               {Math.round(maxVal * t).toLocaleString()}
             </text>
           </g>
@@ -68,7 +68,7 @@ function SimpleSvgBarChart({ data, labelKey = 'name', valueKey = 'article_count'
               y={PAD.top + chartH + 16} 
               textAnchor="end" 
               transform={`rotate(-45, ${x + barWidth / 2}, ${PAD.top + chartH + 16})`}
-              style={{ fontSize: 10, fill: 'var(--text-main)', fontFamily: 'Inter', fontWeight: 500 }}
+              style={{ fontSize: 10, fill: 'var(--text-main)', fontFamily: 'var(--font-display)', fontWeight: 500 }}
             >
               {label}
             </text>

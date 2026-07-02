@@ -1,0 +1,136 @@
+/**
+ * File source thuộc hệ thống FE ResearchPulse.
+ *
+ * File: shared\components\Card\StatCard\StatCard.css
+ */
+
+.shared-stat-card {
+  width: 100%;
+  min-height: 100%;
+  padding: 1rem;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  background: var(--bg-card);
+  color: var(--text-main);
+  text-align: left;
+  font-family: var(--font-display);
+  transition:
+    transform 0.18s ease,
+    border-color 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+button.shared-stat-card {
+  appearance: none;
+  cursor: pointer;
+}
+
+.shared-stat-card:hover,
+.shared-stat-card--interactive:hover {
+  transform: translateY(-2px);
+  border-color: var(--primary);
+  box-shadow: 0 8px 24px rgba(255, 122, 51, 0.1);
+}
+
+.shared-stat-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.shared-stat-card__label {
+  color: var(--text-muted);
+  font-size: 0.82rem;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.shared-stat-card__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 12px;
+
+  flex-shrink: 0;
+}
+
+.shared-stat-card__value {
+  color: var(--stat-card-accent);
+  font-size: clamp(1.45rem, 1.2rem + 0.8vw, 2rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+}
+
+.shared-stat-card__footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+}
+
+.shared-stat-card__description {
+  color: var(--text-muted);
+  font-size: 0.78rem;
+  line-height: 1.4;
+}
+
+.shared-stat-card__trend {
+  color: var(--primary);
+  font-size: 0.78rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.shared-stat-card__growth {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.shared-stat-card__growth.is-neutral {
+  color: var(--text-muted);
+}
+
+.shared-stat-card__growth.is-positive {
+  color: var(--primary);
+}
+
+.shared-stat-card__growth.is-negative {
+  color: var(--danger, #b42318);
+}
+
+.shared-stat-card__skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+.shared-stat-card__skeleton-icon {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 12px;
+}
+
+.shared-stat-card__skeleton-value {
+  width: 60%;
+  height: 1.75rem;
+  border-radius: 8px;
+}
+
+.shared-stat-card__skeleton-label {
+  width: 80%;
+  height: 0.875rem;
+  border-radius: 8px;
+}
+
+.shared-stat-card__skeleton-trend {
+  width: 50%;
+  height: 0.75rem;
+  border-radius: 8px;
+}

@@ -43,7 +43,7 @@ export default function ArticlesTabContent({ recentArticles = [], loading, onArt
         return (
           <Card key={articleId || `${article.title || 'article'}-${index}`} className="journal-article-card">
             <div className="d-flex align-items-center gap-3 mb-2 flex-wrap">
-              <span className="journal-badge journal-badge--accent">
+              <span className="text-muted-custom small">
                 {article.publication_year || article.year || 'N/A'}
               </span>
               {article.doi && (

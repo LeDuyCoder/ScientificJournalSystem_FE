@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import ROUTES from '../../../app/routes/routePaths';
 import { useKeywordTracking } from '../../keyword/hooks/useKeywordTracking';
@@ -7,6 +7,7 @@ import AddKeywordModal from '../../keyword/components/AddKeywordModal';
 import ManageKeywordsModal from '../../keyword/components/ManageKeywordsModal';
 import { Icon } from '@iconify/react';
 import Header from '../../landing/components/Header';
+import PrimaryButton from '../../../shared/components/Button/PrimaryButton';
 
 
 const ProjectDetailPage = () => {
@@ -140,12 +141,12 @@ const ProjectDetailPage = () => {
             </div>
             <div className="d-flex gap-2">
 
-              <button
-                className="btn btn-primary btn-primary-glow fw-medium d-flex align-items-center gap-2 rounded-pill px-3"
+              <PrimaryButton
+                className="px-3"
                 onClick={() => setShowAddModal(true)}
               >
                 <Icon icon="lucide:search" width="16" /> Tìm trong lĩnh vực
-              </button>
+              </PrimaryButton>
             </div>
           </div>
 
@@ -279,12 +280,13 @@ const ProjectDetailPage = () => {
                   <h5 className="fw-bold text-main mb-1">Quản lý Watch-List từ khóa</h5>
                   <p className="text-muted-custom small mb-0">Hệ thống sẽ liên tục quét bài báo mới và gửi thông báo theo các từ khóa này.</p>
                 </div>
-                <button
-                  className="btn btn-dark btn-dark-solid rounded-pill px-3 py-2 fw-medium d-flex align-items-center gap-2"
+                <PrimaryButton
+                  variant="outline"
+                  className="px-3 py-2"
                   onClick={() => navigate(`/projects/${projectId}/edit`)}
                 >
                   <Icon icon="lucide:edit-2" width="16" /> Chỉnh sửa danh sách
-                </button>
+                </PrimaryButton>
               </div>
 
               <KeywordWatchList

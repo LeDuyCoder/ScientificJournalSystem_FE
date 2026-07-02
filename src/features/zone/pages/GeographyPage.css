@@ -14,7 +14,7 @@
 
 /* Breadcrumb styling */
 .geography-breadcrumb {
-  font-family: var(--font-sans);
+  font-family: var(--font-display);
   font-size: 0.82rem;
   color: var(--text-muted);
   margin-bottom: 0.75rem;
@@ -35,7 +35,7 @@
 }
 
 .geography-subtitle {
-  font-family: var(--font-sans);
+  font-family: var(--font-display);
   color: var(--text-muted);
   font-size: 0.88rem;
   font-weight: 400;
@@ -47,7 +47,7 @@
   background-color: var(--bg-card);
   border: 1px solid var(--border);
   color: var(--text-main);
-  font-family: var(--font-sans);
+  font-family: var(--font-display);
   font-size: 0.85rem;
   font-weight: 500;
   border-radius: 8px;
@@ -78,7 +78,7 @@
 }
 
 .geography-search-input {
-  font-family: var(--font-sans);
+  font-family: var(--font-display);
   font-size: 0.85rem;
   background-color: var(--bg-chip) !important;
   border: 1px solid var(--border) !important;
@@ -117,7 +117,7 @@
 }
 
 .geography-table {
-  font-family: var(--font-sans) !important;
+  font-family: var(--font-display) !important;
   font-size: 0.85rem;
 }
 
@@ -256,7 +256,7 @@
   color: var(--text-muted);
   border: 1px solid var(--border);
   border-radius: 6px;
-  font-family: var(--font-sans);
+  font-family: var(--font-display);
   font-size: 0.7rem;
   font-weight: 500;
   padding: 0.22rem 0.55rem;
@@ -276,7 +276,7 @@
   color: var(--q1-color);
   border: 1px solid rgba(47, 198, 70, 0.18);
   border-radius: 6px;
-  font-family: var(--font-sans);
+  font-family: var(--font-display);
   font-size: 0.7rem;
   font-weight: 600;
   padding: 0.22rem 0.55rem;
@@ -294,7 +294,7 @@
 
 .geography-article-title {
   color: var(--text-main);
-  font-family: var(--font-sans);
+  font-family: var(--font-display);
   font-weight: 600;
   font-size: 0.88rem;
   line-height: 1.45;
@@ -321,7 +321,7 @@
 
 /* Pagination modifications */
 .custom-pagination .page-link {
-  font-family: var(--font-sans) !important;
+  font-family: var(--font-display) !important;
   font-weight: 500 !important;
   border-radius: 6px !important;
   margin: 0 2px !important;

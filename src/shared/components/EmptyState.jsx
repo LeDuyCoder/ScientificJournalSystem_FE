@@ -1,8 +1,8 @@
 // Component hiển thị giao diện trống (Empty State)
 // Dùng để thông báo cho người dùng khi danh sách hoặc kết quả tìm kiếm không có dữ liệu
 
-import { Button } from 'react-bootstrap';
 import Icon from './Icon';
+import PrimaryButton from './Button/PrimaryButton';
 
 /**
  * Thành phần hiển thị giao diện thông báo trực quan khi không tìm thấy dữ liệu.
@@ -49,7 +49,7 @@ export default function EmptyState({
       {/* Tiêu đề trạng thái trống */}
       <h3 
         className="text-main fw-bold mb-2"
-        style={{ fontSize: '1.1rem', fontFamily: 'var(--font-sans)' }}
+        style={{ fontSize: '1.1rem', fontFamily: 'var(--font-display)' }}
       >
         {title}
       </h3>
@@ -64,12 +64,9 @@ export default function EmptyState({
       
       {/* Nút hành động đi kèm (ví dụ: Tạo mới, Thử lại, Reset bộ lọc) */}
       {actionLabel && onAction && (
-        <Button 
-          className="btn-primary-glow rounded-pill px-4 py-2 text-xs font-bold"
-          onClick={onAction}
-        >
+        <PrimaryButton onClick={onAction}>
           {actionLabel}
-        </Button>
+        </PrimaryButton>
       )}
     </div>
   );

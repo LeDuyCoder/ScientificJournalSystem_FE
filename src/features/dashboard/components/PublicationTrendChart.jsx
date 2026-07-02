@@ -1,9 +1,10 @@
-﻿/**
+/**
  * File source thuộc hệ thống FE ResearchPulse.
  *
  * File: features\dashboard\components\PublicationTrendChart.jsx
  */
 import { Icon } from '@iconify/react';
+import '../Dashboard.css';
 
 /**
  * PublicationTrendChart — line chart xu hướng publication theo năm.
@@ -16,7 +17,7 @@ import { Icon } from '@iconify/react';
  *   error
  */
 
-const LINE_COLORS = ['var(--primary)', '#6366f1', '#0ea5e9', '#f59e0b'];
+const LINE_COLORS = ['var(--primary)', 'var(--text-main)', 'var(--text-muted)', 'var(--border)'];
 
 function SimpleSvgChart({ years, series }) {
   if (!years?.length || !series?.length) return null;
@@ -47,7 +48,7 @@ function SimpleSvgChart({ years, series }) {
       {/* X axis labels */}
       {years.map((yr, i) => (
         <text key={yr} x={xScale(i)} y={H - 4} textAnchor="middle"
-          style={{ fontSize: 9, fill: 'var(--text-muted)', fontFamily: 'Inter' }}>
+          style={{ fontSize: 9, fill: 'var(--text-muted)', fontFamily: 'var(--font-display)' }}>
           {yr}
         </text>
       ))}
@@ -86,39 +87,22 @@ export default function PublicationTrendChart({ analytics, loading, error, onRet
   const years  = analytics?.years  ?? analytics?.year_range  ?? [];
   const series = analytics?.series ?? (analytics?.data ? [{ label: 'Bài báo', data: analytics.data }] : []);
 
-  return (
-    <div
-      className="rounded-3 p-4 h-100"
-      style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)' }}
-    >
-      {/* Header */}
-      <div className="d-flex align-items-start justify-content-between mb-3">
-        <div>
-          <div className="d-flex align-items-center gap-2 mb-1">
-            <Icon icon="lucide:trending-up" width={16} style={{ color: 'var(--primary)' }} />
-            <span className="font-display fw-bold text-main" style={{ fontSize: '0.9rem' }}>
-              Xu hướng Publication
-            </span>
-          </div>
-          <p className="text-muted-custom mb-0" style={{ fontSize: '0.72rem' }}>
-            Số bài báo theo năm trong projects của bạn
-          </p>
+  const actions = series.length > 0 ? (
+    <div className="d-flex flex-wrap gap-3 justify-content-end">
+      {series.map((s, i) => (
+        <div key={i} className="d-flex align-items-center gap-1">
+          <div style={{ width: 10, height: 3, borderRadius: 2, backgroundColor: LINE_COLORS[i % LINE_COLORS.length] }} />
+          <span className="text-muted-custom" style={{ fontSize: '0.65rem' }}>{s.label ?? `Series ${i + 1}`}</span>
         </div>
+      ))}
+    </div>
+  ) : null;
 
-        {/* Legend */}
-        {series.length > 0 && (
-          <div className="d-flex flex-wrap gap-3 justify-content-end">
-            {series.map((s, i) => (
-              <div key={i} className="d-flex align-items-center gap-1">
-                <div style={{ width: 10, height: 3, borderRadius: 2, backgroundColor: LINE_COLORS[i % LINE_COLORS.length] }} />
-                <span className="text-muted-custom" style={{ fontSize: '0.65rem' }}>{s.label ?? `Series ${i + 1}`}</span>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-
-      {/* Chart area */}
+  const description = (
+    <>
+      <p className="text-muted-custom mb-3" style={{ fontSize: '0.72rem' }}>
+        Số bài báo theo năm trong projects của bạn
+      </p>
       <div style={{ minHeight: 160 }}>
         {loading ? (
           <div className="skeleton-shimmer rounded-3 w-100" style={{ height: 160 }} />
@@ -143,6 +127,21 @@ export default function PublicationTrendChart({ analytics, loading, error, onRet
         ) : (
           <SimpleSvgChart years={years} series={series} />
         )}
+      </div>
+    </>
+  );
+
+  return (
+    <div className="publication-trend-card h-100">
+      <div className="ptc-header">
+        <div className="ptc-title">
+          <Icon icon="lucide:trending-up" width={16} style={{ color: 'var(--primary)' }} />
+          <span>Xu hướng Publication</span>
+        </div>
+        {actions && <div className="ptc-actions">{actions}</div>}
+      </div>
+      <div className="ptc-body">
+        {description}
       </div>
     </div>
   );
