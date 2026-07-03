@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import ROUTES from '../../../app/routes/routePaths';
 import { useKeywordTracking } from '../../keyword/hooks/useKeywordTracking';
@@ -8,6 +8,19 @@ import ManageKeywordsModal from '../../keyword/components/ManageKeywordsModal';
 import { Icon } from '@iconify/react';
 import Header from '../../landing/components/Header';
 import PrimaryButton from '../../../shared/components/Button/PrimaryButton';
+import projectService from '../../project/services/projectService';
+import { 
+  LineChart, 
+  Line, 
+  XAxis, 
+  YAxis, 
+  Tooltip, 
+  ResponsiveContainer, 
+  CartesianGrid,
+  PieChart,
+  Pie,
+  Cell
+} from 'recharts';
 
 
 const ProjectDetailPage = () => {
@@ -32,6 +45,244 @@ const ProjectDetailPage = () => {
   const [activeTab, setActiveTab] = useState('articles'); // 'overview', 'articles', 'keywords'
   const [showAddModal, setShowAddModal] = useState(false);
   const [showManageModal, setShowManageModal] = useState(false);
+  const [overviewData, setOverviewData] = useState(null);
+  const [overviewLoading, setOverviewLoading] = useState(false);
+  const [overviewError, setOverviewError] = useState(null);
+
+  const chartColors = ['#ff702f', '#ff9f68', '#ffc09b', '#334155', '#64748b', '#94a3b8'];
+
+  const fetchProjectOverview = useCallback(async () => {
+    if (!projectId) return;
+    setOverviewLoading(true);
+    setOverviewError(null);
+    try {
+      const data = await projectService.getProjectOverview(projectId);
+      setOverviewData(data || null);
+    } catch (err) {
+      console.error('Error fetching project overview', err);
+      setOverviewError('Không thể tải dữ liệu tổng quan. Vui lòng thử lại sau.');
+    } finally {
+      setOverviewLoading(false);
+    }
+  }, [projectId]);
+
+  useEffect(() => {
+    fetchProjectOverview();
+  }, [fetchProjectOverview]);
+
+  const formatNumber = (value) => Number(value || 0).toLocaleString('vi-VN');
+
+  const formatDate = (value) => {
+    if (!value) return 'Chưa cập nhật';
+    return new Date(value).toLocaleDateString('vi-VN');
+  };
+
+  const mapChartData = (chart) => {
+    const labels = chart?.labels || [];
+    const values = chart?.datasets?.[0]?.data || [];
+    return labels.map((label, index) => ({ name: label, value: values[index] || 0 }));
+  };
+
+  const hasChartData = (chart) => mapChartData(chart).some(item => item.value > 0);
+
+  const chartTooltipStyle = {
+    backgroundColor: 'var(--bg-card)',
+    border: '1px solid var(--border)',
+    borderRadius: '12px',
+    boxShadow: '0 12px 30px rgba(15, 23, 42, 0.08)',
+    color: 'var(--text-main)',
+    fontFamily: 'var(--font-display)',
+    fontSize: '12px'
+  };
+
+  const renderEmptyChart = (message = 'Chưa có dữ liệu biểu đồ') => (
+    <div className="d-flex flex-column align-items-center justify-content-center h-100 text-muted-custom py-5">
+      <Icon icon="lucide:chart-no-axes-column" width="42" className="mb-2 opacity-50" />
+      <span className="small">{message}</span>
+    </div>
+  );
+
+  const renderDonutChart = (chart, centerLabel) => {
+    let data = mapChartData(chart);
+    if (!hasChartData(chart)) return renderEmptyChart();
+
+    // Group items beyond top 5 into "Lĩnh vực khác" / "Nguồn khác"
+    if (data.length > 5) {
+      const sorted = [...data].sort((a, b) => b.value - a.value);
+      const top5 = sorted.slice(0, 5);
+      const remainingSum = sorted.slice(5).reduce((sum, item) => sum + item.value, 0);
+      if (remainingSum > 0) {
+        const otherLabel = centerLabel === 'Subject Areas' ? 'Lĩnh vực khác' : 'Nguồn khác';
+        top5.push({ name: otherLabel, value: remainingSum });
+      }
+      data = top5;
+    }
+
+    const total = data.reduce((sum, item) => sum + item.value, 0);
+
+    return (
+      <div className="row align-items-center g-3">
+        <div className="col-12 col-sm-6 d-flex justify-content-center position-relative">
+          <div style={{ width: '100%', height: '220px' }}>
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie
+                  data={data}
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={55}
+                  outerRadius={75}
+                  paddingAngle={3}
+                  dataKey="value"
+                  nameKey="name"
+                >
+                  {data.map((_, index) => (
+                    <Cell key={`cell-${index}`} fill={chartColors[index % chartColors.length]} />
+                  ))}
+                </Pie>
+                <Tooltip contentStyle={chartTooltipStyle} formatter={(value) => [formatNumber(value), centerLabel]} />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+          <div className="position-absolute d-flex flex-column align-items-center justify-content-center" style={{ top: 0, bottom: 0, left: 0, right: 0, pointerEvents: 'none' }}>
+            <span className="fw-bold text-main" style={{ fontSize: '1.25rem' }}>{formatNumber(total)}</span>
+            <span className="text-muted-custom" style={{ fontSize: '0.65rem', textTransform: 'uppercase', letterSpacing: '0.05em', fontWeight: 600 }}>Tổng số</span>
+          </div>
+        </div>
+        <div className="col-12 col-sm-6">
+          <div className="d-flex flex-column gap-2 pe-2 custom-scrollbar" style={{ maxHeight: '200px', overflowY: 'auto' }}>
+            {data.map((item, index) => {
+              const percentage = total > 0 ? ((item.value / total) * 100).toFixed(1) : 0;
+              return (
+                <div key={index} className="d-flex align-items-center justify-content-between py-1 border-bottom border-light-subtle">
+                  <div className="d-flex align-items-center gap-2 text-truncate" style={{ maxWidth: '70%' }}>
+                    <span className="rounded-circle flex-shrink-0" style={{ width: 8, height: 8, backgroundColor: chartColors[index % chartColors.length] }} />
+                    <span className="small text-main text-truncate fw-medium" title={item.name}>{item.name}</span>
+                  </div>
+                  <div className="small text-muted-custom text-nowrap">
+                    <span className="fw-semibold text-main me-1">{formatNumber(item.value)}</span>
+                    <span style={{ fontSize: '0.85em' }}>({percentage}%)</span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+  const renderLineChart = (chart) => {
+    const data = mapChartData(chart);
+    if (!hasChartData(chart)) return renderEmptyChart();
+
+    return (
+      <ResponsiveContainer width="100%" height={300}>
+        <LineChart data={data} margin={{ top: 12, right: 18, left: -10, bottom: 8 }}>
+          <CartesianGrid stroke="var(--border)" strokeDasharray="4 4" vertical={false} />
+          <XAxis
+            dataKey="name"
+            tick={{ fill: 'var(--text-muted)', fontSize: 12, fontFamily: 'var(--font-display)' }}
+            axisLine={false}
+            tickLine={false}
+          />
+          <YAxis
+            allowDecimals={false}
+            tick={{ fill: 'var(--text-muted)', fontSize: 12, fontFamily: 'var(--font-display)' }}
+            axisLine={false}
+            tickLine={false}
+          />
+          <Tooltip contentStyle={chartTooltipStyle} formatter={(value) => [formatNumber(value), chart?.datasets?.[0]?.label || 'Publications']} />
+          <Line
+            type="monotone"
+            dataKey="value"
+            stroke="var(--primary)"
+            strokeWidth={3}
+            dot={{ r: 4, strokeWidth: 2, fill: 'var(--bg-card)', stroke: 'var(--primary)' }}
+            activeDot={{ r: 6, fill: 'var(--primary)' }}
+          />
+        </LineChart>
+      </ResponsiveContainer>
+    );
+  };
+
+  const renderOverviewTab = () => {
+    const summary = overviewData?.summary || {};
+    const charts = overviewData?.charts || {};
+    const summaryCards = [
+      { label: 'Tổng số bài báo', value: formatNumber(summary.totalArticles), icon: 'lucide:file-text', tone: '#ff702f' },
+      { label: 'Keyword theo dõi', value: formatNumber(summary.totalKeywords), icon: 'lucide:key-round', tone: '#f97316' },
+      { label: 'Tổng số tạp chí', value: formatNumber(summary.totalJournals), icon: 'lucide:library', tone: '#334155' },
+      { label: 'Cập nhật gần nhất', value: formatDate(summary.lastUpdatedAt), icon: 'lucide:calendar-clock', tone: '#64748b' },
+    ];
+
+    if (overviewLoading) {
+      return (
+        <div className="glass-card rounded-4 shadow-sm border p-5 text-center text-muted-custom">
+          <div className="spinner-border" style={{ color: 'var(--primary)' }} role="status" />
+          <p className="small mb-0 mt-3">Đang tải dữ liệu tổng quan...</p>
+        </div>
+      );
+    }
+
+    if (overviewError) {
+      return (
+        <div className="glass-card rounded-4 shadow-sm border p-4 text-center">
+          <Icon icon="lucide:circle-alert" width="42" className="text-danger mb-3" />
+          <h6 className="fw-bold text-main">Không thể tải biểu đồ</h6>
+          <p className="text-muted-custom small">{overviewError}</p>
+          <PrimaryButton className="px-3 py-2" onClick={fetchProjectOverview}>Thử lại</PrimaryButton>
+        </div>
+      );
+    }
+
+    return (
+      <div className="d-flex flex-column gap-4">
+        <div className="row g-3">
+          {summaryCards.map((card) => (
+            <div className="col-12 col-sm-6 col-lg-3" key={card.label}>
+              <div className="glass-card rounded-4 border shadow-sm p-3 h-100">
+                <div className="d-flex justify-content-between align-items-start gap-3">
+                  <div>
+                    <div className="text-muted-custom small fw-semibold text-uppercase mb-2" style={{ letterSpacing: '.04em' }}>{card.label}</div>
+                    <div className="fs-4 fw-bold text-main">{card.value}</div>
+                  </div>
+                  <div className="rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" style={{ width: 42, height: 42, backgroundColor: 'var(--primary-light)', color: card.tone }}>
+                    <Icon icon={card.icon} width="20" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="glass-card rounded-4 border shadow-sm p-4">
+          <div className="mb-3">
+            <h5 className="fw-bold text-main mb-1">Xu hướng xuất bản</h5>
+            <p className="text-muted-custom small mb-0">Số lượng bài báo liên quan theo từng năm.</p>
+          </div>
+          {renderLineChart(charts.publicationTrend)}
+        </div>
+
+        <div className="row g-4">
+          <div className="col-12 col-lg-6">
+            <div className="glass-card rounded-4 border shadow-sm p-4 h-100">
+              <h5 className="fw-bold text-main mb-1">Phân bố lĩnh vực</h5>
+              <p className="text-muted-custom small mb-3">Tỷ trọng bài báo theo subject area.</p>
+              {renderDonutChart(charts.subjectAreaDistribution, 'Subject Areas')}
+            </div>
+          </div>
+          <div className="col-12 col-lg-6">
+            <div className="glass-card rounded-4 border shadow-sm p-4 h-100">
+              <h5 className="fw-bold text-main mb-1">Loại nguồn xuất bản</h5>
+              <p className="text-muted-custom small mb-3">Phân bố theo journal, conference, book series...</p>
+              {renderDonutChart(charts.publicationTypeDistribution, 'Publication Types')}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
 
   const renderPagination = (type) => {
     const pagination = type === 'keywords' ? keywordArticlesPagination : watchArticlesPagination;
@@ -143,9 +394,12 @@ const ProjectDetailPage = () => {
 
               <PrimaryButton
                 className="px-3"
-                onClick={() => setShowAddModal(true)}
+                onClick={() => {
+                  const originUrl = import.meta.env.VITE_ORIGIN_URL || 'http://localhost:5174';
+                  window.location.href = `${originUrl}/project/${projectId}/dashboard`;
+                }}
               >
-                <Icon icon="lucide:search" width="16" /> Tìm trong lĩnh vực
+                <Icon icon="lucide:sparkles" width="16" /> Phân tích chuyên sâu
               </PrimaryButton>
             </div>
           </div>
@@ -210,13 +464,7 @@ const ProjectDetailPage = () => {
 
         {/* Tab Content */}
         <div className="mb-5">
-          {activeTab === 'overview' && (
-            <div className="glass-card rounded-4 shadow-sm border p-4 text-center py-5 text-muted-custom">
-              <Icon icon="lucide:pie-chart" width="48" className="mb-3 opacity-50" />
-              <h5 className="text-main fw-bold">Biểu đồ tổng quan</h5>
-              <p className="mb-0 small">Tính năng phân tích dữ liệu và biểu đồ đang được cập nhật.</p>
-            </div>
-          )}
+          {activeTab === 'overview' && renderOverviewTab()}
 
           {activeTab === 'articles' && (
             <div className="glass-card rounded-4 shadow-sm border p-4">
@@ -258,6 +506,8 @@ const ProjectDetailPage = () => {
                                 fontSize: '0.7rem',
                                 backgroundColor: 'var(--primary-light)',
                                 color: 'var(--primary)',
+                                border: 'none',
+                                boxShadow: 'none',
                               }}
                             >
                               <Icon icon="lucide:book-open" className="me-1" width="12" />
@@ -272,6 +522,8 @@ const ProjectDetailPage = () => {
                                 fontSize: '0.7rem',
                                 backgroundColor: 'var(--primary-light)',
                                 color: 'var(--primary)',
+                                border: 'none',
+                                boxShadow: 'none',
                               }}
                             >
                               <Icon icon="lucide:sparkles" className="me-1" width="12" />
@@ -285,6 +537,8 @@ const ProjectDetailPage = () => {
                                 fontSize: '0.7rem',
                                 backgroundColor: 'var(--primary-light)',
                                 color: 'var(--primary)',
+                                border: 'none',
+                                boxShadow: 'none',
                               }}
                             >
                               Độ trùng khớp cao

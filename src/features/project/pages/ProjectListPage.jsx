@@ -152,7 +152,7 @@ const ProjectListPage = () => {
                 <div className="row g-4">
                   {recentProjects.map(project => (
                     <div key={`recent-${project.project_id || project.id}`} className="col-12 col-md-6 col-lg-4">
-                      <ProjectCard project={project} onDelete={handleDelete} />
+                      <ProjectCard project={project} onDelete={handleDelete} isRecent={true} />
                     </div>
                   ))}
                 </div>
