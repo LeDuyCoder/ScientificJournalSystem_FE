@@ -3,6 +3,7 @@
  *
  * File: features\dashboard\components\PublicationTrendChart.jsx
  */
+import { useState } from 'react';
 import { Icon } from '@iconify/react';
 import '../Dashboard.css';
 import ChartRangeDropdown from './ChartRangeDropdown';
@@ -21,6 +22,8 @@ import ChartRangeDropdown from './ChartRangeDropdown';
 const LINE_COLORS = ['var(--primary)', 'var(--text-main)', 'var(--text-muted)', 'var(--border)'];
 
 function SimpleSvgChart({ years, series }) {
+  const [hoveredPoint, setHoveredPoint] = useState(null);
+
   if (!years?.length || !series?.length) return null;
 
   const W = 480, H = 160, PAD = { top: 12, right: 16, bottom: 28, left: 36 };
@@ -36,50 +39,84 @@ function SimpleSvgChart({ years, series }) {
   const yScale = (v) => PAD.top + chartH - ((v - minVal) / (maxVal - minVal || 1)) * chartH;
 
   return (
-    <svg viewBox={`0 0 ${W} ${H}`} width="100%" height="100%" style={{ overflow: 'visible' }}>
-      {/* Grid lines */}
-      {[0, 0.25, 0.5, 0.75, 1].map(t => {
-        const y = PAD.top + (1 - t) * chartH;
-        return (
-          <line key={t} x1={PAD.left} x2={PAD.left + chartW} y1={y} y2={y}
-            stroke="var(--border)" strokeWidth={0.6} strokeDasharray="3 3" />
-        );
-      })}
+    <div className="position-relative w-100 h-100">
+      <svg viewBox={`0 0 ${W} ${H}`} width="100%" height="100%" style={{ overflow: 'visible' }}>
+        {/* Grid lines */}
+        {[0, 0.25, 0.5, 0.75, 1].map(t => {
+          const y = PAD.top + (1 - t) * chartH;
+          return (
+            <line key={t} x1={PAD.left} x2={PAD.left + chartW} y1={y} y2={y}
+              stroke="var(--border)" strokeWidth={0.6} strokeDasharray="3 3" />
+          );
+        })}
 
-      {/* X axis labels */}
-      {years.map((yr, i) => (
-        <text key={yr} x={xScale(i)} y={H - 4} textAnchor="middle"
-          style={{ fontSize: 9, fill: 'var(--text-muted)', fontFamily: 'var(--font-display)' }}>
-          {yr}
-        </text>
-      ))}
+        {/* X axis labels */}
+        {years.map((yr, i) => (
+          <text key={yr} x={xScale(i)} y={H - 4} textAnchor="middle"
+            style={{ fontSize: 9, fill: 'var(--text-muted)', fontFamily: 'var(--font-display)' }}>
+            {yr}
+          </text>
+        ))}
 
-      {/* Series lines */}
-      {series.map((s, si) => {
-        if (!s.data?.length) return null;
-        const color = LINE_COLORS[si % LINE_COLORS.length];
-        const pts = s.data.map((v, i) => `${xScale(i)},${yScale(v ?? 0)}`).join(' ');
-        const pts0 = `${xScale(0)},${yScale(0)}`;
-        const ptsN = `${xScale(s.data.length - 1)},${yScale(0)}`;
+        {/* Series lines */}
+        {series.map((s, si) => {
+          if (!s.data?.length) return null;
+          const color = LINE_COLORS[si % LINE_COLORS.length];
+          const pts = s.data.map((v, i) => `${xScale(i)},${yScale(v ?? 0)}`).join(' ');
+          const pts0 = `${xScale(0)},${yScale(0)}`;
+          const ptsN = `${xScale(s.data.length - 1)},${yScale(0)}`;
 
-        return (
-          <g key={si}>
-            {/* Area fill */}
-            <polygon
-              points={`${pts0} ${pts} ${ptsN}`}
-              fill={color} fillOpacity={0.08}
-            />
-            {/* Line */}
-            <polyline points={pts} fill="none" stroke={color} strokeWidth={2} strokeLinejoin="round" />
-            {/* Dots */}
-            {s.data.map((v, i) => (
-              <circle key={i} cx={xScale(i)} cy={yScale(v ?? 0)} r={3}
-                fill={color} stroke="var(--bg-card)" strokeWidth={1.5} />
-            ))}
-          </g>
-        );
-      })}
-    </svg>
+          return (
+            <g key={si}>
+              {/* Area fill */}
+              <polygon
+                points={`${pts0} ${pts} ${ptsN}`}
+                fill={color} fillOpacity={0.08}
+              />
+              {/* Line */}
+              <polyline points={pts} fill="none" stroke={color} strokeWidth={2} strokeLinejoin="round" />
+              {/* Dots */}
+              {s.data.map((v, i) => (
+                <circle key={i} cx={xScale(i)} cy={yScale(v ?? 0)} r={3}
+                  fill={color} stroke="var(--bg-card)" strokeWidth={1.5} />
+              ))}
+              {/* Transparent larger hover targets */}
+              {s.data.map((v, i) => (
+                <circle
+                  key={`hover-${i}`}
+                  cx={xScale(i)}
+                  cy={yScale(v ?? 0)}
+                  r={12}
+                  fill="transparent"
+                  style={{ cursor: 'pointer' }}
+                  onMouseEnter={() => setHoveredPoint({
+                    year: years[i],
+                    value: v ?? 0,
+                    x: xScale(i),
+                    y: yScale(v ?? 0)
+                  })}
+                  onMouseLeave={() => setHoveredPoint(null)}
+                />
+              ))}
+            </g>
+          );
+        })}
+      </svg>
+      {/* Tooltip Overlay */}
+      {hoveredPoint && (
+        <div
+          className="chart-svg-tooltip"
+          style={{
+            left: `${(hoveredPoint.x / W) * 100}%`,
+            top: `${(hoveredPoint.y / H) * 100}%`,
+            transform: 'translate(-50%, -100%) translateY(-8px)',
+          }}
+        >
+          <div className="fw-semibold mb-0" style={{ fontSize: '10px', color: 'var(--text-muted)' }}>Năm {hoveredPoint.year}</div>
+          <div className="fw-bold" style={{ fontSize: '12px', color: 'var(--primary)' }}>{hoveredPoint.value} bài báo</div>
+        </div>
+      )}
+    </div>
   );
 }
 

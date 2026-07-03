@@ -34,6 +34,13 @@ export const getTrendingKeywordsApi = (projectId, limit = 12) =>
   api.get(`/projects/${projectId}/keywords/trending`, { params: { limit } });
 
 /**
+ * Get overall trending keywords for dashboard
+ * BE: GET /api/v1/dashboard/trending-keywords
+ */
+export const getDashboardTrendingKeywordsApi = (params = {}) =>
+  api.get('/dashboard/trending-keywords', { params });
+
+/**
  * Get top author leaderboard
  * BE: GET /api/v1/author/leaderboard  [requireAuth]
  */

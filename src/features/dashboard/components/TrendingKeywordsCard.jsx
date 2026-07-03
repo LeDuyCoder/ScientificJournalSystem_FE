@@ -5,45 +5,64 @@
  */
 import { Icon } from '@iconify/react';
 import { EntityCard } from '../../../shared/components/Card';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
 
-/**
- * KeywordTag — một keyword pill
- */
-function KeywordTag({ keyword, onClick }) {
-  const name   = keyword.keyword ?? keyword.name ?? keyword;
-  const growth = keyword.growth ?? keyword.count ?? null;
+function KeywordsRechart({ chartData, onKeywordClick }) {
+  const labels = chartData?.labels || [];
+  const dataset = chartData?.datasets?.[0] || { data: [] };
+
+  const mappedData = labels.map((label, index) => ({
+    keyword: label,
+    value: dataset.data[index] ?? 0
+  }));
 
   return (
-    <button
-      className="d-inline-flex align-items-center gap-1 rounded-pill px-3 py-1 font-display"
-      onClick={() => onClick?.(name)}
-      style={{
-        backgroundColor: 'var(--bg-chip)', color: 'var(--text-main)', border: '1px solid var(--border)',
-        fontSize: '0.8rem', fontWeight: 500, cursor: 'pointer',
-        transition: 'all 0.15s ease',
-        letterSpacing: '0.01em',
-      }}
-      onMouseEnter={e => {
-        e.currentTarget.style.color = 'var(--primary)';
-        e.currentTarget.style.borderColor = 'var(--primary)';
-      }}
-      onMouseLeave={e => {
-        e.currentTarget.style.color = 'var(--text-main)';
-        e.currentTarget.style.borderColor = 'var(--border)';
-      }}
-    >
-      <span>{name}</span>
-      {growth != null && (
-        <span style={{ opacity: 0.6, fontSize: '0.7rem' }}>
-          {growth > 0 ? `+${growth > 999 ? (growth/1000).toFixed(1)+'k' : growth}` : growth}
-        </span>
-      )}
-    </button>
+    <ResponsiveContainer width="100%" height={260}>
+      <BarChart
+        data={mappedData}
+        layout="vertical"
+        margin={{ left: 5, right: 10, top: 5, bottom: 5 }}
+      >
+        <XAxis type="number" hide />
+        <YAxis
+          dataKey="keyword"
+          type="category"
+          width={110}
+          tick={{ fill: 'var(--text-muted)', fontSize: 11, fontFamily: 'var(--font-display)' }}
+          axisLine={false}
+          tickLine={false}
+        />
+        <Tooltip
+          cursor={{ fill: 'var(--bg-section)', opacity: 0.5 }}
+          contentStyle={{
+            backgroundColor: 'var(--bg-card)',
+            border: '1px solid var(--border)',
+            borderRadius: '8px',
+            color: 'var(--text-main)',
+            fontSize: '11px',
+            fontFamily: 'var(--font-display)'
+          }}
+        />
+        <Bar
+          dataKey="value"
+          fill="var(--primary)"
+          name={dataset.label || 'Số bài báo'}
+          radius={[0, 4, 4, 0]}
+          barSize={14}
+          onClick={(data) => {
+            if (data && data.keyword) {
+              onKeywordClick?.(data.keyword);
+            }
+          }}
+          style={{ cursor: 'pointer' }}
+        />
+      </BarChart>
+    </ResponsiveContainer>
   );
 }
 
 /**
- * TrendingKeywordsCard — card trending keywords với pills
+ * TrendingKeywordsCard — card trending keywords với biểu đồ BarChart của Recharts
  */
 export default function TrendingKeywordsCard({ keywords, loading, error, onKeywordClick, onViewMore }) {
   const actions = onViewMore ? (
@@ -63,10 +82,17 @@ export default function TrendingKeywordsCard({ keywords, loading, error, onKeywo
     </button>
   ) : null;
 
+  const labels = keywords?.labels || [];
+  const dataset = keywords?.datasets?.[0] || { data: [] };
+  const hasData = labels.length > 0 && dataset.data?.length > 0;
+
   const description = loading ? (
-    <div className="d-flex flex-wrap gap-2">
-      {[120, 80, 100, 90, 110, 70, 95].map((w, i) => (
-        <div key={i} className="skeleton-shimmer rounded-pill" style={{ width: w, height: 28 }} />
+    <div className="d-flex flex-column gap-3 py-2">
+      {[1, 2, 3, 4, 5].map((_, i) => (
+        <div key={i} className="d-flex align-items-center gap-3">
+          <div className="skeleton-shimmer rounded" style={{ width: 80, height: 16 }} />
+          <div className="skeleton-shimmer rounded flex-grow-1" style={{ height: 16 }} />
+        </div>
       ))}
     </div>
   ) : error ? (
@@ -74,7 +100,7 @@ export default function TrendingKeywordsCard({ keywords, loading, error, onKeywo
       <Icon icon="lucide:alert-circle" width={28} style={{ color: '#ef4444' }} />
       <p className="text-muted-custom mt-2 mb-0" style={{ fontSize: '0.8rem' }}>{error}</p>
     </div>
-  ) : keywords.length === 0 ? (
+  ) : !hasData ? (
     <div className="text-center py-4">
       <Icon icon="lucide:tag" width={32} style={{ color: 'var(--text-muted)' }} />
       <p className="text-main fw-semibold mt-2 mb-1" style={{ fontSize: '0.85rem' }}>
@@ -85,16 +111,7 @@ export default function TrendingKeywordsCard({ keywords, loading, error, onKeywo
       </p>
     </div>
   ) : (
-    <div className="d-flex flex-wrap gap-2">
-      {keywords.map((kw, i) => (
-        <KeywordTag
-          key={i}
-          keyword={kw}
-          index={i}
-          onClick={onKeywordClick}
-        />
-      ))}
-    </div>
+    <KeywordsRechart chartData={keywords} onKeywordClick={onKeywordClick} />
   );
 
   return (
