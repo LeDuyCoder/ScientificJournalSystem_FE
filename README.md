@@ -80,19 +80,44 @@ npm run build
 
 ---
 
-## 📁 CẤU TRÚC THƯ MỤC THAM KHẢO
+## 📁 CẤU TRÚC THƯ MỤC
+Dự án áp dụng kiến trúc **Feature-Sliced Design**, giúp module hóa code và dễ dàng quản lý.
 
 ```text
 src/
-├── assets/        # Ảnh, icon, file tĩnh
-├── components/    # Component dùng chung
-├── pages/         # Các trang (route)
-├── services/      # Gọi API
-├── hooks/         # Custom hooks
-├── utils/         # Hàm tiện ích
-├── App.jsx
-├── main.jsx
+├── app/                # Cấu hình, store, provider toàn cục cho ứng dụng
+│   ├── store/          # Zustand stores (e.g., authStore.js)
+│   └── ...
+│
+├── assets/             # Tài nguyên tĩnh: ảnh, icon, font...
+│
+├── features/           # Nơi chứa code cho các tính năng nghiệp vụ chính
+│   ├── article/        # Ví dụ: tính năng quản lý bài báo
+│   │   ├── api/        # Các hàm gọi API liên quan đến article
+│   │   ├── components/ # Components chỉ dùng trong feature article
+│   │   ├── hooks/      # Custom hooks chỉ dùng trong feature article
+│   │   └── pages/      # Các trang hoàn chỉnh (e.g., ArticleListPage)
+│   │
+│   ├── auth/           # Tính năng xác thực (login, register...)
+│   │   └── ...
+│   └── ...             # Các features khác (journal, author, etc.)
+│
+├── shared/             # Các module có thể tái sử dụng ở bất kỳ đâu
+│   ├── api/            # Cấu hình Axios instance dùng chung
+│   ├── components/     # UI components dùng chung toàn dự án (Button, Modal...)
+│   ├── hooks/          # Custom hooks dùng chung
+│   ├── services/       # Các service dùng chung
+│   ├── utils/          # Hàm tiện ích dùng chung
+│   └── ...
+│
+├── main.jsx            # Điểm khởi đầu của ứng dụng React
+│
+└── App.jsx             # Component gốc, định nghĩa routing chính
 ```
+
+**Nguyên tắc:**
+- **`features`**: Code đặc thù cho một tính năng. Một feature không được import từ feature khác.
+- **`shared`**: Code dùng chung, có thể được import bởi bất kỳ `feature` nào hoặc `app`.
 
 ---
 

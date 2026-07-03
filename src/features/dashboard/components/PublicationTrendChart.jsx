@@ -5,6 +5,7 @@
  */
 import { Icon } from '@iconify/react';
 import '../Dashboard.css';
+import ChartRangeDropdown from './ChartRangeDropdown';
 
 /**
  * PublicationTrendChart — line chart xu hướng publication theo năm.
@@ -82,13 +83,13 @@ function SimpleSvgChart({ years, series }) {
   );
 }
 
-export default function PublicationTrendChart({ analytics, loading, error, onRetry }) {
+export default function PublicationTrendChart({ analytics, loading, error, onRetry, selectedRange, onRangeChange }) {
   // Normalise BE response shape
   const years  = analytics?.years  ?? analytics?.year_range  ?? [];
   const series = analytics?.series ?? (analytics?.data ? [{ label: 'Bài báo', data: analytics.data }] : []);
 
-  const actions = series.length > 0 ? (
-    <div className="d-flex flex-wrap gap-3 justify-content-end">
+  const legend = series.length > 0 ? (
+    <div className="d-flex flex-wrap gap-3 justify-content-end me-3">
       {series.map((s, i) => (
         <div key={i} className="d-flex align-items-center gap-1">
           <div style={{ width: 10, height: 3, borderRadius: 2, backgroundColor: LINE_COLORS[i % LINE_COLORS.length] }} />
@@ -111,7 +112,7 @@ export default function PublicationTrendChart({ analytics, loading, error, onRet
             <Icon icon="lucide:alert-triangle" width={28} style={{ color: '#ef4444' }} />
             <p className="text-muted-custom mb-0" style={{ fontSize: '0.8rem' }}>{error}</p>
             {onRetry && (
-              <button className="btn btn-sm btn-outline-primary" onClick={onRetry}>Thử lại</button>
+              <button className="btn btn-sm btn-outline-primary mt-2" onClick={onRetry}>Thử lại</button>
             )}
           </div>
         ) : years.length === 0 ? (
@@ -138,7 +139,15 @@ export default function PublicationTrendChart({ analytics, loading, error, onRet
           <Icon icon="lucide:trending-up" width={16} style={{ color: 'var(--primary)' }} />
           <span>Xu hướng Publication</span>
         </div>
-        {actions && <div className="ptc-actions">{actions}</div>}
+        <div className="ptc-actions d-flex align-items-center">
+          {legend}
+          {onRangeChange && (
+            <ChartRangeDropdown
+              value={selectedRange}
+              onChange={onRangeChange}
+            />
+          )}
+        </div>
       </div>
       <div className="ptc-body">
         {description}

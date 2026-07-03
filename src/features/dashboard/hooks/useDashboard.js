@@ -1,4 +1,4 @@
-﻿/**
+/**
  * File source thuộc hệ thống FE ResearchPulse.
  *
  * File: features\dashboard\hooks\useDashboard.js
@@ -6,7 +6,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import {
   getDashboardProjectsApi,
-  getProjectAnalyticsApi,
+  getPublicationTrendsApi,
   getTrendingKeywordsApi,
   getTopAuthorsApi,
 } from '../api/dashboardApi';
@@ -39,7 +39,7 @@ const normalizeTopAuthor = (author) => ({
  * Fetches projects, analytics, trending keywords and top authors in parallel.
  * Each section has independent loading/error state to avoid full-page crash.
  */
-export default function useDashboard(currentUser) {
+export default function useDashboard(currentUser, trendRange = '5') {
   const [projects, setProjects]               = useState([]);
   const [analytics, setAnalytics]             = useState(null);
   const [trendingKeywords, setTrendingKeywords] = useState([]);
@@ -79,18 +79,36 @@ export default function useDashboard(currentUser) {
   }, []);
 
   const fetchAnalytics = useCallback(async (projectId) => {
-    if (!projectId) return;
     setLoadingAnalytics(true);
     setErrorAnalytics(null);
     try {
-      const res = await getProjectAnalyticsApi(projectId);
-      setAnalytics(res.data?.data ?? res.data ?? null);
+      const currentYear = new Date().getFullYear();
+      const yearCount = Number(trendRange);
+      const yearParams = Number.isFinite(yearCount)
+        ? { fromYear: currentYear - yearCount + 1, toYear: currentYear }
+        : {};
+      const params = { ...yearParams, ...(projectId ? { projectId } : {}) };
+      const res = await getPublicationTrendsApi(params);
+      const trendData = res.data?.data ?? [];
+
+      const rows = Array.isArray(trendData) ? trendData : [];
+      setAnalytics({
+        years: rows.map((item) => item.year),
+        series: [
+          {
+            label: 'Số bài báo xuất bản',
+            data: rows.map((item) => item.totalPublications ?? 0),
+          },
+        ],
+        rawData: rows,
+      });
     } catch (err) {
-      setErrorAnalytics(err.response?.data?.message || err.message || 'Không thể tải xu hướng.');
+      setErrorAnalytics(err.response?.data?.message || err.message || 'Không thể tải xu hướng xuất bản.');
+      setAnalytics({ years: [], series: [], rawData: [] });
     } finally {
       setLoadingAnalytics(false);
     }
-  }, []);
+  }, [trendRange]);
 
   const fetchKeywords = useCallback(async (projectId) => {
     if (!projectId) return;
@@ -122,7 +140,7 @@ export default function useDashboard(currentUser) {
           try {
             const breakdownResponse = await getAuthorAreasBreakdownApi(id);
             return { id, breakdown: normalizeAuthorBreakdown(breakdownResponse) };
-          } catch (error) {
+          } catch {
             return { id, breakdown: [] };
           }
         })
@@ -155,6 +173,13 @@ export default function useDashboard(currentUser) {
     }
   }, []);
 
+  // ── fetch analytics when range or user changes ──────────────────────────
+  useEffect(() => {
+    if (currentUser) {
+      fetchAnalytics();
+    }
+  }, [currentUser, fetchAnalytics]);
+
   // ── initialise on mount (only when user is logged in) ───────────────────
   useEffect(() => {
     if (!currentUser) {
@@ -171,19 +196,16 @@ export default function useDashboard(currentUser) {
       if (list && list.length > 0) {
         const firstId = list[0]?.project_id ?? list[0]?.id;
         if (firstId) {
-          fetchAnalytics(firstId);
           fetchKeywords(firstId);
         } else {
-          setLoadingAnalytics(false);
           setLoadingKeywords(false);
         }
       } else {
-        setLoadingAnalytics(false);
         setLoadingKeywords(false);
       }
     };
     init();
-  }, [currentUser, fetchProjects, fetchAuthors, fetchAnalytics, fetchKeywords]);
+  }, [currentUser, fetchProjects, fetchAuthors, fetchKeywords]);
 
   // ── derived stat card data ───────────────────────────────────────────────
   const summaryStats = {
@@ -197,10 +219,11 @@ export default function useDashboard(currentUser) {
   const refetchAll = useCallback(() => {
     if (!currentUser) return;
     const init = async () => {
+      fetchAnalytics();
       const [list] = await Promise.all([fetchProjects(), fetchAuthors()]);
       if (list?.length > 0) {
         const id = list[0]?.project_id ?? list[0]?.id;
-        if (id) { fetchAnalytics(id); fetchKeywords(id); }
+        if (id) { fetchKeywords(id); }
       }
     };
     init();

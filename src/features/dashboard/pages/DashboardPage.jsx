@@ -35,6 +35,9 @@ export default function DashboardPage() {
   const navigate = useNavigate();
   const email = useUserStore((state) => state.email);
 
+  // Year range select state for publication trends ('5', '10', 'all')
+  const [trendRange, setTrendRange] = useState("5");
+
   const {
     projects,
     analytics,
@@ -50,7 +53,7 @@ export default function DashboardPage() {
     errorKeywords,
     errorAuthors,
     refetchAnalytics,
-  } = useDashboard(email);
+  } = useDashboard(email, trendRange);
 
   // Quick search state
   const [quickSearch, setQuickSearch] = useState("");
@@ -89,7 +92,6 @@ export default function DashboardPage() {
     navigate(`/catalog?search=${encodeURIComponent(keyword)}`);
   };
 
-  const firstProjectId = projects[0]?.project_id ?? projects[0]?.id;
 
   return (
     <div
@@ -172,7 +174,9 @@ export default function DashboardPage() {
               analytics={analytics}
               loading={loadingAnalytics}
               error={errorAnalytics}
-              onRetry={() => firstProjectId && refetchAnalytics(firstProjectId)}
+              onRetry={() => refetchAnalytics()}
+              selectedRange={trendRange}
+              onRangeChange={setTrendRange}
             />
           </Col>
           <Col xs={12} lg={4}>
