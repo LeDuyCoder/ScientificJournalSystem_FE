@@ -47,7 +47,7 @@ export default function EntityCard({
         <div className={`shared-entity-card__content ${contentClassName}`.trim()}>
           <div className="shared-entity-card__header">
             <div className="shared-entity-card__title-group">
-              <h3 className="shared-entity-card__title">{title}</h3>
+              <h3 className="shared-entity-card__title" title={typeof title === 'string' ? title : undefined}>{title}</h3>
               {subtitle && <p className="shared-entity-card__subtitle">{subtitle}</p>}
             </div>
             {actions && <div className="shared-entity-card__actions">{actions}</div>}

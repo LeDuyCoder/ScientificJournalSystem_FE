@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import ROUTES from '../../../app/routes/routePaths';
 import useProjects from '../hooks/useProjects';
@@ -12,18 +12,44 @@ import PrimaryButton from '../../../shared/components/Button/PrimaryButton';
 const ProjectListPage = () => {
   const navigate = useNavigate();
   const { projects, isLoading, error, fetchProjects, deleteProject } = useProjects();
+  const [recentIds, setRecentIds] = useState([]);
 
   useEffect(() => {
     fetchProjects();
   }, [fetchProjects]);
 
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem('recently_viewed_projects');
+      if (raw) {
+        setRecentIds(JSON.parse(raw));
+      }
+    } catch (e) {
+      console.error('Lỗi đọc dự án xem gần đây:', e);
+    }
+  }, []);
+
   const handleDelete = async (id) => {
     try {
       await deleteProject(id);
+      
+      // Xóa khỏi danh sách xem gần đây
+      const storageKey = 'recently_viewed_projects';
+      const raw = localStorage.getItem(storageKey);
+      if (raw) {
+        const list = JSON.parse(raw).filter(recentId => recentId !== id);
+        localStorage.setItem(storageKey, JSON.stringify(list));
+        setRecentIds(list);
+      }
     } catch (err) {
       alert(err.message || 'Không thể xóa dự án');
     }
   };
+
+  // Lọc các dự án xem gần đây từ danh sách projects hiện tại
+  const recentProjects = recentIds
+    .map(id => projects.find(p => (p.project_id || p.id) === id))
+    .filter(Boolean);
 
   return (
     <div className="container-fluid pb-4 grid-bg min-vh-100 position-relative overflow-hidden" style={{ paddingTop: '80px' }}>
@@ -115,12 +141,38 @@ const ProjectListPage = () => {
             className="mt-4"
           />
         ) : (
-          <div className="row g-4">
-            {projects.map(project => (
-              <div key={project.project_id || project.id} className="col-12 col-md-6 col-lg-4">
-                <ProjectCard project={project} onDelete={handleDelete} />
+          <div className="d-flex flex-column gap-5">
+            {/* Section: Dự án xem gần đây */}
+            {recentProjects.length > 0 && (
+              <div>
+                <h5 className="font-display fw-bold text-main mb-3 d-flex align-items-center gap-2">
+                  <Icon icon="lucide:clock" width={18} style={{ color: 'var(--primary)' }} />
+                  <span>Dự án xem gần đây</span>
+                </h5>
+                <div className="row g-4">
+                  {recentProjects.map(project => (
+                    <div key={`recent-${project.project_id || project.id}`} className="col-12 col-md-6 col-lg-4">
+                      <ProjectCard project={project} onDelete={handleDelete} />
+                    </div>
+                  ))}
+                </div>
               </div>
-            ))}
+            )}
+
+            {/* Section: Tất cả dự án */}
+            <div>
+              <h5 className="font-display fw-bold text-main mb-3 d-flex align-items-center gap-2">
+                <Icon icon="lucide:folder" width={18} style={{ color: 'var(--primary)' }} />
+                <span>Tất cả dự án ({projects.length})</span>
+              </h5>
+              <div className="row g-4">
+                {projects.map(project => (
+                  <div key={project.project_id || project.id} className="col-12 col-md-6 col-lg-4">
+                    <ProjectCard project={project} onDelete={handleDelete} />
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         )}
       </div>

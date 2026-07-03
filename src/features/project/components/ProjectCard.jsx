@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import { EntityCard } from '../../../shared/components/Card';
@@ -21,7 +20,7 @@ const ProjectCard = ({ project, onDelete }) => {
   const keywordCount = project.keywords_count || project.watch_keywords?.length || 0;
 
   const meta = (
-    <span className="badge rounded-pill text-primary fw-medium" style={{ backgroundColor: 'var(--primary-light)' }}>
+    <span className="badge rounded-pill fw-medium" style={{ backgroundColor: 'var(--primary-light)', color: 'var(--primary)' }}>
       {areaName}
     </span>
   );
@@ -59,14 +58,33 @@ const ProjectCard = ({ project, onDelete }) => {
       <span className="text-muted-custom small">
         Cập nhật: {createdAt}
       </span>
-      <span className="text-primary small fw-medium d-flex align-items-center gap-1">
+      <span className="small fw-medium d-flex align-items-center gap-1" style={{ color: 'var(--primary)' }}>
         Chi tiết <Icon icon="lucide:arrow-right" width="14" />
       </span>
     </div>
   );
 
+  const handleCardClick = () => {
+    try {
+      const storageKey = 'recently_viewed_projects';
+      const raw = localStorage.getItem(storageKey);
+      let list = raw ? JSON.parse(raw) : [];
+      const projectId = project.project_id || project.id;
+      list = list.filter(id => id !== projectId);
+      list.unshift(projectId);
+      list = list.slice(0, 3); // Giới hạn tối đa 3 dự án xem gần nhất
+      localStorage.setItem(storageKey, JSON.stringify(list));
+    } catch (e) {
+      console.error('Lỗi lưu dự án xem gần đây:', e);
+    }
+  };
+
   return (
-    <Link to={`/projects/${project.project_id || project.id}`} className="text-decoration-none h-100 d-block">
+    <Link 
+      to={`/projects/${project.project_id || project.id}`} 
+      className="text-decoration-none h-100 d-block"
+      onClick={handleCardClick}
+    >
       <EntityCard
         className="h-100"
         title={title}

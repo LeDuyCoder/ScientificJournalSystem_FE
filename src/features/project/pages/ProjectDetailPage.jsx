@@ -132,7 +132,7 @@ const ProjectDetailPage = () => {
           <div className="d-flex flex-wrap justify-content-between align-items-start gap-3 mb-4">
             <div>
               <div className="d-flex align-items-center gap-2 mb-3">
-                <span className="badge rounded-pill text-primary fw-medium" style={{ backgroundColor: 'var(--primary-light)' }}>
+                <span className="badge rounded-pill fw-medium" style={{ backgroundColor: 'var(--primary-light)', color: 'var(--primary)' }}>
                   {areaName}
                 </span>
                 <span className="text-muted-custom small">Cập nhật lúc: {createdAt}</span>
@@ -150,7 +150,7 @@ const ProjectDetailPage = () => {
             </div>
           </div>
 
-          <div className="row g-4 pt-4 border-top">
+          <div className="row g-4 mt-3 pt-4 border-top">
             <div className="col-6 col-md-3">
               <div className="text-muted-custom small mb-1 text-uppercase tracking-wider fw-semibold">Từ khóa theo dõi</div>
               <div className="fs-3 fw-bold text-main">{keywordCount}</div>
@@ -181,24 +181,27 @@ const ProjectDetailPage = () => {
         <ul className="nav nav-tabs tab-nav-custom mb-4 border-bottom-0 gap-4" style={{ paddingLeft: '1rem' }}>
           <li className="nav-item">
             <button
-              className={`nav-link border-0 bg-transparent px-0 pb-3 fw-medium ${activeTab === 'overview' ? 'active text-primary border-bottom border-2 border-primary' : 'text-muted-custom'}`}
+              className={`nav-link border-0 bg-transparent px-0 pb-3 fw-medium ${activeTab === 'overview' ? 'active' : 'text-muted-custom'}`}
               onClick={() => setActiveTab('overview')}
+              style={activeTab === 'overview' ? { color: 'var(--primary)', borderBottom: '2px solid var(--primary)' } : undefined}
             >
               <Icon icon="lucide:bar-chart-2" width="18" className="me-2" /> Tổng quan & Biểu đồ
             </button>
           </li>
           <li className="nav-item">
             <button
-              className={`nav-link border-0 bg-transparent px-0 pb-3 fw-medium ${activeTab === 'articles' ? 'active text-primary border-bottom border-2 border-primary' : 'text-muted-custom'}`}
+              className={`nav-link border-0 bg-transparent px-0 pb-3 fw-medium ${activeTab === 'articles' ? 'active' : 'text-muted-custom'}`}
               onClick={() => setActiveTab('articles')}
+              style={activeTab === 'articles' ? { color: 'var(--primary)', borderBottom: '2px solid var(--primary)' } : undefined}
             >
               <Icon icon="lucide:file-text" width="18" className="me-2" /> Luồng Bài Báo ({articleCount})
             </button>
           </li>
           <li className="nav-item">
             <button
-              className={`nav-link border-0 bg-transparent px-0 pb-3 fw-medium ${activeTab === 'keywords' ? 'active text-primary border-bottom border-2 border-primary' : 'text-muted-custom'}`}
+              className={`nav-link border-0 bg-transparent px-0 pb-3 fw-medium ${activeTab === 'keywords' ? 'active' : 'text-muted-custom'}`}
               onClick={() => setActiveTab('keywords')}
+              style={activeTab === 'keywords' ? { color: 'var(--primary)', borderBottom: '2px solid var(--primary)' } : undefined}
             >
               <Icon icon="lucide:key" width="18" className="me-2" /> Keywords & Giám sát ({keywordCount})
             </button>
@@ -248,19 +251,44 @@ const ProjectDetailPage = () => {
                         </div>
                         <div className="d-flex gap-2 flex-wrap justify-content-end">
                           {article.matched_areas?.map((area, aIdx) => (
-                            <span key={`area-${aIdx}`} className="badge border fw-normal text-nowrap" style={{ fontSize: '0.7rem', backgroundColor: '#e2e3e5', color: '#383d41', borderColor: '#d6d8db !important' }}>
+                            <span
+                              key={`area-${aIdx}`}
+                              className="badge fw-medium text-nowrap"
+                              style={{
+                                fontSize: '0.7rem',
+                                backgroundColor: 'var(--primary-light)',
+                                color: 'var(--primary)',
+                              }}
+                            >
                               <Icon icon="lucide:book-open" className="me-1" width="12" />
                               {area}
                             </span>
                           ))}
                           {article.matched_keywords?.map((kw, kwIdx) => (
-                            <span key={`kw-${kwIdx}`} className="badge border fw-normal text-nowrap" style={{ fontSize: '0.7rem', backgroundColor: '#fff3cd', color: '#856404', borderColor: '#ffeeba !important' }}>
-                              <span className="text-warning me-1">★</span>
+                            <span
+                              key={`kw-${kwIdx}`}
+                              className="badge fw-medium text-nowrap"
+                              style={{
+                                fontSize: '0.7rem',
+                                backgroundColor: 'var(--primary-light)',
+                                color: 'var(--primary)',
+                              }}
+                            >
+                              <Icon icon="lucide:sparkles" className="me-1" width="12" />
                               {kw}
                             </span>
                           ))}
                           {(!article.matched_keywords?.length && !article.matched_areas?.length) && (
-                            <span className="badge bg-light text-muted border fw-normal text-nowrap" style={{ fontSize: '0.7rem' }}>Độ trùng khớp cao</span>
+                            <span
+                              className="badge fw-medium text-nowrap"
+                              style={{
+                                fontSize: '0.7rem',
+                                backgroundColor: 'var(--primary-light)',
+                                color: 'var(--primary)',
+                              }}
+                            >
+                              Độ trùng khớp cao
+                            </span>
                           )}
                         </div>
                       </div>

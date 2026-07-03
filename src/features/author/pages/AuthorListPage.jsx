@@ -162,7 +162,7 @@ export default function AuthorListPage() {
           ))}
         </Row>
 
-        <FilterCard className="author-filter-card">
+        <FilterCard className="author-filter-card mb-4">
           <Form onSubmit={handleSearchSubmit}>
             <Row className="g-3 align-items-center author-filter-row">
               <Col xs={12} lg={4}>

@@ -1,4 +1,3 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 
@@ -32,8 +31,16 @@ const KeywordRelatedArticleList = ({ articles, loading }) => {
           <div className="d-flex justify-content-between align-items-start mb-2">
             <div className="d-flex gap-2 flex-wrap">
               {article.matched_keywords?.map((kw, kwIdx) => (
-                <span key={kwIdx} className="badge border mb-2" style={{ backgroundColor: '#fff3cd', color: '#856404', borderColor: '#ffeeba !important' }}>
-                  <span className="text-warning me-1">★</span>
+                <span
+                  key={kwIdx}
+                  className="badge fw-medium text-nowrap mb-2 d-inline-flex align-items-center"
+                  style={{
+                    fontSize: '0.7rem',
+                    backgroundColor: 'var(--primary-light)',
+                    color: 'var(--primary)',
+                  }}
+                >
+                  <Icon icon="lucide:sparkles" className="me-1" width="12" />
                   {kw}
                 </span>
               ))}
