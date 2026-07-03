@@ -10,15 +10,46 @@ import '../Dashboard.css';
 /**
  * QUICK_ACCESS_ITEMS — constant config, dễ mở rộng sau này
  */
+/**
+ * QUICK_ACCESS_ITEMS — constant config với màu sắc và mô tả chi tiết
+ */
 const QUICK_ACCESS_ITEMS = [
-  { icon: 'lucide:search', label: 'Tìm kiếm', path: '/catalog' },
-  { icon: 'lucide:book-open', label: 'Tạp chí', path: '/catalog' },
-  { icon: 'lucide:globe', label: 'Địa lý', path: '/geography' },
-  { icon: 'lucide:trophy', label: 'Leaderboard', path: '/authors' },
+  { 
+    icon: 'lucide:search', 
+    label: 'Tìm kiếm', 
+    desc: 'Khám phá bài báo & đề tài',
+    path: '/catalog',
+    color: 'var(--primary)',
+    bg: 'var(--primary-light)'
+  },
+  { 
+    icon: 'lucide:book-open', 
+    label: 'Tạp chí', 
+    desc: 'Xếp hạng Q1-Q4 khoa học',
+    path: '/catalog',
+    color: 'var(--primary)',
+    bg: 'var(--primary-light)'
+  },
+  { 
+    icon: 'lucide:globe', 
+    label: 'Địa lý', 
+    desc: 'Bản đồ phân bố tác giả',
+    path: '/geography',
+    color: 'var(--primary)',
+    bg: 'var(--primary-light)'
+  },
+  { 
+    icon: 'lucide:trophy', 
+    label: 'Leaderboard', 
+    desc: 'Xếp hạng tác giả nổi bật',
+    path: '/authors',
+    color: 'var(--primary)',
+    bg: 'var(--primary-light)'
+  },
 ];
 
 /**
- * QuickAccessGrid — 4 card điều hướng nhanh
+ * QuickAccessGrid — 4 card điều hướng nhanh, thiết kế hiện đại 2x2
  */
 export default function QuickAccessGrid() {
   const navigate = useNavigate();
@@ -31,18 +62,24 @@ export default function QuickAccessGrid() {
       </header>
 
       <div className="quick-access-body">
-        <div className="quick-access-grid">
+        <div className="premium-qa-grid">
           {QUICK_ACCESS_ITEMS.map((item) => (
             <button
               key={item.label}
               type="button"
-              className="quick-access-item"
+              className="premium-qa-tile"
               onClick={() => navigate(item.path)}
             >
-              <span className="quick-access-icon">
-                <Icon icon={item.icon} width={18} />
-              </span>
-              <span className="quick-access-label">{item.label}</span>
+              <div 
+                className="premium-qa-icon-wrapper" 
+                style={{ backgroundColor: item.bg, color: item.color }}
+              >
+                <Icon icon={item.icon} width={20} />
+              </div>
+              <div className="premium-qa-content">
+                <span className="premium-qa-title">{item.label}</span>
+                <span className="premium-qa-desc">{item.desc}</span>
+              </div>
             </button>
           ))}
         </div>
