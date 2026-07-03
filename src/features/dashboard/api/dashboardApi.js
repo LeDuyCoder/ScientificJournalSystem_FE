@@ -1,4 +1,4 @@
-﻿/**
+/**
  * File source thuộc hệ thống FE ResearchPulse.
  *
  * File: features\dashboard\api\dashboardApi.js
@@ -12,11 +12,18 @@ import api from '../../../shared/services/api';
 export const getDashboardProjectsApi = () => api.get('/projects');
 
 /**
- * Get project analytics / publication trend
+ * Get project analytics / publication trend (Deprecated, use getPublicationTrendsApi instead for dashboard)
  * BE: GET /api/v1/projects/:id/analytics  [requireAuth]
  */
 export const getProjectAnalyticsApi = (projectId) =>
   api.get(`/projects/${projectId}/analytics`);
+
+/**
+ * Get overall or project-specific publication trends
+ * BE: GET /api/v1/statistics/publication-trends
+ */
+export const getPublicationTrendsApi = (params = {}) =>
+  api.get('/statistics/publication-trends', { params });
 
 /**
  * Get trending keywords for a project
