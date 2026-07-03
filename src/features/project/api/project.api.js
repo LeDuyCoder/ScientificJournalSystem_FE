@@ -32,6 +32,15 @@ export const getProjectByIdApi = (id) => {
 };
 
 /**
+ * Get project overview statistics and charts
+ * @param {number|string} id - Project ID
+ * @returns {Promise} Axios promise
+ */
+export const getProjectOverviewApi = (id) => {
+  return api.get(`/projects/${id}/overview`);
+};
+
+/**
  * Update project details by ID
  * @param {number|string} id - Project ID
  * @param {Object} data - { title, subject_area, subject_category_ids, journal_ids }

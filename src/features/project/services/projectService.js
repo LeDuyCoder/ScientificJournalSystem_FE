@@ -34,6 +34,16 @@ const projectService = {
   },
 
   /**
+   * Lấy dữ liệu tổng quan và biểu đồ của dự án
+   * @param {number|string} id - ID dự án
+   * @returns {Promise<Object>} Dữ liệu overview
+   */
+  async getProjectOverview(id) {
+    const res = await projectApi.getProjectOverviewApi(id);
+    return res.data?.data || res.data;
+  },
+
+  /**
    * Cập nhật dự án
    * @param {number|string} id - ID dự án
    * @param {Object} data - Dữ liệu cập nhật
