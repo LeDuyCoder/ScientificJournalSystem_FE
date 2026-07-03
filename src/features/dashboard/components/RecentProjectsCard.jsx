@@ -3,9 +3,9 @@
  *
  * File: features\dashboard\components\RecentProjectsCard.jsx
  */
+import { useState } from 'react';
 import { Icon } from '@iconify/react';
 import { EntityCard } from '../../../shared/components/Card';
-import { truncate } from '../../../shared/utils/formatNumber';
 
 /** Status badge config */
 const STATUS_CONFIG = {
@@ -19,7 +19,7 @@ function ProjectStatusBadge({ status }) {
   const cfg = STATUS_CONFIG[status?.toLowerCase()] ?? STATUS_CONFIG.active;
   return (
     <span
-      className="d-inline-block px-2 py-1 rounded-pill font-display"
+      className="d-inline-flex align-items-center px-2 py-1 rounded-pill font-display flex-shrink-0 text-nowrap"
       style={{
         fontSize: '0.7rem', fontWeight: 600,
         backgroundColor: cfg.bg, color: cfg.color,
@@ -73,11 +73,11 @@ function RecentProjectItem({ project, onClick }) {
       </div>
 
       {/* Info */}
-      <div className="flex-grow-1 min-w-0">
-        <div className="text-main fw-semibold text-truncate" style={{ fontSize: '0.85rem' }}>
-          {truncate(name, 32)}
+      <div className="flex-grow-1" style={{ minWidth: 0 }}>
+        <div className="text-main fw-semibold text-truncate" style={{ fontSize: '0.85rem' }} title={name}>
+          {name}
         </div>
-        <div className="text-muted-custom" style={{ fontSize: '0.72rem' }}>
+        <div className="text-muted-custom text-truncate" style={{ fontSize: '0.72rem' }}>
           {journalCount} journals · {articleCount} bài báo
         </div>
       </div>
@@ -92,6 +92,11 @@ function RecentProjectItem({ project, onClick }) {
  * RecentProjectsCard — card chứa danh sách 3 project gần đây
  */
 export default function RecentProjectsCard({ projects, loading, error, onViewAll, onProjectClick }) {
+  const ITEMS_PER_PAGE = 4;
+  const [page, setPage] = useState(1);
+  const totalPages = Math.max(1, Math.ceil((projects?.length ?? 0) / ITEMS_PER_PAGE));
+  const paginatedProjects = projects.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE);
+
   const actions = onViewAll ? (
     <button
       className="btn btn-link p-0 text-decoration-none"
@@ -137,13 +142,55 @@ export default function RecentProjectsCard({ projects, loading, error, onViewAll
           </p>
         </div>
       ) : (
-        projects.slice(0, 3).map((p, i) => (
-          <RecentProjectItem
-            key={p.project_id ?? p.id ?? i}
-            project={p}
-            onClick={() => onProjectClick?.(p)}
-          />
-        ))
+        <>
+          {paginatedProjects.map((p, i) => (
+            <RecentProjectItem
+              key={p.project_id ?? p.id ?? i}
+              project={p}
+              onClick={() => onProjectClick?.(p)}
+            />
+          ))}
+
+          {totalPages > 1 && (
+            <div className="d-flex align-items-center justify-content-between gap-2 px-3 pt-3 pb-2">
+              <button
+                type="button"
+                className="btn btn-sm"
+                onClick={() => setPage((prev) => Math.max(1, prev - 1))}
+                disabled={page === 1}
+                style={{
+                  border: '1px solid var(--border)',
+                  background: 'var(--bg-card)',
+                  color: page === 1 ? 'var(--text-muted)' : 'var(--text-main)',
+                  fontSize: '0.72rem',
+                  fontWeight: 600,
+                }}
+              >
+                ← Trước
+              </button>
+
+              <span className="text-muted-custom" style={{ fontSize: '0.72rem' }}>
+                Trang {page}/{totalPages}
+              </span>
+
+              <button
+                type="button"
+                className="btn btn-sm"
+                onClick={() => setPage((prev) => Math.min(totalPages, prev + 1))}
+                disabled={page === totalPages}
+                style={{
+                  border: '1px solid var(--border)',
+                  background: 'var(--bg-card)',
+                  color: page === totalPages ? 'var(--text-muted)' : 'var(--text-main)',
+                  fontSize: '0.72rem',
+                  fontWeight: 600,
+                }}
+              >
+                Sau →
+              </button>
+            </div>
+          )}
+        </>
       )}
     </div>
   );

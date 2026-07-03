@@ -51,12 +51,26 @@ function SimpleSvgChart({ years, series }) {
         })}
 
         {/* X axis labels */}
-        {years.map((yr, i) => (
-          <text key={yr} x={xScale(i)} y={H - 4} textAnchor="middle"
-            style={{ fontSize: 9, fill: 'var(--text-muted)', fontFamily: 'var(--font-display)' }}>
-            {yr}
-          </text>
-        ))}
+        {years.map((yr, i) => {
+          // Calculate dynamic step to avoid label overlaps for long year ranges
+          const maxLabels = 8;
+          const step = Math.ceil(years.length / maxLabels);
+          
+          // Always show the first and the last years, and other years at step intervals
+          const shouldShow = i === 0 || i === years.length - 1 || i % step === 0;
+          
+          // Prevent showing label if it is too close to the last year label
+          const isTooCloseToLast = i % step === 0 && (years.length - 1 - i) < step * 0.5 && i !== years.length - 1;
+
+          if (!shouldShow || isTooCloseToLast) return null;
+
+          return (
+            <text key={yr} x={xScale(i)} y={H - 4} textAnchor="middle"
+              style={{ fontSize: 9, fill: 'var(--text-muted)', fontFamily: 'var(--font-display)' }}>
+              {yr}
+            </text>
+          );
+        })}
 
         {/* Series lines */}
         {series.map((s, si) => {
@@ -65,6 +79,9 @@ function SimpleSvgChart({ years, series }) {
           const pts = s.data.map((v, i) => `${xScale(i)},${yScale(v ?? 0)}`).join(' ');
           const pts0 = `${xScale(0)},${yScale(0)}`;
           const ptsN = `${xScale(s.data.length - 1)},${yScale(0)}`;
+
+          // Hide small dots visually if there are too many data points (to keep the line clean)
+          const showDots = years.length <= 25;
 
           return (
             <g key={si}>
@@ -76,11 +93,11 @@ function SimpleSvgChart({ years, series }) {
               {/* Line */}
               <polyline points={pts} fill="none" stroke={color} strokeWidth={2} strokeLinejoin="round" />
               {/* Dots */}
-              {s.data.map((v, i) => (
+              {showDots && s.data.map((v, i) => (
                 <circle key={i} cx={xScale(i)} cy={yScale(v ?? 0)} r={3}
                   fill={color} stroke="var(--bg-card)" strokeWidth={1.5} />
               ))}
-              {/* Transparent larger hover targets */}
+              {/* Transparent larger hover targets (always active) */}
               {s.data.map((v, i) => (
                 <circle
                   key={`hover-${i}`}

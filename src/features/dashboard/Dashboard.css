@@ -432,62 +432,70 @@
   padding: 0 1.25rem 1.25rem;
 }
 
-.quick-access-grid {
+.premium-qa-grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(2, 1fr);
   gap: 1rem;
 }
 
-.quick-access-item {
+.premium-qa-tile {
   width: 100%;
-  min-height: 156px;
-  border: none;
-  background: transparent;
-  color: var(--text-main);
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.9rem;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
   cursor: pointer;
+  text-align: left;
+  font-family: var(--font-display);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.premium-qa-tile:hover,
+.premium-qa-tile:focus {
+  border-color: var(--primary);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(15, 23, 42, 0.04);
+}
+
+.premium-qa-icon-wrapper {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  transition: transform 0.2s ease;
+}
+
+.premium-qa-tile:hover .premium-qa-icon-wrapper {
+  transform: scale(1.08);
+}
+
+.premium-qa-content {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 0.75rem;
-  padding: 1rem 0.75rem;
-  font-family: var(--font-display);
-  transition: color 0.15s ease;
+  min-width: 0;
 }
 
-.quick-access-item:hover {
-  background: transparent;
-}
-
-.quick-access-item:hover .quick-access-label,
-.quick-access-item:hover .quick-access-icon {
-  color: var(--primary);
-}
-
-.quick-access-icon {
-  width: 36px;
-  height: 36px;
-  border-radius: 999px;
-  background: var(--bg-chip);
+.premium-qa-title {
   color: var(--text-main);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: color 0.15s ease, background-color 0.15s ease;
-}
-
-.quick-access-item:hover .quick-access-icon {
-  background: var(--primary-light);
-  color: var(--primary);
-}
-
-.quick-access-label {
-  color: var(--text-main);
-  font-size: 0.92rem;
+  font-size: 0.88rem;
   font-weight: 600;
-  line-height: 1.2;
-  text-align: center;
-  transition: color 0.15s ease;
+  line-height: 1.25;
+  margin-bottom: 0.15rem;
+}
+
+.premium-qa-desc {
+  color: var(--text-muted);
+  font-size: 0.74rem;
+  line-height: 1.25;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .publication-trend-card {
@@ -561,12 +569,9 @@
   white-space: nowrap;
 }
 
-@media (max-width: 767.98px) {
-  .quick-access-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .quick-access-item {
-    min-height: 128px;
+@media (max-width: 575.98px) {
+  .premium-qa-grid {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
   }
 }
