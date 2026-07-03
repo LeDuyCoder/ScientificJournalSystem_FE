@@ -7,7 +7,7 @@ import { useState, useEffect, useCallback } from 'react';
 import {
   getDashboardProjectsApi,
   getPublicationTrendsApi,
-  getTrendingKeywordsApi,
+  getDashboardTrendingKeywordsApi,
   getTopAuthorsApi,
 } from '../api/dashboardApi';
 import { getAuthorAreasBreakdownApi } from '../../author/api/author.api';
@@ -110,20 +110,30 @@ export default function useDashboard(currentUser, trendRange = '5') {
     }
   }, [trendRange]);
 
-  const fetchKeywords = useCallback(async (projectId) => {
-    if (!projectId) return;
+  const fetchKeywords = useCallback(async () => {
     setLoadingKeywords(true);
     setErrorKeywords(null);
     try {
-      const res  = await getTrendingKeywordsApi(projectId, 12);
-      const data = res.data?.data ?? res.data ?? [];
-      setTrendingKeywords(Array.isArray(data) ? data : []);
+      const currentYear = new Date().getFullYear();
+      const yearCount = Number(trendRange);
+      const yearParams = Number.isFinite(yearCount)
+        ? { fromYear: currentYear - yearCount + 1, toYear: currentYear }
+        : {};
+      const params = {
+        limit: 10,
+        metric: 'articleCount',
+        ...yearParams,
+      };
+      const res = await getDashboardTrendingKeywordsApi(params);
+      const chart = res.data?.chart ?? res.data?.data?.chart ?? res.data ?? null;
+      setTrendingKeywords(chart);
     } catch (err) {
-      setErrorKeywords(err.response?.data?.message || err.message || 'Không thể tải keywords.');
+      setErrorKeywords(err.response?.data?.message || err.message || 'Không thể tải trending keywords.');
+      setTrendingKeywords(null);
     } finally {
       setLoadingKeywords(false);
     }
-  }, []);
+  }, [trendRange]);
 
   const fetchAuthors = useCallback(async () => {
     setLoadingAuthors(true);
@@ -177,8 +187,9 @@ export default function useDashboard(currentUser, trendRange = '5') {
   useEffect(() => {
     if (currentUser) {
       fetchAnalytics();
+      fetchKeywords();
     }
-  }, [currentUser, fetchAnalytics]);
+  }, [currentUser, fetchAnalytics, fetchKeywords]);
 
   // ── initialise on mount (only when user is logged in) ───────────────────
   useEffect(() => {
@@ -191,21 +202,9 @@ export default function useDashboard(currentUser, trendRange = '5') {
       return;
     }
 
-    const init = async () => {
-      const [list] = await Promise.all([fetchProjects(), fetchAuthors()]);
-      if (list && list.length > 0) {
-        const firstId = list[0]?.project_id ?? list[0]?.id;
-        if (firstId) {
-          fetchKeywords(firstId);
-        } else {
-          setLoadingKeywords(false);
-        }
-      } else {
-        setLoadingKeywords(false);
-      }
-    };
-    init();
-  }, [currentUser, fetchProjects, fetchAuthors, fetchKeywords]);
+    fetchProjects();
+    fetchAuthors();
+  }, [currentUser, fetchProjects, fetchAuthors]);
 
   // ── derived stat card data ───────────────────────────────────────────────
   const summaryStats = {
@@ -218,15 +217,10 @@ export default function useDashboard(currentUser, trendRange = '5') {
   // ── refetch helpers exposed for retry buttons ───────────────────────────
   const refetchAll = useCallback(() => {
     if (!currentUser) return;
-    const init = async () => {
-      fetchAnalytics();
-      const [list] = await Promise.all([fetchProjects(), fetchAuthors()]);
-      if (list?.length > 0) {
-        const id = list[0]?.project_id ?? list[0]?.id;
-        if (id) { fetchKeywords(id); }
-      }
-    };
-    init();
+    fetchAnalytics();
+    fetchProjects();
+    fetchAuthors();
+    fetchKeywords();
   }, [currentUser, fetchProjects, fetchAuthors, fetchAnalytics, fetchKeywords]);
 
   return {

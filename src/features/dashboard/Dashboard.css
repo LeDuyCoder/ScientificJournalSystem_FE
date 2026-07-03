@@ -403,7 +403,8 @@
 }
 
 .quick-access-card {
-  height: 100%;
+  height: auto;
+  min-height: 172px;
   background: var(--bg-card);
   border: 1px solid var(--border);
   border-radius: 18px;
@@ -545,6 +546,19 @@
 .chart-range-select:hover,
 .chart-range-select:focus {
   border-color: var(--primary);
+}
+.chart-svg-tooltip {
+  position: absolute;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 6px 10px;
+  font-family: var(--font-display);
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
+  pointer-events: none;
+  z-index: 10;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+  white-space: nowrap;
 }
 
 @media (max-width: 767.98px) {
