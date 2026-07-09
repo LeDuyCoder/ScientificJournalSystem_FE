@@ -85,13 +85,12 @@ export default function Header() {
       <Navbar
         expand="md"
         fixed="top"
-        className={`transition-all duration-300 py-3 ${
-          isScrolled ? "sticky-scrolled" : "bg-transparent"
-        }`}
+        className="transition-all duration-300 py-3 sticky-scrolled"
         style={{
-          borderBottom: isScrolled ? "none" : "1px solid var(--border)",
-          background: isScrolled ? "var(--bg-card)" : "transparent",
-          backdropFilter: isScrolled ? "blur(12px)" : "none",
+          borderBottom: "1px solid var(--border)",
+          background: "var(--bg-card)",
+          backdropFilter: "blur(12px)",
+          boxShadow: "0 4px 20px rgba(0, 0, 0, 0.05)",
         }}
       >
         <Container>
@@ -248,7 +247,7 @@ export default function Header() {
                       </div>
                     </div>
                     <Dropdown.Item
-                      onClick={() => navigate(ROUTES.WALLET_TOP_UP)}
+                      onClick={() => navigate(ROUTES.WALLET)}
                       className="d-flex align-items-center gap-2 text-xs py-2 text-main"
                     >
                       <Icon
@@ -256,7 +255,7 @@ export default function Header() {
                         width="14"
                         style={{ color: '#ff7a33' }}
                       />
-                      <span className="font-weight-bold" style={{ color: 'var(--text-main)' }}>Nạp Coin</span>
+                      <span className="font-weight-bold" style={{ color: 'var(--text-main)' }}>Ví của tôi</span>
                     </Dropdown.Item>
                     <Dropdown.Item
                       onClick={() => navigate(ROUTES.DASHBOARD)}

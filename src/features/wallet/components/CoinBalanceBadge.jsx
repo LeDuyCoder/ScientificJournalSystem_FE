@@ -6,10 +6,13 @@
  * Component hiển thị số dư coin dạng badge pill sang trọng.
  */
 import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import Icon from '../../../shared/components/Icon';
 import { useWalletStore } from '../../../app/store/walletStore';
+import ROUTES from '../../../app/routes/routePaths';
 
 export default function CoinBalanceBadge({ className = '' }) {
+  const navigate = useNavigate();
   const { balance, fetchWallet, isFetched, isLoading } = useWalletStore();
 
   useEffect(() => {
@@ -28,11 +31,20 @@ export default function CoinBalanceBadge({ className = '' }) {
 
   return (
     <div
-      className={`d-inline-flex align-items-center gap-2 px-3 py-1 ${className}`}
+      className={`d-inline-flex align-items-center gap-2 px-3 py-1 user-select-none ${className}`}
+      onClick={() => navigate(ROUTES.WALLET)}
       style={{
         background: 'rgba(0, 0, 0, 0.04)',
         borderRadius: '50rem',
         border: '1px solid rgba(0, 0, 0, 0.05)',
+        cursor: 'pointer',
+        transition: 'background 0.2s ease, transform 0.1s ease',
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.background = 'rgba(255, 122, 51, 0.08)';
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.background = 'rgba(0, 0, 0, 0.04)';
       }}
     >
       <div

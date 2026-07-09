@@ -19,6 +19,18 @@ export const getMyWallet = async () => {
 };
 
 /**
+ * Lấy lịch sử giao dịch ví của user.
+ * Endpoint: GET /wallet/me/transactions
+ *
+ * @param {Object} params - { page, limit, type }
+ * @returns {Promise<Object>} Lịch sử giao dịch
+ */
+export const getWalletTransactions = async (params = {}) => {
+  const response = await api.get('/wallet/me/transactions', { params });
+  return response.data;
+};
+
+/**
  * Lấy danh sách gói coin đang bán (không cần đăng nhập).
  * Endpoint: GET /coin-packages
  *

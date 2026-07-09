@@ -11,10 +11,21 @@
   padding-top: 80px;
 }
 
+.topup-page.topup-in-layout {
+  min-height: auto;
+  background: transparent;
+  padding-top: 0;
+}
+
 .topup-inner {
   max-width: 900px;
   margin: 0 auto;
   padding: 40px 16px 80px;
+}
+
+.topup-in-layout .topup-inner {
+  max-width: 980px;
+  padding: 0 0 24px;
 }
 
 /* ── Hero Section ───────────────────────────────────────── */

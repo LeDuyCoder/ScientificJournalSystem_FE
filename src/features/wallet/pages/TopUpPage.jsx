@@ -14,7 +14,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';
-import Header from '../../landing/components/Header';
 import { useWalletStore } from '../../../app/store/walletStore';
 import ROUTES from '../../../app/routes/routePaths';
 import { getCoinPackages } from '../api/walletApi';
@@ -71,9 +70,6 @@ export default function TopUpPage() {
 
   const [selectedPkgId, setSelectedPkgId] = useState(null);
   const [paymentMethod, setPaymentMethod] = useState('vnpay');
-
-  const [paying, setPaying] = useState(false);
-  const [payError, setPayError] = useState(null);
 
   // Fetch wallet nếu chưa có
   useEffect(() => {
@@ -132,8 +128,7 @@ export default function TopUpPage() {
   const selectedPkg = packages.find((p) => p.package_id === selectedPkgId);
 
   return (
-    <div className="topup-page">
-      <Header />
+    <div className="topup-page topup-in-layout">
       <div className="topup-inner">
 
         {/* ── Hero ── */}
@@ -290,47 +285,19 @@ export default function TopUpPage() {
           <div className="topup-cta-row">
             <button
               className="topup-cta-btn"
-              disabled={!selectedPkgId || paying}
+              disabled={!selectedPkgId}
               onClick={handlePay}
               type="button"
             >
-              {paying ? (
-                <>
-                  <div className="spinner-border spinner-border-sm text-white" role="status" />
-                  Đang xử lý...
-                </>
-              ) : (
-                <>
-                  <Icon icon="solar:wallet-bold" width={16} />
-                  Tiến hành nạp tiền
-                  {selectedPkg && ` — ${formatVND(selectedPkg.price)}`}
-                </>
-              )}
+              <Icon icon="solar:wallet-bold" width={16} />
+              Tiến hành nạp tiền
+              {selectedPkg && ` — ${formatVND(selectedPkg.price)}`}
             </button>
             <div className="topup-cta-note">
               Giao dịch được bảo mật và mã hóa.
               <br />
               Coin sẽ được cộng sau khi thanh toán thành công.
             </div>
-          </div>
-        )}
-
-        {/* Error message */}
-        {payError && (
-          <div
-            className="alert d-flex align-items-center gap-2 mb-4"
-            role="alert"
-            style={{
-              background: 'rgba(239, 68, 68, 0.08)',
-              border: '1px solid rgba(239, 68, 68, 0.2)',
-              borderRadius: 12,
-              color: '#dc2626',
-              fontSize: 13,
-              padding: '12px 16px',
-            }}
-          >
-            <Icon icon="lucide:alert-circle" width={16} />
-            {payError}
           </div>
         )}
 

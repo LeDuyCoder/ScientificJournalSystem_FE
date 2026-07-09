@@ -12,9 +12,13 @@ import RegisterPage from '../../features/auth/pages/RegisterPage';
 import LoginPage from '../../features/auth/pages/LoginPage';
 import ProfilePage from '../../features/profile/pages/ProfilePage';
 import VerifyEmailPage from '../../features/auth/pages/VerifyEmailPage';
+import WalletLayout from '../../features/wallet/components/WalletLayout';
+import MyWalletPage from '../../features/wallet/pages/MyWalletPage';
 import TopUpPage from '../../features/wallet/pages/TopUpPage';
+import TransactionHistoryPage from '../../features/wallet/pages/TransactionHistoryPage';
 import WalletCheckoutPage from '../../features/wallet/pages/WalletCheckoutPage';
 import PaymentResultPage from '../../features/wallet/pages/PaymentResultPage';
+import ROUTES from './routePaths';
 
 import ProtectedRoute from './ProtectedRoute';
 import AdminRoute from './AdminRoute';
@@ -92,6 +96,12 @@ export default function AppRoutes() {
           <Route path="/projects/:id/edit" element={<EditProjectPage />} />
           <Route path="/projects/:id" element={<ProjectDetailPage />} />
 
+          <Route element={<WalletLayout />}>
+            <Route path={ROUTES.WALLET} element={<MyWalletPage />} />
+            <Route path={ROUTES.WALLET_TOP_UP} element={<TopUpPage />} />
+            <Route path={ROUTES.WALLET_TRANSACTIONS} element={<TransactionHistoryPage />} />
+          </Route>
+
           <Route
             path="/authors/leaderboard"
             element={<AuthorLeaderboardPage />}
@@ -130,7 +140,6 @@ export default function AppRoutes() {
         />
 
         <Route path="/profile" element={<ProfilePage />} />
-        <Route path="/wallet/top-up" element={<TopUpPage />} />
         <Route path="/wallet/checkout" element={<WalletCheckoutPage />} />
         <Route path="/wallet/payment-result" element={<PaymentResultPage />} />
         <Route path="/api/v1/payments/vnpay/return" element={<PaymentResultPage />} />

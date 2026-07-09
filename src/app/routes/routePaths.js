@@ -52,7 +52,9 @@ const ROUTES = {
 
   // Hồ sơ cá nhân & Ví coin
   PROFILE:               "/profile",
+  WALLET:                "/wallet",
   WALLET_TOP_UP:         "/wallet/top-up",
+  WALLET_TRANSACTIONS:   "/wallet/transactions",
   WALLET_CHECKOUT:       "/wallet/checkout",
   PAYMENT_RESULT:        "/wallet/payment-result",
   VNPAY_RETURN:          "/api/v1/payments/vnpay/return",
