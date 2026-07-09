@@ -16,6 +16,7 @@ import Icon from "../../../shared/components/Icon";
 import useAuth from "../../auth/hooks/useAuth";
 import { useUserStore } from "../../../app/store/userStore";
 import ROUTES from "../../../app/routes/routePaths";
+import CoinBalanceBadge from "../../wallet/components/CoinBalanceBadge";
 
 export default function Header() {
   const { t, i18n } = useTranslation();
@@ -218,8 +219,10 @@ export default function Header() {
 
               {/* User Authentication Display/Buttons */}
               {email ? (
-                <Dropdown align="end">
-                  <Dropdown.Toggle
+                <>
+                  <CoinBalanceBadge />
+                  <Dropdown align="end">
+                    <Dropdown.Toggle
                     as="button"
                     type="button"
                     className="border-0 bg-transparent d-inline-flex align-items-center justify-content-center p-0 text-muted-custom hover:text-primary"
@@ -236,7 +239,7 @@ export default function Header() {
 
                   <Dropdown.Menu className="border-0 shadow-sm mt-2" style={dropdownMenuStyle}>
                     <div className="px-3 py-2 text-xs font-bold text-main border-bottom pb-2 mb-1">
-                      Người dùng
+                      <span>Người dùng</span>
                       <div
                         className="text-muted-custom font-normal mt-0.5 text-truncate"
                         style={{ fontSize: "10px", color: "var(--text-muted)" }}
@@ -244,6 +247,17 @@ export default function Header() {
                         {email}
                       </div>
                     </div>
+                    <Dropdown.Item
+                      onClick={() => alert("Trang Nạp Coin đang được phát triển")}
+                      className="d-flex align-items-center gap-2 text-xs py-2 text-main"
+                    >
+                      <Icon
+                        icon="solar:wallet-bold"
+                        width="14"
+                        style={{ color: '#ff7a33' }}
+                      />
+                      <span className="font-weight-bold" style={{ color: 'var(--text-main)' }}>Nạp Coin</span>
+                    </Dropdown.Item>
                     <Dropdown.Item
                       onClick={() => navigate(ROUTES.DASHBOARD)}
                       className="d-flex align-items-center gap-2 text-xs py-2 text-main"
@@ -275,6 +289,7 @@ export default function Header() {
                     </Dropdown.Item>
                   </Dropdown.Menu>
                 </Dropdown>
+                </>
               ) : (
                 <>
                   <Button
@@ -458,6 +473,9 @@ export default function Header() {
                     >
                       {email}
                     </div>
+                  </div>
+                  <div className="ms-auto">
+                    <CoinBalanceBadge />
                   </div>
                 </div>
                 <Button
