@@ -248,7 +248,7 @@ export default function Header() {
                       </div>
                     </div>
                     <Dropdown.Item
-                      onClick={() => alert("Trang Nạp Coin đang được phát triển")}
+                      onClick={() => navigate(ROUTES.WALLET_TOP_UP)}
                       className="d-flex align-items-center gap-2 text-xs py-2 text-main"
                     >
                       <Icon

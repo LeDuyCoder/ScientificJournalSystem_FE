@@ -12,6 +12,9 @@ import RegisterPage from '../../features/auth/pages/RegisterPage';
 import LoginPage from '../../features/auth/pages/LoginPage';
 import ProfilePage from '../../features/profile/pages/ProfilePage';
 import VerifyEmailPage from '../../features/auth/pages/VerifyEmailPage';
+import TopUpPage from '../../features/wallet/pages/TopUpPage';
+import WalletCheckoutPage from '../../features/wallet/pages/WalletCheckoutPage';
+import PaymentResultPage from '../../features/wallet/pages/PaymentResultPage';
 
 import ProtectedRoute from './ProtectedRoute';
 import AdminRoute from './AdminRoute';
@@ -127,6 +130,10 @@ export default function AppRoutes() {
         />
 
         <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/wallet/top-up" element={<TopUpPage />} />
+        <Route path="/wallet/checkout" element={<WalletCheckoutPage />} />
+        <Route path="/wallet/payment-result" element={<PaymentResultPage />} />
+        <Route path="/api/v1/payments/vnpay/return" element={<PaymentResultPage />} />
         <Route path="/verify-email" element={<VerifyEmailPage />} />
 
         <Route path="/authors" element={<AuthorListPage />} />

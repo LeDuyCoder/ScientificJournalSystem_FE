@@ -1,0 +1,506 @@
+/**
+ * File: features/wallet/pages/TopUpPage.css
+ * Styles cho trang nạp coin ResearchPulse
+ */
+
+/* ── Layout Container ───────────────────────────────────── */
+.topup-page {
+  min-height: 100vh;
+  background-color: var(--bg-main);
+  color: var(--text-main);
+  padding-top: 80px;
+}
+
+.topup-inner {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 40px 16px 80px;
+}
+
+/* ── Hero Section ───────────────────────────────────────── */
+.topup-hero {
+  text-align: center;
+  margin-bottom: 48px;
+}
+
+.topup-hero__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 14px;
+  border-radius: 50rem;
+  background: rgba(255, 122, 51, 0.1);
+  color: #ff7a33;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  margin-bottom: 16px;
+}
+
+.topup-hero__title {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--text-main);
+  line-height: 1.2;
+  margin-bottom: 12px;
+}
+
+.topup-hero__sub {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  max-width: 480px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* ── Wallet Balance Card ────────────────────────────────── */
+.topup-wallet-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 18px 24px;
+  margin-bottom: 40px;
+}
+
+.topup-wallet-bar__left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.topup-wallet-bar__icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: rgba(255, 122, 51, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.topup-wallet-bar__label {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 2px;
+}
+
+.topup-wallet-bar__balance {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--text-main);
+  line-height: 1;
+}
+
+.topup-wallet-bar__unit {
+  font-size: 13px;
+  font-weight: 600;
+  color: #ff7a33;
+  margin-left: 6px;
+}
+
+/* ── Section Title ──────────────────────────────────────── */
+.topup-section-title {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 16px;
+  padding-left: 2px;
+}
+
+/* ── Package Grid ───────────────────────────────────────── */
+.topup-packages-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+@media (max-width: 768px) {
+  .topup-packages-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .topup-packages-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Package Card ───────────────────────────────────────── */
+.topup-pkg-card {
+  position: relative;
+  min-height: 230px;
+  background:
+    radial-gradient(circle at top right, rgba(255, 122, 51, 0.055), transparent 34%),
+    var(--bg-card);
+  border: 1.5px solid var(--border);
+  border-radius: 22px;
+  padding: 22px;
+  cursor: pointer;
+  transition: border-color 0.22s ease, box-shadow 0.22s ease, transform 0.18s ease, background 0.22s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  outline: none;
+  overflow: hidden;
+  text-align: left;
+}
+
+.topup-pkg-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  border-radius: inherit;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.52), transparent 45%);
+  opacity: 0.72;
+}
+
+.topup-pkg-card > * {
+  position: relative;
+  z-index: 1;
+}
+
+.topup-pkg-card:hover {
+  border-color: rgba(255, 122, 51, 0.42);
+  box-shadow: 0 10px 22px rgba(15, 23, 42, 0.06), 0 4px 12px rgba(255, 122, 51, 0.08);
+  transform: translateY(-2px);
+}
+
+.topup-pkg-card.selected {
+  border-color: #ff7a33;
+  box-shadow: 0 10px 24px rgba(255, 122, 51, 0.12);
+  background:
+    radial-gradient(circle at top right, rgba(255, 122, 51, 0.075), transparent 36%),
+    linear-gradient(180deg, rgba(255, 122, 51, 0.025), var(--bg-card) 72%);
+}
+
+.topup-pkg-card.selected .topup-pkg-card__check {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.topup-pkg-card.selected .topup-pkg-card__icon {
+  transform: scale(1.03) rotate(-2deg);
+  box-shadow: 0 6px 14px rgba(255, 122, 51, 0.16);
+}
+
+/* Checkmark overlay */
+.topup-pkg-card__check {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #ff7a33, #ff5500);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transform: scale(0.65);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  box-shadow: 0 4px 10px rgba(255, 122, 51, 0.18);
+}
+
+/* Badge recommended */
+.topup-pkg-card__badge {
+  position: absolute;
+  top: 0;
+  left: 22px;
+  padding: 4px 12px;
+  border-radius: 0 0 10px 10px;
+  background: linear-gradient(135deg, #ff7a33, #ff5500);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.35px;
+  box-shadow: 0 4px 10px rgba(255, 122, 51, 0.12);
+}
+
+.topup-pkg-card__top-row {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding-top: 4px;
+}
+
+.topup-pkg-card__icon-wrap {
+  width: 54px;
+  height: 54px;
+  border-radius: 18px;
+  background: rgba(255, 122, 51, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+/* Icon area */
+.topup-pkg-card__icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 15px;
+  background: linear-gradient(135deg, #fff8f3, #ffe9da);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ff7a33;
+  box-shadow: 0 4px 10px rgba(255, 122, 51, 0.1);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.topup-pkg-card__meta {
+  min-width: 0;
+}
+
+.topup-pkg-card__label {
+  font-size: 10px;
+  color: #ff7a33;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.45px;
+  margin-bottom: 3px;
+}
+
+.topup-pkg-card__name {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-weight: 600;
+  line-height: 1.35;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.topup-pkg-card__main {
+  text-align: center;
+  padding: 6px 0 2px;
+}
+
+/* Coin amount */
+.topup-pkg-card__total-coin {
+  font-family: var(--font-display);
+  font-size: 2rem;
+  font-weight: 900;
+  color: var(--text-main);
+  line-height: 0.95;
+  letter-spacing: -0.04em;
+}
+
+.topup-pkg-card__coin-unit {
+  font-size: 12px;
+  color: var(--text-muted);
+  font-weight: 700;
+  margin-top: 6px;
+}
+
+/* Bonus tag */
+.topup-pkg-card__bonus {
+  width: fit-content;
+  margin: 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 50rem;
+  background: rgba(34, 197, 94, 0.12);
+  color: #16a34a;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.topup-pkg-card__bonus--muted {
+  background: rgba(100, 116, 139, 0.09);
+  color: var(--text-muted);
+}
+
+.topup-pkg-card__footer {
+  margin-top: auto;
+  padding-top: 14px;
+  border-top: 1px dashed rgba(15, 23, 42, 0.12);
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+/* Price */
+.topup-pkg-card__price {
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  font-weight: 900;
+  color: var(--text-main);
+}
+
+.topup-pkg-card__footer-note {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-weight: 600;
+  text-align: right;
+  white-space: nowrap;
+}
+
+/* ── Payment Method Selector ────────────────────────────── */
+.topup-method-row {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+}
+
+.topup-method-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  border-radius: 50rem;
+  border: 2px solid var(--border);
+  background: var(--bg-card);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+  transition: all 0.2s ease;
+}
+
+.topup-method-btn:hover {
+  border-color: rgba(255, 122, 51, 0.4);
+  color: var(--text-main);
+}
+
+.topup-method-btn.active {
+  border-color: #ff7a33;
+  color: var(--text-main);
+  background: rgba(255, 122, 51, 0.05);
+}
+
+/* ── CTA Button ─────────────────────────────────────────── */
+.topup-cta-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 40px;
+}
+
+.topup-cta-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 32px;
+  border-radius: 50rem;
+  background: linear-gradient(135deg, #ff7a33, #ff5500);
+  color: #fff;
+  border: none;
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: box-shadow 0.2s ease, transform 0.15s ease, opacity 0.2s ease;
+  box-shadow: 0 4px 16px rgba(255, 122, 51, 0.35);
+  min-width: 200px;
+}
+
+.topup-cta-btn:hover:not(:disabled) {
+  box-shadow: 0 6px 24px rgba(255, 122, 51, 0.5);
+  transform: translateY(-1px);
+}
+
+.topup-cta-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.topup-cta-note {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+/* ── Benefits Section ───────────────────────────────────── */
+.topup-benefits {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 28px 28px 24px;
+  margin-top: 16px;
+}
+
+.topup-benefits__title {
+  font-family: var(--font-display);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 20px;
+}
+
+.topup-benefits__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+}
+
+@media (max-width: 560px) {
+  .topup-benefits__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.topup-benefit-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.topup-benefit-item__icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.topup-benefit-item__title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 2px;
+}
+
+.topup-benefit-item__desc {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+/* ── States ──────────────────────────────────────────────── */
+.topup-loading-area {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 48px 0;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+.topup-empty {
+  text-align: center;
+  padding: 48px 0;
+  color: var(--text-muted);
+}
