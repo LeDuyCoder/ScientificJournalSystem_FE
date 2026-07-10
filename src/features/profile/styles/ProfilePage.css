@@ -266,10 +266,10 @@
   border-top: 4px solid #ff7a30;
   border-radius: 50%;
 
-  animation: spin 1s linear infinite;
+  animation: profile-spin 1s linear infinite;
 }
 
-@keyframes spin {
+@keyframes profile-spin {
   to {
     transform: rotate(360deg);
   }

@@ -16,6 +16,7 @@ import Icon from "../../../shared/components/Icon";
 import useAuth from "../../auth/hooks/useAuth";
 import { useUserStore } from "../../../app/store/userStore";
 import ROUTES from "../../../app/routes/routePaths";
+import CoinBalanceBadge from "../../wallet/components/CoinBalanceBadge";
 
 export default function Header() {
   const { t, i18n } = useTranslation();
@@ -84,13 +85,12 @@ export default function Header() {
       <Navbar
         expand="md"
         fixed="top"
-        className={`transition-all duration-300 py-3 ${
-          isScrolled ? "sticky-scrolled" : "bg-transparent"
-        }`}
+        className="transition-all duration-300 py-3 sticky-scrolled"
         style={{
-          borderBottom: isScrolled ? "none" : "1px solid var(--border)",
-          background: isScrolled ? "var(--bg-card)" : "transparent",
-          backdropFilter: isScrolled ? "blur(12px)" : "none",
+          borderBottom: "1px solid var(--border)",
+          background: "var(--bg-card)",
+          backdropFilter: "blur(12px)",
+          boxShadow: "0 4px 20px rgba(0, 0, 0, 0.05)",
         }}
       >
         <Container>
@@ -218,8 +218,10 @@ export default function Header() {
 
               {/* User Authentication Display/Buttons */}
               {email ? (
-                <Dropdown align="end">
-                  <Dropdown.Toggle
+                <>
+                  <CoinBalanceBadge />
+                  <Dropdown align="end">
+                    <Dropdown.Toggle
                     as="button"
                     type="button"
                     className="border-0 bg-transparent d-inline-flex align-items-center justify-content-center p-0 text-muted-custom hover:text-primary"
@@ -236,7 +238,7 @@ export default function Header() {
 
                   <Dropdown.Menu className="border-0 shadow-sm mt-2" style={dropdownMenuStyle}>
                     <div className="px-3 py-2 text-xs font-bold text-main border-bottom pb-2 mb-1">
-                      Người dùng
+                      <span>Người dùng</span>
                       <div
                         className="text-muted-custom font-normal mt-0.5 text-truncate"
                         style={{ fontSize: "10px", color: "var(--text-muted)" }}
@@ -244,6 +246,17 @@ export default function Header() {
                         {email}
                       </div>
                     </div>
+                    <Dropdown.Item
+                      onClick={() => navigate(ROUTES.WALLET)}
+                      className="d-flex align-items-center gap-2 text-xs py-2 text-main"
+                    >
+                      <Icon
+                        icon="solar:wallet-bold"
+                        width="14"
+                        style={{ color: '#ff7a33' }}
+                      />
+                      <span className="font-weight-bold" style={{ color: 'var(--text-main)' }}>Ví của tôi</span>
+                    </Dropdown.Item>
                     <Dropdown.Item
                       onClick={() => navigate(ROUTES.DASHBOARD)}
                       className="d-flex align-items-center gap-2 text-xs py-2 text-main"
@@ -275,6 +288,7 @@ export default function Header() {
                     </Dropdown.Item>
                   </Dropdown.Menu>
                 </Dropdown>
+                </>
               ) : (
                 <>
                   <Button
@@ -458,6 +472,9 @@ export default function Header() {
                     >
                       {email}
                     </div>
+                  </div>
+                  <div className="ms-auto">
+                    <CoinBalanceBadge />
                   </div>
                 </div>
                 <Button

@@ -50,8 +50,14 @@ const ROUTES = {
   ARTICLE_DETAIL:        "/articles/:id",
   ARTICLE_VISUAL_DETAIL: "/articles/:id/visual",
 
-  // Hồ sơ cá nhân
+  // Hồ sơ cá nhân & Ví coin
   PROFILE:               "/profile",
+  WALLET:                "/wallet",
+  WALLET_TOP_UP:         "/wallet/top-up",
+  WALLET_TRANSACTIONS:   "/wallet/transactions",
+  WALLET_CHECKOUT:       "/wallet/checkout",
+  PAYMENT_RESULT:        "/wallet/payment-result",
+  VNPAY_RETURN:          "/api/v1/payments/vnpay/return",
 
   // Tìm kiếm & Danh mục tạp chí
   CATALOG:               "/catalog",

@@ -1594,7 +1594,6 @@
 }
 
 .article-selected-filters {
-.article-selected-filters {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
