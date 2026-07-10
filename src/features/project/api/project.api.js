@@ -133,3 +133,13 @@ export const updateWatchedKeywordsApi = (id, keywords) => {
 export const unwatchKeywordApi = (id, keywordId) => {
   return api.delete(`/projects/${id}/keywords/${keywordId}`);
 };
+
+/**
+ * Activate a project to VIP
+ * @param {number|string} id - Project ID
+ * @param {number} coinAmount - Amount of coins to deduct
+ * @returns {Promise} Axios promise
+ */
+export const activateProjectApi = (id, coinAmount) => {
+  return api.put(`/projects/${id}/activate`, { coinAmount });
+};

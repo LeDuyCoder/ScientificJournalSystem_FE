@@ -5,6 +5,7 @@ import { useKeywordTracking } from '../../keyword/hooks/useKeywordTracking';
 import KeywordWatchList from '../../keyword/components/KeywordWatchList';
 import AddKeywordModal from '../../keyword/components/AddKeywordModal';
 import ManageKeywordsModal from '../../keyword/components/ManageKeywordsModal';
+import UpgradePlanModal from '../components/UpgradePlanModal';
 import { Icon } from '@iconify/react';
 import Header from '../../landing/components/Header';
 import PrimaryButton from '../../../shared/components/Button/PrimaryButton';
@@ -39,12 +40,14 @@ const ProjectDetailPage = () => {
     addKeywordWatch,
     removeKeywordWatch,
     fetchWatchArticles,
-    fetchKeywordArticles
+    fetchKeywordArticles,
+    refetch: refetchProjectDetails
   } = useKeywordTracking(projectId);
 
   const [activeTab, setActiveTab] = useState('articles'); // 'overview', 'articles', 'keywords'
   const [showAddModal, setShowAddModal] = useState(false);
   const [showManageModal, setShowManageModal] = useState(false);
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const [overviewData, setOverviewData] = useState(null);
   const [overviewLoading, setOverviewLoading] = useState(false);
   const [overviewError, setOverviewError] = useState(null);
@@ -363,6 +366,7 @@ const ProjectDetailPage = () => {
   const createdAt = project.created_at ? new Date(project.created_at).toLocaleDateString('vi-VN') : 'N/A';
   const keywordCount = watchedKeywords?.length || 0;
   const articleCount = watchArticlesPagination?.total || 0;
+  const isProjectActive = String(project.status || '').toUpperCase() === 'ACTIVE';
 
   return (
     <div className="container-fluid pb-4 grid-bg min-vh-100 position-relative overflow-hidden" style={{ paddingTop: '80px' }}>
@@ -392,14 +396,28 @@ const ProjectDetailPage = () => {
             </div>
             <div className="d-flex gap-2">
 
+              {!isProjectActive && (
+                <PrimaryButton
+                  className="px-3"
+                  style={{ background: 'linear-gradient(135deg, #6366f1, #8b5cf6)', border: 'none' }}
+                  onClick={() => setShowUpgradeModal(true)}
+                >
+                  <Icon icon="lucide:crown" width="16" /> Kích hoạt gói
+                </PrimaryButton>
+              )}
+
               <PrimaryButton
                 className="px-3"
+                variant={isProjectActive ? 'primary' : 'outline'}
+                disabled={!isProjectActive}
+                style={!isProjectActive ? { opacity: 0.5, cursor: 'not-allowed' } : {}}
                 onClick={() => {
+                  if (!isProjectActive) return;
                   const originUrl = import.meta.env.VITE_ORIGIN_URL || 'http://localhost:5174';
                   window.location.href = `${originUrl}/project/${projectId}/dashboard`;
                 }}
               >
-                <Icon icon="lucide:sparkles" width="16" /> Phân tích chuyên sâu
+                <Icon icon={isProjectActive ? "lucide:sparkles" : "lucide:lock"} width="16" /> Phân tích chuyên sâu
               </PrimaryButton>
             </div>
           </div>
@@ -598,6 +616,17 @@ const ProjectDetailPage = () => {
         watchedKeywords={watchedKeywords}
         onRemove={removeKeywordWatch}
         actionLoading={actionLoading}
+      />
+
+      <UpgradePlanModal
+        show={showUpgradeModal}
+        onHide={() => setShowUpgradeModal(false)}
+        projectId={projectId}
+        onSuccess={() => {
+          fetchProjectOverview();
+          if (refetchProjectDetails) refetchProjectDetails();
+          setShowUpgradeModal(false);
+        }}
       />
     </div>
   );
