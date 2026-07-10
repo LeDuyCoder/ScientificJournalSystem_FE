@@ -1,8 +1,9 @@
+import { useTranslation } from "react-i18next";
+import { t } from "i18next";
 import React from 'react';
 import { Table, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';
-
 import { StateCard } from '../../../shared/components/Card';
 
 /**
@@ -12,45 +13,67 @@ import { StateCard } from '../../../shared/components/Card';
  * @param {number} page - Trang hiện tại (phục vụ tính toán số thứ tự tăng tiến)
  * @param {number} limit - Số lượng dòng trên một trang
  */
-export default function JournalTableAdmin({ journals, page = 1, limit = 10 }) {
+export default function JournalTableAdmin({
+  journals,
+  page = 1,
+  limit = 10
+}) {
+  const { t: _t } = useTranslation();
   const navigate = useNavigate();
 
   // Trạng thái trống nếu không tìm thấy dữ liệu phù hợp với bộ lọc
   if (!journals || journals.length === 0) {
-    return (
-      <StateCard
-        variant="neutral"
-        icon="lucide:search-x"
-        title="Không tìm thấy tạp chí nào"
-        description="Hãy thử thay đổi từ khóa tìm kiếm hoặc bộ lọc trạng thái của bạn."
-        className="my-4 border-dashed"
-      />
-    );
+    return <StateCard variant="neutral" icon="lucide:search-x" title={t("admin.khongTimThayTapChiNao")} description={t("admin.hayThuThayDoiTuKhoaTimKiemHoac")} className="my-4 border-dashed" />;
   }
-
-  return (
-    <div className="journal-table-shell table-responsive shadow-sm rounded-3 overflow-hidden">
+  return <div className="journal-table-shell table-responsive shadow-sm rounded-3 overflow-hidden">
       <Table hover className="journal-table align-middle mb-0 text-start bg-white">
-        <thead className="border-bottom" style={{ fontSize: '0.75rem', letterSpacing: '0.05em' }}>
+        <thead className="border-bottom" style={{
+        fontSize: '0.75rem',
+        letterSpacing: '0.05em'
+      }}>
           <tr>
-            <th className="py-3.5 ps-4" style={{ width: '60px', backgroundColor: '#f8fafc', color: '#64748b' }}>#</th>
-            <th className="py-3.5" style={{ backgroundColor: '#f8fafc', color: '#64748b' }}>Journal Title / Publisher</th>
-            <th className="py-3.5" style={{ backgroundColor: '#f8fafc', color: '#64748b' }}>ISSN</th>
-            <th className="py-3.5" style={{ backgroundColor: '#f8fafc', color: '#64748b' }}>Lĩnh vực / Chuyên ngành</th>
-            <th className="py-3.5" style={{ backgroundColor: '#f8fafc', color: '#64748b' }}>Publisher</th>
-            <th className="py-3.5" style={{ backgroundColor: '#f8fafc', color: '#64748b' }}>Last Updated</th>
-            <th className="py-3.5" style={{ backgroundColor: '#f8fafc', color: '#64748b' }}>Status</th>
-            <th className="py-3.5 pe-4 text-end" style={{ width: '140px', backgroundColor: '#f8fafc', color: '#64748b' }}>Hành động</th>
+            <th className="py-3.5 ps-4" style={{
+            width: '60px',
+            backgroundColor: '#f8fafc',
+            color: '#64748b'
+          }}>#</th>
+            <th className="py-3.5" style={{
+            backgroundColor: '#f8fafc',
+            color: '#64748b'
+          }}>Journal Title / Publisher</th>
+            <th className="py-3.5" style={{
+            backgroundColor: '#f8fafc',
+            color: '#64748b'
+          }}>ISSN</th>
+            <th className="py-3.5" style={{
+            backgroundColor: '#f8fafc',
+            color: '#64748b'
+          }}>{t("journal.linhVucChuyenNganh")}</th>
+            <th className="py-3.5" style={{
+            backgroundColor: '#f8fafc',
+            color: '#64748b'
+          }}>Publisher</th>
+            <th className="py-3.5" style={{
+            backgroundColor: '#f8fafc',
+            color: '#64748b'
+          }}>Last Updated</th>
+            <th className="py-3.5" style={{
+            backgroundColor: '#f8fafc',
+            color: '#64748b'
+          }}>Status</th>
+            <th className="py-3.5 pe-4 text-end" style={{
+            width: '140px',
+            backgroundColor: '#f8fafc',
+            color: '#64748b'
+          }}>{t("journal.hanhDong")}</th>
           </tr>
         </thead>
         <tbody>
           {journals.map((journal, index) => {
-            // Tính toán số thứ tự hiển thị liên tục theo phân trang hệ thống
-            const displayIndex = (page - 1) * limit + index + 1;
-            const id = journal.id || journal.journal_id;
-
-            return (
-              <tr key={id} className="journal-table-row transition-hover">
+          // Tính toán số thứ tự hiển thị liên tục theo phân trang hệ thống
+          const displayIndex = (page - 1) * limit + index + 1;
+          const id = journal.id || journal.journal_id;
+          return <tr key={id} className="journal-table-row transition-hover">
                 {/* Số thứ tự dòng */}
                 <td className="ps-4 fw-medium text-muted-custom">
                   {displayIndex}
@@ -63,7 +86,7 @@ export default function JournalTableAdmin({ journals, page = 1, limit = 10 }) {
                   </div>
                   <div className="text-muted-custom small d-flex align-items-center gap-1 mt-0.5">
                     <Icon icon="lucide:building" width="12" />
-                    <span>{journal.publisher || 'Chưa cập nhật nhà xuất bản'}</span>
+                    <span>{journal.publisher || t("journal.chuaCapNhatNhaXuatBan")}</span>
                   </div>
                 </td>
 
@@ -76,16 +99,18 @@ export default function JournalTableAdmin({ journals, page = 1, limit = 10 }) {
                 {/* Lĩnh vực và chuyên mục phân loại nghiên cứu */}
                 <td>
                   <span className="badge bg-light text-dark border font-display px-2 py-1">
-                    {journal.subjectCategory || 'Phân loại chung'}
+                    {journal.subjectCategory || t("journal.phanLoaiChung")}
                   </span>
-                  <div className="small text-muted-custom mt-1 text-truncate" style={{ maxWidth: '180px' }}>
-                    {journal.subjectArea || 'Chuyên ngành hẹp'}
+                  <div className="small text-muted-custom mt-1 text-truncate" style={{
+                maxWidth: '180px'
+              }}>
+                    {journal.subjectArea || t("journal.chuyenNganhHep")}
                   </div>
                 </td>
 
                 {/* Tên giáo sư / tổng biên tập chịu trách nhiệm nội dung */}
                 <td className="text-main fw-medium">
-                  {journal.publisher || 'Chưa chỉ định'}
+                  {journal.publisher || t("admin.chuaChiDinh")}
                 </td>
 
                 {/* Ngày cập nhật dữ liệu cấu trúc gần nhất */}
@@ -95,11 +120,7 @@ export default function JournalTableAdmin({ journals, page = 1, limit = 10 }) {
 
                 {/* Badge trạng thái hoạt động ứng với các token màu của Design System */}
                 <td>
-                  <span className={`badge px-2 py-1.5 rounded ${
-                    journal.status === 'Active' 
-                      ? 'bg-success-subtle text-success' 
-                      : 'bg-warning-subtle text-warning'
-                  }`}>
+                  <span className={`badge px-2 py-1.5 rounded ${journal.status === 'Active' ? 'bg-success-subtle text-success' : 'bg-warning-subtle text-warning'}`}>
                     {journal.status || 'Draft'}
                   </span>
                 </td>
@@ -108,33 +129,19 @@ export default function JournalTableAdmin({ journals, page = 1, limit = 10 }) {
                 <td className="pe-4 text-end">
                   <div className="d-flex justify-content-end gap-1.5">
                     {/* Nút vào quản lý kho cấu trúc Volume và Issue (Màn hình 4) */}
-                    <Button 
-                      variant="light" 
-                      size="sm"
-                      className="btn-custom-sm d-inline-flex align-items-center justify-content-center p-2 rounded-2"
-                      onClick={() => navigate('/admin/journals/repository')}
-                      title="Quản lý Repo Volume & Issue"
-                    >
+                    <Button variant="light" size="sm" className="btn-custom-sm d-inline-flex align-items-center justify-content-center p-2 rounded-2" onClick={() => navigate('/admin/journals/repository')} title={t("admin.quanLyRepoVolumeIssue")}>
                       <Icon icon="lucide:layers" width="16" className="text-dark" />
                     </Button>
                     
                     {/* Nút vào form chỉnh sửa chi tiết cấu hình Journal (Màn hình 12) */}
-                    <Button 
-                      variant="outline-dark" 
-                      size="sm"
-                      className="btn-custom-sm d-inline-flex align-items-center justify-content-center p-2 rounded-2"
-                      onClick={() => navigate(`/admin/journals/${id}/edit`)}
-                      title="Chỉnh sửa thông tin Tạp chí"
-                    >
+                    <Button variant="outline-dark" size="sm" className="btn-custom-sm d-inline-flex align-items-center justify-content-center p-2 rounded-2" onClick={() => navigate(`/admin/journals/${id}/edit`)} title={t("admin.chinhSuaThongTinTapChi")}>
                       <Icon icon="lucide:edit-3" width="16" />
                     </Button>
                   </div>
                 </td>
-              </tr>
-            );
-          })}
+              </tr>;
+        })}
         </tbody>
       </Table>
-    </div>
-  );
+    </div>;
 }

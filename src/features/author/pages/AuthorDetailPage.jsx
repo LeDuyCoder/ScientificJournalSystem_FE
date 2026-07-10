@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 /**
  * @file AuthorDetailPage.jsx
  * @description Trang chi tiết hiển thị toàn bộ hồ sơ học thuật của một tác giả cụ thể.
@@ -14,11 +15,14 @@ import AuthorAreasBreakdown from '../components/AuthorAreasBreakdown';
 import AuthorArticlesSection from '../components/AuthorArticlesSection';
 import PrimaryButton from '../../../shared/components/Button/PrimaryButton';
 import './AuthorDetailPage.css';
-
 export default function AuthorDetailPage() {
-  const { id } = useParams();
+  const {
+    t
+  } = useTranslation();
+  const {
+    id
+  } = useParams();
   const navigate = useNavigate();
-
   const {
     currentAuthor,
     authorArticles,
@@ -34,34 +38,26 @@ export default function AuthorDetailPage() {
     fetchAuthorArticles,
     fetchAuthorAreasBreakdown
   } = useAuthors();
-
   useEffect(() => {
     if (id) {
       fetchAuthorDetailsFull(id);
     }
   }, [id, fetchAuthorDetailsFull]);
-
-  const authorName = currentAuthor?.full_name ?? currentAuthor?.display_name ?? currentAuthor?.name ?? 'Tác giả';
-
-  return (
-    <div className="author-detail-page">
+  const authorName = currentAuthor?.full_name ?? currentAuthor?.display_name ?? currentAuthor?.name ?? t("typeAuthor");
+  return <div className="author-detail-page">
       <Header />
 
       <Container>
         <nav className="author-detail-breadcrumb mb-4" aria-label="breadcrumb">
           <ol className="breadcrumb">
             <li className="breadcrumb-item">
-              <span className="author-detail-breadcrumb__link" onClick={() => navigate('/')}>
-                Tổng quan
-              </span>
+              <span className="author-detail-breadcrumb__link" onClick={() => navigate('/')}>{t("author.tongQuan")}</span>
             </li>
             <li className="breadcrumb-item">
-              <span className="author-detail-breadcrumb__link" onClick={() => navigate('/authors')}>
-                Tác giả nổi bật
-              </span>
+              <span className="author-detail-breadcrumb__link" onClick={() => navigate('/authors')}>{t("author.tacGiaNoiBat")}</span>
             </li>
             <li className="breadcrumb-item active author-detail-breadcrumb__current" aria-current="page">
-              {loadingAuthorDetail ? 'Đang tải...' : authorName}
+              {loadingAuthorDetail ? t("common.dangTai") : authorName}
             </li>
           </ol>
         </nav>
@@ -73,51 +69,26 @@ export default function AuthorDetailPage() {
                 <Icon icon="lucide:user-round-search" width="17" />
                 <span>Author profile</span>
               </div>
-              <h1 className="author-detail-title">{loadingAuthorDetail ? 'Hồ sơ tác giả' : authorName}</h1>
-              <p className="author-detail-description">
-                Hồ sơ học thuật, phân bổ lĩnh vực nghiên cứu và danh sách công trình công bố của tác giả.
-              </p>
+              <h1 className="author-detail-title">{loadingAuthorDetail ? t("author.hoSoTacGia") : authorName}</h1>
+              <p className="author-detail-description">{t("author.hoSoHocThuatPhanBoLinhVucNghie")}</p>
             </div>
-            <PrimaryButton
-              variant="outline"
-              onClick={() => navigate('/authors')}
-              className="px-3 py-2"
-              icon="lucide:arrow-left"
-            >
-              Quay lại danh sách tác giả
-            </PrimaryButton>
+            <PrimaryButton variant="outline" onClick={() => navigate('/authors')} className="px-3 py-2" icon="lucide:arrow-left">{t("author.quayLaiDanhSachTacGia")}</PrimaryButton>
           </div>
         </section>
 
         <Row className="g-4">
           <Col xs={12} lg={4}>
-            <AuthorProfileHeader
-              author={currentAuthor}
-              loading={loadingAuthorDetail}
-              error={errorAuthorDetail}
-              onRetry={() => id && fetchAuthorDetail(id)}
-            />
+            <AuthorProfileHeader author={currentAuthor} loading={loadingAuthorDetail} error={errorAuthorDetail} onRetry={() => id && fetchAuthorDetail(id)} />
           </Col>
 
           <Col xs={12} lg={8}>
             <div className="d-flex flex-column gap-4">
-              <AuthorAreasBreakdown
-                breakdown={authorBreakdown}
-                loading={loadingAreas}
-                error={errorAreas}
-                onRetry={() => id && fetchAuthorAreasBreakdown(id)}
-              />
+              <AuthorAreasBreakdown breakdown={authorBreakdown} loading={loadingAreas} error={errorAreas} onRetry={() => id && fetchAuthorAreasBreakdown(id)} />
 
-              <AuthorArticlesSection
-                articles={authorArticles}
-                loading={loadingArticles}
-                error={errorArticles}
-                onRetry={() => id && fetchAuthorArticles(id)}
-              />
+              <AuthorArticlesSection articles={authorArticles} loading={loadingArticles} error={errorArticles} onRetry={() => id && fetchAuthorArticles(id)} />
             </div>
           </Col>
         </Row>
       </Container>
-    </div>
-  );
+    </div>;
 }

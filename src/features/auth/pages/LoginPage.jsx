@@ -1,3 +1,5 @@
+import { useTranslation } from "react-i18next";
+import { t } from "i18next";
 /**
  * Trang đăng nhập người dùng.
  *
@@ -12,13 +14,15 @@ import LoginForm from '../components/LoginForm';
 import SocialAuthButton from '../components/SocialAuthButton';
 import { toast } from '../../../shared/utils/toast';
 import ROUTES from '../../../app/routes/routePaths';
-
 const DASHBOARD_PAGE = ROUTES.DASHBOARD;
-
 export default function LoginPage() {
+  const { t: _t } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
-  const { login, loginWithGoogle } = useAuth();
+  const {
+    login,
+    loginWithGoogle
+  } = useAuth();
 
   // State riêng của màn hình login để điều khiển loading và lỗi form.
   const [isLoading, setIsLoading] = useState(false);
@@ -31,20 +35,17 @@ export default function LoginPage() {
    * Xử lý submit form đăng nhập bằng email/password.
    * Thành công thì điều hướng tới trang trước đó hoặc dashboard.
    */
-  const handleLoginSubmit = async (payload) => {
+  const handleLoginSubmit = async payload => {
     setIsLoading(true);
     setError(null);
-
     try {
       await login(payload.email, payload.password, payload.remember_login);
-      navigate(from, { replace: true });
+      navigate(from, {
+        replace: true
+      });
     } catch (err) {
       console.error('Login failed:', err.response?.data?.message || err.message);
-      setError(
-        err.response?.data?.message
-        || err.message
-        || 'Đăng nhập không thành công. Vui lòng kiểm tra lại thông tin.',
-      );
+      setError(err.response?.data?.message || err.message || t("auth.dangNhapKhongThanhCongVuiLongK"));
     } finally {
       setIsLoading(false);
     }
@@ -57,25 +58,23 @@ export default function LoginPage() {
   const handleLoginWithGoogle = () => {
     setIsLoading(true);
     setError(null);
-
     try {
       loginWithGoogle(DASHBOARD_PAGE);
     } catch {
-      toast.error('Đăng nhập thất bại');
+      toast.error(t("auth.dangNhapThatBai"));
     } finally {
       setIsLoading(false);
     }
   };
-
-  return (
-    <AuthLayout banner={<AuthBanner />}>
+  return <AuthLayout banner={<AuthBanner />}>
       <div className="mb-4">
-        <h2 className="font-display fw-bold mb-1" style={{ fontSize: '1.85rem', color: 'var(--text-main)' }}>
-          Đăng nhập
-        </h2>
-        <p className="text-muted-custom text-sm mb-0" style={{ color: 'var(--text-muted) !important' }}>
-          Chào mừng trở lại! Vui lòng nhập thông tin đăng nhập của bạn.
-        </p>
+        <h2 className="font-display fw-bold mb-1" style={{
+        fontSize: '1.85rem',
+        color: 'var(--text-main)'
+      }}>{t("signIn")}</h2>
+        <p className="text-muted-custom text-sm mb-0" style={{
+        color: 'var(--text-muted) !important'
+      }}>{t("auth.chaoMungTroLaiVuiLongNhapThong")}</p>
       </div>
 
       {/* Nút đăng nhập bằng Google OAuth. */}
@@ -84,25 +83,33 @@ export default function LoginPage() {
       </div>
 
       {/* Đường phân cách giữa Google OAuth và form email/password. */}
-      <div className="d-flex align-items-center justify-content-center mb-4 text-xs font-semibold select-none text-muted-custom" style={{ color: 'var(--text-muted) !important' }}>
-        <div className="w-100" style={{ height: '1px', background: 'var(--border)' }} />
-        <span className="px-3 text-nowrap" style={{ letterSpacing: '0.05em' }}>HOẶC</span>
-        <div className="w-100" style={{ height: '1px', background: 'var(--border)' }} />
+      <div className="d-flex align-items-center justify-content-center mb-4 text-xs font-semibold select-none text-muted-custom" style={{
+      color: 'var(--text-muted) !important'
+    }}>
+        <div className="w-100" style={{
+        height: '1px',
+        background: 'var(--border)'
+      }} />
+        <span className="px-3 text-nowrap" style={{
+        letterSpacing: '0.05em'
+      }}>{t("auth.hoac")}</span>
+        <div className="w-100" style={{
+        height: '1px',
+        background: 'var(--border)'
+      }} />
       </div>
 
-      <LoginForm
-        onSubmit={handleLoginSubmit}
-        isLoading={isLoading}
-        apiError={error}
-      />
+      <LoginForm onSubmit={handleLoginSubmit} isLoading={isLoading} apiError={error} />
 
       {/* Điều hướng sang trang đăng ký nếu người dùng chưa có tài khoản. */}
       <div className="text-center mt-4 text-sm font-medium">
-        <span className="text-muted-custom" style={{ color: '#94a3b8 !important' }}>Chưa có tài khoản? </span>
-        <Link to={ROUTES.REGISTER} className="text-decoration-none" style={{ color: 'var(--primary)', fontWeight: 600 }}>
-          Đăng ký miễn phí
-        </Link>
+        <span className="text-muted-custom" style={{
+        color: '#94a3b8 !important'
+      }}>{t("auth.chuaCoTaiKhoan")}</span>
+        <Link to={ROUTES.REGISTER} className="text-decoration-none" style={{
+        color: 'var(--primary)',
+        fontWeight: 600
+      }}>{t("signUp")}</Link>
       </div>
-    </AuthLayout>
-  );
+    </AuthLayout>;
 }

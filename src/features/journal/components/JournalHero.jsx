@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 /**
  * File source thuộc hệ thống FE ResearchPulse.
  *
@@ -7,7 +8,6 @@ import { Row, Col, Button, Spinner } from 'react-bootstrap';
 import { Icon } from '@iconify/react';
 import { useNavigate } from 'react-router-dom';
 import PrimaryButton from '../../../shared/components/Button/PrimaryButton';
-
 export default function JournalHero({
   journal,
   isFollowing,
@@ -16,38 +16,67 @@ export default function JournalHero({
   onAddToProject,
   loading
 }) {
+  const {
+    t
+  } = useTranslation();
   const navigate = useNavigate();
-
   if (loading || !journal) {
-    return (
-      <section className="journal-surface journal-hero-card mb-4" aria-label="Đang tải thông tin tạp chí">
+    return <section className="journal-surface journal-hero-card mb-4" aria-label="Đang tải thông tin tạp chí">
         <Row className="gy-4 journal-hero-content">
           <Col lg={8}>
             <div className="d-flex gap-2 mb-3">
-              <div className="skeleton-shimmer" style={{ width: '60px', height: '24px', borderRadius: '6px' }} />
-              <div className="skeleton-shimmer" style={{ width: '100px', height: '24px', borderRadius: '6px' }} />
+              <div className="skeleton-shimmer" style={{
+              width: '60px',
+              height: '24px',
+              borderRadius: '6px'
+            }} />
+              <div className="skeleton-shimmer" style={{
+              width: '100px',
+              height: '24px',
+              borderRadius: '6px'
+            }} />
             </div>
-            <div className="skeleton-shimmer mb-3" style={{ width: '80%', height: '44px' }} />
-            <div className="skeleton-shimmer mb-4" style={{ width: '95%', height: '64px' }} />
+            <div className="skeleton-shimmer mb-3" style={{
+            width: '80%',
+            height: '44px'
+          }} />
+            <div className="skeleton-shimmer mb-4" style={{
+            width: '95%',
+            height: '64px'
+          }} />
             <div className="d-flex gap-2 flex-wrap">
-              {[1, 2, 3].map(i => (
-                <div key={i} className="skeleton-shimmer" style={{ width: '92px', height: '32px', borderRadius: '999px' }} />
-              ))}
+              {[1, 2, 3].map(i => <div key={i} className="skeleton-shimmer" style={{
+              width: '92px',
+              height: '32px',
+              borderRadius: '999px'
+            }} />)}
             </div>
           </Col>
           <Col lg={4} className="text-lg-end">
-            <div className="skeleton-shimmer mb-2 ms-lg-auto" style={{ width: '150px', height: '72px' }} />
-            <div className="skeleton-shimmer mb-3 ms-lg-auto" style={{ width: '160px', height: '20px' }} />
+            <div className="skeleton-shimmer mb-2 ms-lg-auto" style={{
+            width: '150px',
+            height: '72px'
+          }} />
+            <div className="skeleton-shimmer mb-3 ms-lg-auto" style={{
+            width: '160px',
+            height: '20px'
+          }} />
             <div className="d-flex gap-2 justify-content-lg-end flex-wrap">
-              <div className="skeleton-shimmer" style={{ width: '110px', height: '38px', borderRadius: '6px' }} />
-              <div className="skeleton-shimmer" style={{ width: '140px', height: '38px', borderRadius: '6px' }} />
+              <div className="skeleton-shimmer" style={{
+              width: '110px',
+              height: '38px',
+              borderRadius: '6px'
+            }} />
+              <div className="skeleton-shimmer" style={{
+              width: '140px',
+              height: '38px',
+              borderRadius: '6px'
+            }} />
             </div>
           </Col>
         </Row>
-      </section>
-    );
+      </section>;
   }
-
   const {
     display_name,
     description,
@@ -60,15 +89,11 @@ export default function JournalHero({
     subject_categories = [],
     is_following
   } = journal;
-
-  const handleCategoryClick = (categoryName) => {
+  const handleCategoryClick = categoryName => {
     if (!categoryName) return;
     navigate(`/keywords?keyword=${encodeURIComponent(categoryName)}`);
   };
-
-
-  return (
-    <section className="journal-surface journal-hero-card mb-4" aria-labelledby="journal-detail-title">
+  return <section className="journal-surface journal-hero-card mb-4" aria-labelledby="journal-detail-title">
       <Row className="gy-4 align-items-start journal-hero-content">
         <Col lg={8} md={7}>
           <div className="journal-meta-line">
@@ -82,82 +107,41 @@ export default function JournalHero({
           </h1>
 
           <p className="journal-description">
-            {description || 'Chưa có mô tả chi tiết phạm vi nghiên cứu cho tạp chí này.'}
+            {description || t("journal.chuaCoMoTaChiTietPhamViNghienC")}
           </p>
 
-          {subject_categories.length > 0 && (
-            <div className="journal-category-list" aria-label="Chủ đề nghiên cứu">
-              {subject_categories.map((cat, idx) => (
-                <span
-                  key={cat.id || idx}
-                  className="journal-category-chip"
-                  role="button"
-                  tabIndex={0}
-                  onClick={() => handleCategoryClick(cat.display_name)}
-                  onKeyDown={(e) => e.key === 'Enter' && handleCategoryClick(cat.display_name)}
-                  title={`Tìm keyword ${cat.display_name}`}
-                >
+          {subject_categories.length > 0 && <div className="journal-category-list" aria-label="Chủ đề nghiên cứu">
+              {subject_categories.map((cat, idx) => <span key={cat.id || idx} className="journal-category-chip" role="button" tabIndex={0} onClick={() => handleCategoryClick(cat.display_name)} onKeyDown={e => e.key === 'Enter' && handleCategoryClick(cat.display_name)} title={`Tìm keyword ${cat.display_name}`}>
                   {cat.display_name}
-                </span>
-              ))}
-            </div>
-          )}
+                </span>)}
+            </div>}
         </Col>
 
         <Col lg={4} md={5} className="text-md-end text-start mt-lg-2">
-          {metric_value ? (
-            <div className="journal-metric-panel ms-md-auto mb-3">
+          {metric_value ? <div className="journal-metric-panel ms-md-auto mb-3">
               <div className="journal-metric-value">
                 {metric_value}
               </div>
               <div className="journal-metric-label">
                 {metric_name} {metric_year}
               </div>
-            </div>
-          ) : (
-            <div className="journal-metric-panel ms-md-auto mb-3">
-              <span className="text-muted-custom">Chưa có dữ liệu ranking</span>
-            </div>
-          )}
+            </div> : <div className="journal-metric-panel ms-md-auto mb-3">
+              <span className="text-muted-custom">{t("journal.chuaCoDuLieuRanking")}</span>
+            </div>}
 
           <div className="journal-action-row">
-            <Button
-              onClick={onFollow}
-              disabled={isFollowing}
-              className={`journal-outline-btn px-3 py-2 ${is_following ? 'is-active' : ''}`}
-            >
-              {isFollowing ? (
-                <Spinner animation="border" size="sm" />
-              ) : is_following ? (
-                <>
-                  <Icon icon="lucide:check" width="16" />
-                  Đang theo dõi
-                </>
-              ) : (
-                <>
-                  <Icon icon="lucide:plus" width="16" />
-                  Theo dõi
-                </>
-              )}
+            <Button onClick={onFollow} disabled={isFollowing} className={`journal-outline-btn px-3 py-2 ${is_following ? 'is-active' : ''}`}>
+              {isFollowing ? <Spinner animation="border" size="sm" /> : is_following ? <>
+                  <Icon icon="lucide:check" width="16" />{t("journal.dangTheoDoi")}</> : <>
+                  <Icon icon="lucide:plus" width="16" />{t("catalog.theoDoi")}</>}
             </Button>
 
-            <PrimaryButton
-              onClick={onAddToProject}
-              disabled={isAddingToProject}
-              className="gap-2 px-3 py-2"
-            >
-              {isAddingToProject ? (
-                <Spinner animation="border" size="sm" variant="light" />
-              ) : (
-                <>
-                  <Icon icon="lucide:folder-plus" width="16" />
-                  Thêm vào Project
-                </>
-              )}
+            <PrimaryButton onClick={onAddToProject} disabled={isAddingToProject} className="gap-2 px-3 py-2">
+              {isAddingToProject ? <Spinner animation="border" size="sm" variant="light" /> : <>
+                  <Icon icon="lucide:folder-plus" width="16" />{t("journal.themVaoProject")}</>}
             </PrimaryButton>
           </div>
         </Col>
       </Row>
-    </section>
-  );
+    </section>;
 }

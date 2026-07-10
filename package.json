@@ -26,6 +26,11 @@
     "zustand": "5.0.14"
   },
   "devDependencies": {
+    "@babel/core": "^7.29.7",
+    "@babel/generator": "^8.0.0",
+    "@babel/parser": "^8.0.4",
+    "@babel/traverse": "^8.0.4",
+    "@babel/types": "^8.0.4",
     "@eslint/js": "^10.0.1",
     "@iconify/react": "^6.0.2",
     "@types/react": "^19.2.14",

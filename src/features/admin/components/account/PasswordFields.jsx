@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import React from 'react';
 import { Row, Col, Form } from 'react-bootstrap';
 
@@ -23,26 +24,20 @@ export default function PasswordFields({
   onConfirmPasswordChange,
   isEdit = true
 }) {
-  return (
-    <div>
+  const {
+    t
+  } = useTranslation();
+  return <div>
       <Row className="g-3">
         {/* Current Password - Only required for updating existing profile */}
-        {isEdit && (
-          <Col xs={12} md={4}>
+        {isEdit && <Col xs={12} md={4}>
             <Form.Group controlId="currentPassword">
               <Form.Label className="account-form-label">
                 Current Password
               </Form.Label>
-              <Form.Control
-                type="password"
-                placeholder="••••••••"
-                value={currentPassword}
-                onChange={(e) => onCurrentPasswordChange(e.target.value)}
-                className="account-form-input"
-              />
+              <Form.Control type="password" placeholder={t("admin.key")} value={currentPassword} onChange={e => onCurrentPasswordChange(e.target.value)} className="account-form-input" />
             </Form.Group>
-          </Col>
-        )}
+          </Col>}
 
         {/* New Password field */}
         <Col xs={12} md={isEdit ? 4 : 6}>
@@ -50,14 +45,7 @@ export default function PasswordFields({
             <Form.Label className="account-form-label">
               {isEdit ? 'New Password' : 'Password *'}
             </Form.Label>
-            <Form.Control
-              type="password"
-              placeholder={isEdit ? 'Min. 12 chars' : 'Create a strong password'}
-              value={newPassword}
-              onChange={(e) => onNewPasswordChange(e.target.value)}
-              required={!isEdit}
-              className="account-form-input"
-            />
+            <Form.Control type="password" placeholder={isEdit ? 'Min. 12 chars' : 'Create a strong password'} value={newPassword} onChange={e => onNewPasswordChange(e.target.value)} required={!isEdit} className="account-form-input" />
           </Form.Group>
         </Col>
 
@@ -67,14 +55,7 @@ export default function PasswordFields({
             <Form.Label className="account-form-label">
               {isEdit ? 'Confirm New Password' : 'Confirm Password *'}
             </Form.Label>
-            <Form.Control
-              type="password"
-              placeholder={isEdit ? 'Repeat new password' : 'Confirm password'}
-              value={confirmPassword}
-              onChange={(e) => onConfirmPasswordChange(e.target.value)}
-              required={!isEdit}
-              className="account-form-input"
-            />
+            <Form.Control type="password" placeholder={isEdit ? 'Repeat new password' : 'Confirm password'} value={confirmPassword} onChange={e => onConfirmPasswordChange(e.target.value)} required={!isEdit} className="account-form-input" />
           </Form.Group>
         </Col>
       </Row>
@@ -83,6 +64,5 @@ export default function PasswordFields({
       <div className="form-text text-muted-custom mt-2 small">
         Password must be at least 8 characters long, and contain uppercase, lowercase letters, and digits.
       </div>
-    </div>
-  );
+    </div>;
 }

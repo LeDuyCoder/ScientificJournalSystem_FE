@@ -1,16 +1,20 @@
+import { useTranslation } from "react-i18next";
 import { useState } from 'react';
 import { Modal } from 'react-bootstrap';
 import PrimaryButton from '../../../../shared/components/Button/PrimaryButton';
-
-export default function ActivityTimeline({ items = [], loading = false, error = '' }) {
+export default function ActivityTimeline({
+  items = [],
+  loading = false,
+  error = ''
+}) {
+  const {
+    t
+  } = useTranslation();
   const [showAll, setShowAll] = useState(false);
   const safeItems = Array.isArray(items) ? items : [];
-
-  const renderActivityItem = (item) => {
+  const renderActivityItem = item => {
     const activityType = item.type || 'reviewer';
-
-    return (
-      <li key={item.id} className="admin-activity-item">
+    return <li key={item.id} className="admin-activity-item">
         <span className={`admin-activity-item__dot admin-activity-item__dot--${activityType}`} />
 
         <div className="admin-activity-item__content">
@@ -18,35 +22,20 @@ export default function ActivityTimeline({ items = [], loading = false, error = 
           <p className="admin-activity-item__description">{item.description}</p>
           <span className="admin-activity-item__time">{item.time}</span>
         </div>
-      </li>
-    );
+      </li>;
   };
-
-  return (
-    <div className="admin-card admin-activity-card">
+  return <div className="admin-card admin-activity-card">
       <h3 className="admin-card__title mb-3">Recent Activity</h3>
 
-      {loading ? (
-        <p className="admin-muted-text mb-0">Đang tải hoạt động gần đây...</p>
-      ) : error ? (
-        <p className="admin-error-text mb-0">{error}</p>
-      ) : safeItems.length === 0 ? (
-        <p className="admin-muted-text mb-0">Chưa có hoạt động gần đây.</p>
-      ) : (
-        <>
+      {loading ? <p className="admin-muted-text mb-0">{t("admin.dangTaiHoatDongGanDay")}</p> : error ? <p className="admin-error-text mb-0">{error}</p> : safeItems.length === 0 ? <p className="admin-muted-text mb-0">{t("admin.chuaCoHoatDongGanDay")}</p> : <>
           <ul className="admin-activity-list">
             {safeItems.slice(0, 4).map(renderActivityItem)}
           </ul>
 
-          <button
-            type="button"
-            className="admin-link-button admin-activity-card__view-all"
-            onClick={() => setShowAll(true)}
-          >
+          <button type="button" className="admin-link-button admin-activity-card__view-all" onClick={() => setShowAll(true)}>
             View All Activity
           </button>
-        </>
-      )}
+        </>}
 
       <Modal show={showAll} onHide={() => setShowAll(false)} centered size="lg" className="admin-activity-modal text-main">
         <Modal.Header closeButton className="border-bottom-0 pb-0">
@@ -56,13 +45,9 @@ export default function ActivityTimeline({ items = [], loading = false, error = 
           </div>
         </Modal.Header>
         <Modal.Body className="pt-3">
-          {safeItems.length === 0 ? (
-            <p className="admin-muted-text mb-0">Chưa có hoạt động gần đây.</p>
-          ) : (
-            <ul className="admin-activity-list admin-activity-list--modal">
+          {safeItems.length === 0 ? <p className="admin-muted-text mb-0">{t("admin.chuaCoHoatDongGanDay")}</p> : <ul className="admin-activity-list admin-activity-list--modal">
               {safeItems.map(renderActivityItem)}
-            </ul>
-          )}
+            </ul>}
         </Modal.Body>
         <Modal.Footer className="border-top-0 pt-0">
           <PrimaryButton className="px-4" onClick={() => setShowAll(false)}>
@@ -70,6 +55,5 @@ export default function ActivityTimeline({ items = [], loading = false, error = 
           </PrimaryButton>
         </Modal.Footer>
       </Modal>
-    </div>
-  );
-}
+    </div>;
+}

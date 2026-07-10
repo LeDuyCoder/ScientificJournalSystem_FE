@@ -1,20 +1,20 @@
+import { useTranslation } from "react-i18next";
 import Icon from '../../../shared/components/Icon';
 import { useAuthStore } from '../../../app/store/authStore';
-
 export default function AdminHeader() {
-  const user = useAuthStore((state) => state.user);
-  
+  const {
+    t
+  } = useTranslation();
+  const user = useAuthStore(state => state.user);
   const name = user ? `${user.first_name || ''} ${user.last_name || ''}`.trim() : 'Admin User';
   const role = user?.role || 'Administrator';
   const avatarUrl = 'https://ui-avatars.com/api/?name=' + encodeURIComponent(name) + '&background=random';
   const notificationCount = 0;
-
-  return (
-    <header className="admin-header">
+  return <header className="admin-header">
       {/* Search bar bên trái - chỉ UI, chưa gắn logic search thật */}
       <div className="admin-header__search">
         <Icon icon="lucide:search" />
-        <input type="text" placeholder="Search journals, articles..." />
+        <input type="text" placeholder={t("admin.searchJournalsArticles")} />
       </div>
 
       {/* Khu vực icon + profile bên phải */}
@@ -39,6 +39,5 @@ export default function AdminHeader() {
           </div>
         </div>
       </div>
-    </header>
-  );
+    </header>;
 }

@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import React, { useState, useEffect, useRef } from 'react';
 import { Icon } from '@iconify/react';
 import './FilterInput.css';
@@ -13,11 +14,15 @@ export default function FilterSearch({
   onChange,
   initialValue,
   onSearchChange,
-  placeholder = "Tìm kiếm...",
+  placeholder,
   className = '',
   actionButton = null,
   style = {}
 }) {
+  const {
+    t
+  } = useTranslation();
+  const resolvedPlaceholder = placeholder || t("common.timKiem");
   const isControlled = value !== undefined;
   const [internalVal, setInternalVal] = useState(initialValue || '');
 
@@ -27,7 +32,6 @@ export default function FilterSearch({
       setInternalVal(initialValue);
     }
   }, [initialValue, isControlled]);
-
   const onSearchChangeRef = useRef(onSearchChange);
   useEffect(() => {
     onSearchChangeRef.current = onSearchChange;
@@ -41,50 +45,38 @@ export default function FilterSearch({
     }, 400);
     return () => clearTimeout(timer);
   }, [internalVal, isControlled]);
-
-  const handleChange = (e) => {
+  const handleChange = e => {
     if (isControlled) {
       onChange && onChange(e);
     } else {
       setInternalVal(e.target.value);
     }
   };
-
   const handleClear = () => {
     if (isControlled) {
-      onChange && onChange({ target: { value: '' } });
+      onChange && onChange({
+        target: {
+          value: ''
+        }
+      });
     } else {
       setInternalVal('');
     }
   };
-
   const displayValue = isControlled ? value : internalVal;
-
-  return (
-    <div className={`shared-search-container ${className}`.trim()} style={style}>
+  return <div className={`shared-search-container ${className}`.trim()} style={style}>
       <div className="search-icon-wrapper">
         <Icon icon="lucide:search" width="18" height="18" />
       </div>
       
-      <input
-        type="text"
-        value={displayValue}
-        onChange={handleChange}
-        placeholder={placeholder}
-        className="search-input"
-      />
+      <input type="text" value={displayValue} onChange={handleChange} placeholder={resolvedPlaceholder} className="search-input" />
       
-      {displayValue && (
-        <button type="button" className="clear-icon-btn" onClick={handleClear} title="Xóa tìm kiếm">
+      {displayValue && <button type="button" className="clear-icon-btn" onClick={handleClear} title={t("common.xoaTimKiem")}>
           <Icon icon="lucide:x" width="16" height="16" />
-        </button>
-      )}
+        </button>}
 
-      {actionButton && (
-        <div className="search-action-wrapper">
+      {actionButton && <div className="search-action-wrapper">
           {actionButton}
-        </div>
-      )}
-    </div>
-  );
+        </div>}
+    </div>;
 }
