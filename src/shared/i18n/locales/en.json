@@ -534,7 +534,8 @@
     "tongCitationsTrenTrangHienTai": "Total citations on the current page",
     "danhSachNhaKhoaHocTacGia": "List of scientists & authors",
     "traCuuThongTinChiSoHocThuatHin": "Research information, h-index academic indicators, citation numbers and scientific works by leading authors.",
-    "timTheoTenVienNghienCuuTuKhoa": "Search by name, institute, keyword..."
+    "timTheoTenVienNghienCuuTuKhoa": "Search by name, institute, keyword...",
+    "tacGia": "Authors"
   },
   "catalog": {
     "khongCoCategoryPhuHop": "No appropriate category",
@@ -577,7 +578,7 @@
     "luuTru": "Storage",
     "xemTatCa": "See all →",
     "chuaCoProjectNao": "No projects yet.",
-    "truoc": "← Before",
+    "truoc": "← Prev",
     "projectsGanDay": "Recent projects",
     "bangXepHang": "The ranking table →",
     "chuaCoDuLieuTacGia": "No author data yet",
@@ -589,7 +590,10 @@
     "timKiemDanhMucBaiBao": "Searching for categories, articles...",
     "chaoMungBanDenVoiResearchpulse": "Welcome to the ResearchPulse!",
     "khamPhaXuHuongXepHangTapChiVaC": "Explore trends, rankings of journals and scientific papers.",
-    "taoProject": "Creating the Project"
+    "taoProject": "Creating the Project",
+    "trang": "Page",
+    "sau": "Next",
+    "soBaiBaoXuatBan": "Number of publications"
   },
   "journal": {
     "khongTheTaiDanhSachDuAnVuiLong": "I can't download the list of projects.",
@@ -919,11 +923,50 @@
     "quanLyCacKeywordWatchlistsPhan": "Manage keyword watch-lists, analyze publishing trends and monitor scientific articles.",
     "timKiemDuAn": "Looking for the project...",
     "tongSoDuAn": "Total number of projects:",
-    "dangHoatDong": "It's working:",
+    "dangHoatDong": "Active",
     "banChuaCoDuAnNao": "You don't have a project yet.",
     "taoDuAnDauTienDeBatDauTheoDoiT": "Create the first project to start tracking keywords and updating scientific papers.",
     "duAnXemGanDay": "Project recently",
-    "tatCaDuAn": "All the projects ("
+    "tatCaDuAn": "All the projects (",
+    "thanhVienDuAn": "Project Members",
+    "quanLyNhungNguoiCoQuyen": "Manage people with access to this project.",
+    "themThanhVien": "Add Member",
+    "duAnNayChuaCoThanhVien": "This project has no other members yet.",
+    "daMoi": "Invited",
+    "nguoiDung": "User",
+    "datLamAdmin": "Set as Admin",
+    "datLamMember": "Set as Member",
+    "datLamViewer": "Set as Viewer",
+    "huyLoiMoi": "Cancel Invite",
+    "xoaThanhVien": "Remove Member",
+    "moiThanhVienMoi": "Invite New Member",
+    "themNguoiCongTac": "Add collaborators to your project.",
+    "diaChiEmail": "Email Address",
+    "nhapEmailNguoiMuonMoi": "Enter email of the person to invite...",
+    "vaiTro": "Role",
+    "quanTriVien": "Admin",
+    "coToanQuyenThietLap": "Has full access to setup and manage the project.",
+    "thanhVien": "Member",
+    "coThePhanTich": "Can analyze and add articles.",
+    "nguoiXem": "Viewer",
+    "chiCoTheXemBaoCao": "Can only view reports and charts.",
+    "dangGui": "Sending...",
+    "xacNhanThamGiaDuAn": "Confirm Project Join",
+    "banDaDuocMoiThamGia": "You have been invited to join a research project on the system.",
+    "tuChoi": "Decline",
+    "dangXuLy": "Processing...",
+    "chapNhanLoiMoi": "Accept Invite",
+    "denTrangDuAn": "Go to Project Page",
+    "quayLaiTrangChu": "Back to Home",
+    "loiXacNhan": "Confirmation Error",
+    "daXayRaLoiKhiXacNhan": "An error occurred while confirming the invite.",
+    "vaoDuAn": "Enter Project",
+    "xoaThanhVienTitle": "Remove Member",
+    "banCoChacMuonXoaThanhVien": "Are you sure you want to remove this member / cancel invite from the project?",
+    "xoa": "Remove",
+    "taoBoi": "Created by",
+    "chuSoHuu": "Owner",
+    "tapChi": "Journals"
   },
   "topic": {
     "khongTheTaiThongTinTopic": "No topic information can be uploaded.",
@@ -1089,5 +1132,10 @@
     "phanBoTapChiTheoQuocGia": "Distribution of the magazines by country",
     "xemThongKeSoLuongAnPhamKhoaHoc": "See statistics on the number of scientific publications and publishers distributed worldwide.",
     "loiTaiDuLieu": "Data loading error:"
+  },
+  "pagination": {
+    "showing": "Showing",
+    "to": "to",
+    "of": "of"
   }
 }

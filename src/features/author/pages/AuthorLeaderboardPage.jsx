@@ -133,7 +133,7 @@ export default function AuthorLeaderboardPage() {
         limit: limit
       })} />
 
-        {leaderboard.length > 0 && leaderboardTotalPages > 1 && <AdminPagination totalItems={totalLeaderboard} currentPage={currentPage} limit={limit} onPageChange={setCurrentPage} entityName="tác giả" />}
+        {leaderboard.length > 0 && leaderboardTotalPages > 1 && <AdminPagination totalItems={totalLeaderboard} currentPage={currentPage} limit={limit} onPageChange={setCurrentPage} entityName={t("author.tacGia")} />}
       </Container>
     </div>;
 }

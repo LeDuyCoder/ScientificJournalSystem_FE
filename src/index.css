@@ -547,3 +547,19 @@ select.account-form-input {
   transition: all 0.22s ease;
 }
 
+/* --- Dropdown Item Custom Hover --- */
+.dropdown-item-custom-hover {
+  transition: all 0.2s ease !important;
+}
+.dropdown-item-custom-hover:hover,
+.dropdown-item-custom-hover:focus {
+  background-color: var(--primary) !important;
+  color: #ffffff !important;
+}
+.dropdown-item-custom-hover:hover .iconify,
+.dropdown-item-custom-hover:focus .iconify,
+.dropdown-item-custom-hover:hover .text-danger,
+.dropdown-item-custom-hover:focus .text-danger {
+  color: #ffffff !important;
+}
+

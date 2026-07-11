@@ -31,6 +31,7 @@ import ProjectListPage from '../../features/project/pages/ProjectListPage';
 import CreateProjectPage from '../../features/project/pages/CreateProjectPage';
 import EditProjectPage from '../../features/project/pages/EditProjectPage';
 import ProjectDetailPage from '../../features/project/pages/ProjectDetailPage';
+import AcceptInvitePage from '../../features/project/pages/AcceptInvitePage';
 
 import AdminLayout from '../layouts/AdminLayout';
 import UserDirectoryPage from '../../features/admin/pages/account/UserDirectoryPage';
@@ -97,6 +98,7 @@ export default function AppRoutes() {
             <Route path="projects/create" element={<CreateProjectPage />} />
             <Route path="projects/:id/edit" element={<EditProjectPage />} />
             <Route path="projects/:id" element={<ProjectDetailPage />} />
+            <Route path="project-invite/accept" element={<AcceptInvitePage />} />
 
             <Route element={<WalletLayout />}>
               <Route path={ROUTES.WALLET.substring(1)} element={<MyWalletPage />} />

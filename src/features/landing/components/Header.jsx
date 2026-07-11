@@ -69,7 +69,7 @@ export default function Header() {
       segments.unshift(lang);
     }
     const newPath = '/' + segments.join('/') + location.search + location.hash;
-    window.location.href = newPath;
+    navigate(newPath);
   };
   const handleAuthLogin = () => {
     navigateWithLang(ROUTES.LOGIN);

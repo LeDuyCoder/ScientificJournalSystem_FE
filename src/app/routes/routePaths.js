@@ -23,6 +23,7 @@ const ROUTES = {
   PROJECT_CREATE:        "/projects/create",
   PROJECT_EDIT:          "/projects/:id/edit",
   PROJECT_DETAIL:        "/projects/:id",
+  PROJECT_INVITE_ACCEPT: "/project-invite/accept",
 
   // Tác giả (Author)
   AUTHORS:               "/authors",

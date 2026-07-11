@@ -534,7 +534,8 @@
     "tongCitationsTrenTrangHienTai": "현재 페이지의 전체 인용",
     "danhSachNhaKhoaHocTacGia": "과학자 & 작가 목록",
     "traCuuThongTinChiSoHocThuatHin": "정보의 수요, h-index 학술 지표, 인용수와 주요 작가의 과학 저작.",
-    "timTheoTenVienNghienCuuTuKhoa": "이름, 연구소, 키워드..."
+    "timTheoTenVienNghienCuuTuKhoa": "이름, 연구소, 키워드...",
+    "tacGia": "저자"
   },
   "catalog": {
     "khongCoCategoryPhuHop": "적절한 카테고리가 없습니다",
@@ -577,7 +578,7 @@
     "luuTru": "저장",
     "xemTatCa": "모든 것을 보아라",
     "chuaCoProjectNao": "아직 프로젝트가 없습니다",
-    "truoc": "← 전",
+    "truoc": "← 이전",
     "projectsGanDay": "최근 프로젝트",
     "bangXepHang": "순위표 →",
     "chuaCoDuLieuTacGia": "아직 저작자 자료가 없습니다.",
@@ -589,7 +590,10 @@
     "timKiemDanhMucBaiBao": "카테고리 검색, 기사를 검색...",
     "chaoMungBanDenVoiResearchpulse": "리서치펄스에 오신 것을 환영합니다!",
     "khamPhaXuHuongXepHangTapChiVaC": "트렌드, 학술 기사 등등을 탐구하세요.",
-    "taoProject": "프로젝트를 만들자"
+    "taoProject": "프로젝트를 만들자",
+    "trang": "페이지",
+    "sau": "다음",
+    "soBaiBaoXuatBan": "출판 논문 수"
   },
   "journal": {
     "khongTheTaiDanhSachDuAnVuiLong": "프로젝트 목록은 다운로드할 수 없습니다. 다시 시도해 보시기 바랍니다.",
@@ -919,11 +923,50 @@
     "quanLyCacKeywordWatchlistsPhan": "키워드 워치 리스트를 관리하고 출판 트렌드를 분석하고 과학 기사를 감시합니다.",
     "timKiemDuAn": "프로젝트를 찾아...",
     "tongSoDuAn": "프로젝트의 총수:",
-    "dangHoatDong": "작동 중:",
+    "dangHoatDong": "활성",
     "banChuaCoDuAnNao": "아직 계획이 없습니다.",
     "taoDuAnDauTienDeBatDauTheoDoiT": "첫 번째 프로젝트를 만들어서 키워드 추적과 과학 기사를 업데이트하기 시작합니다.",
     "duAnXemGanDay": "최근에 진행된 프로젝트",
-    "tatCaDuAn": "모든 프로젝트 ("
+    "tatCaDuAn": "모든 프로젝트 (",
+    "thanhVienDuAn": "프로젝트 멤버",
+    "quanLyNhungNguoiCoQuyen": "이 프로젝트에 대한 액세스 권한이 있는 사람들을 관리합니다.",
+    "themThanhVien": "멤버 추가",
+    "duAnNayChuaCoThanhVien": "이 프로젝트에는 아직 다른 멤버가 없습니다.",
+    "daMoi": "초대됨",
+    "nguoiDung": "사용자",
+    "datLamAdmin": "관리자로 설정",
+    "datLamMember": "멤버로 설정",
+    "datLamViewer": "뷰어로 설정",
+    "huyLoiMoi": "초대 취소",
+    "xoaThanhVien": "멤버 제거",
+    "moiThanhVienMoi": "새 멤버 초대",
+    "themNguoiCongTac": "프로젝트에 공동 작업자를 추가합니다.",
+    "diaChiEmail": "이메일 주소",
+    "nhapEmailNguoiMuonMoi": "초대할 사람의 이메일 입력...",
+    "vaiTro": "역할",
+    "quanTriVien": "관리자",
+    "coToanQuyenThietLap": "프로젝트 설정 및 관리에 대한 전체 권한이 있습니다.",
+    "thanhVien": "멤버",
+    "coThePhanTich": "문서를 분석하고 추가할 수 있습니다.",
+    "nguoiXem": "뷰어",
+    "chiCoTheXemBaoCao": "보고서 및 차트만 볼 수 있습니다.",
+    "dangGui": "전송 중...",
+    "xacNhanThamGiaDuAn": "프로젝트 참여 확인",
+    "banDaDuocMoiThamGia": "시스템의 연구 프로젝트에 참여하도록 초대되었습니다.",
+    "tuChoi": "거절",
+    "dangXuLy": "처리 중...",
+    "chapNhanLoiMoi": "초대 수락",
+    "denTrangDuAn": "프로젝트 페이지로 이동",
+    "quayLaiTrangChu": "홈으로 돌아가기",
+    "loiXacNhan": "확인 오류",
+    "daXayRaLoiKhiXacNhan": "초대를 확인하는 동안 오류가 발생했습니다.",
+    "vaoDuAn": "프로젝트 들어가기",
+    "xoaThanhVienTitle": "멤버 제거",
+    "banCoChacMuonXoaThanhVien": "이 프로젝트에서 이 멤버를 제거하거나 초대를 취소하시겠습니까?",
+    "xoa": "제거",
+    "taoBoi": "작성자",
+    "chuSoHuu": "소유자",
+    "tapChi": "저널"
   },
   "topic": {
     "khongTheTaiThongTinTopic": "토픽 정보 전송이 불가능합니다.",
@@ -1089,5 +1132,10 @@
     "phanBoTapChiTheoQuocGia": "전국적으로 발행된 잡지",
     "xemThongKeSoLuongAnPhamKhoaHoc": "과학 출판사 및 출판사의 통계를 보세요.",
     "loiTaiDuLieu": "데이터 로드 오류:"
+  },
+  "pagination": {
+    "showing": "표시 중",
+    "to": "~",
+    "of": "중"
   }
 }

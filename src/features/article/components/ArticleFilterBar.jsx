@@ -1,4 +1,3 @@
-import { t } from "i18next";
 import { useTranslation } from "react-i18next";
 /**
  * File source thuộc hệ thống FE ResearchPulse.
@@ -32,25 +31,6 @@ const ACCESS_OPTIONS = [{
   value: 'oa',
   label: 'Open Access (OA)'
 }];
-const SORT_OPTIONS = [{
-  value: 'created_at-desc',
-  label: t("article.moiNhat")
-}, {
-  value: 'created_at-asc',
-  label: t("article.cuNhat")
-}, {
-  value: 'title-asc',
-  label: t("article.tieuDeAz")
-}, {
-  value: 'title-desc',
-  label: t("article.tieuDeZa")
-}, {
-  value: 'publication_year-desc',
-  label: t("article.namXuatBanGiam")
-}, {
-  value: 'publication_year-asc',
-  label: t("article.namXuatBanTang")
-}];
 export default function ArticleFilterBar({
   filters,
   updateFilters,
@@ -59,6 +39,26 @@ export default function ArticleFilterBar({
   const {
     t
   } = useTranslation();
+
+  const SORT_OPTIONS = [{
+    value: 'created_at-desc',
+    label: t("article.moiNhat")
+  }, {
+    value: 'created_at-asc',
+    label: t("article.cuNhat")
+  }, {
+    value: 'title-asc',
+    label: t("article.tieuDeAz")
+  }, {
+    value: 'title-desc',
+    label: t("article.tieuDeZa")
+  }, {
+    value: 'publication_year-desc',
+    label: t("article.namXuatBanGiam")
+  }, {
+    value: 'publication_year-asc',
+    label: t("article.namXuatBanTang")
+  }];
   const [journalOptions, setJournalOptions] = useState([]);
   const [topicOptions, setTopicOptions] = useState([]);
   const [loadingFilters, setLoadingFilters] = useState(false);

@@ -1,5 +1,4 @@
 import { useTranslation } from "react-i18next";
-import { t } from "i18next";
 /**
  * File source thuộc hệ thống FE ResearchPulse.
  *
@@ -13,7 +12,7 @@ export default function JournalTable({
   page,
   limit
 }) {
-  const { t: _t } = useTranslation();
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const getQuartileClassName = quartile => {
     const normalized = (quartile || '').toLowerCase();

@@ -1,4 +1,3 @@
-import { t } from "i18next";
 import { useTranslation } from "react-i18next";
 /**
  * File: features/project/components/UpgradePlanModal.jsx
@@ -13,50 +12,7 @@ import { activateProjectApi } from '../api/project.api';
 import { toast } from '../../../shared/utils/toast';
 import { useWalletStore } from '../../../app/store/walletStore';
 import './UpgradePlanModal.css';
-const FREE_FEATURES = [{
-  text: t("project.taoVaQuanLyDuAn"),
-  included: true
-}, {
-  text: t("project.theoDoiTuKhoaCoBan"),
-  included: true
-}, {
-  text: t("article.xemBaiBaoLienQuan"),
-  included: true
-}, {
-  text: t("project.phanTichTrendingDaChieu"),
-  included: false
-}, {
-  text: t("project.bieuDoNangCaoChart"),
-  included: false
-}, {
-  text: t("project.aiChatbotHoTroPhanTich"),
-  included: false
-}, {
-  text: t("project.timKiemThongMinhAi"),
-  included: false
-}];
-const VIP_FEATURES = [{
-  text: t("project.tatCaTinhNangFree"),
-  icon: 'check'
-}, {
-  text: t("project.phanTichTrendingDaChieuVoiNhie"),
-  icon: 'star'
-}, {
-  text: t("project.bieuDoNangCaoLineBarPieRadarHe"),
-  icon: 'star'
-}, {
-  text: t("project.aiChatbotHoTroPhanTichTimKiemT"),
-  icon: 'star'
-}, {
-  text: t("project.soSanhXuHuongGiuaCacLinhVuc"),
-  icon: 'star'
-}, {
-  text: t("project.xuatBaoCaoDuLieuPhanTich"),
-  icon: 'star'
-}, {
-  text: t("project.uuTienXuLyHoTroNhanh"),
-  icon: 'star'
-}];
+
 const UpgradePlanModal = ({
   show,
   onHide,
@@ -67,10 +23,55 @@ const UpgradePlanModal = ({
   const [showConfirm, setShowConfirm] = useState(false);
   const [loading, setLoading] = useState(false);
   const fetchWallet = useWalletStore(state => state.fetchWallet);
+  const { t } = useTranslation();
+
+  const FREE_FEATURES = [{
+    text: t("project.taoVaQuanLyDuAn"),
+    included: true
+  }, {
+    text: t("project.theoDoiTuKhoaCoBan"),
+    included: true
+  }, {
+    text: t("article.xemBaiBaoLienQuan"),
+    included: true
+  }, {
+    text: t("project.phanTichTrendingDaChieu"),
+    included: false
+  }, {
+    text: t("project.bieuDoNangCaoChart"),
+    included: false
+  }, {
+    text: t("project.aiChatbotHoTroPhanTich"),
+    included: false
+  }, {
+    text: t("project.timKiemThongMinhAi"),
+    included: false
+  }];
+
+  const VIP_FEATURES = [{
+    text: t("project.tatCaTinhNangFree"),
+    icon: 'check'
+  }, {
+    text: t("project.phanTichTrendingDaChieuVoiNhie"),
+    icon: 'star'
+  }, {
+    text: t("project.bieuDoNangCaoLineBarPieRadarHe"),
+    icon: 'star'
+  }, {
+    text: t("project.aiChatbotHoTroPhanTichTimKiemT"),
+    icon: 'star'
+  }, {
+    text: t("project.soSanhXuHuongGiuaCacLinhVuc"),
+    icon: 'star'
+  }, {
+    text: t("project.xuatBaoCaoDuLieuPhanTich"),
+    icon: 'star'
+  }, {
+    text: t("project.uuTienXuLyHoTroNhanh"),
+    icon: 'star'
+  }];
+
   const handleActivate = async () => {
-    const {
-      t
-    } = useTranslation();
     if (!projectId) {
       toast.error(t("project.khongTimThayDuAn"));
       return;
