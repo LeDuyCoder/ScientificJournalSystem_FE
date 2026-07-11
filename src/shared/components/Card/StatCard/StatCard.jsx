@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 /**
  * File source thuộc hệ thống FE ResearchPulse.
  *
@@ -34,64 +35,46 @@ export default function StatCard({
   description,
   trend,
   growth,
-  growthLabel = 'tuần này',
+  growthLabel,
   loading = false,
   formatValue = true,
   onClick,
-  className = '',
+  className = ''
 }) {
+  const {
+    t
+  } = useTranslation();
+  const growthLabelText = growthLabel || t("common.tuanNay");
   const Tag = onClick ? 'button' : 'article';
   const isPositive = growth > 0;
   const isNeutral = growth === 0 || growth == null;
-  const renderedValue = formatValue && typeof value === 'number'
-    ? formatCount(value)
-    : value;
-
-  const renderedTrend = trend ?? (growth !== undefined ? (
-    <span className={`shared-stat-card__growth ${isNeutral ? 'is-neutral' : isPositive ? 'is-positive' : 'is-negative'}`}>
-      <Icon
-        icon={isNeutral ? 'lucide:minus' : isPositive ? 'lucide:trending-up' : 'lucide:trending-down'}
-        width="12"
-      />
-      <span>{isNeutral ? 'Không đổi' : `${formatGrowth(growth)} ${growthLabel}`}</span>
-    </span>
-  ) : null);
-
-  return (
-    <Tag
-      type={onClick ? 'button' : undefined}
-      onClick={onClick}
-      className={`shared-stat-card ${onClick ? 'shared-stat-card--interactive' : ''} ${className}`.trim()}
-      style={{ '--stat-card-accent': accentColor }}
-    >
-      {loading ? (
-        <div className="shared-stat-card__skeleton" aria-label="Đang tải thống kê">
+  const renderedValue = formatValue && typeof value === 'number' ? formatCount(value) : value;
+  const renderedTrend = trend ?? (growth !== undefined ? <span className={`shared-stat-card__growth ${isNeutral ? 'is-neutral' : isPositive ? 'is-positive' : 'is-negative'}`}>
+      <Icon icon={isNeutral ? 'lucide:minus' : isPositive ? 'lucide:trending-up' : 'lucide:trending-down'} width="12" />
+      <span>{isNeutral ? t("common.khongDoi") : `${formatGrowth(growth)} ${growthLabelText}`}</span>
+    </span> : null);
+  return <Tag type={onClick ? 'button' : undefined} onClick={onClick} className={`shared-stat-card ${onClick ? 'shared-stat-card--interactive' : ''} ${className}`.trim()} style={{
+    '--stat-card-accent': accentColor
+  }}>
+      {loading ? <div className="shared-stat-card__skeleton" aria-label="Đang tải thống kê">
           <div className="skeleton-shimmer shared-stat-card__skeleton-icon" />
           <div className="skeleton-shimmer shared-stat-card__skeleton-value" />
           <div className="skeleton-shimmer shared-stat-card__skeleton-label" />
           <div className="skeleton-shimmer shared-stat-card__skeleton-trend" />
-        </div>
-      ) : (
-        <>
+        </div> : <>
           <div className="shared-stat-card__header">
             <span className="shared-stat-card__label">{label}</span>
-            {icon && (
-              <span className="shared-stat-card__icon" aria-hidden="true">
+            {icon && <span className="shared-stat-card__icon" aria-hidden="true">
                 <Icon icon={icon} width="16" />
-              </span>
-            )}
+              </span>}
           </div>
 
           <div className="shared-stat-card__value">{renderedValue}</div>
 
-          {(description || renderedTrend) && (
-            <div className="shared-stat-card__footer">
+          {(description || renderedTrend) && <div className="shared-stat-card__footer">
               {description && <span className="shared-stat-card__description">{description}</span>}
               {renderedTrend && <span className="shared-stat-card__trend">{renderedTrend}</span>}
-            </div>
-          )}
-        </>
-      )}
-    </Tag>
-  );
+            </div>}
+        </>}
+    </Tag>;
 }

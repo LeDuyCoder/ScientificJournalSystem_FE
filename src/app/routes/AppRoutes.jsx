@@ -1,4 +1,4 @@
-import { Routes, Route } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 
 import LandingPage from '../../features/landing/pages/LandingPage';
 import JournalDetailPage from '../../features/journal/pages/JournalDetailPage';
@@ -24,6 +24,8 @@ import ProtectedRoute from './ProtectedRoute';
 import AdminRoute from './AdminRoute';
 import PublicRoute from './PublicRoute';
 import AuthLayoutWithUser from '../layouts/AuthLayoutWithUser';
+import LangLayout from '../layouts/LangLayout';
+import LanguageRedirect from './LanguageRedirect';
 
 import ProjectListPage from '../../features/project/pages/ProjectListPage';
 import CreateProjectPage from '../../features/project/pages/CreateProjectPage';
@@ -61,123 +63,127 @@ import RepositoryManagementPage from '../../features/admin/pages/RepositoryManag
 import EditJournalPage from '../../features/admin/pages/EditJournalPage';
 import VolumeArchivePage from '../../features/admin/pages/VolumeArchivePage';
 
-/**
- * Nơi khai báo route chính của ứng dụng.
- *
- * Chính sách hiện tại:
- * - Các trang khám phá dữ liệu/bài báo cho phép guest truy cập công khai.
- * - Login/Register sử dụng PublicRoute.
- * - Dashboard yêu cầu đăng nhập.
- */
 export default function AppRoutes() {
   return (
     <Routes>
-      <Route path="/" element={<LandingPage />} />
+      {/* Root redirect to language-prefixed root */}
+      <Route path="/" element={<LanguageRedirect />} />
 
-      <Route element={<ProtectedRoute />}>
-        <Route path="/dashboard" element={<DashboardPage />} />
-        <Route path="/authors/leaderboard" element={<AuthorLeaderboardPage />} />
-      </Route>
+      {/* VNPay redirect exact API path on frontend */}
+      <Route path="/api/v1/payments/vnpay/return" element={<PaymentResultPage />} />
 
-      <Route element={<PublicRoute />}>
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
-      </Route>
+      {/* Language Prefixed Route Tree */}
+      <Route path="/:lang" element={<LangLayout />}>
+        <Route index element={<LandingPage />} />
 
-      {/* Routes sử dụng layout chung */}
-      <Route element={<AuthLayoutWithUser />}>
-        
-        {/* 🔐 Tuyến đường yêu cầu bảo mật (Đã đăng nhập) */}
         <Route element={<ProtectedRoute />}>
-          <Route path="/dashboard" element={<DashboardPage />} />
-          
-          <Route path="/projects" element={<ProjectListPage />} />
-          <Route path="/projects/create" element={<CreateProjectPage />} />
-          <Route path="/projects/:id/edit" element={<EditProjectPage />} />
-          <Route path="/projects/:id" element={<ProjectDetailPage />} />
-
-          <Route element={<WalletLayout />}>
-            <Route path={ROUTES.WALLET} element={<MyWalletPage />} />
-            <Route path={ROUTES.WALLET_TOP_UP} element={<TopUpPage />} />
-            <Route path={ROUTES.WALLET_TRANSACTIONS} element={<TransactionHistoryPage />} />
-          </Route>
-
-          <Route
-            path="/authors/leaderboard"
-            element={<AuthorLeaderboardPage />}
-          />
-
-          {/* Admin layouts & pages (Quản trị viên) - thống nhất namespace /admin/... */}
-          <Route element={<AdminRoute />}>
-            <Route element={<AdminLayout />}>
-              <Route path="/admin/dashboard" element={<AdminDashboardPage />} />
-              <Route path="/admin/users" element={<UserDirectoryPage />} />
-              <Route path="/admin/users/create" element={<AddNewAccountPage />} />
-              <Route path="/admin/users/:id/edit" element={<UpdateUserAccountPage />} />
-
-              <Route path="/admin/articles" element={<ArticleRepositoryPage />} />
-              <Route path="/admin/articles/create" element={<SubmitArticlePage />} />
-              <Route path="/admin/articles/:id" element={<UpdateArticlePage />} />
-
-              {/* Quản lý cấu trúc tạp chí dành cho Admin (Issue #76) */}
-              <Route path="/admin/journals" element={<JournalDirectoryPage />} />
-              <Route path="/admin/journals/repository" element={<RepositoryManagementPage />} />
-              <Route path="/admin/journals/archive" element={<VolumeArchivePage />} />
-              <Route path="/admin/journals/:id/edit" element={<EditJournalPage />} />
-            </Route>
-          </Route>
+          <Route path="dashboard" element={<DashboardPage />} />
+          <Route path="authors/leaderboard" element={<AuthorLeaderboardPage />} />
         </Route>
 
-        {/* Public pages inside layout */}
-        <Route path="/search" element={<CatalogSearchPage />} />
-        <Route path="/catalog" element={<CatalogSearchPage />} />
+        <Route element={<PublicRoute />}>
+          <Route path="login" element={<LoginPage />} />
+          <Route path="register" element={<RegisterPage />} />
+        </Route>
 
-        <Route path="/articles" element={<ArticleListPage />} />
-        <Route path="/articles/:id" element={<ArticleDetailPage />} />
-        <Route
-          path="/articles/:id/visual"
-          element={<ArticleVisualDetailPage />}
-        />
+        {/* Routes sử dụng layout chung */}
+        <Route element={<AuthLayoutWithUser />}>
+          
+          {/* 🔐 Tuyến đường yêu cầu bảo mật (Đã đăng nhập) */}
+          <Route element={<ProtectedRoute />}>
+            <Route path="dashboard" element={<DashboardPage />} />
+            
+            <Route path="projects" element={<ProjectListPage />} />
+            <Route path="projects/create" element={<CreateProjectPage />} />
+            <Route path="projects/:id/edit" element={<EditProjectPage />} />
+            <Route path="projects/:id" element={<ProjectDetailPage />} />
 
-        <Route path="/profile" element={<ProfilePage />} />
-        <Route path="/wallet/checkout" element={<WalletCheckoutPage />} />
-        <Route path="/wallet/payment-result" element={<PaymentResultPage />} />
-        <Route path="/api/v1/payments/vnpay/return" element={<PaymentResultPage />} />
-        <Route path="/verify-email" element={<VerifyEmailPage />} />
+            <Route element={<WalletLayout />}>
+              <Route path={ROUTES.WALLET.substring(1)} element={<MyWalletPage />} />
+              <Route path={ROUTES.WALLET_TOP_UP.substring(1)} element={<TopUpPage />} />
+              <Route path={ROUTES.WALLET_TRANSACTIONS.substring(1)} element={<TransactionHistoryPage />} />
+            </Route>
 
-        <Route path="/authors" element={<AuthorListPage />} />
-        <Route path="/authors/:id" element={<AuthorDetailPage />} />
+            <Route
+              path="authors/leaderboard"
+              element={<AuthorLeaderboardPage />}
+            />
 
-        <Route path="/journals/:id" element={<JournalDetailPage />} />
+            {/* Admin layouts & pages (Quản trị viên) - thống nhất namespace /admin/... */}
+            <Route element={<AdminRoute />}>
+              <Route element={<AdminLayout />}>
+                <Route path="admin/dashboard" element={<AdminDashboardPage />} />
+                <Route path="admin/users" element={<UserDirectoryPage />} />
+                <Route path="admin/users/create" element={<AddNewAccountPage />} />
+                <Route path="admin/users/:id/edit" element={<UpdateUserAccountPage />} />
 
-        <Route path="/keywords" element={<KeywordListPage />} />
-        <Route
-          path="/keywords/:keywordId/articles"
-          element={<KeywordArticlesPage />}
-        />
+                <Route path="admin/articles" element={<ArticleRepositoryPage />} />
+                <Route path="admin/articles/create" element={<SubmitArticlePage />} />
+                <Route path="admin/articles/:id" element={<UpdateArticlePage />} />
 
-        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-        <Route path="/reset-password" element={<ResetPasswordPage />} />
+                {/* Quản lý cấu trúc tạp chí dành cho Admin (Issue #76) */}
+                <Route path="admin/journals" element={<JournalDirectoryPage />} />
+                <Route path="admin/journals/repository" element={<RepositoryManagementPage />} />
+                <Route path="admin/journals/archive" element={<VolumeArchivePage />} />
+                <Route path="admin/journals/:id/edit" element={<EditJournalPage />} />
+              </Route>
+            </Route>
+          </Route>
 
-        <Route path="/geography" element={<GeographyPage />} />
+          {/* Public pages inside layout */}
+          <Route path="search" element={<CatalogSearchPage />} />
+          <Route path="catalog" element={<CatalogSearchPage />} />
 
-        <Route path="/topics/:topicId" element={<TopicDetailPage />} />
+          <Route path="articles" element={<ArticleListPage />} />
+          <Route path="articles/:id" element={<ArticleDetailPage />} />
+          <Route
+            path="articles/:id/visual"
+            element={<ArticleVisualDetailPage />}
+          />
+
+          <Route path="profile" element={<ProfilePage />} />
+          <Route path="wallet/checkout" element={<WalletCheckoutPage />} />
+          <Route path="wallet/payment-result" element={<PaymentResultPage />} />
+          <Route path="verify-email" element={<VerifyEmailPage />} />
+
+          <Route path="authors" element={<AuthorListPage />} />
+          <Route path="authors/:id" element={<AuthorDetailPage />} />
+
+          <Route path="journals/:id" element={<JournalDetailPage />} />
+
+          <Route path="keywords" element={<KeywordListPage />} />
+          <Route
+            path="keywords/:keywordId/articles"
+            element={<KeywordArticlesPage />}
+          />
+
+          <Route path="forgot-password" element={<ForgotPasswordPage />} />
+          <Route path="reset-password" element={<ResetPasswordPage />} />
+
+          <Route path="geography" element={<GeographyPage />} />
+
+          <Route path="topics/:topicId" element={<TopicDetailPage />} />
+        </Route>
+
+        <Route path="topics/:topicId" element={<TopicDetailPage />} />
+
+        {/* TODO: route tạm để preview UI Admin không cần login.
+            Xóa route này khi vấn đề đăng nhập đã được xử lý xong. */}
+        <Route element={<AdminLayout />}>
+          <Route path="admin-preview" element={<AdminDashboardPage />} />
+          <Route path="admin-preview/articles/:id" element={<UpdateArticlePage />} />
+          <Route path="admin-preview/journals" element={<JournalDirectoryPage />} />
+          <Route path="admin-preview/journals/repository" element={<RepositoryManagementPage />} />
+          <Route path="admin-preview/journals/archive" element={<VolumeArchivePage />} />
+          <Route path="admin-preview/journals/:id/edit" element={<EditJournalPage />} />
+        </Route>
+
+        {/* Fallback inside language to LandingPage */}
+        <Route path="*" element={<LandingPage />} />
       </Route>
 
-      <Route path="/topics/:topicId" element={<TopicDetailPage />} />
-
-      {/* TODO: route tạm để preview UI Admin không cần login.
-          Xóa route này khi vấn đề đăng nhập đã được xử lý xong. */}
-      <Route element={<AdminLayout />}>
-        <Route path="/admin-preview" element={<AdminDashboardPage />} />
-        <Route path="/admin-preview/articles/:id" element={<UpdateArticlePage />} />
-        <Route path="/admin-preview/journals" element={<JournalDirectoryPage />} />
-        <Route path="/admin-preview/journals/repository" element={<RepositoryManagementPage />} />
-        <Route path="/admin-preview/journals/archive" element={<VolumeArchivePage />} />
-        <Route path="/admin-preview/journals/:id/edit" element={<EditJournalPage />} />
-      </Route>
-
-      <Route path="*" element={<LandingPage />} />
+      {/* Legacy/Invalid Route Fallback Handler (Matches any URL not caught above, e.g. /login or /jp/login) */}
+      <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   );
 }

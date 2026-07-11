@@ -1,12 +1,15 @@
+import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
 import { Navigate, Outlet } from "react-router-dom";
 import { useAuthStore } from "../store/authStore";
 import { isAuthenticated as checkAuthStatus } from "../../shared/utils/auth";
-
+import { getDefaultLang } from "./languageRouting";
 const PublicRoute = () => {
-  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+  const {
+    t
+  } = useTranslation();
+  const isAuthenticated = useAuthStore(s => s.isAuthenticated);
   const [loading, setLoading] = useState(true);
-
   useEffect(() => {
     const checkAuth = async () => {
       try {
@@ -17,11 +20,10 @@ const PublicRoute = () => {
     };
     checkAuth();
   }, []);
+  if (loading) return <div>{t("common.dangTai")}</div>;
 
-  if (loading) return <div>Đang tải...</div>;
-  
   // 🔥 Nếu đã đăng nhập thành công -> Đá ngược về dashboard, không cho xem trang login nữa
-  return isAuthenticated ? <Navigate to="/dashboard" replace /> : <Outlet />;
+  const lang = getDefaultLang();
+  return isAuthenticated ? <Navigate to={`/${lang}/dashboard`} replace /> : <Outlet />;
 };
-
 export default PublicRoute;

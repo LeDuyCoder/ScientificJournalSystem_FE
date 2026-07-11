@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 /**
  * @file AuthorMetricsCards.jsx
  * @description Component hiển thị hàng thẻ chỉ số học thuật tóm tắt của tác giả (Bài báo, Trích dẫn, H-index, i10-index).
@@ -19,23 +20,26 @@ import LoadingSkeleton from '../../../shared/components/LoadingSkeleton';
  * @param {boolean} [props.loading=false] - Trạng thái loading.
  * @returns {JSX.Element} Giao diện hàng thẻ chỉ số.
  */
-export default function AuthorMetricsCards({ stats, loading = false }) {
-  
+export default function AuthorMetricsCards({
+  stats,
+  loading = false
+}) {
+  const {
+    t
+  } = useTranslation();
   // ── HIỂN THỊ LOADING SKELETON ───────────────────────────────────────────────
   // Hiển thị 4 khung xương (skeleton shimmer) tương ứng với 4 thẻ metrics khi dữ liệu đang tải
   if (loading) {
-    return (
-      <Row className="g-3 mb-4">
-        {Array.from({ length: 4 }).map((_, idx) => (
-          <Col xs={6} md={3} key={idx}>
+    return <Row className="g-3 mb-4">
+        {Array.from({
+        length: 4
+      }).map((_, idx) => <Col xs={6} md={3} key={idx}>
             <Card className="p-3 border rounded-3 bg-white">
               <LoadingSkeleton width="40px" height="12px" className="mb-2" />
               <LoadingSkeleton width="70%" height="24px" />
             </Card>
-          </Col>
-        ))}
-      </Row>
-    );
+          </Col>)}
+      </Row>;
   }
 
   // Giải nén các chỉ số học thuật với giá trị mặc định là 0
@@ -53,7 +57,7 @@ export default function AuthorMetricsCards({ stats, loading = false }) {
    * @param {number} num - Số cần định dạng.
    * @returns {string} Chuỗi số đã định dạng.
    */
-  const formatLocalNumber = (num) => {
+  const formatLocalNumber = num => {
     if (num == null) return '0';
     if (num >= 1_000_000) return (num / 1_000_000).toFixed(1).replace(/\.0$/, '') + 'M';
     if (num >= 1_000) return (num / 1_000).toFixed(1).replace(/\.0$/, '') + 'K';
@@ -61,51 +65,52 @@ export default function AuthorMetricsCards({ stats, loading = false }) {
   };
 
   // Danh sách các thẻ chỉ số hiển thị
-  const metricItems = [
-    { label: 'Bài báo', value: formatLocalNumber(worksCount) },
-    { label: 'Citations', value: formatLocalNumber(citationsCount) },
-    { label: 'H-index', value: hIndex },
-    { label: 'i10-index', value: i10Index }
-  ];
-
-  return (
-    <Row className="g-3 mb-4">
-      {metricItems.map((item, idx) => (
-        <Col xs={6} md={3} key={idx}>
-          <Card 
-            className="p-3 text-center border transition-all"
-            style={{
-              backgroundColor: 'var(--bg-card)',
-              borderColor: 'var(--border)',
-              borderRadius: '12px',
-              boxShadow: '0 4px 12px rgba(0, 0, 0, 0.01)'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.borderColor = 'var(--primary)';
-              e.currentTarget.style.boxShadow = '0 6px 16px rgba(255, 122, 51, 0.05)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.borderColor = 'var(--border)';
-              e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.01)';
-            }}
-          >
+  const metricItems = [{
+    label: t("articles"),
+    value: formatLocalNumber(worksCount)
+  }, {
+    label: 'Citations',
+    value: formatLocalNumber(citationsCount)
+  }, {
+    label: 'H-index',
+    value: hIndex
+  }, {
+    label: 'i10-index',
+    value: i10Index
+  }];
+  return <Row className="g-3 mb-4">
+      {metricItems.map((item, idx) => <Col xs={6} md={3} key={idx}>
+          <Card className="p-3 text-center border transition-all" style={{
+        backgroundColor: 'var(--bg-card)',
+        borderColor: 'var(--border)',
+        borderRadius: '12px',
+        boxShadow: '0 4px 12px rgba(0, 0, 0, 0.01)'
+      }} onMouseEnter={e => {
+        e.currentTarget.style.borderColor = 'var(--primary)';
+        e.currentTarget.style.boxShadow = '0 6px 16px rgba(255, 122, 51, 0.05)';
+      }} onMouseLeave={e => {
+        e.currentTarget.style.borderColor = 'var(--border)';
+        e.currentTarget.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.01)';
+      }}>
             {/* Nhãn của chỉ số */}
-            <div 
-              className="text-muted-custom" 
-              style={{ fontSize: '0.72rem', fontWeight: 500, textTransform: 'uppercase', letterSpacing: '0.05em' }}
-            >
+            <div className="text-muted-custom" style={{
+          fontSize: '0.72rem',
+          fontWeight: 500,
+          textTransform: 'uppercase',
+          letterSpacing: '0.05em'
+        }}>
               {item.label}
             </div>
             {/* Giá trị số của chỉ số hiển thị màu cam nổi bật */}
-            <div 
-              className="fw-bold mt-1.5" 
-              style={{ fontSize: '1.5rem', color: 'var(--primary)', fontFamily: 'var(--font-display)', lineHeight: '1.1' }}
-            >
+            <div className="fw-bold mt-1.5" style={{
+          fontSize: '1.5rem',
+          color: 'var(--primary)',
+          fontFamily: 'var(--font-display)',
+          lineHeight: '1.1'
+        }}>
               {item.value}
             </div>
           </Card>
-        </Col>
-      ))}
-    </Row>
-  );
+        </Col>)}
+    </Row>;
 }

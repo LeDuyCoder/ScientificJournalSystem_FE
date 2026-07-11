@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import React from 'react';
 import { Row, Col, Form, Button, InputGroup } from 'react-bootstrap';
 import PrimaryButton from '../../../shared/components/Button/PrimaryButton';
@@ -21,31 +22,29 @@ export default function JournalFilterBar({
   onViewModeChange,
   onOpenAddModal
 }) {
-  return (
-    <Row className="mb-4 align-items-center g-3">
+  const {
+    t
+  } = useTranslation();
+  return <Row className="mb-4 align-items-center g-3">
       {/* Cột 1: Ô tìm kiếm Tạp chí theo Tên hoặc ISSN */}
       <Col xs={12} md={4}>
         <InputGroup>
-          <Form.Control
-            type="text"
-            placeholder="Tìm kiếm theo tên tạp chí hoặc ISSN..."
-            value={search}
-            onChange={(e) => onSearchChange(e.target.value)}
-            style={{ backgroundColor: 'var(--bg-chip)', borderColor: 'var(--border)' }}
-          />
+          <Form.Control type="text" placeholder={t("journal.timKiemTheoTenTapChiHoacIssn")} value={search} onChange={e => onSearchChange(e.target.value)} style={{
+          backgroundColor: 'var(--bg-chip)',
+          borderColor: 'var(--border)'
+        }} />
         </InputGroup>
       </Col>
 
       {/* Cột 2: Bộ lọc theo trạng thái (Active / Draft) */}
       <Col xs={6} md={3}>
-        <Form.Select
-          value={statusFilter}
-          onChange={(e) => onStatusChange(e.target.value)}
-          style={{ backgroundColor: 'var(--bg-chip)', borderColor: 'var(--border)' }}
-        >
-          <option value="All">Tất cả trạng thái</option>
-          <option value="Active">Đang hoạt động (Active)</option>
-          <option value="Draft">Bản nháp (Draft)</option>
+        <Form.Select value={statusFilter} onChange={e => onStatusChange(e.target.value)} style={{
+        backgroundColor: 'var(--bg-chip)',
+        borderColor: 'var(--border)'
+      }}>
+          <option value="All">{t("journal.tatCaTrangThai")}</option>
+          <option value="Active">{t("journal.dangHoatDongActive")}</option>
+          <option value="Draft">{t("journal.banNhapDraft")}</option>
         </Form.Select>
       </Col>
 
@@ -53,31 +52,14 @@ export default function JournalFilterBar({
       <Col xs={6} md={5} className="d-flex justify-content-md-end align-items-center gap-2">
         {/* Toggle View Mode */}
         <div className="btn-group" role="group">
-          <Button
-            variant={viewMode === 'table' ? 'dark' : 'light'}
-            onClick={() => onViewModeChange('table')}
-            className="btn-custom-sm"
-          >
-            <i className="bi bi-table me-1"></i> Bảng
-          </Button>
-          <Button
-            variant={viewMode === 'card' ? 'dark' : 'light'}
-            onClick={() => onViewModeChange('card')}
-            className="btn-custom-sm"
-          >
-            <i className="bi bi-grid-three-up me-1"></i> Thẻ
-          </Button>
+          <Button variant={viewMode === 'table' ? 'dark' : 'light'} onClick={() => onViewModeChange('table')} className="btn-custom-sm">
+            <i className="bi bi-table me-1"></i>{t("journal.bang")}</Button>
+          <Button variant={viewMode === 'card' ? 'dark' : 'light'} onClick={() => onViewModeChange('card')} className="btn-custom-sm">
+            <i className="bi bi-grid-three-up me-1"></i>{t("journal.the")}</Button>
         </div>
 
         {/* Nút Tạo Tạp chí Mới (Add Journal) */}
-        <PrimaryButton
-          className="gap-1"
-          icon="bi:plus-circle"
-          onClick={onOpenAddModal}
-        >
-          Thêm tạp chí
-        </PrimaryButton>
+        <PrimaryButton className="gap-1" icon="bi:plus-circle" onClick={onOpenAddModal}>{t("journal.themTapChi")}</PrimaryButton>
       </Col>
-    </Row>
-  );
+    </Row>;
 }

@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 // Component hiển thị giao diện trống (Empty State)
 // Dùng để thông báo cho người dùng khi danh sách hoặc kết quả tìm kiếm không có dữ liệu
 
@@ -17,57 +18,58 @@ import PrimaryButton from './Button/PrimaryButton';
  * @returns {JSX.Element} Giao diện trạng thái trống.
  */
 export default function EmptyState({
-  title = 'Không có dữ liệu', // Tiêu đề thông báo
-  description = 'Không tìm thấy kết quả phù hợp.', // Mô tả chi tiết thông báo trống
-  icon = 'lucide:folder-open', // Icon hiển thị
-  actionLabel = '', // Nhãn của nút hành động đi kèm (nếu có)
-  onAction = null, // Hàm xử lý sự kiện khi click nút hành động
+  title,
+  // Tiêu đề thông báo
+  description,
+  // Mô tả chi tiết thông báo trống
+  icon = 'lucide:folder-open',
+  // Icon hiển thị
+  actionLabel = '',
+  // Nhãn của nút hành động đi kèm (nếu có)
+  onAction = null,
+  // Hàm xử lý sự kiện khi click nút hành động
   className = ''
 }) {
-  return (
-    <div 
-      className={`d-flex flex-column align-items-center justify-content-center text-center py-5 px-4 rounded-3 border ${className}`}
-      style={{
-        backgroundColor: 'var(--bg-card)',
-        borderColor: 'var(--border)',
-        minHeight: '260px'
-      }}
-    >
+  const {
+    t
+  } = useTranslation();
+  const resolvedTitle = title || t("topic.khongCoDuLieu");
+  const resolvedDescription = description || t("common.khongTimThayKetQuaPhuHop");
+  return <div className={`d-flex flex-column align-items-center justify-content-center text-center py-5 px-4 rounded-3 border ${className}`} style={{
+    backgroundColor: 'var(--bg-card)',
+    borderColor: 'var(--border)',
+    minHeight: '260px'
+  }}>
       {/* Vùng hiển thị Icon tròn */}
-      <div 
-        className="d-flex align-items-center justify-content-center mb-3 text-muted-custom"
-        style={{
-          width: '64px',
-          height: '64px',
-          borderRadius: '50%',
-          backgroundColor: 'var(--bg-section)'
-        }}
-      >
+      <div className="d-flex align-items-center justify-content-center mb-3 text-muted-custom" style={{
+      width: '64px',
+      height: '64px',
+      borderRadius: '50%',
+      backgroundColor: 'var(--bg-section)'
+    }}>
         <Icon icon={icon} width="32" className="opacity-75" />
       </div>
       
       {/* Tiêu đề trạng thái trống */}
-      <h3 
-        className="text-main fw-bold mb-2"
-        style={{ fontSize: '1.1rem', fontFamily: 'var(--font-display)' }}
-      >
-        {title}
+      <h3 className="text-main fw-bold mb-2" style={{
+      fontSize: '1.1rem',
+      fontFamily: 'var(--font-display)'
+    }}>
+        {resolvedTitle}
       </h3>
       
       {/* Mô tả chi tiết trạng thái trống */}
-      <p 
-        className="text-muted-custom mb-4 mx-auto"
-        style={{ fontSize: '0.85rem', maxWidth: '380px', lineHeight: '1.5' }}
-      >
-        {description}
+      <p className="text-muted-custom mb-4 mx-auto" style={{
+      fontSize: '0.85rem',
+      maxWidth: '380px',
+      lineHeight: '1.5'
+    }}>
+        {resolvedDescription}
       </p>
       
       {/* Nút hành động đi kèm (ví dụ: Tạo mới, Thử lại, Reset bộ lọc) */}
-      {actionLabel && onAction && (
-        <PrimaryButton onClick={onAction}>
+      {actionLabel && onAction && <PrimaryButton onClick={onAction}>
           {actionLabel}
-        </PrimaryButton>
-      )}
-    </div>
-  );
+        </PrimaryButton>}
+    </div>;
 }

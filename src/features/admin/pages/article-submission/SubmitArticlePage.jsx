@@ -1,3 +1,5 @@
+import { useTranslation } from "react-i18next";
+import { t } from "i18next";
 import { useState } from 'react';
 import { Card, Button, Row, Col, Modal, Form } from 'react-bootstrap';
 import { useNavigate, Link } from 'react-router-dom';
@@ -14,8 +16,11 @@ import PrimaryButton from '../../../../shared/components/Button/PrimaryButton';
  * Orchestrates the full submit article flow (Page 15 & 16).
  */
 export default function SubmitArticlePage() {
+  const { t: _t } = useTranslation();
   const navigate = useNavigate();
-  const { saveDraft } = useAdminStore();
+  const {
+    saveDraft
+  } = useAdminStore();
 
   // Tab State
   const [activeTab, setActiveTab] = useState('manual'); // 'manual' or 'pdf'
@@ -42,7 +47,10 @@ export default function SubmitArticlePage() {
   const handleSaveDraft = () => {
     const draftItem = {
       type: activeTab,
-      data: activeTab === 'manual' ? manualFormData : { fileName: selectedFile?.name, fileSize: selectedFile?.size },
+      data: activeTab === 'manual' ? manualFormData : {
+        fileName: selectedFile?.name,
+        fileSize: selectedFile?.size
+      },
       savedAt: new Date().toLocaleTimeString()
     };
     saveDraft(draftItem);
@@ -52,36 +60,51 @@ export default function SubmitArticlePage() {
   /**
    * Submits the article. Triggers client-side checks and uses available APIs only.
    */
-  const handleSubmitArticle = async (e) => {
+  const handleSubmitArticle = async e => {
     e.preventDefault();
-
     if (activeTab === 'manual') {
       // Validate manual form fields
-      const { title, abstract, author, journalId, categoryId, keywords } = manualFormData;
+      const {
+        title,
+        abstract,
+        author,
+        journalId,
+        categoryId,
+        keywords
+      } = manualFormData;
       if (!title || !abstract || !author || !journalId || !categoryId) {
         alert('Please fill in all required fields in the Manual Entry form.');
         return;
       }
-
       setIsSubmitting(true);
       try {
-        const { getAuthorsApi, createAuthorApi } = await import('../../../../features/author/api/author.api');
-        const { createArticleApi } = await import('../../../../features/article/api/articleApi');
-        
+        const {
+          getAuthorsApi,
+          createAuthorApi
+        } = await import('../../../../features/author/api/author.api');
+        const {
+          createArticleApi
+        } = await import('../../../../features/article/api/articleApi');
+
         // Resolve author
         const authorNames = author.split(',').map(n => n.trim()).filter(Boolean);
         const authorIds = [];
         for (const name of authorNames) {
-          const searchRes = await getAuthorsApi({ search: name, limit: 1 });
+          const searchRes = await getAuthorsApi({
+            search: name,
+            limit: 1
+          });
           const items = searchRes.data?.data?.items || searchRes.data?.data || [];
           if (items.length > 0 && items[0].display_name.toLowerCase() === name.toLowerCase()) {
             authorIds.push(items[0].author_id || items[0].id);
           } else {
-            const createRes = await createAuthorApi({ display_name: name });
+            const createRes = await createAuthorApi({
+              display_name: name
+            });
             authorIds.push(createRes.data?.data?.author_id || createRes.data?.data?.id);
           }
         }
-        
+
         // Prepare article payload
         const payload = {
           title,
@@ -92,14 +115,12 @@ export default function SubmitArticlePage() {
           authors: authorIds,
           keywords: keywords || []
         };
-        
         await createArticleApi(payload);
-
         setIsSubmitting(false);
         setSuccessInfo({
           mode: 'manual',
           title: title,
-          author: author,
+          author: author
         });
         setShowSuccessModal(true);
       } catch (err) {
@@ -112,13 +133,11 @@ export default function SubmitArticlePage() {
         alert('Please select or drop a valid PDF manuscript to submit.');
         return;
       }
-      
       setIsSubmitting(true);
       setIsSubmitting(false);
-      alert('ChÆ°a cÃ³ API submit PDF article. ÄÃ£ xÃ³a dá»¯ liá»‡u mock khá»i khu vá»±c nÃ y.');
+      alert(t("admin.chaCaApiSubmitPdfArticleAaXaaD"));
     }
   };
-
 
   /**
    * Reset form and file values.
@@ -135,9 +154,7 @@ export default function SubmitArticlePage() {
     setSelectedFile(null);
     setShowSuccessModal(false);
   };
-
-  return (
-    <div className="container-fluid py-2">
+  return <div className="container-fluid py-2">
       {/* Page Breadcrumbs */}
       <nav aria-label="breadcrumb" className="mb-3">
         <ol className="breadcrumb text-muted-custom small mb-0">
@@ -149,21 +166,22 @@ export default function SubmitArticlePage() {
       {/* Main Header banner with Save Draft */}
       <div className="d-flex justify-content-between align-items-center mb-4">
         <div>
-          <h1 className="font-display fw-bold text-main mb-1" style={{ fontSize: '1.8rem' }}>Submit Article</h1>
+          <h1 className="font-display fw-bold text-main mb-1" style={{
+          fontSize: '1.8rem'
+        }}>Submit Article</h1>
         </div>
         
         {/* Top Aligned Save Draft Button */}
-        <Button 
-          variant="light"
-          onClick={handleSaveDraft}
-          className="border rounded-3 py-2 px-3 fw-semibold text-main hover-primary-light"
-          style={{ fontSize: '0.85rem' }}
-        >
+        <Button variant="light" onClick={handleSaveDraft} className="border rounded-3 py-2 px-3 fw-semibold text-main hover-primary-light" style={{
+        fontSize: '0.85rem'
+      }}>
           Save Draft
         </Button>
       </div>
 
-      <div className="mx-auto" style={{ maxWidth: '850px' }}>
+      <div className="mx-auto" style={{
+      maxWidth: '850px'
+    }}>
         {/* Primary submission wrapper card */}
         <Card className="p-4 rounded-4 border bg-white shadow-sm mb-5">
           {/* Tab nav selectors */}
@@ -172,65 +190,37 @@ export default function SubmitArticlePage() {
           <Form onSubmit={handleSubmitArticle}>
             {/* Conditional Tab Body Rendering */}
             <div className="py-2 mb-4">
-              {activeTab === 'manual' ? (
-                // Tab 1: Manual Form Fields
-                <ManualArticleForm 
-                  formData={manualFormData}
-                  onChange={setManualFormData}
-                />
-              ) : (
-                // Tab 2: PDF dropzone upload area
-                <div className="d-flex flex-column gap-4">
-                  <PdfDropzone 
-                    selectedFile={selectedFile}
-                    onFileSelect={setSelectedFile}
-                    onFileRemove={() => setSelectedFile(null)}
-                  />
+              {activeTab === 'manual' ?
+            // Tab 1: Manual Form Fields
+            <ManualArticleForm formData={manualFormData} onChange={setManualFormData} /> :
+            // Tab 2: PDF dropzone upload area
+            <div className="d-flex flex-column gap-4">
+                  <PdfDropzone selectedFile={selectedFile} onFileSelect={setSelectedFile} onFileRemove={() => setSelectedFile(null)} />
 
                   {/* Highlight feature cards rendered at the bottom of upload view (Page 16) */}
                   <Row className="g-3 mt-1">
                     <Col xs={12} md={4}>
-                      <UploadFeatureCard 
-                        title="OCR Processing"
-                        description="System automatically extracts metadata from your uploaded PDF."
-                        icon="lucide:scan-eye"
-                      />
+                      <UploadFeatureCard title="OCR Processing" description="System automatically extracts metadata from your uploaded PDF." icon="lucide:scan-eye" />
                     </Col>
                     <Col xs={12} md={4}>
-                      <UploadFeatureCard 
-                        title="Secure Upload"
-                        description="Encrypted storage ensures your intellectual property is protected."
-                        icon="lucide:lock"
-                      />
+                      <UploadFeatureCard title="Secure Upload" description="Encrypted storage ensures your intellectual property is protected." icon="lucide:lock" />
                     </Col>
                     <Col xs={12} md={4}>
-                      <UploadFeatureCard 
-                        title="Fast Review"
-                        description="Uploaded PDFs enter the review queue immediately."
-                        icon="lucide:zap"
-                      />
+                      <UploadFeatureCard title="Fast Review" description="Uploaded PDFs enter the review queue immediately." icon="lucide:zap" />
                     </Col>
                   </Row>
-                </div>
-              )}
+                </div>}
             </div>
 
             {/* Bottom-right alignment Submit Action Button */}
             <div className="d-flex justify-content-end pt-3 border-top">
-              <PrimaryButton
-                type="submit"
-                disabled={isSubmitting}
-                className="px-4.5 py-2"
-                style={{ minWidth: '150px' }}
-              >
-                {isSubmitting ? (
-                  <>
+              <PrimaryButton type="submit" disabled={isSubmitting} className="px-4.5 py-2" style={{
+              minWidth: '150px'
+            }}>
+                {isSubmitting ? <>
                     <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
                     Submitting...
-                  </>
-                ) : (
-                  'Submit Article'
-                )}
+                  </> : 'Submit Article'}
               </PrimaryButton>
             </div>
           </Form>
@@ -238,24 +228,15 @@ export default function SubmitArticlePage() {
       </div>
 
       {/* Success modal */}
-      <Modal 
-        show={showSuccessModal} 
-        onHide={() => setShowSuccessModal(false)}
-        centered
-        backdrop="static"
-        contentClassName="border-0 rounded-4 shadow-lg"
-      >
+      <Modal show={showSuccessModal} onHide={() => setShowSuccessModal(false)} centered backdrop="static" contentClassName="border-0 rounded-4 shadow-lg">
         <Modal.Body className="p-4 p-md-5 text-center">
           {/* Animated/Glowing Check Icon */}
-          <div 
-            className="rounded-circle d-inline-flex align-items-center justify-content-center mb-4 success-glow"
-            style={{
-              width: '72px',
-              height: '72px',
-              backgroundColor: 'var(--primary-light)',
-              color: 'var(--primary)'
-            }}
-          >
+          <div className="rounded-circle d-inline-flex align-items-center justify-content-center mb-4 success-glow" style={{
+          width: '72px',
+          height: '72px',
+          backgroundColor: 'var(--primary-light)',
+          color: 'var(--primary)'
+        }}>
             <Icon icon="lucide:check-circle" width="36" />
           </div>
 
@@ -264,11 +245,10 @@ export default function SubmitArticlePage() {
             Your manuscript has been safely received. The review board and OCR pipelines will evaluate this entry.
           </p>
 
-          {successInfo && (
-            <div 
-              className="p-3.5 rounded-3 border mb-4 text-start"
-              style={{ backgroundColor: '#f8fafc', fontSize: '0.85rem' }}
-            >
+          {successInfo && <div className="p-3.5 rounded-3 border mb-4 text-start" style={{
+          backgroundColor: '#f8fafc',
+          fontSize: '0.85rem'
+        }}>
               <div className="mb-2">
                 <span className="text-muted-custom">Mode: </span>
                 <strong className="text-main text-capitalize">{successInfo.mode} Entry</strong>
@@ -281,29 +261,20 @@ export default function SubmitArticlePage() {
                 <span className="text-muted-custom">Author: </span>
                 <strong className="text-main">{successInfo.author}</strong>
               </div>
-            </div>
-          )}
+            </div>}
 
           <div className="d-flex flex-column gap-2">
-            <PrimaryButton
-              className="py-2.5"
-              onClick={() => {
-                setShowSuccessModal(false);
-                navigate('/dashboard');
-              }}
-            >
+            <PrimaryButton className="py-2.5" onClick={() => {
+            setShowSuccessModal(false);
+            navigate('/dashboard');
+          }}>
               Go to Dashboard
             </PrimaryButton>
-            <PrimaryButton
-              variant="outline"
-              className="py-2"
-              onClick={resetSubmissionForm}
-            >
+            <PrimaryButton variant="outline" className="py-2" onClick={resetSubmissionForm}>
               Submit Another Article
             </PrimaryButton>
           </div>
         </Modal.Body>
       </Modal>
-    </div>
-  );
+    </div>;
 }

@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 /**
  * File source thuộc hệ thống FE ResearchPulse.
  *
@@ -12,8 +13,10 @@ import JournalTable from '../components/JournalTable';
 import useJournalList from '../hooks/useJournalList';
 import AdminPagination from '../../../shared/components/Pagination';
 import './JournalListPage.css';
-
 export default function JournalListPage() {
+  const {
+    t
+  } = useTranslation();
   const {
     journals,
     pagination,
@@ -30,7 +33,6 @@ export default function JournalListPage() {
     handleSearchSubmit,
     handlePageChange
   } = useJournalList();
-
   const totalPages = Math.ceil(pagination.total / pagination.limit) || 1;
 
   // Clear all filters handler
@@ -41,25 +43,18 @@ export default function JournalListPage() {
     // Force reset page and refetch via hook states indirectly
     window.location.reload();
   };
-
-  return (
-    <div className="journal-list-page text-main">
+  return <div className="journal-list-page text-main">
       <Header />
 
       <Container>
         <nav aria-label="breadcrumb" className="journal-list-breadcrumb mb-4">
           <ol className="breadcrumb">
             <li className="breadcrumb-item">
-              <span
-                className="journal-list-breadcrumb__link"
-                onClick={() => window.location.href = '/'}
-              >
+              <span className="journal-list-breadcrumb__link" onClick={() => window.location.href = '/'}>
                 Home
               </span>
             </li>
-            <li className="breadcrumb-item active text-primary" aria-current="page">
-              Tạp chí
-            </li>
+            <li className="breadcrumb-item active text-primary" aria-current="page">{t("typeJournal")}</li>
           </ol>
         </nav>
 
@@ -69,12 +64,8 @@ export default function JournalListPage() {
               <Icon icon="lucide:library" width="17" />
               <span>Journal catalog</span>
             </div>
-            <h1 className="journal-list-title">
-              Tạp chí
-            </h1>
-            <p className="journal-list-description">
-              Danh sách tạp chí khoa học trong hệ thống ResearchPulse, hỗ trợ lọc theo quartile và trạng thái truy cập mở.
-            </p>
+            <h1 className="journal-list-title">{t("typeJournal")}</h1>
+            <p className="journal-list-description">{t("journal.danhSachTapChiKhoaHocTrongHeTh")}</p>
           </div>
         </section>
 
@@ -82,55 +73,25 @@ export default function JournalListPage() {
         <JournalStatsCards stats={stats} loading={loadingStats} />
 
         {/* Search & Filter Bar */}
-        <JournalSearchBar
-          searchInput={searchInput}
-          setSearchInput={setSearchInput}
-          quartile={quartile}
-          setQuartile={setQuartile}
-          isOpenAccess={isOpenAccess}
-          setIsOpenAccess={setIsOpenAccess}
-          onSubmit={handleSearchSubmit}
-          onClear={handleClearAll}
-        />
+        <JournalSearchBar searchInput={searchInput} setSearchInput={setSearchInput} quartile={quartile} setQuartile={setQuartile} isOpenAccess={isOpenAccess} setIsOpenAccess={setIsOpenAccess} onSubmit={handleSearchSubmit} onClear={handleClearAll} />
 
         {/* Error State */}
-        {error && (
-          <div className="journal-alert alert d-flex align-items-center gap-2 mb-4" role="alert">
+        {error && <div className="journal-alert alert d-flex align-items-center gap-2 mb-4" role="alert">
             <Icon icon="lucide:alert-circle" width="18" />
             <div>{error}</div>
-          </div>
-        )}
+          </div>}
 
         {/* Table & Loading Skeleton wrapper */}
-        {isLoading ? (
-          <div className="journal-loading-panel">
+        {isLoading ? <div className="journal-loading-panel">
             <div className="skeleton-shimmer journal-skeleton-line mb-3" />
-            {[1, 2, 3, 4, 5].map((i) => (
-              <div key={i} className="skeleton-shimmer journal-skeleton-row mb-2" />
-            ))}
-          </div>
-        ) : (
-          <>
+            {[1, 2, 3, 4, 5].map(i => <div key={i} className="skeleton-shimmer journal-skeleton-row mb-2" />)}
+          </div> : <>
             {/* Journal Table */}
-            <JournalTable 
-              journals={journals} 
-              page={pagination.page} 
-              limit={pagination.limit} 
-            />
+            <JournalTable journals={journals} page={pagination.page} limit={pagination.limit} />
 
             {/* Pagination Controls */}
-            {journals.length > 0 && totalPages > 1 && (
-              <AdminPagination
-                totalItems={pagination.total}
-                currentPage={pagination.page}
-                limit={pagination.limit}
-                onPageChange={handlePageChange}
-                entityName="tạp chí"
-              />
-            )}
-          </>
-        )}
+            {journals.length > 0 && totalPages > 1 && <AdminPagination totalItems={pagination.total} currentPage={pagination.page} limit={pagination.limit} onPageChange={handlePageChange} entityName="tạp chí" />}
+          </>}
       </Container>
-    </div>
-  );
+    </div>;
 }

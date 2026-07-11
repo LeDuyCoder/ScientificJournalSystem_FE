@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { useState, useEffect } from 'react';
 import { Row, Col, Form, Button } from 'react-bootstrap';
 import { Icon } from '@iconify/react';
@@ -30,15 +31,20 @@ export default function JournalFilterBar({
   onViewModeChange,
   onOpenAddModal
 }) {
+  const {
+    t
+  } = useTranslation();
   const [subjectAreas, setSubjectAreas] = useState([]);
   const [loading, setLoading] = useState(false);
-
   useEffect(() => {
     let ignore = false;
     const fetchSubjectAreas = async () => {
       setLoading(true);
       try {
-        const response = await getSubjectAreasApi({ page: 1, limit: 100 });
+        const response = await getSubjectAreasApi({
+          page: 1,
+          limit: 100
+        });
         if (ignore) return;
         const items = response.data?.data?.items || response.data?.data || [];
         setSubjectAreas(items);
@@ -53,60 +59,56 @@ export default function JournalFilterBar({
       ignore = true;
     };
   }, []);
-
-  return (
-    <HeaderFilterCard className="mb-4">
+  return <HeaderFilterCard className="mb-4">
       <Row className="align-items-end g-3">
         {/* Search Input */}
         <Col xs={12} md={4}>
           <Form.Group>
-            <Form.Label className="fw-medium small text-main text-uppercase mb-2" style={{ letterSpacing: '0.05em' }}>
+            <Form.Label className="fw-medium small text-main text-uppercase mb-2" style={{
+            letterSpacing: '0.05em'
+          }}>
               Search Journals
             </Form.Label>
-            <FilterSearch
-              value={search}
-              onChange={(e) => onSearchChange(e.target.value)}
-              placeholder="Search by title, ISSN..."
-            />
+            <FilterSearch value={search} onChange={e => onSearchChange(e.target.value)} placeholder={t("admin.searchByTitleIssn")} />
           </Form.Group>
         </Col>
 
         {/* Status Filter */}
         <Col xs={12} sm={6} md={2.5}>
           <Form.Group>
-            <Form.Label className="fw-medium small text-main text-uppercase mb-2" style={{ letterSpacing: '0.05em' }}>
+            <Form.Label className="fw-medium small text-main text-uppercase mb-2" style={{
+            letterSpacing: '0.05em'
+          }}>
               Status
             </Form.Label>
-            <FilterSelect
-              value={statusFilter}
-              onChange={(e) => onStatusChange(e.target.value)}
-              options={[
-                { value: 'All', label: 'All Statuses' },
-                { value: 'Active', label: 'Active' },
-                { value: 'Draft', label: 'Draft' }
-              ]}
-            />
+            <FilterSelect value={statusFilter} onChange={e => onStatusChange(e.target.value)} options={[{
+            value: 'All',
+            label: 'All Statuses'
+          }, {
+            value: 'Active',
+            label: 'Active'
+          }, {
+            value: 'Draft',
+            label: 'Draft'
+          }]} />
           </Form.Group>
         </Col>
 
         {/* Subject Area Filter */}
         <Col xs={12} sm={6} md={2.5}>
           <Form.Group>
-            <Form.Label className="fw-medium small text-main text-uppercase mb-2" style={{ letterSpacing: '0.05em' }}>
+            <Form.Label className="fw-medium small text-main text-uppercase mb-2" style={{
+            letterSpacing: '0.05em'
+          }}>
               Subject Area
             </Form.Label>
-            <FilterSelect
-              value={subjectFilter}
-              onChange={(e) => onSubjectChange(e.target.value)}
-              disabled={loading}
-              options={[
-                { value: 'All', label: 'All Subject Areas' },
-                ...subjectAreas.map(area => ({
-                  value: area.display_name || area.name,
-                  label: area.display_name || area.name
-                }))
-              ]}
-            />
+            <FilterSelect value={subjectFilter} onChange={e => onSubjectChange(e.target.value)} disabled={loading} options={[{
+            value: 'All',
+            label: 'All Subject Areas'
+          }, ...subjectAreas.map(area => ({
+            value: area.display_name || area.name,
+            label: area.display_name || area.name
+          }))]} />
           </Form.Group>
         </Col>
 
@@ -114,41 +116,28 @@ export default function JournalFilterBar({
         <Col xs={12} md={3} className="d-flex justify-content-md-end align-items-end gap-3">
           {/* View Toggle */}
           <div className="btn-group" role="group">
-            <Button
-              variant="light"
-              onClick={() => onViewModeChange('table')}
-              className={`d-flex align-items-center p-2 rounded-start ${
-                viewMode === 'table' ? 'bg-dark text-white' : 'bg-light text-dark border'
-              }`}
-              style={{ borderRight: 'none', height: '40px' }}
-              title="Table view"
-            >
+            <Button variant="light" onClick={() => onViewModeChange('table')} className={`d-flex align-items-center p-2 rounded-start ${viewMode === 'table' ? 'bg-dark text-white' : 'bg-light text-dark border'}`} style={{
+            borderRight: 'none',
+            height: '40px'
+          }} title="Table view">
               <Icon icon="lucide:layout-list" width="16" />
             </Button>
-            <Button
-              variant="light"
-              onClick={() => onViewModeChange('card')}
-              className={`d-flex align-items-center p-2 rounded-end ${
-                viewMode === 'card' ? 'bg-dark text-white' : 'bg-light text-dark border'
-              }`}
-              style={{ borderLeft: 'none', height: '40px' }}
-              title="Card view"
-            >
+            <Button variant="light" onClick={() => onViewModeChange('card')} className={`d-flex align-items-center p-2 rounded-end ${viewMode === 'card' ? 'bg-dark text-white' : 'bg-light text-dark border'}`} style={{
+            borderLeft: 'none',
+            height: '40px'
+          }} title="Card view">
               <Icon icon="lucide:grid" width="16" />
             </Button>
           </div>
 
           {/* Add Journal Button */}
-          <PrimaryButton
-            className="text-nowrap"
-            onClick={onOpenAddModal}
-            style={{ height: '40px' }}
-          >
+          <PrimaryButton className="text-nowrap" onClick={onOpenAddModal} style={{
+          height: '40px'
+        }}>
             <Icon icon="lucide:plus" width="16" className="me-2" />
             <span>Create Journal</span>
           </PrimaryButton>
         </Col>
       </Row>
-    </HeaderFilterCard>
-  );
+    </HeaderFilterCard>;
 }

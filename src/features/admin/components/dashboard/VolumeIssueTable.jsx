@@ -1,3 +1,5 @@
+import { useTranslation } from "react-i18next";
+import { t } from "i18next";
 /**
  * - Hiển thị bảng "Volume & Issue Overview" ở cuối Admin Dashboard,
  *   gồm cột Volume, Total Issues, Publication Date, Status, Progress, Actions.
@@ -10,7 +12,6 @@ import StatusBadge from '../shared/StatusBadge';
 import AdminProgressBar from '../layout/AdminProgressBar';
 import Pagination from '../../../../shared/components/Pagination';
 import { exportAdminVolumeIssueStatusCsv } from '../../api/adminDashboard.api';
-
 export default function VolumeIssueTable({
   items = [],
   loading = false,
@@ -18,20 +19,21 @@ export default function VolumeIssueTable({
   currentPage = 1,
   onPageChange,
   totalItems = 0,
-  limit = 5,
-
+  limit = 5
 }) {
+  const { t: _t } = useTranslation();
   const navigate = useNavigate();
   const isPreview = window.location.pathname.startsWith('/admin-preview');
   const basePath = isPreview ? '/admin-preview' : '/admin';
   const safeItems = Array.isArray(items) ? items : [];
   const [exporting, setExporting] = useState(false);
-
   const handleExportCsv = async () => {
     try {
       setExporting(true);
       const response = await exportAdminVolumeIssueStatusCsv();
-      const blob = new Blob([response.data], { type: 'text/csv;charset=utf-8;' });
+      const blob = new Blob([response.data], {
+        type: 'text/csv;charset=utf-8;'
+      });
       const downloadUrl = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = downloadUrl;
@@ -41,20 +43,15 @@ export default function VolumeIssueTable({
       link.remove();
       window.URL.revokeObjectURL(downloadUrl);
     } catch (downloadError) {
-      alert(downloadError.response?.status === 403
-        ? 'Backend từ chối quyền admin: token hiện tại không có role ADMINISTRATOR.'
-        : 'Không thể tải file CSV từ backend.');
+      alert(downloadError.response?.status === 403 ? t("admin.backendTuChoiQuyenAdminTokenHi") : t("admin.khongTheTaiFileCsvTuBackend"));
     } finally {
       setExporting(false);
     }
   };
-
   const handleOpenRepository = () => {
     navigate(`${basePath}/journals/repository`);
   };
-
-  return (
-    <div className="admin-card admin-volume-card">
+  return <div className="admin-card admin-volume-card">
       {/* Header card: tiêu đề bên trái, nút Export CSV bên phải */}
       <div className="admin-volume-card__header">
         <h3 className="admin-card__title">Volume &amp; Issue Overview</h3>
@@ -64,14 +61,7 @@ export default function VolumeIssueTable({
         </button>
       </div>
 
-      {loading ? (
-        <p className="admin-muted-text mb-0">Đang tải Volume & Issue Overview...</p>
-      ) : error ? (
-        <p className="admin-error-text mb-0">{error}</p>
-      ) : safeItems.length === 0 ? (
-        <p className="admin-muted-text mb-0">Chưa có dữ liệu Volume & Issue Overview.</p>
-      ) : (
-        <>
+      {loading ? <p className="admin-muted-text mb-0">{t("admin.dangTaiVolumeIssueOverview")}</p> : error ? <p className="admin-error-text mb-0">{error}</p> : safeItems.length === 0 ? <p className="admin-muted-text mb-0">{t("admin.chuaCoDuLieuVolumeIssueOvervie")}</p> : <>
           <div className="admin-table-wrapper">
             <table className="admin-table">
               <thead>
@@ -85,19 +75,12 @@ export default function VolumeIssueTable({
                 </tr>
               </thead>
               <tbody>
-                {safeItems.map((item) => (
-                  <tr
-                    key={item.id}
-                    className="admin-clickable-row"
-                    onClick={handleOpenRepository}
-                    tabIndex={0}
-                    onKeyDown={(event) => {
-                      if (event.key === 'Enter' || event.key === ' ') {
-                        event.preventDefault();
-                        handleOpenRepository();
-                      }
-                    }}
-                  >
+                {safeItems.map(item => <tr key={item.id} className="admin-clickable-row" onClick={handleOpenRepository} tabIndex={0} onKeyDown={event => {
+              if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                handleOpenRepository();
+              }
+            }}>
                     <td className="admin-table__cell-strong">{item.volume}</td>
                     <td>{item.totalIssues}</td>
                     <td>{item.publicationDate}</td>
@@ -108,33 +91,19 @@ export default function VolumeIssueTable({
                       <AdminProgressBar percentage={item.progress} />
                     </td>
                     <td className="admin-table__actions-col">
-                      <button
-                        type="button"
-                        className="admin-table__icon-btn"
-                        aria-label="Open volume repository"
-                        onClick={(event) => {
-                          event.stopPropagation();
-                          handleOpenRepository();
-                        }}
-                      >
+                      <button type="button" className="admin-table__icon-btn" aria-label="Open volume repository" onClick={event => {
+                  event.stopPropagation();
+                  handleOpenRepository();
+                }}>
                         <Icon icon="lucide:arrow-up-right" />
                       </button>
                     </td>
-                  </tr>
-                ))}
+                  </tr>)}
               </tbody>
             </table>
           </div>
 
-          <Pagination
-            totalItems={totalItems}
-            currentPage={currentPage}
-            limit={limit}
-            onPageChange={onPageChange}
-            entityName="volumes"
-          />
-        </>
-      )}
-    </div>
-  );
-}
+          <Pagination totalItems={totalItems} currentPage={currentPage} limit={limit} onPageChange={onPageChange} entityName="volumes" />
+        </>}
+    </div>;
+}

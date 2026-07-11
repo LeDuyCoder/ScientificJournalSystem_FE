@@ -1,3 +1,5 @@
+import { useTranslation } from "react-i18next";
+import { t } from "i18next";
 import { useState } from 'react';
 import { Modal, Form, Row, Col } from 'react-bootstrap';
 import PrimaryButton from '../../../../shared/components/Button/PrimaryButton';
@@ -7,8 +9,14 @@ import { useJournalManagement } from '../../hooks/useJournalManagement';
  * Component CreateIssueModal - Cửa sổ Modal bật lên để Admin thêm Số phát hành (Issue) mới vào Volume đang chọn.
  * Đáp ứng Issue #76: Gồm Issue name, Issue number, Publication year.
  */
-export default function CreateIssueModal({ show, handleClose }) {
-  const { createIssue } = useJournalManagement();
+export default function CreateIssueModal({
+  show,
+  handleClose
+}) {
+  const { t: _t } = useTranslation();
+  const {
+    createIssue
+  } = useJournalManagement();
 
   // Khởi tạo state cho Form dữ liệu Số phát hành
   const [formData, setFormData] = useState({
@@ -21,29 +29,36 @@ export default function CreateIssueModal({ show, handleClose }) {
   const [errors, setErrors] = useState({});
 
   /** Theo dõi thay đổi chữ trong form */
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+  const handleChange = e => {
+    const {
+      name,
+      value
+    } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
     if (errors[name]) {
-      setErrors((prev) => ({ ...prev, [name]: '' }));
+      setErrors(prev => ({
+        ...prev,
+        [name]: ''
+      }));
     }
   };
 
   /** Hàm thực hiện bắt lỗi dữ liệu bỏ trống */
   const validateForm = () => {
     const newErrors = {};
-    if (!formData.issueName.trim()) newErrors.issueName = 'Tên số phát hành không được để trống';
-    if (!formData.issueNumber.trim()) newErrors.issueNumber = 'Số hiệu định danh không được trống (Ví dụ: No. 3)';
-    
+    if (!formData.issueName.trim()) newErrors.issueName = t("journal.tenSoPhatHanhKhongDuocDeTrong");
+    if (!formData.issueNumber.trim()) newErrors.issueNumber = t("journal.soHieuDinhDanhKhongDuocTrongVi");
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   /** Xử lý nhấn nút Tạo Issue */
-  const handleSubmit = (e) => {
+  const handleSubmit = e => {
     e.preventDefault();
     if (!validateForm()) return;
-
     createIssue({
       issueName: formData.issueName,
       issueNumber: formData.issueNumber,
@@ -58,11 +73,9 @@ export default function CreateIssueModal({ show, handleClose }) {
     });
     handleClose();
   };
-
-  return (
-    <Modal show={show} onHide={handleClose} centered backdrop="static" className="text-main">
+  return <Modal show={show} onHide={handleClose} centered backdrop="static" className="text-main">
       <Modal.Header closeButton className="border-bottom-0 pb-0">
-        <Modal.Title className="font-display fw-bold h5 text-main">Tạo Số Phát Hành Mới (Create New Issue)</Modal.Title>
+        <Modal.Title className="font-display fw-bold h5 text-main">{t("journal.taoSoPhatHanhMoiCreateNewIssue")}</Modal.Title>
       </Modal.Header>
 
       <Form onSubmit={handleSubmit}>
@@ -70,15 +83,8 @@ export default function CreateIssueModal({ show, handleClose }) {
           
           {/* Tên tiêu đề số / Tên Issue */}
           <Form.Group className="mb-3">
-            <Form.Label className="fw-medium small text-main">Tên Issue (Issue name) <span className="text-danger">*</span></Form.Label>
-            <Form.Control
-              type="text"
-              name="issueName"
-              value={formData.issueName}
-              onChange={handleChange}
-              isInvalid={!!errors.issueName}
-              placeholder="Ví dụ: Special Issue on Applied Deep Learning hoặc Regular Issue"
-            />
+            <Form.Label className="fw-medium small text-main">{t("journal.tenIssueIssueName")}<span className="text-danger">*</span></Form.Label>
+            <Form.Control type="text" name="issueName" value={formData.issueName} onChange={handleChange} isInvalid={!!errors.issueName} placeholder={t("journal.viDuSpecialIssueOnAppliedDeepL")} />
             <Form.Control.Feedback type="invalid">{errors.issueName}</Form.Control.Feedback>
           </Form.Group>
 
@@ -86,15 +92,8 @@ export default function CreateIssueModal({ show, handleClose }) {
             {/* Số hiệu định vị số (Issue Number) */}
             <Col xs={12} sm={6}>
               <Form.Group>
-                <Form.Label className="fw-medium small text-main">Số định danh (Issue number) <span className="text-danger">*</span></Form.Label>
-                <Form.Control
-                  type="text"
-                  name="issueNumber"
-                  value={formData.issueNumber}
-                  onChange={handleChange}
-                  isInvalid={!!errors.issueNumber}
-                  placeholder="Ví dụ: No. 1, No. 2, Vol. 3 No. 1..."
-                />
+                <Form.Label className="fw-medium small text-main">{t("journal.soDinhDanhIssueNumber")}<span className="text-danger">*</span></Form.Label>
+                <Form.Control type="text" name="issueNumber" value={formData.issueNumber} onChange={handleChange} isInvalid={!!errors.issueNumber} placeholder={t("journal.viDuNo1No2Vol3No1")} />
                 <Form.Control.Feedback type="invalid">{errors.issueNumber}</Form.Control.Feedback>
               </Form.Group>
             </Col>
@@ -102,23 +101,17 @@ export default function CreateIssueModal({ show, handleClose }) {
             {/* Năm phát hành */}
             <Col xs={12} sm={6}>
               <Form.Group>
-                <Form.Label className="fw-medium small text-main">Năm phát hành (Publication year)</Form.Label>
-                <Form.Control
-                  type="number"
-                  name="publicationYear"
-                  value={formData.publicationYear}
-                  onChange={handleChange}
-                />
+                <Form.Label className="fw-medium small text-main">{t("journal.namPhatHanhPublicationYear")}</Form.Label>
+                <Form.Control type="number" name="publicationYear" value={formData.publicationYear} onChange={handleChange} />
               </Form.Group>
             </Col>
           </Row>
 
         </Modal.Body>
         <Modal.Footer className="border-top-0 pt-0">
-          <PrimaryButton variant="outline" onClick={handleClose}>Hủy bỏ</PrimaryButton>
-          <PrimaryButton type="submit">Tạo Issue</PrimaryButton>
+          <PrimaryButton variant="outline" onClick={handleClose}>{t("journal.huyBo")}</PrimaryButton>
+          <PrimaryButton type="submit">{t("admin.taoIssue")}</PrimaryButton>
         </Modal.Footer>
       </Form>
-    </Modal>
-  );
-}   
+    </Modal>;
+}

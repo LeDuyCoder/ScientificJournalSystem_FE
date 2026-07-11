@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 /**
  * @file AuthorTable.jsx
  * @description Vỏ chứa dữ liệu dạng bảng hiển thị danh sách tác giả theo cấu trúc dòng cột.
@@ -9,7 +10,6 @@ import AuthorCard from './AuthorCard';
 import LoadingSkeleton from '../../../shared/components/LoadingSkeleton';
 import EmptyState from '../../../shared/components/EmptyState';
 import ErrorState from '../../../shared/components/ErrorState';
-
 export default function AuthorTable({
   authors = [],
   loading = false,
@@ -17,39 +17,33 @@ export default function AuthorTable({
   onRetry = null,
   startIndex = 1
 }) {
+  const {
+    t
+  } = useTranslation();
   if (error) {
     return <ErrorState message={error} onRetry={onRetry} />;
   }
-
   if (!loading && authors.length === 0) {
-    return (
-      <EmptyState
-        title="Không tìm thấy tác giả phù hợp"
-        description="Hãy thử thay đổi từ khóa tìm kiếm hoặc đặt lại các bộ lọc."
-        icon="lucide:search-slash"
-      />
-    );
+    return <EmptyState title={t("author.khongTimThayTacGiaPhuHop")} description={t("author.hayThuThayDoiTuKhoaTimKiemHoac")} icon="lucide:search-slash" />;
   }
-
-  return (
-    <div>
+  return <div>
       <div className="author-table-shell d-none d-md-block">
         <Table hover responsive className="author-table m-0 align-middle">
           <thead>
             <tr>
               <th className="author-table-index-col text-center py-3">#</th>
-              <th className="py-3">Tác giả</th>
-              <th className="py-3">Tổ chức</th>
-              <th className="py-3">Số bài báo</th>
+              <th className="py-3">{t("typeAuthor")}</th>
+              <th className="py-3">{t("author.toChuc")}</th>
+              <th className="py-3">{t("publications")}</th>
               <th className="py-3">Citations</th>
               <th className="py-3">H-index</th>
-              <th className="author-table-action-col py-3">Chi tiết</th>
+              <th className="author-table-action-col py-3">{t("article.chiTiet1")}</th>
             </tr>
           </thead>
           <tbody>
-            {loading ? (
-              Array.from({ length: 5 }).map((_, idx) => (
-                <tr key={idx}>
+            {loading ? Array.from({
+            length: 5
+          }).map((_, idx) => <tr key={idx}>
                   <td className="text-center"><LoadingSkeleton width="20px" height="15px" /></td>
                   <td>
                     <div className="d-flex align-items-center gap-2">
@@ -65,22 +59,16 @@ export default function AuthorTable({
                   <td><LoadingSkeleton width="50px" height="14px" /></td>
                   <td><LoadingSkeleton width="30px" height="14px" /></td>
                   <td><LoadingSkeleton width="60px" height="14px" /></td>
-                </tr>
-              ))
-            ) : (
-              authors.filter(Boolean).map((author, idx) => (
-                <AuthorTableRow key={author.author_id ?? author.id ?? idx} author={author} index={startIndex + idx} />
-              ))
-            )}
+                </tr>) : authors.filter(Boolean).map((author, idx) => <AuthorTableRow key={author.author_id ?? author.id ?? idx} author={author} index={startIndex + idx} />)}
           </tbody>
         </Table>
       </div>
 
       <div className="d-block d-md-none">
-        {loading ? (
-          <Row className="g-3">
-            {Array.from({ length: 3 }).map((_, idx) => (
-              <Col xs={12} key={idx}>
+        {loading ? <Row className="g-3">
+            {Array.from({
+          length: 3
+        }).map((_, idx) => <Col xs={12} key={idx}>
                 <div className="author-mobile-skeleton">
                   <div className="d-flex gap-3 mb-2">
                     <LoadingSkeleton width="48px" height="48px" borderRadius="50%" />
@@ -91,19 +79,12 @@ export default function AuthorTable({
                   </div>
                   <LoadingSkeleton width="100%" height="40px" />
                 </div>
-              </Col>
-            ))}
-          </Row>
-        ) : (
-          <Row className="g-3">
-            {authors.filter(Boolean).map((author, idx) => (
-              <Col xs={12} key={author.author_id ?? author.id ?? idx}>
+              </Col>)}
+          </Row> : <Row className="g-3">
+            {authors.filter(Boolean).map((author, idx) => <Col xs={12} key={author.author_id ?? author.id ?? idx}>
                 <AuthorCard author={author} />
-              </Col>
-            ))}
-          </Row>
-        )}
+              </Col>)}
+          </Row>}
       </div>
-    </div>
-  );
+    </div>;
 }

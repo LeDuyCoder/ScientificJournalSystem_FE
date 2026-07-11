@@ -1,12 +1,13 @@
+import { useTranslation } from "react-i18next";
+import { t } from "i18next";
 import "../styles/ProfilePage.css";
 import Header from "../../landing/components/Header";
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useAuth from "../../auth/hooks/useAuth";
 import { isAuthenticated as isAuthenticatedUtil } from "../../../shared/utils/auth";
-
-
 export default function ProfilePage() {
+  const { t: _t } = useTranslation();
   const {
     user,
     isAuthenticated,
@@ -14,7 +15,7 @@ export default function ProfilePage() {
     updateProfile,
     deleteAccount,
     isLoading,
-    error,
+    error
   } = useAuth();
   const navigate = useNavigate();
 
@@ -29,9 +30,8 @@ export default function ProfilePage() {
     role: "",
     gender: true,
     date_of_birth: "",
-    url_image: "",
+    url_image: ""
   });
-
   const computedIsAuthenticated = useMemo(() => {
     if (user) return true;
     if (isAuthenticated) return true;
@@ -40,11 +40,9 @@ export default function ProfilePage() {
     return false;
   }, [isAuthenticated, user]);
 
-
   // Gọi API profile nếu đã auth.
   useEffect(() => {
     let cancelled = false;
-
     const run = async () => {
       // nếu store chưa hydrate nhưng cookie vẫn tồn tại thì thử kiểm tra util
       const shouldFetch = computedIsAuthenticated || (await isAuthenticatedUtil());
@@ -56,17 +54,12 @@ export default function ProfilePage() {
           // tránh hard-crash và để UI hiển thị error state từ hook.
         }
       }
-
-
     };
-
     run();
-
     return () => {
       cancelled = true;
     };
   }, [computedIsAuthenticated, fetchProfile]);
-
 
   // Đổ dữ liệu user vào form
   useEffect(() => {
@@ -90,8 +83,7 @@ export default function ProfilePage() {
           if (v instanceof Date) return v.toISOString().slice(0, 10);
           return String(v);
         })(),
-
-        url_image: user.url_image || "",
+        url_image: user.url_image || ""
       });
     }
   }, [user]);
@@ -104,12 +96,12 @@ export default function ProfilePage() {
         last_name: formData.last_name,
         gender: formData.gender,
         date_of_birth: formData.date_of_birth,
-        url_image: formData.url_image,
+        url_image: formData.url_image
       });
-      alert("Cập nhật thành công");
+      alert(t("profile.capNhatThanhCong"));
     } catch (err) {
       console.error(err);
-      alert("Cập nhật thất bại");
+      alert(t("profile.capNhatThatBai"));
     }
   };
 
@@ -118,156 +110,115 @@ export default function ProfilePage() {
     if (deleteAccount) {
       try {
         await deleteAccount();
-        alert("Xóa tài khoản thành công");
+        alert(t("profile.xoaTaiKhoanThanhCong"));
         navigate("/login");
       } catch (err) {
         console.error(err);
-        alert("Xóa tài khoản thất bại");
+        alert(t("profile.xoaTaiKhoanThatBai"));
       }
     } else {
-      alert("Chức năng xóa tài khoản đang chờ backend hoàn thiện.");
+      alert(t("profile.chucNangXoaTaiKhoanDangChoBack"));
     }
     setShowDeleteModal(false);
   };
 
   // Sửa lỗi Loading State lặp (Chỉ hiển thị loading khi chưa có dữ liệu user)
   if (isLoading && !user) {
-    return (
-      <>
+    return <>
         <Header />
         <div className="loading-state">
           <div className="spinner"></div>
-          <p>Đang tải dữ liệu...</p>
+          <p>{t("journal.dangTaiDuLieu")}</p>
         </div>
-      </>
-    );
+      </>;
   }
 
   // Error State - Hiển thị lỗi tường minh
   if (error) {
-    return (
-      <>
+    return <>
         <Header />
         <div className="error-state">
           <div className="error-box">
-            <h3>Đã xảy ra lỗi</h3>
+            <h3>{t("profile.daXayRaLoi")}</h3>
             <p>{error}</p>
-            <button onClick={() => fetchProfile()} className="retry-btn">
-              Thử lại
-            </button>
+            <button onClick={() => fetchProfile()} className="retry-btn">{t("article.thuLai")}</button>
           </div>
         </div>
-      </>
-    );
+      </>;
   }
-
-  return (
-    <>
+  return <>
       <Header />
 
-      {!computedIsAuthenticated ? (
-
-        <div className="profile-page">
+      {!computedIsAuthenticated ? <div className="profile-page">
           <div className="profile-container">
             <div className="page-header">
-              <h1>Hồ sơ</h1>
-              <p>Quản lý thông tin cá nhân và thiết lập tài khoản của bạn.</p>
+              <h1>{t("profile.hoSo")}</h1>
+              <p>{t("profile.quanLyThongTinCaNhanVaThietLap")}</p>
             </div>
 
-            <div
-              style={{
-                background: "white",
-                borderRadius: "20px",
-                padding: "60px 40px",
-                textAlign: "center",
-                marginTop: "40px",
-                boxShadow: "0 2px 10px rgba(0, 0, 0, 0.06)",
-              }}
-            >
-              <h2 style={{ marginBottom: "16px" }}>Vui lòng đăng nhập</h2>
-              <p
-                style={{
-                  color: "#666",
-                  marginBottom: "32px",
-                  fontSize: "16px",
-                }}
-              >
-                Bạn cần đăng nhập để xem và quản lý hồ sơ cá nhân của mình
-              </p>
-              <button
-                onClick={() => navigate("/login")}
-                style={{
-                  background: "#ff7a30",
-                  color: "white",
-                  border: "none",
-                  padding: "12px 32px",
-                  borderRadius: "10px",
-                  fontSize: "16px",
-                  fontWeight: "600",
-                  cursor: "pointer",
-                  marginRight: "12px",
-                }}
-              >
-                Đăng nhập
-              </button>
-              <button
-                onClick={() => navigate("/register")}
-                style={{
-                  background: "transparent",
-                  color: "#ff7a30",
-                  border: "2px solid #ff7a30",
-                  padding: "10px 30px",
-                  borderRadius: "10px",
-                  fontSize: "16px",
-                  fontWeight: "600",
-                  cursor: "pointer",
-                }}
-              >
-                Đăng kí
-              </button>
+            <div style={{
+          background: "white",
+          borderRadius: "20px",
+          padding: "60px 40px",
+          textAlign: "center",
+          marginTop: "40px",
+          boxShadow: "0 2px 10px rgba(0, 0, 0, 0.06)"
+        }}>
+              <h2 style={{
+            marginBottom: "16px"
+          }}>{t("profile.vuiLongDangNhap")}</h2>
+              <p style={{
+            color: "#666",
+            marginBottom: "32px",
+            fontSize: "16px"
+          }}>{t("profile.banCanDangNhapDeXemVaQuanLyHoS")}</p>
+              <button onClick={() => navigate("/login")} style={{
+            background: "#ff7a30",
+            color: "white",
+            border: "none",
+            padding: "12px 32px",
+            borderRadius: "10px",
+            fontSize: "16px",
+            fontWeight: "600",
+            cursor: "pointer",
+            marginRight: "12px"
+          }}>{t("signIn")}</button>
+              <button onClick={() => navigate("/register")} style={{
+            background: "transparent",
+            color: "#ff7a30",
+            border: "2px solid #ff7a30",
+            padding: "10px 30px",
+            borderRadius: "10px",
+            fontSize: "16px",
+            fontWeight: "600",
+            cursor: "pointer"
+          }}>{t("profile.dangKi")}</button>
             </div>
           </div>
-        </div>
-      ) : (
-        <div className="profile-page">
+        </div> : <div className="profile-page">
           <div className="profile-container">
             <div className="page-header">
-              <h1>Hồ sơ</h1>
-              <p>Quản lý thông tin cá nhân và thiết lập tài khoản của bạn.</p>
+              <h1>{t("profile.hoSo")}</h1>
+              <p>{t("profile.quanLyThongTinCaNhanVaThietLap")}</p>
             </div>
 
-            <div className="breadcrumb">
-              Tổng quan
-              <span>&gt;</span>
-              Hồ sơ cá nhân
-            </div>
+            <div className="breadcrumb">{t("author.tongQuan")}<span>&gt;</span>{t("profile.hoSoCaNhan")}</div>
 
             <div className="profile-content">
               <div className="profile-sidebar">
                 <div className="avatar">
-                  {formData.url_image ? (
-                    <img
-                      src={formData.url_image}
-                      alt="avatar"
-                      className="avatar-image"
-                      onError={(e) => {
-                        e.target.style.display = "none";
-                        if (e.target.nextElementSibling) {
-                          e.target.nextElementSibling.style.display = "flex";
-                        }
-                      }}
-                    />
-                  ) : <span
-                    className="avatar-initials"
-                    style={{ display: formData.url_image ? "none" : "flex", alignItems: "center", justifyContent: "center" }}
-                  >
-                    {formData.first_name
-                      ? formData.first_name.charAt(0).toUpperCase()
-                      : formData.last_name
-                      ? formData.last_name.charAt(0).toUpperCase()
-                      : "U"}
-                  </span>
+                  {formData.url_image ? <img src={formData.url_image} alt="avatar" className="avatar-image" onError={e => {
+                e.target.style.display = "none";
+                if (e.target.nextElementSibling) {
+                  e.target.nextElementSibling.style.display = "flex";
                 }
+              }} /> : <span className="avatar-initials" style={{
+                display: formData.url_image ? "none" : "flex",
+                alignItems: "center",
+                justifyContent: "center"
+              }}>
+                    {formData.first_name ? formData.first_name.charAt(0).toUpperCase() : formData.last_name ? formData.last_name.charAt(0).toUpperCase() : "U"}
+                  </span>}
                   
                 </div>
 
@@ -276,172 +227,109 @@ export default function ProfilePage() {
                 </h2>
 
                 <div className="role-badge">
-                  {formData.role || "Nhà nghiên cứu"}
+                  {formData.role || t("auth.nhaNghienCuu")}
                 </div>
 
-                <div
-                  className={`status-badge ${(user?.is_active ?? true) ? "active" : "inactive"}`}
-                >
-                  {(user?.is_active ?? true) ? "Active" : "Inactive"}
+                <div className={`status-badge ${user?.is_active ?? true ? "active" : "inactive"}`}>
+                  {user?.is_active ?? true ? "Active" : "Inactive"}
                 </div>
 
                 <hr />
 
-                <div className="activity-title">Hoạt động</div>
+                <div className="activity-title">{t("admin.hoatDong")}</div>
 
                 <div className="stat-row">
-                  <span>Dự án đang theo dõi</span>
+                  <span>{t("profile.duAnDangTheoDoi")}</span>
                   <strong>2</strong>
                 </div>
 
                 <div className="stat-row">
-                  <span>Từ khóa đã lưu</span>
+                  <span>{t("profile.tuKhoaDaLuu")}</span>
                   <strong>5</strong>
                 </div>
               </div>
 
               <div className="profile-card">
-                <h2>Thông tin tài khoản</h2>
+                <h2>{t("profile.thongTinTaiKhoan")}</h2>
 
                 <div className="form-grid">
                   <div className="form-group">
-                    <label>HỌ</label>
-                    <input
-                      type="text"
-                      value={formData.last_name}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          last_name: e.target.value,
-                        })
-                      }
-                    />
+                    <label>{t("profile.ho")}</label>
+                    <input type="text" value={formData.last_name} onChange={e => setFormData({
+                  ...formData,
+                  last_name: e.target.value
+                })} />
                   </div>
 
                   <div className="form-group">
-                    <label>TÊN</label>
-                    <input
-                      type="text"
-                      value={formData.first_name}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          first_name: e.target.value,
-                        })
-                      }
-                    />
+                    <label>{t("profile.ten")}</label>
+                    <input type="text" value={formData.first_name} onChange={e => setFormData({
+                  ...formData,
+                  first_name: e.target.value
+                })} />
                   </div>
 
                   <div className="form-group">
-                    <label>ĐỊA CHỈ EMAIL</label>
-                    <input
-                      type="email"
-                      value={formData.email}
-                      readOnly
-                      className="readonly-input"
-                    />
+                    <label>{t("auth.diaChiEmail")}</label>
+                    <input type="email" value={formData.email} readOnly className="readonly-input" />
                   </div>
 
                   <div className="form-group">
-                    <label>VAI TRÒ / CHỨC DANH</label>
-                    <input
-                      type="text"
-                      value={formData.role || "Nhà nghiên cứu"}
-                      readOnly
-                      className="readonly-input"
-                    />
+                    <label>{t("profile.vaiTroChucDanh")}</label>
+                    <input type="text" value={formData.role || t("auth.nhaNghienCuu")} readOnly className="readonly-input" />
                   </div>
 
                   <div className="form-group">
-                    <label>GIỚI TÍNH</label>
-                    <select
-                      value={formData.gender ? "male" : "female"}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          gender: e.target.value === "male",
-                        })
-                      }
-                    >
+                    <label>{t("profile.gioiTinh")}</label>
+                    <select value={formData.gender ? "male" : "female"} onChange={e => setFormData({
+                  ...formData,
+                  gender: e.target.value === "male"
+                })}>
                       <option value="male">Nam</option>
-                      <option value="female">Nữ</option>
+                      <option value="female">{t("auth.nu")}</option>
                     </select>
                   </div>
 
                   <div className="form-group">
-                    <label>NGÀY SINH</label>
-                    <input
-                      type="date"
-                      value={formData.date_of_birth}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          date_of_birth: e.target.value,
-                        })
-                      }
-                    />
+                    <label>{t("profile.ngaySinh")}</label>
+                    <input type="date" value={formData.date_of_birth} onChange={e => setFormData({
+                  ...formData,
+                  date_of_birth: e.target.value
+                })} />
                   </div>
                 </div>
 
                 <div className="form-group full-width">
                   <label>AVATAR URL</label>
-                  <input
-                    type="text"
-                    value={formData.url_image}
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        url_image: e.target.value,
-                      })
-                    }
-                    placeholder="https://example.com/avatar.png"
-                  />
+                  <input type="text" value={formData.url_image} onChange={e => setFormData({
+                ...formData,
+                url_image: e.target.value
+              })} placeholder={t("profile.httpsexamplecomavatarpng")} />
                 </div>
 
                 <div className="button-area">
-                  <button className="save-btn" onClick={handleSave}>
-                    Lưu thay đổi
-                  </button>
+                  <button className="save-btn" onClick={handleSave}>{t("admin.luuThayDoi")}</button>
                 </div>
 
                 <div className="danger-zone">
                   <h3>Danger Zone</h3>
-                  <p>Hành động này sẽ xóa tài khoản vĩnh viễn.</p>
-                  <button
-                    className="delete-btn"
-                    onClick={() => setShowDeleteModal(true)}
-                  >
-                    Xóa tài khoản
-                  </button>
+                  <p>{t("profile.hanhDongNaySeXoaTaiKhoanVinhVi")}</p>
+                  <button className="delete-btn" onClick={() => setShowDeleteModal(true)}>{t("profile.xoaTaiKhoan")}</button>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-      )}
+        </div>}
 
-      {showDeleteModal && isAuthenticated && (
-        <div className="modal-overlay">
+      {showDeleteModal && isAuthenticated && <div className="modal-overlay">
           <div className="modal-content">
-            <h3>Xác nhận xóa tài khoản</h3>
-            <p>
-              Bạn có chắc muốn xóa tài khoản này không? Hành động này không thể
-              hoàn tác.
-            </p>
+            <h3>{t("profile.xacNhanXoaTaiKhoan")}</h3>
+            <p>{t("profile.banCoChacMuonXoaTaiKhoanNayKho")}</p>
             <div className="modal-actions">
-              <button
-                className="cancel-btn"
-                onClick={() => setShowDeleteModal(false)}
-              >
-                Hủy
-              </button>
-              <button className="delete-confirm-btn" onClick={handleDelete}>
-                Xóa tài khoản
-              </button>
+              <button className="cancel-btn" onClick={() => setShowDeleteModal(false)}>{t("admin.huy")}</button>
+              <button className="delete-confirm-btn" onClick={handleDelete}>{t("profile.xoaTaiKhoan")}</button>
             </div>
           </div>
-        </div>
-      )}
-    </>
-  );
+        </div>}
+    </>;
 }
