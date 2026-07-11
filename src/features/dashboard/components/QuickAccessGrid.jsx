@@ -1,4 +1,3 @@
-import { t } from "i18next";
 import { useTranslation } from "react-i18next";
 /**
  * File source thuộc hệ thống FE ResearchPulse.
@@ -12,47 +11,41 @@ import '../Dashboard.css';
 /**
  * QUICK_ACCESS_ITEMS — constant config, dễ mở rộng sau này
  */
-/**
- * QUICK_ACCESS_ITEMS — constant config với màu sắc và mô tả chi tiết
- */
-const QUICK_ACCESS_ITEMS = [{
-  icon: 'lucide:search',
-  label: t("search"),
-  desc: t("dashboard.khamPhaBaiBaoDeTai"),
-  path: '/catalog',
-  color: 'var(--primary)',
-  bg: 'var(--primary-light)'
-}, {
-  icon: 'lucide:book-open',
-  label: t("typeJournal"),
-  desc: t("dashboard.xepHangQ1q4KhoaHoc"),
-  path: '/catalog',
-  color: 'var(--primary)',
-  bg: 'var(--primary-light)'
-}, {
-  icon: 'lucide:globe',
-  label: t("geography"),
-  desc: t("dashboard.banDoPhanBoTacGia"),
-  path: '/geography',
-  color: 'var(--primary)',
-  bg: 'var(--primary-light)'
-}, {
-  icon: 'lucide:trophy',
-  label: 'Leaderboard',
-  desc: t("dashboard.xepHangTacGiaNoiBat"),
-  path: '/authors',
-  color: 'var(--primary)',
-  bg: 'var(--primary-light)'
-}];
-
-/**
- * QuickAccessGrid — 4 card điều hướng nhanh, thiết kế hiện đại 2x2
- */
 export default function QuickAccessGrid() {
   const {
     t
   } = useTranslation();
   const navigate = useNavigate();
+
+  const QUICK_ACCESS_ITEMS = [{
+    icon: 'lucide:search',
+    label: t("search"),
+    desc: t("dashboard.khamPhaBaiBaoDeTai"),
+    path: '/catalog',
+    color: 'var(--primary)',
+    bg: 'var(--primary-light)'
+  }, {
+    icon: 'lucide:book-open',
+    label: t("typeJournal"),
+    desc: t("dashboard.xepHangQ1q4KhoaHoc"),
+    path: '/catalog',
+    color: 'var(--primary)',
+    bg: 'var(--primary-light)'
+  }, {
+    icon: 'lucide:globe',
+    label: t("geography"),
+    desc: t("dashboard.banDoPhanBoTacGia"),
+    path: '/geography',
+    color: 'var(--primary)',
+    bg: 'var(--primary-light)'
+  }, {
+    icon: 'lucide:trophy',
+    label: 'Leaderboard',
+    desc: t("dashboard.xepHangTacGiaNoiBat"),
+    path: '/authors',
+    color: 'var(--primary)',
+    bg: 'var(--primary-light)'
+  }];
   return <section className="quick-access-card">
       <header className="quick-access-header">
         <Icon className="quick-access-header-icon" icon="lucide:zap" width={16} />

@@ -1,4 +1,3 @@
-import { t } from "i18next";
 import { useTranslation } from "react-i18next";
 /**
  * File source thuộc hệ thống FE ResearchPulse.
@@ -9,36 +8,44 @@ import { useState } from 'react';
 import { Icon } from '@iconify/react';
 import { EntityCard } from '../../../shared/components/Card';
 
-/** Status badge config */
-const STATUS_CONFIG = {
-  active: {
-    label: t("admin.hoatDong"),
-    bg: 'var(--bg-chip)',
-    color: 'var(--text-main)',
-    border: 'var(--border)'
-  },
-  new: {
-    label: 'New',
-    bg: 'var(--primary-light)',
-    color: 'var(--primary)',
-    border: 'transparent'
-  },
-  paused: {
-    label: t("dashboard.tamDung"),
-    bg: 'var(--bg-section)',
-    color: 'var(--text-muted)',
-    border: 'var(--border)'
-  },
-  archived: {
-    label: t("dashboard.luuTru"),
-    bg: 'var(--bg-section)',
-    color: 'var(--text-muted)',
-    border: 'var(--border)'
-  }
-};
 function ProjectStatusBadge({
   status
 }) {
+  const { t } = useTranslation();
+  
+  const STATUS_CONFIG = {
+    active: {
+      label: t("admin.hoatDong"),
+      bg: 'var(--bg-chip)',
+      color: 'var(--text-main)',
+      border: 'var(--border)'
+    },
+    new: {
+      label: 'New',
+      bg: 'var(--primary-light)',
+      color: 'var(--primary)',
+      border: 'transparent'
+    },
+    paused: {
+      label: t("dashboard.tamDung"),
+      bg: 'var(--bg-section)',
+      color: 'var(--text-muted)',
+      border: 'var(--border)'
+    },
+    archived: {
+      label: t("dashboard.luuTru"),
+      bg: 'var(--bg-section)',
+      color: 'var(--text-muted)',
+      border: 'var(--border)'
+    },
+    deleted: {
+      label: 'Deleted',
+      bg: '#fee2e2',
+      color: '#dc2626',
+      border: 'transparent'
+    }
+  };
+
   const cfg = STATUS_CONFIG[status?.toLowerCase()] ?? STATUS_CONFIG.active;
   return <span className="d-inline-flex align-items-center px-2 py-1 rounded-pill font-display flex-shrink-0 text-nowrap" style={{
     fontSize: '0.7rem',
@@ -97,7 +104,7 @@ function RecentProjectItem({
         <div className="text-muted-custom text-truncate" style={{
         fontSize: '0.72rem'
       }}>
-          {journalCount} journals · {articleCount}{t("author.baiBao")}</div>
+          {journalCount} {t("project.tapChi")} · {articleCount} {t("author.baiBao")}</div>
       </div>
 
       {/* Status */}
@@ -180,7 +187,7 @@ export default function RecentProjectsCard({
               <span className="text-muted-custom" style={{
           fontSize: '0.72rem'
         }}>
-                Trang {page}/{totalPages}
+                {t("dashboard.trang")} {page}/{totalPages}
               </span>
 
               <button type="button" className="btn btn-sm" onClick={() => setPage(prev => Math.min(totalPages, prev + 1))} disabled={page === totalPages} style={{
@@ -190,7 +197,7 @@ export default function RecentProjectsCard({
           fontSize: '0.72rem',
           fontWeight: 600
         }}>
-                Sau →
+                {t("dashboard.sau")} →
               </button>
             </div>}
         </>}

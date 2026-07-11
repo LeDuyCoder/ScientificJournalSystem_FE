@@ -7,8 +7,10 @@ import ProjectCard from '../components/ProjectCard';
 import EmptyState from '../../../shared/components/EmptyState';
 import LoadingSkeleton from '../../../shared/components/LoadingSkeleton';
 import { Icon } from '@iconify/react';
+import { Modal, Button } from 'react-bootstrap';
 import Header from '../../landing/components/Header';
 import PrimaryButton from '../../../shared/components/Button/PrimaryButton';
+import useAuth from '../../auth/hooks/useAuth';
 const ProjectListPage = () => {
   const navigate = useNavigate();
   const {
@@ -16,10 +18,14 @@ const ProjectListPage = () => {
     isLoading,
     error,
     fetchProjects,
-    deleteProject
+    deleteProject,
+    restoreProject
   } = useProjects();
   const [recentIds, setRecentIds] = useState([]);
+  const [confirmModal, setConfirmModal] = useState({ show: false, projectId: null, action: null });
   const { t } = useTranslation();
+  const auth = useAuth();
+  const currentUser = auth?.user;
   useEffect(() => {
     fetchProjects();
   }, [fetchProjects]);
@@ -34,6 +40,13 @@ const ProjectListPage = () => {
     }
   }, []);
   const handleDelete = async id => {
+    setConfirmModal({ show: true, projectId: id, action: 'delete' });
+  };
+
+  const executeDelete = async () => {
+    if (!confirmModal.projectId) return;
+    const id = confirmModal.projectId;
+    setConfirmModal({ show: false, projectId: null, action: null });
     try {
       await deleteProject(id);
 
@@ -47,6 +60,21 @@ const ProjectListPage = () => {
       }
     } catch (err) {
       alert(err.message || t("project.khongTheXoaDuAn"));
+    }
+  };
+
+  const handleRestore = async id => {
+    setConfirmModal({ show: true, projectId: id, action: 'restore' });
+  };
+
+  const executeRestore = async () => {
+    if (!confirmModal.projectId) return;
+    const id = confirmModal.projectId;
+    setConfirmModal({ show: false, projectId: null, action: null });
+    try {
+      await restoreProject(id);
+    } catch (err) {
+      alert(err.message || "Không thể khôi phục dự án");
     }
   };
 
@@ -142,7 +170,7 @@ const ProjectListPage = () => {
                 </h5>
                 <div className="row g-4">
                   {recentProjects.map(project => <div key={`recent-${project.project_id || project.id}`} className="col-12 col-md-6 col-lg-4">
-                      <ProjectCard project={project} onDelete={handleDelete} isRecent={true} />
+                      <ProjectCard project={project} onDelete={handleDelete} onRestore={handleRestore} isRecent={true} currentUser={currentUser} />
                     </div>)}
                 </div>
               </div>}
@@ -157,12 +185,40 @@ const ProjectListPage = () => {
               </h5>
               <div className="row g-4">
                 {projects.map(project => <div key={project.project_id || project.id} className="col-12 col-md-6 col-lg-4">
-                    <ProjectCard project={project} onDelete={handleDelete} />
+                    <ProjectCard project={project} onDelete={handleDelete} onRestore={handleRestore} currentUser={currentUser} />
                   </div>)}
               </div>
             </div>
           </div>}
       </div>
+
+      <Modal show={confirmModal.show} onHide={() => setConfirmModal({ show: false, projectId: null, action: null })} centered>
+        <Modal.Header border="0" closeButton>
+          <Modal.Title className="fw-bold">
+            {confirmModal.action === 'delete' ? t("project.xacNhanXoaDuAn", "Xác nhận xóa dự án") : "Xác nhận khôi phục dự án"}
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p className="text-muted-custom mb-0">
+            {confirmModal.action === 'delete' 
+              ? (t("project.banCoChacMuonXoaDuAnNayHanhDon") || "Bạn có chắc muốn xóa dự án này? Hành động này không thể hoàn tác.")
+              : "Bạn có chắc muốn khôi phục dự án này?"}
+          </p>
+        </Modal.Body>
+        <Modal.Footer border="0" className="gap-2">
+          <Button variant="light" className="px-4 fw-medium" onClick={() => setConfirmModal({ show: false, projectId: null, action: null })} style={{ borderRadius: '10px' }}>
+            Hủy bỏ
+          </Button>
+          <Button 
+            variant={confirmModal.action === 'delete' ? "danger" : "success"} 
+            className="px-4 fw-medium text-white" 
+            onClick={confirmModal.action === 'delete' ? executeDelete : executeRestore}
+            style={{ borderRadius: '10px' }}
+          >
+            {confirmModal.action === 'delete' ? t("project.xoaDuAn") : "Khôi phục"}
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>;
 };
 export default ProjectListPage;

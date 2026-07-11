@@ -196,7 +196,7 @@ export default function AuthorListPage() {
               </Row> : <AuthorTable authors={authors} loading={loadingAuthors} error={errorAuthors} onRetry={() => fetchAuthors()} startIndex={startIndex} />}
         </div>
 
-        {authors.length > 0 && totalPagesCount > 1 && <AdminPagination totalItems={totalAuthors} currentPage={pageVal} limit={limitVal} onPageChange={handlePageChange} entityName="tác giả" />}
+        {authors.length > 0 && totalPagesCount > 1 && <AdminPagination totalItems={totalAuthors} currentPage={pageVal} limit={limitVal} onPageChange={handlePageChange} entityName={t("author.tacGia")} />}
       </Container>
     </div>;
 }

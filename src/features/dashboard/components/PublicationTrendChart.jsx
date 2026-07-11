@@ -151,7 +151,7 @@ export default function PublicationTrendChart({
       }} />
           <span className="text-muted-custom" style={{
         fontSize: '0.65rem'
-      }}>{s.label ?? `Series ${i + 1}`}</span>
+      }}>{s.label ? t(s.label, s.label) : `Series ${i + 1}`}</span>
         </div>)}
     </div> : null;
   const description = <>

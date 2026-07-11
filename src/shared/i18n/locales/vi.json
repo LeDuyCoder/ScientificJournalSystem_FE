@@ -534,7 +534,8 @@
     "tongCitationsTrenTrangHienTai": "Tổng citations trên trang hiện tại",
     "danhSachNhaKhoaHocTacGia": "Danh sách Nhà khoa học & Tác giả",
     "traCuuThongTinChiSoHocThuatHin": "Tra cứu thông tin, chỉ số học thuật h-index, số trích dẫn và các công trình khoa học của các tác giả hàng đầu.",
-    "timTheoTenVienNghienCuuTuKhoa": "Tìm theo tên, viện nghiên cứu, từ khóa..."
+    "timTheoTenVienNghienCuuTuKhoa": "Tìm theo tên, viện nghiên cứu, từ khóa...",
+    "tacGia": "Tác giả"
   },
   "catalog": {
     "khongCoCategoryPhuHop": "Không có category phù hợp",
@@ -589,7 +590,10 @@
     "timKiemDanhMucBaiBao": "Tìm kiếm danh mục, bài báo...",
     "chaoMungBanDenVoiResearchpulse": "Chào mừng bạn đến với ResearchPulse!",
     "khamPhaXuHuongXepHangTapChiVaC": "Khám phá xu hướng, xếp hạng tạp chí và các bài báo khoa học.",
-    "taoProject": "Tạo Project"
+    "taoProject": "Tạo Project",
+    "trang": "Trang",
+    "sau": "Sau",
+    "soBaiBaoXuatBan": "Số bài báo xuất bản"
   },
   "journal": {
     "khongTheTaiDanhSachDuAnVuiLong": "Không thể tải danh sách dự án. Vui lòng thử lại!",
@@ -919,11 +923,50 @@
     "quanLyCacKeywordWatchlistsPhan": "Quản lý các keyword watch-lists, phân tích xu hướng xuất bản và giám sát bài báo khoa học.",
     "timKiemDuAn": "Tìm kiếm dự án...",
     "tongSoDuAn": "Tổng số dự án:",
-    "dangHoatDong": "Đang hoạt động:",
+    "dangHoatDong": "Đang hoạt động",
     "banChuaCoDuAnNao": "Bạn chưa có dự án nào",
     "taoDuAnDauTienDeBatDauTheoDoiT": "Tạo dự án đầu tiên để bắt đầu theo dõi từ khóa và cập nhật bài báo khoa học.",
     "duAnXemGanDay": "Dự án xem gần đây",
-    "tatCaDuAn": "Tất cả dự án ("
+    "tatCaDuAn": "Tất cả dự án (",
+    "thanhVienDuAn": "Thành viên dự án",
+    "quanLyNhungNguoiCoQuyen": "Quản lý những người có quyền truy cập vào dự án này.",
+    "themThanhVien": "Thêm thành viên",
+    "duAnNayChuaCoThanhVien": "Dự án này chưa có thành viên nào khác.",
+    "daMoi": "Đã mời",
+    "nguoiDung": "Người dùng",
+    "datLamAdmin": "Đặt làm Admin",
+    "datLamMember": "Đặt làm Member",
+    "datLamViewer": "Đặt làm Viewer",
+    "huyLoiMoi": "Hủy lời mời",
+    "xoaThanhVien": "Xóa thành viên",
+    "moiThanhVienMoi": "Mời thành viên mới",
+    "themNguoiCongTac": "Thêm người cộng tác vào dự án của bạn.",
+    "diaChiEmail": "Địa chỉ Email",
+    "nhapEmailNguoiMuonMoi": "Nhập email của người muốn mời...",
+    "vaiTro": "Vai trò",
+    "quanTriVien": "Quản trị viên",
+    "coToanQuyenThietLap": "Có toàn quyền thiết lập và quản lý dự án.",
+    "thanhVien": "Thành viên",
+    "coThePhanTich": "Có thể phân tích và thêm bài báo.",
+    "nguoiXem": "Người xem",
+    "chiCoTheXemBaoCao": "Chỉ có thể xem các báo cáo và biểu đồ.",
+    "dangGui": "Đang gửi...",
+    "xacNhanThamGiaDuAn": "Xác nhận tham gia dự án",
+    "banDaDuocMoiThamGia": "Bạn đã được mời tham gia vào một dự án nghiên cứu trên hệ thống.",
+    "tuChoi": "Từ chối",
+    "dangXuLy": "Đang xử lý...",
+    "chapNhanLoiMoi": "Chấp nhận lời mời",
+    "denTrangDuAn": "Đến trang dự án",
+    "quayLaiTrangChu": "Quay lại trang chủ",
+    "loiXacNhan": "Lỗi xác nhận",
+    "daXayRaLoiKhiXacNhan": "Đã xảy ra lỗi khi xác nhận lời mời.",
+    "vaoDuAn": "Vào dự án",
+    "xoaThanhVienTitle": "Xóa thành viên",
+    "banCoChacMuonXoaThanhVien": "Bạn có chắc chắn muốn xóa thành viên này / hủy lời mời khỏi dự án không?",
+    "xoa": "Xóa",
+    "taoBoi": "Tạo bởi",
+    "chuSoHuu": "Chủ sở hữu",
+    "tapChi": "Tạp chí"
   },
   "topic": {
     "khongTheTaiThongTinTopic": "Không thể tải thông tin topic.",
@@ -1089,5 +1132,10 @@
     "phanBoTapChiTheoQuocGia": "Phân bố Tạp chí theo Quốc gia",
     "xemThongKeSoLuongAnPhamKhoaHoc": "Xem thống kê số lượng ấn phẩm khoa học và nhà xuất bản phân bố trên toàn thế giới.",
     "loiTaiDuLieu": "Lỗi tải dữ liệu:"
+  },
+  "pagination": {
+    "showing": "Hiển thị",
+    "to": "đến",
+    "of": "của"
   }
 }

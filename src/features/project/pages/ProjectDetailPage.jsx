@@ -8,10 +8,14 @@ import KeywordWatchList from '../../keyword/components/KeywordWatchList';
 import AddKeywordModal from '../../keyword/components/AddKeywordModal';
 import ManageKeywordsModal from '../../keyword/components/ManageKeywordsModal';
 import UpgradePlanModal from '../components/UpgradePlanModal';
+import ProjectMembersList from '../components/ProjectMembersList';
+import InviteMemberModal from '../components/InviteMemberModal';
 import { Icon } from '@iconify/react';
+import { Modal } from 'react-bootstrap';
 import Header from '../../landing/components/Header';
 import PrimaryButton from '../../../shared/components/Button/PrimaryButton';
 import projectService from '../../project/services/projectService';
+import useAuth from '../../auth/hooks/useAuth';
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, PieChart, Pie, Cell } from 'recharts';
 const ProjectDetailPage = () => {
   const { t: _t } = useTranslation();
@@ -19,6 +23,8 @@ const ProjectDetailPage = () => {
     id: projectId
   } = useParams();
   const navigate = useNavigate();
+  const auth = useAuth();
+  const currentUser = auth?.user;
   const {
     project,
     watchArticles,
@@ -39,9 +45,17 @@ const ProjectDetailPage = () => {
   const [showAddModal, setShowAddModal] = useState(false);
   const [showManageModal, setShowManageModal] = useState(false);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
+  const [showInviteModal, setShowInviteModal] = useState(false);
+  const [confirmModal, setConfirmModal] = useState({ show: false, userId: null });
+  
   const [overviewData, setOverviewData] = useState(null);
   const [overviewLoading, setOverviewLoading] = useState(false);
   const [overviewError, setOverviewError] = useState(null);
+  
+  const [members, setMembers] = useState([]);
+  const [membersLoading, setMembersLoading] = useState(false);
+  const [membersActionLoading, setMembersActionLoading] = useState(false);
+
   const chartColors = ['#ff702f', '#ff9f68', '#ffc09b', '#334155', '#64748b', '#94a3b8'];
   const fetchProjectOverview = useCallback(async () => {
     if (!projectId) return;
@@ -60,6 +74,71 @@ const ProjectDetailPage = () => {
   useEffect(() => {
     fetchProjectOverview();
   }, [fetchProjectOverview]);
+
+  const fetchProjectMembers = useCallback(async () => {
+    if (!projectId) return;
+    setMembersLoading(true);
+    try {
+      const data = await projectService.getProjectMembers(projectId);
+      setMembers(data || []);
+    } catch (err) {
+      console.error('Error fetching project members', err);
+    } finally {
+      setMembersLoading(false);
+    }
+  }, [projectId]);
+
+  useEffect(() => {
+    if (activeTab === 'members') {
+      fetchProjectMembers();
+    }
+  }, [activeTab, fetchProjectMembers]);
+
+  const handleInviteMember = async (email, role) => {
+    setMembersActionLoading(true);
+    try {
+      await projectService.inviteProjectMember(projectId, email, role);
+      setShowInviteModal(false);
+      fetchProjectMembers();
+    } catch (err) {
+      console.error('Error inviting member', err);
+      alert(err.response?.data?.message || 'Có lỗi xảy ra khi mời thành viên.');
+    } finally {
+      setMembersActionLoading(false);
+    }
+  };
+
+  const handleChangeRole = async (userId, role) => {
+    setMembersActionLoading(true);
+    try {
+      await projectService.updateProjectMemberRole(projectId, userId, role);
+      fetchProjectMembers();
+    } catch (err) {
+      console.error('Error updating role', err);
+      alert('Không thể cập nhật quyền.');
+    } finally {
+      setMembersActionLoading(false);
+    }
+  };
+
+  const handleRemoveMember = (userId) => {
+    setConfirmModal({ show: true, userId });
+  };
+
+  const confirmRemoveMember = async () => {
+    if (!confirmModal.userId) return;
+    setMembersActionLoading(true);
+    setConfirmModal({ show: false, userId: null });
+    try {
+      await projectService.removeProjectMember(projectId, confirmModal.userId);
+      fetchProjectMembers();
+    } catch (err) {
+      console.error('Error removing member', err);
+      alert('Không thể xóa thành viên.');
+    } finally {
+      setMembersActionLoading(false);
+    }
+  };
   const formatNumber = value => Number(value || 0).toLocaleString('vi-VN');
   const formatDate = value => {
     if (!value) return t("author.chuaCapNhat");
@@ -482,6 +561,14 @@ const ProjectDetailPage = () => {
               <Icon icon="lucide:key" width="18" className="me-2" />{t("project.keywordsGiamSat")}{keywordCount})
             </button>
           </li>
+          <li className="nav-item">
+            <button className={`nav-link border-0 bg-transparent px-0 pb-3 fw-medium ${activeTab === 'members' ? 'active' : 'text-muted-custom'}`} onClick={() => setActiveTab('members')} style={activeTab === 'members' ? {
+            color: 'var(--primary)',
+            borderBottom: '2px solid var(--primary)'
+          } : undefined}>
+              <Icon icon="lucide:users" width="18" className="me-2" />{t("project.thanhVien", "Thành viên")}
+            </button>
+          </li>
         </ul>
 
         {/* Tab Content */}
@@ -562,6 +649,18 @@ const ProjectDetailPage = () => {
               
               {renderPagination('keywords')}
             </div>}
+            
+          {activeTab === 'members' && (
+            <ProjectMembersList 
+              members={members} 
+              loading={membersLoading} 
+              onInviteClick={() => setShowInviteModal(true)}
+              onChangeRole={handleChangeRole}
+              onRemoveMember={handleRemoveMember}
+              actionLoading={membersActionLoading}
+              currentUser={currentUser}
+            />
+          )}
         </div>
       </div>
 
@@ -569,6 +668,32 @@ const ProjectDetailPage = () => {
       <AddKeywordModal show={showAddModal} onHide={() => setShowAddModal(false)} onAdd={addKeywordWatch} actionLoading={actionLoading} />
 
       <ManageKeywordsModal show={showManageModal} onHide={() => setShowManageModal(false)} watchedKeywords={watchedKeywords} onRemove={removeKeywordWatch} actionLoading={actionLoading} />
+
+      <InviteMemberModal 
+        show={showInviteModal} 
+        onHide={() => setShowInviteModal(false)} 
+        onInvite={handleInviteMember} 
+        actionLoading={membersActionLoading} 
+      />
+
+      <Modal show={confirmModal.show} onHide={() => setConfirmModal({ show: false, userId: null })} centered>
+        <Modal.Header closeButton className="border-0 pb-0">
+          <Modal.Title className="fw-bold text-main">
+            {t("project.xoaThanhVienTitle", "Xóa thành viên")}
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p className="text-muted-custom">{t("project.banCoChacMuonXoaThanhVien", "Bạn có chắc chắn muốn xóa thành viên này / hủy lời mời khỏi dự án không?")}</p>
+        </Modal.Body>
+        <Modal.Footer className="border-0 pt-0">
+          <PrimaryButton variant="outline" className="px-4" onClick={() => setConfirmModal({ show: false, userId: null })}>
+            {t("admin.huy", "Hủy")}
+          </PrimaryButton>
+          <button className="btn btn-danger px-4" onClick={confirmRemoveMember} style={{ fontWeight: 600, borderRadius: '12px' }}>
+            {t("project.xoa", "Xóa")}
+          </button>
+        </Modal.Footer>
+      </Modal>
 
       <UpgradePlanModal show={showUpgradeModal} onHide={() => setShowUpgradeModal(false)} projectId={projectId} onSuccess={() => {
       fetchProjectOverview();

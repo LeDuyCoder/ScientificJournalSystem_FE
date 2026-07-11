@@ -534,7 +534,8 @@
     "tongCitationsTrenTrangHienTai": "ページの引用",
     "danhSachNhaKhoaHocTacGia": "科学者・著者一覧",
     "traCuuThongTinChiSoHocThuatHin": "情報の調査,学術指数 h-index,引用数,そして主要な著者の科学作品.",
-    "timTheoTenVienNghienCuuTuKhoa": "名前や研究所の キーワードを検索する"
+    "timTheoTenVienNghienCuuTuKhoa": "名前や研究所の キーワードを検索する",
+    "tacGia": "著者"
   },
   "catalog": {
     "khongCoCategoryPhuHop": "適切なカテゴリーはありません",
@@ -577,7 +578,7 @@
     "luuTru": "保存",
     "xemTatCa": "続きを見る →",
     "chuaCoProjectNao": "プロジェクトはありません",
-    "truoc": "← 前",
+    "truoc": "← 前へ",
     "projectsGanDay": "最近のプロジェクト",
     "bangXepHang": "ランキング表 →",
     "chuaCoDuLieuTacGia": "著作権データはありません",
@@ -589,7 +590,10 @@
     "timKiemDanhMucBaiBao": "記事やカテゴリー検索",
     "chaoMungBanDenVoiResearchpulse": "ロープを押す",
     "khamPhaXuHuongXepHangTapChiVaC": "傾向を調査し 雑誌や論文を評価する",
-    "taoProject": "プロジェクトを作成する"
+    "taoProject": "プロジェクトを作成する",
+    "trang": "ページ",
+    "sau": "次へ",
+    "soBaiBaoXuatBan": "出版された論文数"
   },
   "journal": {
     "khongTheTaiDanhSachDuAnVuiLong": "プロジェクトリストをダウンロードできないよ またやってみてください",
@@ -919,11 +923,50 @@
     "quanLyCacKeywordWatchlistsPhan": "キーワードウォッチリストを管理し,出版傾向分析し,科学論文を監視する.",
     "timKiemDuAn": "プロジェクトを探して...",
     "tongSoDuAn": "プロジェクト総額:",
-    "dangHoatDong": "動作する:",
+    "dangHoatDong": "アクティブ",
     "banChuaCoDuAnNao": "計画はない",
     "taoDuAnDauTienDeBatDauTheoDoiT": "キーワードを追跡し 科学論文を更新する最初のプロジェクトを 作ります",
     "duAnXemGanDay": "プロジェクトを最近見ました",
-    "tatCaDuAn": "プロジェクト全体 ("
+    "tatCaDuAn": "プロジェクト全体 (",
+    "thanhVienDuAn": "プロジェクトメンバー",
+    "quanLyNhungNguoiCoQuyen": "このプロジェクトへのアクセス権を持つユーザーを管理します。",
+    "themThanhVien": "メンバーを追加",
+    "duAnNayChuaCoThanhVien": "このプロジェクトにはまだ他のメンバーがいません。",
+    "daMoi": "招待済み",
+    "nguoiDung": "ユーザー",
+    "datLamAdmin": "管理者として設定",
+    "datLamMember": "メンバーとして設定",
+    "datLamViewer": "閲覧者として設定",
+    "huyLoiMoi": "招待をキャンセル",
+    "xoaThanhVien": "メンバーを削除",
+    "moiThanhVienMoi": "新しいメンバーを招待",
+    "themNguoiCongTac": "プロジェクトに共同作業者を追加します。",
+    "diaChiEmail": "メールアドレス",
+    "nhapEmailNguoiMuonMoi": "招待する人のメールアドレスを入力...",
+    "vaiTro": "役割",
+    "quanTriVien": "管理者",
+    "coToanQuyenThietLap": "プロジェクトの設定と管理の完全なアクセス権があります。",
+    "thanhVien": "メンバー",
+    "coThePhanTich": "記事を分析および追加できます。",
+    "nguoiXem": "閲覧者",
+    "chiCoTheXemBaoCao": "レポートとチャートのみを表示できます。",
+    "dangGui": "送信中...",
+    "xacNhanThamGiaDuAn": "プロジェクト参加の確認",
+    "banDaDuocMoiThamGia": "システム上の研究プロジェクトへの参加に招待されました。",
+    "tuChoi": "拒否",
+    "dangXuLy": "処理中...",
+    "chapNhanLoiMoi": "招待を承認する",
+    "denTrangDuAn": "プロジェクトページへ",
+    "quayLaiTrangChu": "ホームに戻る",
+    "loiXacNhan": "確認エラー",
+    "daXayRaLoiKhiXacNhan": "招待の確認中にエラーが発生しました。",
+    "vaoDuAn": "プロジェクトに入る",
+    "xoaThanhVienTitle": "メンバーを削除",
+    "banCoChacMuonXoaThanhVien": "このメンバーをプロジェクトから削除/招待をキャンセルしてもよろしいですか？",
+    "xoa": "削除",
+    "taoBoi": "作成者",
+    "chuSoHuu": "所有者",
+    "tapChi": "ジャーナル"
   },
   "topic": {
     "khongTheTaiThongTinTopic": "話題の情報は載せられない",
@@ -1089,5 +1132,10 @@
     "phanBoTapChiTheoQuocGia": "国別雑誌の配布",
     "xemThongKeSoLuongAnPhamKhoaHoc": "論文の発行と科学出版の統計を見てください",
     "loiTaiDuLieu": "データをダウンロードしたエラー:"
+  },
+  "pagination": {
+    "showing": "表示中",
+    "to": "から",
+    "of": "のうち"
   }
 }

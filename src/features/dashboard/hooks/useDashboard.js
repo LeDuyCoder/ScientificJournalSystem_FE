@@ -96,7 +96,7 @@ export default function useDashboard(currentUser, trendRange = '5') {
         years: rows.map((item) => item.year),
         series: [
           {
-            label: 'Số bài báo xuất bản',
+            label: 'dashboard.soBaiBaoXuatBan',
             data: rows.map((item) => item.totalPublications ?? 0),
           },
         ],

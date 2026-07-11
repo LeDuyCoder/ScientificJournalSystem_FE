@@ -1,18 +1,7 @@
-import { t } from "i18next";
 import { useTranslation } from "react-i18next";
 import { useState, useRef, useEffect } from 'react';
 import { Icon } from '@iconify/react';
 import './ChartRangeDropdown.css';
-const OPTIONS = [{
-  label: t("dashboard.5NamGanNhat"),
-  value: '5'
-}, {
-  label: t("dashboard.10NamGanNhat"),
-  value: '10'
-}, {
-  label: t("dashboard.tatCa"),
-  value: 'all'
-}];
 export default function ChartRangeDropdown({
   value,
   onChange
@@ -20,6 +9,17 @@ export default function ChartRangeDropdown({
   const {
     t
   } = useTranslation();
+
+  const OPTIONS = [{
+    label: t("dashboard.5NamGanNhat"),
+    value: '5'
+  }, {
+    label: t("dashboard.10NamGanNhat"),
+    value: '10'
+  }, {
+    label: t("dashboard.tatCa"),
+    value: 'all'
+  }];
   const [isOpen, setIsOpen] = useState(false);
   const wrapperRef = useRef(null);
   useEffect(() => {

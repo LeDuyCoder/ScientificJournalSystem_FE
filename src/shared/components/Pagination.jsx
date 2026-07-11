@@ -1,5 +1,6 @@
 import PaginationControls from './PaginationControls';
 import './Pagination.css';
+import { useTranslation } from 'react-i18next';
 
 /**
  * Reusable Pagination Component for data lists.
@@ -18,6 +19,7 @@ export default function Pagination({
   onPageChange,
   entityName = 'items'
 }) {
+  const { t } = useTranslation();
   const totalPages = Math.max(1, Math.ceil(totalItems / limit));
   const startItem = totalItems === 0 ? 0 : (currentPage - 1) * limit + 1;
   const endItem = Math.min(totalItems, currentPage * limit);
@@ -29,8 +31,8 @@ export default function Pagination({
   return (
     <div className="admin-pagination-bar">
       <div className="text-muted-custom small">
-        Showing <span className="fw-semibold text-main">{startItem}</span> to{' '}
-        <span className="fw-semibold text-main">{endItem}</span> of{' '}
+        {t('pagination.showing', 'Showing')} <span className="fw-semibold text-main">{startItem}</span> {t('pagination.to', 'to')}{' '}
+        <span className="fw-semibold text-main">{endItem}</span> {t('pagination.of', 'of')}{' '}
         <span className="fw-semibold text-main">{totalItems}</span> {entityName}
       </div>
 
