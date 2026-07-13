@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 /**
  * File source thuộc hệ thống FE ResearchPulse.
  *
@@ -6,7 +7,7 @@
 import { Row, Col, Button, Spinner } from 'react-bootstrap';
 import { Icon } from '@iconify/react';
 import { useNavigate } from 'react-router-dom';
-
+import PrimaryButton from '../../../shared/components/Button/PrimaryButton';
 export default function JournalHero({
   journal,
   isFollowing,
@@ -15,41 +16,67 @@ export default function JournalHero({
   onAddToProject,
   loading
 }) {
+  const {
+    t
+  } = useTranslation();
   const navigate = useNavigate();
-
   if (loading || !journal) {
-    return (
-      <div 
-        className="journal-dark-card p-4 p-md-5 mb-4 position-relative overflow-hidden"
-        style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '16px' }}
-      >
-        <Row className="gy-4">
+    return <section className="journal-surface journal-hero-card mb-4" aria-label="Đang tải thông tin tạp chí">
+        <Row className="gy-4 journal-hero-content">
           <Col lg={8}>
             <div className="d-flex gap-2 mb-3">
-              <div className="skeleton-shimmer" style={{ width: '60px', height: '24px', borderRadius: '12px' }} />
-              <div className="skeleton-shimmer" style={{ width: '100px', height: '24px', borderRadius: '12px' }} />
+              <div className="skeleton-shimmer" style={{
+              width: '60px',
+              height: '24px',
+              borderRadius: '6px'
+            }} />
+              <div className="skeleton-shimmer" style={{
+              width: '100px',
+              height: '24px',
+              borderRadius: '6px'
+            }} />
             </div>
-            <div className="skeleton-shimmer mb-3" style={{ width: '80%', height: '40px', borderRadius: '4px' }} />
-            <div className="skeleton-shimmer mb-4" style={{ width: '95%', height: '60px', borderRadius: '4px' }} />
-            <div className="d-flex gap-2">
-              {[1, 2, 3].map(i => (
-                <div key={i} className="skeleton-shimmer" style={{ width: '80px', height: '32px', borderRadius: '16px' }} />
-              ))}
+            <div className="skeleton-shimmer mb-3" style={{
+            width: '80%',
+            height: '44px'
+          }} />
+            <div className="skeleton-shimmer mb-4" style={{
+            width: '95%',
+            height: '64px'
+          }} />
+            <div className="d-flex gap-2 flex-wrap">
+              {[1, 2, 3].map(i => <div key={i} className="skeleton-shimmer" style={{
+              width: '92px',
+              height: '32px',
+              borderRadius: '999px'
+            }} />)}
             </div>
           </Col>
           <Col lg={4} className="text-lg-end">
-            <div className="skeleton-shimmer mb-2 ms-lg-auto" style={{ width: '120px', height: '48px', borderRadius: '4px' }} />
-            <div className="skeleton-shimmer mb-3 ms-lg-auto" style={{ width: '160px', height: '20px', borderRadius: '4px' }} />
-            <div className="d-flex gap-2 justify-content-lg-end">
-              <div className="skeleton-shimmer" style={{ width: '110px', height: '38px', borderRadius: '6px' }} />
-              <div className="skeleton-shimmer" style={{ width: '140px', height: '38px', borderRadius: '6px' }} />
+            <div className="skeleton-shimmer mb-2 ms-lg-auto" style={{
+            width: '150px',
+            height: '72px'
+          }} />
+            <div className="skeleton-shimmer mb-3 ms-lg-auto" style={{
+            width: '160px',
+            height: '20px'
+          }} />
+            <div className="d-flex gap-2 justify-content-lg-end flex-wrap">
+              <div className="skeleton-shimmer" style={{
+              width: '110px',
+              height: '38px',
+              borderRadius: '6px'
+            }} />
+              <div className="skeleton-shimmer" style={{
+              width: '140px',
+              height: '38px',
+              borderRadius: '6px'
+            }} />
             </div>
           </Col>
         </Row>
-      </div>
-    );
+      </section>;
   }
-
   const {
     display_name,
     description,
@@ -62,173 +89,59 @@ export default function JournalHero({
     subject_categories = [],
     is_following
   } = journal;
-
-  const handleCategoryClick = (categoryName) => {
+  const handleCategoryClick = categoryName => {
     if (!categoryName) return;
     navigate(`/keywords?keyword=${encodeURIComponent(categoryName)}`);
   };
-
-  return (
-    <div className="journal-dark-card p-4 p-md-5 mb-4 position-relative overflow-hidden" 
-         style={{ 
-           borderRadius: '16px',
-           backgroundColor: 'var(--bg-card)',
-           border: '1px solid var(--border)',
-           borderTop: '3px solid var(--primary)', 
-           boxShadow: '0 8px 30px rgba(0, 0, 0, 0.04)' 
-         }}>
-      {/* Decorative background glow */}
-      <div className="position-absolute" style={{
-        top: '-150px',
-        right: '-150px',
-        width: '400px',
-        height: '400px',
-        background: 'radial-gradient(circle, var(--primary-light) 0%, transparent 70%)',
-        zIndex: 0,
-        pointerEvents: 'none'
-      }} />
-
-      <Row className="gy-4 align-items-start position-relative" style={{ zIndex: 1 }}>
+  return <section className="journal-surface journal-hero-card mb-4" aria-labelledby="journal-detail-title">
+      <Row className="gy-4 align-items-start journal-hero-content">
         <Col lg={8} md={7}>
-          {/* Badges */}
-          <div className="d-flex flex-wrap gap-2 mb-3">
-            {quartile && (
-              <span 
-                className="px-3 py-2 font-display text-main border-secondary"
-                style={{ 
-                  fontWeight: 700, 
-                  borderRadius: '6px',
-                }}
-              >
-                {quartile}
-              </span>
-            )}
-            {is_open_access && (
-              <badge 
-                className="px-3 py-2" 
-                style={{ 
-                  backgroundColor: 'rgba(25, 135, 84, 0.08)', 
-                  color: '#198754', 
-                  border: '1px solid rgba(25, 135, 84, 0.2)', 
-                  borderRadius: '6px' 
-                }}
-              >
-                Open Access
-              </badge>
-            )}
-            {publisher_name && (
-              <span 
-className="px-3 py-2 font-display text-main border-secondary"
-                style={{ 
-                  fontWeight: 700, 
-                  borderRadius: '6px',
-                }}
-              >
-                {publisher_name}
-              </span>
-            )}
+          <div className="journal-meta-line">
+            {quartile && <span>{quartile}</span>}
+            {is_open_access && <span>Open Access</span>}
+            {publisher_name && <span>{publisher_name}</span>}
           </div>
 
-          {/* Title */}
-          <h1 className="font-display fw-bold text-main mb-3" style={{ fontSize: '2.5rem', letterSpacing: '-0.5px' }}>
+          <h1 id="journal-detail-title" className="journal-title">
             {display_name}
           </h1>
 
-          {/* Description */}
-          <p className="text-muted-custom mb-4 leading-relaxed" style={{ fontSize: '1.05rem', maxWidth: '750px' }}>
-            {description || 'Chưa có mô tả chi tiết phạm vi nghiên cứu cho tạp chí này.'}
+          <p className="journal-description">
+            {description || t("journal.chuaCoMoTaChiTietPhamViNghienC")}
           </p>
 
-          {/* Subject Category tags */}
-          <div className="d-flex flex-wrap gap-2">
-            {subject_categories.map((cat, idx) => (
-              <span 
-                key={cat.id || idx} 
-                className="px-3 py-1 rounded-pill font-display text-main fw-semibold"
-                role="button"
-                tabIndex={0}
-                onClick={() => handleCategoryClick(cat.display_name)}
-                onKeyDown={(e) => e.key === 'Enter' && handleCategoryClick(cat.display_name)}
-                title={`Tìm keyword ${cat.display_name}`}
-                
-              style={{ backgroundColor: 'rgba(0,0,0,0.07)', border: '1px solid rgba(0,0,0,0.10)' }}
-              >
-                {cat.display_name}
-              </span>
-            ))}
-          </div>
+          {subject_categories.length > 0 && <div className="journal-category-list" aria-label="Chủ đề nghiên cứu">
+              {subject_categories.map((cat, idx) => <span key={cat.id || idx} className="journal-category-chip" role="button" tabIndex={0} onClick={() => handleCategoryClick(cat.display_name)} onKeyDown={e => e.key === 'Enter' && handleCategoryClick(cat.display_name)} title={`Tìm keyword ${cat.display_name}`}>
+                  {cat.display_name}
+                </span>)}
+            </div>}
         </Col>
 
-        {/* Metric and Action Buttons */}
         <Col lg={4} md={5} className="text-md-end text-start mt-lg-2">
-          {metric_value ? (
-            <div className="mb-4">
-              <div className="font-display fw-bold text-main d-inline-block" style={{ fontSize: '4rem', lineHeight: '1' }}>
+          {metric_value ? <div className="journal-metric-panel ms-md-auto mb-3">
+              <div className="journal-metric-value">
                 {metric_value}
               </div>
-              <div className="font-display text-muted-custom text-uppercase fw-semibold" style={{ fontSize: '1rem', letterSpacing: '1px' }}>
+              <div className="journal-metric-label">
                 {metric_name} {metric_year}
               </div>
-            </div>
-          ) : (
-            <div className="mb-4 text-muted-custom italic">
-              Chưa có dữ liệu ranking
-            </div>
-          )}
+            </div> : <div className="journal-metric-panel ms-md-auto mb-3">
+              <span className="text-muted-custom">{t("journal.chuaCoDuLieuRanking")}</span>
+            </div>}
 
-          {/* Buttons */}
-          <div className="d-flex flex-wrap gap-2 justify-content-md-end align-items-center">
-            <Button
-              variant={is_following ? 'outline-success' : 'outline-primary'}
-              onClick={onFollow}
-              disabled={isFollowing}
-              className="d-flex align-items-center gap-2 px-3 py-2"
-              style={{
-                borderRadius: '8px',
-                border: is_following ? '1px solid rgba(25, 135, 84, 0.3)' : '1px solid var(--primary)',
-                backgroundColor: is_following ? 'rgba(25, 135, 84, 0.05)' : 'var(--bg-main)',
-                color: is_following ? '#198754' : 'var(--primary)',
-                fontSize: '0.9rem',
-                fontWeight: 600
-              }}
-            >
-              {isFollowing ? (
-                <Spinner animation="border" size="sm" variant={is_following ? 'success' : 'primary'} />
-              ) : is_following ? (
-                <>
-                  <Icon icon="lucide:check" width="16" />
-                  Đang theo dõi
-                </>
-              ) : (
-                <>
-                  <Icon icon="lucide:plus" width="16" />
-                  Theo dõi
-                </>
-              )}
+          <div className="journal-action-row">
+            <Button onClick={onFollow} disabled={isFollowing} className={`journal-outline-btn px-3 py-2 ${is_following ? 'is-active' : ''}`}>
+              {isFollowing ? <Spinner animation="border" size="sm" /> : is_following ? <>
+                  <Icon icon="lucide:check" width="16" />{t("journal.dangTheoDoi")}</> : <>
+                  <Icon icon="lucide:plus" width="16" />{t("catalog.theoDoi")}</>}
             </Button>
 
-            <Button
-              onClick={onAddToProject}
-              disabled={isAddingToProject}
-              className="btn-primary-glow d-flex align-items-center gap-2 px-3 py-2 text-white border-0"
-              style={{
-                borderRadius: '8px',
-                fontSize: '0.9rem',
-                fontWeight: 600
-              }}
-            >
-              {isAddingToProject ? (
-                <Spinner animation="border" size="sm" variant="light" />
-              ) : (
-                <>
-                  <Icon icon="lucide:folder-plus" width="16" />
-                  Thêm vào Project
-                </>
-              )}
-            </Button>
+            <PrimaryButton onClick={onAddToProject} disabled={isAddingToProject} className="gap-2 px-3 py-2">
+              {isAddingToProject ? <Spinner animation="border" size="sm" variant="light" /> : <>
+                  <Icon icon="lucide:folder-plus" width="16" />{t("journal.themVaoProject")}</>}
+            </PrimaryButton>
           </div>
         </Col>
       </Row>
-    </div>
-  );
+    </section>;
 }

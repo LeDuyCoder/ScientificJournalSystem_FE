@@ -1,4 +1,4 @@
-﻿/**
+/**
  * File source thuộc hệ thống FE ResearchPulse.
  *
  * File: app\store\authStore.js
@@ -14,6 +14,7 @@ import { create } from 'zustand';
  * - `user`: thông tin user khôi phục từ `/users/me` khi cookie còn hợp lệ.
  */
 export const useAuthStore = create((set) => {
+
   return {
     token: null,
     isAuthenticated: false,
@@ -28,12 +29,15 @@ export const useAuthStore = create((set) => {
      * - Login/refresh token: `loginSuccess(token)`
      * - Khôi phục session bằng cookie: `loginSuccess(null, user)`
      */
-    loginSuccess: (token = null, user = null) => set((state) => ({
-      token: token ?? state.token,
-      user: user ?? state.user,
-      isAuthenticated: Boolean(token ?? state.token ?? user ?? state.user),
-      error: null,
-    })),
+    loginSuccess: (token = null, user = null) => set((state) => {
+      const targetToken = token ?? state.token;
+      return {
+        token: targetToken,
+        user: user ?? state.user,
+        isAuthenticated: Boolean(targetToken ?? user ?? state.user),
+        error: null,
+      };
+    }),
 
     setUser: (user) => set({ user }),
     setLoading: (isLoading) => set({ isLoading }),
@@ -43,12 +47,14 @@ export const useAuthStore = create((set) => {
      * Xóa trạng thái auth trong memory.
      * Việc xóa token trong localStorage/sessionStorage nằm ở `removeToken`.
      */
-    logout: () => set({
-      token: null,
-      isAuthenticated: false,
-      user: null,
-      error: null,
-      isLoading: false,
-    }),
+    logout: () => {
+      return set({
+        token: null,
+        isAuthenticated: false,
+        user: null,
+        error: null,
+        isLoading: false,
+      });
+    },
   };
 });

@@ -1,0 +1,94 @@
+import { useTranslation } from "react-i18next";
+/**
+ * @file AuthorDetailPage.jsx
+ * @description Trang chi tiết hiển thị toàn bộ hồ sơ học thuật của một tác giả cụ thể.
+ */
+
+import { useEffect } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { Container, Row, Col } from 'react-bootstrap';
+import Icon from '../../../shared/components/Icon';
+import Header from '../../landing/components/Header';
+import useAuthors from '../hooks/useAuthors';
+import AuthorProfileHeader from '../components/AuthorProfileHeader';
+import AuthorAreasBreakdown from '../components/AuthorAreasBreakdown';
+import AuthorArticlesSection from '../components/AuthorArticlesSection';
+import PrimaryButton from '../../../shared/components/Button/PrimaryButton';
+import './AuthorDetailPage.css';
+export default function AuthorDetailPage() {
+  const {
+    t
+  } = useTranslation();
+  const {
+    id
+  } = useParams();
+  const navigate = useNavigate();
+  const {
+    currentAuthor,
+    authorArticles,
+    authorBreakdown,
+    loadingAuthorDetail,
+    loadingArticles,
+    loadingAreas,
+    errorAuthorDetail,
+    errorArticles,
+    errorAreas,
+    fetchAuthorDetailsFull,
+    fetchAuthorDetail,
+    fetchAuthorArticles,
+    fetchAuthorAreasBreakdown
+  } = useAuthors();
+  useEffect(() => {
+    if (id) {
+      fetchAuthorDetailsFull(id);
+    }
+  }, [id, fetchAuthorDetailsFull]);
+  const authorName = currentAuthor?.full_name ?? currentAuthor?.display_name ?? currentAuthor?.name ?? t("typeAuthor");
+  return <div className="author-detail-page">
+      <Header />
+
+      <Container>
+        <nav className="author-detail-breadcrumb mb-4" aria-label="breadcrumb">
+          <ol className="breadcrumb">
+            <li className="breadcrumb-item">
+              <span className="author-detail-breadcrumb__link" onClick={() => navigate('/')}>{t("author.tongQuan")}</span>
+            </li>
+            <li className="breadcrumb-item">
+              <span className="author-detail-breadcrumb__link" onClick={() => navigate('/authors')}>{t("author.tacGiaNoiBat")}</span>
+            </li>
+            <li className="breadcrumb-item active author-detail-breadcrumb__current" aria-current="page">
+              {loadingAuthorDetail ? t("common.dangTai") : authorName}
+            </li>
+          </ol>
+        </nav>
+
+        <section className="author-detail-hero">
+          <div className="author-detail-hero__content d-flex flex-column flex-md-row justify-content-between align-items-start gap-3">
+            <div>
+              <div className="author-detail-eyebrow">
+                <Icon icon="lucide:user-round-search" width="17" />
+                <span>Author profile</span>
+              </div>
+              <h1 className="author-detail-title">{loadingAuthorDetail ? t("author.hoSoTacGia") : authorName}</h1>
+              <p className="author-detail-description">{t("author.hoSoHocThuatPhanBoLinhVucNghie")}</p>
+            </div>
+            <PrimaryButton variant="outline" onClick={() => navigate('/authors')} className="px-3 py-2" icon="lucide:arrow-left">{t("author.quayLaiDanhSachTacGia")}</PrimaryButton>
+          </div>
+        </section>
+
+        <Row className="g-4">
+          <Col xs={12} lg={4}>
+            <AuthorProfileHeader author={currentAuthor} loading={loadingAuthorDetail} error={errorAuthorDetail} onRetry={() => id && fetchAuthorDetail(id)} />
+          </Col>
+
+          <Col xs={12} lg={8}>
+            <div className="d-flex flex-column gap-4">
+              <AuthorAreasBreakdown breakdown={authorBreakdown} loading={loadingAreas} error={errorAreas} onRetry={() => id && fetchAuthorAreasBreakdown(id)} />
+
+              <AuthorArticlesSection articles={authorArticles} loading={loadingArticles} error={errorArticles} onRetry={() => id && fetchAuthorArticles(id)} />
+            </div>
+          </Col>
+        </Row>
+      </Container>
+    </div>;
+}

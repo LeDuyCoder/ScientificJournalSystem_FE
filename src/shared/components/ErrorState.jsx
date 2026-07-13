@@ -1,0 +1,92 @@
+import { useTranslation } from "react-i18next";
+// Component hiển thị giao diện báo lỗi (Error State)
+// Dùng để thông báo cho người dùng khi có lỗi kết nối hoặc API thất bại và cho phép click thử lại
+
+import { Button } from 'react-bootstrap';
+import Icon from './Icon';
+
+/**
+ * Thành phần hiển thị thông báo lỗi kèm nút bấm hành động thử lại (Retry).
+ * 
+ * @param {Object} props - Thuộc tính truyền vào component.
+ * @param {string} [props.title='Không thể tải dữ liệu'] - Tiêu đề lỗi chính.
+ * @param {string} [props.message='Vui lòng kiểm tra lại kết nối mạng hoặc thử lại sau.'] - Chi tiết thông báo lỗi.
+ * @param {string} [props.icon='lucide:alert-triangle'] - Icon biểu thị cảnh báo lỗi.
+ * @param {Function} [props.onRetry=null] - Hàm xử lý sự kiện khi bấm nút thử lại.
+ * @param {string} [props.retryLabel='Thử lại'] - Nhãn nút thử lại.
+ * @param {string} [props.className=''] - Lớp CSS tùy chọn bổ sung.
+ * @returns {JSX.Element} Giao diện thông báo lỗi.
+ */
+export default function ErrorState({
+  title,
+  // Tiêu đề lỗi chính
+  message,
+  // Chi tiết thông báo lỗi
+  icon = 'lucide:alert-triangle',
+  // Icon biểu thị cảnh báo lỗi
+  onRetry = null,
+  // Hàm xử lý sự kiện khi bấm nút thử lại
+  retryLabel,
+  // Nhãn nút thử lại
+  className = ''
+}) {
+  const {
+    t
+  } = useTranslation();
+  const resolvedTitle = title || t("common.khongTheTaiDuLieu");
+  const resolvedMessage = message || t("common.vuiLongKiemTraLaiKetNoiMangHoa");
+  const resolvedRetryLabel = retryLabel || t("article.thuLai");
+  const handleRetryClick = event => {
+    const button = event.currentTarget;
+    const ripple = document.createElement('span');
+    const rect = button.getBoundingClientRect();
+    const size = Math.max(rect.width, rect.height);
+    ripple.style.width = ripple.style.height = `${size}px`;
+    ripple.style.left = `${event.clientX - rect.left - size / 2}px`;
+    ripple.style.top = `${event.clientY - rect.top - size / 2}px`;
+    ripple.classList.add('ripple-effect');
+
+    // Clean up previous ripples
+    const existingRipple = button.querySelector('.ripple-effect');
+    if (existingRipple) existingRipple.remove();
+    button.appendChild(ripple);
+    if (onRetry) onRetry(event);
+  };
+  return <div className={`d-flex flex-column align-items-center justify-content-center text-center py-5 px-4 rounded-3 border ${className}`} style={{
+    backgroundColor: 'var(--bg-card)',
+    borderColor: 'var(--border)',
+    minHeight: '260px'
+  }}>
+      {/* Vùng hiển thị Icon cảnh báo màu đỏ nhạt */}
+      <div className="d-flex align-items-center justify-content-center mb-3 text-danger" style={{
+      width: '64px',
+      height: '64px',
+      borderRadius: '50%',
+      backgroundColor: 'rgba(239, 68, 68, 0.08)'
+    }}>
+        <Icon icon={icon} width="30" />
+      </div>
+      
+      {/* Tiêu đề lỗi */}
+      <h3 className="text-main fw-bold mb-2" style={{
+      fontSize: '1.1rem',
+      fontFamily: 'var(--font-display)'
+    }}>
+        {resolvedTitle}
+      </h3>
+      
+      {/* Mô tả lỗi chi tiết */}
+      <p className="text-muted-custom mb-4 mx-auto" style={{
+      fontSize: '0.85rem',
+      maxWidth: '380px',
+      lineHeight: '1.5'
+    }}>
+        {resolvedMessage}
+      </p>
+      
+      {onRetry && <Button className="btn-dark-solid btn-ripple rounded-pill px-4 py-2 text-xs font-bold" onClick={handleRetryClick}>
+          <Icon icon="lucide:rotate-cw" width="12" className="me-1.5" />
+          {resolvedRetryLabel}
+        </Button>}
+    </div>;
+}

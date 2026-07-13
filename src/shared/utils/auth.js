@@ -1,4 +1,4 @@
-﻿/**
+/**
  * File source thuộc hệ thống FE ResearchPulse.
  *
  * File: shared\utils\auth.js
@@ -18,50 +18,55 @@ import { jwtDecode } from 'jwt-decode';
  * giúp logout hoặc xử lý phiên hết hạn sạch hơn.
  */
 export const removeToken = () => {
-  localStorage.removeItem('token');
-  sessionStorage.removeItem('token');
-  localStorage.removeItem('researchpulse_token');
-  sessionStorage.removeItem('researchpulse_token');
+  // Trống, vì Zustand xử lý việc xóa RAM và cookie do BE xử lý
 };
 
 /**
  * Kiểm tra người dùng hiện tại còn phiên đăng nhập hợp lệ hay không.
  *
  * Trường hợp nhanh: Zustand đã có user nên không cần gọi API.
- * Trường hợp F5/reload: Zustand mất dữ liệu, gọi `/users/me` để BE xác thực
+ * Trường hợp F5/reload: Zustand mất dữ liệu, gọi `/auth/check-auth` để BE xác thực
  * bằng cookie HTTP-only và trả lại thông tin user.
  */
 export const isAuthenticated = async () => {
   try {
     const authStore = useAuthStore.getState();
 
-    if (authStore.token && useUserStore.email) {
+    // ưu tiên dev: nếu Zustand đã có trạng thái isAuthenticated hợp lệ thì trả true ngay
+    if (authStore.isAuthenticated && useUserStore.getState().email) {
       return true;
     }
 
-    const res = await api.get("/auth/check-auth");
+    // còn thiếu dữ liệu: gọi BE để xác thực theo luồng HEAD (users/me + fallback)
+    let meResponse;
+    try {
+      meResponse = await api.get('/users/me');
+    } catch (error) {
+      if (error.response?.status === 404) {
+        meResponse = await api.get('/users/profile');
+      } else {
+        throw error;
+      }
+    }
 
-    if (
-      res.status === 200 &&
-      res.data?.authenticated === true
-    ) {
-      const token = res.data.access_token;
-      const decoded = jwtDecode(token);
+    // BE có thể trả payload nhiều format
+    const meData = meResponse?.data?.data ?? meResponse?.data;
 
-      authStore.loginSuccess(token, {
-        id: decoded.id,
-        email: decoded.email,
-        role: decoded.role,
-      });
-
-      useUserStore.getState().setEmail(decoded.email);
-      
+    // Chỉ cần lấy được user payload là coi như authenticated
+    if (meData) {
+      useUserStore.getState().setUser?.(meData);
+      useUserStore.getState().setEmail?.(meData?.email);
+      authStore.loginSuccess(null, meData);
       return true;
     }
+
 
     return false;
+
+
   } catch (error) {
-    useAuthStore.getState().logout();
+    // Nếu dính lỗi 401 triệt để (kể cả sau khi Axios Interceptor đã cố Refresh thất bại)
+    useAuthStore.getState().logout(); // Đảm bảo clear sạch Zustand cũ nếu có
     return false;
   }
 };

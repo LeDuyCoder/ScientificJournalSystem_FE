@@ -1,72 +1,48 @@
-﻿/**
+import { useTranslation } from "react-i18next";
+/**
  * File source thuộc hệ thống FE ResearchPulse.
  *
  * File: features\keywords\components\KeywordArticleItem.jsx
  */
-import { Badge, Button } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 import { Icon } from '@iconify/react';
 
 /**
  * Item hiển thị bài báo liên quan đến keyword.
  */
-export default function KeywordArticleItem({ article, onViewDetail }) {
-  return (
-    <div
-      className="journal-dark-card p-4"
-      style={{
-        backgroundColor: 'var(--bg-card)',
-        border: '1px solid var(--border)',
-        borderRadius: '16px',
-        boxShadow: '0 10px 28px rgba(0,0,0,0.04)',
-      }}
-    >
-      <div className="d-flex align-items-center gap-2 flex-wrap mb-3">
-        {article.publication_year && <Badge className="text-white bg-black px-2 py-1">{article.publication_year}</Badge>}
-        {article.journal_name && (
-          <span className="text-muted-custom d-inline-flex align-items-center gap-1" style={{ fontSize: '0.85rem' }}>
+export default function KeywordArticleItem({
+  article,
+  onViewDetail
+}) {
+  const {
+    t
+  } = useTranslation();
+  return <div className="keyword-article-card">
+      <div className="keyword-article-meta">
+        {article.publication_year && <span className="keyword-article-year">{article.publication_year}</span>}
+        {article.journal_name && <span className="keyword-article-journal">
             <Icon icon="lucide:book-open" width="14" />
             {article.journal_name}
-          </span>
-        )}
-        {article.citations_count > 0 && (
-          <span className="text-muted-custom d-inline-flex align-items-center gap-1" style={{ fontSize: '0.85rem' }}>
+          </span>}
+        {article.citations_count > 0 && <span className="keyword-article-citations">
             <Icon icon="lucide:quote" width="14" />
             {article.citations_count} citations
-          </span>
-        )}
+          </span>}
       </div>
 
-      <h2 className="font-display fw-bold text-main mb-2" style={{ fontSize: '1.15rem', lineHeight: 1.4 }}>
+      <h2 className="keyword-article-item__title">
         {article.title}
       </h2>
 
-      {article.doi && (
-        <p className="text-muted-custom mb-3" style={{ fontSize: '0.88rem' }}>
+      {article.doi && <p className="keyword-article-doi">
           DOI: {article.doi}
-        </p>
-      )}
+        </p>}
 
-      {article.abstract && (
-        <p className="text-muted-custom mb-4" style={{ fontSize: '0.95rem', display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+      {article.abstract && <p className="keyword-article-abstract">
           {article.abstract}
-        </p>
-      )}
+        </p>}
 
-      <Button
-        type="button"
-        onClick={() => onViewDetail && onViewDetail(article.article_id)}
-        className="d-inline-flex align-items-center gap-2"
-        style={{
-          backgroundColor: '#111',
-          color: '#fff',
-          border: '1px solid #111',
-          borderRadius: '10px',
-          fontWeight: 600,
-        }}
-      >
-        Xem chi tiết
-        <Icon icon="lucide:arrow-right" width="16" />
+      <Button type="button" onClick={() => onViewDetail && onViewDetail(article.article_id)} className="keyword-article-action d-inline-flex align-items-center gap-2">{t("journal.xemChiTiet")}<Icon icon="lucide:arrow-right" width="16" />
       </Button>
-    </div>
-  );
+    </div>;
 }

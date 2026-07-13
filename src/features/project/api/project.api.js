@@ -1,4 +1,4 @@
-﻿/**
+/**
  * File source thuộc hệ thống FE ResearchPulse.
  *
  * File: features\project\api\project.api.js
@@ -32,6 +32,15 @@ export const getProjectByIdApi = (id) => {
 };
 
 /**
+ * Get project overview statistics and charts
+ * @param {number|string} id - Project ID
+ * @returns {Promise} Axios promise
+ */
+export const getProjectOverviewApi = (id) => {
+  return api.get(`/projects/${id}/overview`);
+};
+
+/**
  * Update project details by ID
  * @param {number|string} id - Project ID
  * @param {Object} data - { title, subject_area, subject_category_ids, journal_ids }
@@ -48,6 +57,15 @@ export const updateProjectApi = (id, data) => {
  */
 export const deleteProjectApi = (id) => {
   return api.delete(`/projects/${id}`);
+};
+
+/**
+ * Restore a deleted project by ID
+ * @param {number|string} id - Project ID
+ * @returns {Promise} Axios promise
+ */
+export const restoreProjectApi = (id) => {
+  return api.put(`/projects/${id}/restore`);
 };
 
 /**
@@ -89,8 +107,10 @@ export const getTrendingKeywordsApi = (id, limit = 20, sortBy = 'count') => {
  * @param {number|string} id - Project ID
  * @returns {Promise} Axios promise
  */
-export const getWatchedKeywordArticlesApi = (id) => {
-  return api.get(`/projects/${id}/keywords/watch/articles`);
+export const getWatchedKeywordArticlesApi = (id, page = 1, limit = 10, filter = 'all') => {
+  return api.get(`/projects/${id}/keywords/watch/articles`, {
+    params: { page, limit, filter }
+  });
 };
 
 /**
@@ -100,7 +120,7 @@ export const getWatchedKeywordArticlesApi = (id) => {
  * @returns {Promise} Axios promise
  */
 export const watchKeywordsApi = (id, keywords) => {
-  return api.post(`/projects/${id}/keywords/watch`, { keywords });
+  return api.post(`/projects/${id}/keywords/watch`, { keyword_ids: keywords });
 };
 
 /**
@@ -110,7 +130,7 @@ export const watchKeywordsApi = (id, keywords) => {
  * @returns {Promise} Axios promise
  */
 export const updateWatchedKeywordsApi = (id, keywords) => {
-  return api.put(`/projects/${id}/keywords/watch`, { keywords });
+  return api.put(`/projects/${id}/keywords/watch`, { keyword_ids: keywords });
 };
 
 /**
@@ -122,3 +142,66 @@ export const updateWatchedKeywordsApi = (id, keywords) => {
 export const unwatchKeywordApi = (id, keywordId) => {
   return api.delete(`/projects/${id}/keywords/${keywordId}`);
 };
+
+/**
+ * Activate a project to VIP
+ * @param {number|string} id - Project ID
+ * @param {number} coinAmount - Amount of coins to deduct
+ * @returns {Promise} Axios promise
+ */
+export const activateProjectApi = (id, coinAmount) => {
+  return api.put(`/projects/${id}/activate`, { coinAmount });
+};
+
+/**
+ * Get project members list
+ * @param {number|string} id - Project ID
+ * @returns {Promise} Axios promise
+ */
+export const getProjectMembersApi = (id) => {
+  return api.get(`/projects/${id}/members`);
+};
+
+/**
+ * Invite a member to the project
+ * @param {number|string} id - Project ID
+ * @param {string} email - User email
+ * @param {string} role - Role (OWNER, ADMIN, MEMBER, VIEWER)
+ * @returns {Promise} Axios promise
+ */
+export const inviteProjectMemberApi = (id, email, role) => {
+  return api.post(`/projects/${id}/members/invite`, { email, role });
+};
+
+/**
+ * Update project member role
+ * @param {number|string} id - Project ID
+ * @param {string} userId - User ID
+ * @param {string} role - New role
+ * @returns {Promise} Axios promise
+ */
+export const updateProjectMemberRoleApi = (id, userId, role) => {
+  return api.put(`/projects/${id}/members/${userId}/role`, { role });
+};
+
+/**
+ * Remove a member or cancel invitation
+ * @param {number|string} id - Project ID
+ * @param {string} userId - User ID
+ * @returns {Promise} Axios promise
+ */
+export const removeProjectMemberApi = (id, userId) => {
+  return api.delete(`/projects/${id}/members/${userId}`);
+};
+
+/**
+ * Accept project invitation via email token
+ * @param {string} token - JWT Token
+ * @returns {Promise} Axios promise
+ */
+export const acceptProjectInviteApi = (token) => {
+  return api.get(`/projects/project-invite/accept`, {
+    params: { token }
+  });
+};
+

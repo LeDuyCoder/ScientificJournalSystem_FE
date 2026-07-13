@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 /**
  * File source thuộc hệ thống FE ResearchPulse.
  *
@@ -8,13 +9,7 @@ import { Spinner, Button } from 'react-bootstrap';
 import { Icon } from '@iconify/react';
 import { useNavigate } from 'react-router-dom';
 import LoadingSkeleton from '../../../shared/components/LoadingSkeleton';
-
-const MONTH_NAMES = [
-  '', 'Tháng 1', 'Tháng 2', 'Tháng 3', 'Tháng 4',
-  'Tháng 5', 'Tháng 6', 'Tháng 7', 'Tháng 8',
-  'Tháng 9', 'Tháng 10', 'Tháng 11', 'Tháng 12'
-];
-
+import AdminPagination from '../../../shared/components/Pagination';
 export default function VolumesTabContent({
   volumes = [],
   issuesByVolume = {},
@@ -28,14 +23,20 @@ export default function VolumesTabContent({
   onVolumePageChange,
   onIssuePageChange
 }) {
+  const {
+    t
+  } = useTranslation();
+  const MONTH_NAMES = ['', t("journal.thang1"), t("journal.thang2"), t("journal.thang3"), t("journal.thang4"), t("journal.thang5"), t("journal.thang6"), t("journal.thang7"), t("journal.thang8"), t("journal.thang9"), t("journal.thang10"), t("journal.thang11"), t("journal.thang12")];
   const navigate = useNavigate();
   const [expandedVolumes, setExpandedVolumes] = useState({});
 
   /** Toggle accordion mở/đóng volume; trigger lazy load nếu chưa có data */
-  const toggleVolume = (volumeId) => {
+  const toggleVolume = volumeId => {
     const isNowExpanded = !expandedVolumes[volumeId];
-    setExpandedVolumes(prev => ({ ...prev, [volumeId]: isNowExpanded }));
-
+    setExpandedVolumes(prev => ({
+      ...prev,
+      [volumeId]: isNowExpanded
+    }));
     if (isNowExpanded && onVolumeExpand) {
       onVolumeExpand(volumeId);
     }
@@ -44,156 +45,62 @@ export default function VolumesTabContent({
   /** Điều hướng đến trang bài báo theo issue */
   const handleViewArticles = (e, issueId) => {
     e.stopPropagation();
-    const query = new URLSearchParams({ issue_id: issueId });
+    const query = new URLSearchParams({
+      issue_id: issueId
+    });
     if (journalId) query.set('journal_id', journalId);
     navigate(`/articles?${query.toString()}`);
   };
 
-  /** Render compact pagination controls. */
-  const renderPagination = (pagination, onPageChange, prefix) => {
-    const totalPages = pagination?.total_pages || 1;
+  /** Render shared pagination controls with API pagination metadata. */
+  const renderPagination = (pagination, onPageChange, entityName) => {
+    const totalItems = pagination?.total || pagination?.total_items || pagination?.totalItems || 0;
     const currentPage = pagination?.page || 1;
-    if (totalPages <= 1) return null;
-
-    const pages = [];
-    const startPage = Math.max(1, currentPage - 1);
-    const endPage = Math.min(totalPages, currentPage + 1);
-
-    if (startPage > 1) pages.push(1);
-    if (startPage > 2) pages.push('ellipsis-start');
-    for (let page = startPage; page <= endPage; page += 1) pages.push(page);
-    if (endPage < totalPages - 1) pages.push('ellipsis-end');
-    if (endPage < totalPages) pages.push(totalPages);
-
-    const buttonStyle = (active = false) => ({
-      minWidth: '32px',
-      height: '32px',
-      borderRadius: '8px',
-      border: active ? '1px solid #111' : '1px solid rgba(0,0,0,0.10)',
-      backgroundColor: active ? '#111' : 'var(--bg-card)',
-      color: active ? '#fff' : 'var(--text-muted)',
-      fontSize: '0.82rem',
-      fontWeight: 600,
-      cursor: active ? 'default' : 'pointer',
-    });
-
-    return (
-      <div className="d-flex align-items-center justify-content-center gap-1 flex-wrap mt-3">
-        <button type="button" disabled={currentPage <= 1} onClick={() => onPageChange(currentPage - 1)} style={buttonStyle(false)}>
-          <Icon icon="lucide:chevron-left" width="14" />
-        </button>
-        {pages.map((page) => page.toString().startsWith('ellipsis') ? (
-          <span key={`${prefix}-${page}`} className="px-1 text-muted-custom">…</span>
-        ) : (
-          <button key={`${prefix}-${page}`} type="button" onClick={() => onPageChange(page)} style={buttonStyle(page === currentPage)}>
-            {page}
-          </button>
-        ))}
-        <button type="button" disabled={currentPage >= totalPages} onClick={() => onPageChange(currentPage + 1)} style={buttonStyle(false)}>
-          <Icon icon="lucide:chevron-right" width="14" />
-        </button>
-      </div>
-    );
+    const limit = pagination?.limit || pagination?.page_size || 10;
+    if (totalItems <= limit) return null;
+    return <AdminPagination totalItems={totalItems} currentPage={currentPage} limit={limit} onPageChange={onPageChange} entityName={entityName} />;
   };
-
-  // ─── Loading volumes ──────────────────────────────────────────────────
   if (loading) {
-    return (
-      <div
-        className="journal-dark-card p-4"
-        style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '12px' }}
-      >
-        {[1, 2, 3].map(i => (
-          <div key={i} className="mb-3 p-3" style={{ borderBottom: '1px solid var(--border)' }}>
+    return <section className="journal-surface p-4">
+        {[1, 2, 3].map(i => <div key={i} className="mb-3 p-3 border-bottom">
             <LoadingSkeleton width="200px" height="24px" className="mb-2" />
             <LoadingSkeleton width="120px" height="16px" />
-          </div>
-        ))}
-      </div>
-    );
+          </div>)}
+      </section>;
   }
-
-  // ─── Error volumes ─────────────────────────────────────────────────────
   if (error) {
-    return (
-      <div
-        className="journal-dark-card p-5 text-center"
-        style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '12px' }}
-      >
-        <Icon icon="lucide:alert-triangle" width="40" className="mb-3 text-danger" />
-        <p className="mb-0 text-muted-custom">Không thể tải danh sách volumes. Vui lòng thử lại.</p>
-      </div>
-    );
+    return <section className="journal-surface journal-empty-state">
+        <Icon icon="lucide:alert-triangle" width="36" className="text-danger" />
+        <p className="mb-0">{t("journal.khongTheTaiDanhSachVolumesVuiL")}</p>
+      </section>;
   }
-
-  // ─── Empty volumes ────────────────────────────────────────────────────
   if (!volumes || volumes.length === 0) {
-    return (
-      <div
-        className="journal-dark-card p-5 text-center text-muted-custom"
-        style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '12px' }}
-      >
-        <Icon icon="lucide:folder-x" width="40" className="mb-3 text-muted-custom" />
-        <p className="mb-0">Journal này chưa có dữ liệu volume.</p>
-      </div>
-    );
+    return <section className="journal-surface journal-empty-state">
+        <Icon icon="lucide:folder-x" width="36" />
+        <p className="mb-0">{t("journal.journalNayChuaCoDuLieuVolume")}</p>
+      </section>;
   }
+  return <div className="journal-volume-list">
+      {volumes.map(vol => {
 
-  return (
-    <div className="d-flex flex-column gap-3">
-      {volumes.map((vol) => {
-        const volumeId = vol.volume_id || vol.id;
-        const volumeYear = vol.publication_year || vol.year;
-        const isExpanded = !!expandedVolumes[volumeId];
-        const issues = issuesByVolume[volumeId];
-        const issueError = issueErrors[volumeId];
-        const issuePagination = issuePaginationByVolume[volumeId];
-
-        return (
-          <div
-            key={volumeId}
-            className="journal-dark-card overflow-hidden"
-            style={{
-              borderRadius: '12px',
-              backgroundColor: 'var(--bg-card)',
-              transition: 'all 0.2s ease',
-              border: isExpanded ? '1.5px solid rgba(0,0,0,0.18)' : '1px solid var(--border)'
-            }}
-          >
-            {/* Volume Header */}
-            <div
-              className="p-3 d-flex align-items-center justify-content-between"
-              style={{ cursor: 'pointer', userSelect: 'none' }}
-              onClick={() => toggleVolume(volumeId)}
-            >
-              <div className="d-flex align-items-center gap-3">
-                <Icon
-                  icon={isExpanded ? 'lucide:folder-open' : 'lucide:folder'}
-                  style={{ color: 'var(--text-muted)' }}
-                  width="20"
-                />
+      const volumeId = vol.volume_id || vol.id;
+      const volumeYear = vol.publication_year || vol.year;
+      const isExpanded = !!expandedVolumes[volumeId];
+      const issues = issuesByVolume[volumeId];
+      const issueError = issueErrors[volumeId];
+      const issuePagination = issuePaginationByVolume[volumeId];
+      return <article key={volumeId} className={`journal-volume-card ${isExpanded ? 'is-expanded' : ''}`}>
+            <div className="journal-volume-header" onClick={() => toggleVolume(volumeId)}>
+              <div className="d-flex align-items-center gap-3 flex-wrap">
+                <Icon icon={isExpanded ? 'lucide:folder-open' : 'lucide:folder'} style={{
+              color: 'var(--text-muted)'
+            }} width="20" />
                 <div>
-                  <span className="text-main fw-bold font-display" style={{ fontSize: '1.02rem' }}>
-                    Volume {vol.volume_number || 'N/A'}
-                  </span>
-                  <span className="text-muted-custom fw-normal ms-2" style={{ fontSize: '0.9rem' }}>
-                    · {volumeYear || 'Chưa cập nhật'}
-                  </span>
-                  {vol.issue_count !== undefined && vol.issue_count > 0 && (
-                    <span
-                      className="ms-2 px-2 py-1"
-                      style={{
-                        fontSize: '0.72rem',
-                        fontWeight: 600,
-                        borderRadius: '6px',
-                        backgroundColor: 'rgba(0,0,0,0.07)',
-                        color: 'var(--text-muted)',
-                        border: '1px solid rgba(0,0,0,0.08)'
-                      }}
-                    >
+                  <span className="journal-volume-title">Volume {vol.volume_number || 'N/A'}</span>
+                  <span className="journal-volume-meta">{volumeYear || t("author.chuaCapNhat")}</span>
+                  {vol.issue_count !== undefined && vol.issue_count > 0 && <span className="text-muted-custom small ms-2">
                       {vol.issue_count} issue
-                    </span>
-                  )}
+                    </span>}
                 </div>
               </div>
               <span className="text-muted-custom d-flex align-items-center">
@@ -201,118 +108,38 @@ export default function VolumesTabContent({
               </span>
             </div>
 
-            {/* Issues Panel */}
-            {isExpanded && (
-              <div
-                className="px-4 pb-3 pt-1"
-                style={{
-                  borderTop: '1px solid var(--border)',
-                  backgroundColor: 'var(--bg-main)'
-                }}
-              >
-                {/* Loading issues */}
-                {issues === undefined && !issueError ? (
-                  <div className="d-flex align-items-center gap-2 py-3 text-muted-custom" style={{ fontSize: '0.9rem' }}>
-                    <Spinner animation="border" size="sm" />
-                    Đang tải danh sách issue...
-                  </div>
+            {isExpanded && <div className="journal-issue-panel">
+                {issues === undefined && !issueError ? <div className="d-flex align-items-center gap-2 py-3 text-muted-custom">
+                    <Spinner animation="border" size="sm" />{t("journal.dangTaiDanhSachIssue")}</div> : issueError ? <div className="d-flex align-items-center gap-2 py-3 text-danger">
+                    <Icon icon="lucide:alert-triangle" width="16" />{t("journal.khongTheTaiDanhSachIssuesVuiLo")}</div> : !issues || issues.length === 0 ? <div className="text-muted-custom py-3 text-start">
+                    <Icon icon="lucide:inbox" width="14" className="me-1" />{t("journal.volumeNayChuaCoIssue")}</div> : <div className="d-flex flex-column gap-2 py-2">
+                    {issues.map(issue => {
 
-                ) : issueError ? (
-                  /* Error loading issues */
-                  <div className="d-flex align-items-center gap-2 py-3 text-danger" style={{ fontSize: '0.88rem' }}>
-                    <Icon icon="lucide:alert-triangle" width="16" />
-                    Không thể tải danh sách issues. Vui lòng thử lại.
-                  </div>
-
-                ) : !issues || issues.length === 0 ? (
-                  /* Empty issues */
-                  <div className="text-muted-custom py-3 text-start" style={{ fontSize: '0.9rem' }}>
-                    <Icon icon="lucide:inbox" width="14" className="me-1" />
-                    Volume này chưa có issue.
-                  </div>
-
-                ) : (
-                  <div className="d-flex flex-column gap-2 py-2">
-                    {issues.map((issue) => {
-                      const issueId = issue.issue_id || issue.id;
-                      const issueYear = issue.publication_year || issue.year;
-                      const issueMonth = issue.month ? MONTH_NAMES[issue.month] || `Tháng ${issue.month}` : null;
-
-                      return (
-                        <div
-                          key={issueId}
-                          className="d-flex align-items-center justify-content-between rounded"
-                          style={{
-                            padding: '10px 14px',
-                            borderLeft: '2px solid rgba(0,0,0,0.12)',
-                            backgroundColor: 'var(--bg-card)',
-                          }}
-                        >
-                          {/* Issue Info */}
+              const issueId = issue.issue_id || issue.id;
+              const issueYear = issue.publication_year || issue.year;
+              const issueMonth = issue.month ? MONTH_NAMES[issue.month] || `Tháng ${issue.month}` : null;
+              return <div key={issueId} className="journal-issue-row">
                           <div className="d-flex align-items-center gap-2 flex-wrap">
-                            <Icon icon="lucide:file-stack" style={{ color: 'var(--text-muted)' }} width="15" />
-                            <span className="text-main fw-semibold font-display" style={{ fontSize: '0.93rem' }}>
-                              Issue {issue.issue_number || 'N/A'}
-                            </span>
-                            {(issueMonth || issueYear) && (
-                              <span className="text-muted-custom" style={{ fontSize: '0.83rem' }}>
-                                · {[issueMonth, issueYear].filter(Boolean).join(' ')}
-                              </span>
-                            )}
-                            {issue.article_count !== undefined && (
-                              <span
-                                style={{
-                                  fontSize: '0.72rem',
-                                  fontWeight: 600,
-                                  borderRadius: '6px',
-                                  backgroundColor: 'rgba(0,0,0,0.06)',
-                                  color: 'var(--text-muted)',
-                                  border: '1px solid rgba(0,0,0,0.08)'
-                                }}
-                              >
-                                {issue.article_count} bài báo
-                              </span>
-                            )}
+                            <Icon icon="lucide:file-stack" style={{
+                    color: 'var(--text-muted)'
+                  }} width="15" />
+                            <span className="journal-issue-title">Issue {issue.issue_number || 'N/A'}</span>
+                            {(issueMonth || issueYear) && <span className="text-muted-custom small">
+                                {[issueMonth, issueYear].filter(Boolean).join(' ')}
+                              </span>}
+                            {issue.article_count !== undefined && <span className="text-muted-custom small">
+                                {issue.article_count}{t("author.baiBao")}</span>}
                           </div>
 
-                          {/* CTA Button */}
-                          <Button
-                            variant="outline-light"
-                            onClick={(e) => handleViewArticles(e, issueId)}
-                            className="d-flex align-items-center gap-2 px-3 py-1.5"
-                            style={{
-                              borderRadius: '6px',
-                              border: '1px solid #111',
-                              color: '#111',
-                              fontSize: '0.85rem',
-                              fontWeight: 600,
-                              whiteSpace: 'nowrap',
-                              flexShrink: 0,
-                            }}
-                          >
-                            Xem bài báo
-                            <Icon icon="lucide:arrow-right" width="14" />
+                          <Button onClick={e => handleViewArticles(e, issueId)} className="journal-text-btn px-3 py-1">{t("journal.xemBaiBao")}<Icon icon="lucide:arrow-right" width="14" />
                           </Button>
-                        </div>
-                      );
-                    })}
-                    {renderPagination(
-                      issuePagination,
-                      (nextPage) => onIssuePageChange && onIssuePageChange(volumeId, nextPage),
-                      `issue-${volumeId}`
-                    )}
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
-        );
-      })}
-      {renderPagination(
-        volumePagination,
-        (nextPage) => onVolumePageChange && onVolumePageChange(nextPage),
-        'volume'
-      )}
-    </div>
-  );
+                        </div>;
+            })}
+                    {renderPagination(issuePagination, nextPage => onIssuePageChange && onIssuePageChange(volumeId, nextPage), 'issue')}
+                  </div>}
+              </div>}
+          </article>;
+    })}
+      {renderPagination(volumePagination, nextPage => onVolumePageChange && onVolumePageChange(nextPage), 'volume')}
+    </div>;
 }

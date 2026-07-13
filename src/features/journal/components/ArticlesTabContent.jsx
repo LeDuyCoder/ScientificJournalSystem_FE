@@ -1,121 +1,70 @@
+import { useTranslation } from "react-i18next";
+import { t } from "i18next";
 /**
  * File source thuộc hệ thống FE ResearchPulse.
  *
  * File: features\journal\components\ArticlesTabContent.jsx
  */
-import { Card, Button, Badge } from 'react-bootstrap';
+import { Card, Button } from 'react-bootstrap';
 import { Icon } from '@iconify/react';
 import LoadingSkeleton from '../../../shared/components/LoadingSkeleton';
-
-export default function ArticlesTabContent({ recentArticles = [], loading, onArticleClick }) {
+export default function ArticlesTabContent({
+  recentArticles = [],
+  loading,
+  onArticleClick
+}) {
+  const { t: _t } = useTranslation();
   if (loading) {
-    return (
-      <div className="d-flex flex-column gap-3">
-        {[1, 2].map(i => (
-          <div 
-            key={i} 
-            className="journal-dark-card p-4"
-            style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '12px' }}
-          >
+    return <div className="d-flex flex-column gap-3">
+        {[1, 2].map(i => <section key={i} className="journal-surface p-4">
             <LoadingSkeleton width="120px" height="18px" className="mb-2" />
             <LoadingSkeleton width="80%" height="28px" className="mb-3" />
             <LoadingSkeleton width="200px" height="16px" className="mb-3" />
             <LoadingSkeleton width="100%" height="60px" />
-          </div>
-        ))}
-      </div>
-    );
+          </section>)}
+      </div>;
   }
-
   if (!recentArticles || recentArticles.length === 0) {
-    return (
-      <div 
-        className="journal-dark-card p-5 text-center text-muted-custom"
-        style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)', borderRadius: '12px' }}
-      >
-        Journal này chưa có bài báo gần đây.
-      </div>
-    );
+    return <section className="journal-surface journal-empty-state">{t("journal.journalNayChuaCoBaiBaoGanDay")}</section>;
   }
-
-  return (
-    <div className="d-flex flex-column gap-3 text-start">
-      {recentArticles.map((article) => {
-        const articleId = article.article_id || article.id;
-
-        return (
-          <Card 
-            key={articleId} 
-            className="journal-dark-card p-4 border-0" 
-            style={{ 
-              backgroundColor: 'var(--bg-card)',
-              boxShadow: '0 4px 20px rgba(0,0,0,0.03)',
-              border: '1px solid var(--border)',
-              borderRadius: '12px'
-            }}
-          >
-            {/* Metadata Row */}
-            <div className="d-flex align-items-center gap-3 mb-2 flex-wrap" style={{ fontSize: '0.85rem' }}>
-              <Badge 
-                className="font-display px-2 py-1 text-white bg-black" 
-              >
-                {article.publication_year}
-              </Badge>
-              {article.doi && (
-                <span className="text-muted-custom d-flex align-items-center gap-1">
+  return <div className="d-flex flex-column gap-3 text-start">
+      {recentArticles.map((article, index) => {
+      const articleId = article.article_id || article.id || article.articleId;
+      const hasArticleId = articleId !== undefined && articleId !== null && String(articleId).trim() !== '';
+      const handleArticleOpen = () => {
+        if (hasArticleId && onArticleClick) onArticleClick(articleId);
+      };
+      return <Card key={articleId || `${article.title || 'article'}-${index}`} className="journal-article-card">
+            <div className="d-flex align-items-center gap-3 mb-2 flex-wrap">
+              <span className="text-muted-custom small">
+                {article.publication_year || article.year || 'N/A'}
+              </span>
+              {article.doi && <span className="text-muted-custom d-flex align-items-center gap-1 small">
                   <Icon icon="lucide:link-2" width="14" />
                   DOI: {article.doi}
-                </span>
-              )}
+                </span>}
             </div>
 
-            {/* Title */}
-            <h4 
-              className="font-display fw-bold text-main mb-2 transition-colors duration-150" 
-              style={{ fontSize: '1.2rem', cursor: 'pointer', lineHeight: '1.4' }} 
-              onClick={() => onArticleClick && onArticleClick(articleId)}
-              onMouseEnter={(e) => { e.currentTarget.style.color = '#111'; }}
-              onMouseLeave={(e) => { e.currentTarget.style.color = 'var(--text-main)'; }}
-            >
-              {article.title}
-            </h4>
+            <h3 className={`journal-article-title ${hasArticleId ? '' : 'text-muted-custom'}`} onClick={handleArticleOpen} role={hasArticleId ? 'button' : undefined} title={hasArticleId ? t("article.xemChiTietBaiBao") : t("journal.baiBaoNayChuaCoMaDinhDanh")}>
+              {article.title || 'Untitled Article'}
+            </h3>
 
-            {/* Authors */}
-            {article.authors && (
-              <div className="text-muted-custom mb-3 d-flex align-items-center gap-2" style={{ fontSize: '0.9rem' }}>
-                <Icon icon="lucide:users" width="16" style={{ color: 'var(--text-muted)' }} />
-                <span>{article.authors}</span>
-              </div>
-            )}
+            {article.authors && <div className="text-muted-custom mb-3 d-flex align-items-center gap-2 small">
+                <Icon icon="lucide:users" width="16" style={{
+            color: 'var(--text-muted)'
+          }} />
+                <span>{Array.isArray(article.authors) ? article.authors.map(author => author.display_name || author.name || author.author_name).filter(Boolean).join(', ') : article.authors}</span>
+              </div>}
 
-            {/* Abstract */}
-            {article.abstract && (
-              <p className="text-muted-custom mb-4 leading-relaxed" style={{ fontSize: '0.95rem', display: '-webkit-box', WebkitLineClamp: '3', WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+            {article.abstract && <p className="journal-article-abstract">
                 {article.abstract}
-              </p>
-            )}
+              </p>}
 
-            {/* Action button */}
             <div className="mt-auto d-flex justify-content-end">
-              <Button
-                variant="outline-light"
-                onClick={() => onArticleClick && onArticleClick(articleId)}
-                className="d-flex align-items-center gap-2 px-3 py-1.5"
-                style={{
-                  borderRadius: '6px',
-                  border: '1px solid #111',
-                  color: '#111',
-                  fontSize: '0.85rem',
-                  fontWeight: 600
-                }}
-              >
-                Xem chi tiết
-                <Icon icon="lucide:arrow-right" width="14" />
+              <Button disabled={!hasArticleId} onClick={handleArticleOpen} className="journal-text-btn px-3 py-1">{t("journal.xemChiTiet")}<Icon icon="lucide:arrow-right" width="14" />
               </Button>
             </div>
-          </Card>
-        );
-      })}
-    </div>
-  );
+          </Card>;
+    })}
+    </div>;
 }

@@ -1,30 +1,27 @@
-import { useEffect, useState } from "react";
-import { Navigate, Outlet } from "react-router-dom";
-import { isAuthenticated } from "../../shared/utils/auth";
-import { useUserStore } from "../store/userStore";
+import { useTranslation } from "react-i18next";
 import { useAuthStore } from "../store/authStore";
-
+import { Navigate, Outlet } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { isAuthenticated as checkAuthStatus } from "../../shared/utils/auth";
+import { getDefaultLang } from "./languageRouting";
 const ProtectedRoute = () => {
+  const {
+    t
+  } = useTranslation();
+  const isAuthenticated = useAuthStore(s => s.isAuthenticated);
   const [loading, setLoading] = useState(true);
-  const [isAuth, setIsAuth] = useState(false);
-
   useEffect(() => {
     const checkAuth = async () => {
-      const result = await isAuthenticated();
-      setIsAuth(result);
-      setLoading(false);
+      try {
+        await checkAuthStatus();
+      } finally {
+        setLoading(false);
+      }
     };
     checkAuth();
   }, []);
-
-  console.log(useAuthStore.getState());
-  console.log(useUserStore.getState());
-
-  if (loading) return <div>Đang kiểm tra quyền truy cập...</div>;
-
-  // 🔥 THAY CHILDREN THÀNH OUTLET: 
-  // Nếu hợp lệ thì cho phép hiển thị các Route con nằm trong Layout này
-  return isAuth ? <Outlet /> : <Navigate to="/login" replace />;
+  if (loading) return <div>{t("common.dangKiemTraQuyenTruyCap")}</div>;
+  const lang = getDefaultLang();
+  return isAuthenticated ? <Outlet /> : <Navigate to={`/${lang}/login`} replace />;
 };
-
 export default ProtectedRoute;

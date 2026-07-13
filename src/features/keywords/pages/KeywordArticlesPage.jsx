@@ -1,4 +1,5 @@
-﻿/**
+import { useTranslation } from "react-i18next";
+/**
  * File source thuộc hệ thống FE ResearchPulse.
  *
  * File: features\keywords\pages\KeywordArticlesPage.jsx
@@ -10,15 +11,20 @@ import Header from '../../landing/components/Header';
 import LoadingSkeleton from '../../../shared/components/LoadingSkeleton';
 import KeywordArticleList from '../components/KeywordArticleList';
 import { useKeywordArticles } from '../hooks/useKeywordArticles';
+import './KeywordArticlesPage.css';
 
 /**
  * Trang bài báo theo Keyword.
  * Route: /keywords/:keywordId/articles
  */
 export default function KeywordArticlesPage() {
-  const { keywordId } = useParams();
+  const {
+    t
+  } = useTranslation();
+  const {
+    keywordId
+  } = useParams();
   const navigate = useNavigate();
-
   const {
     keyword,
     articles,
@@ -27,115 +33,73 @@ export default function KeywordArticlesPage() {
     loadingArticles,
     keywordError,
     articlesError,
-    handlePageChange,
+    handlePageChange
   } = useKeywordArticles(keywordId);
-
-  const handleViewDetail = (articleId) => {
-    navigate(`/articles/${articleId}`);
+  const handleViewDetail = articleId => {
+    navigate(`/articles/${articleId}/visual`);
   };
-
   const handleRetry = () => {
-    window.location.reload();
+    handlePageChange(1);
   };
-
-  return (
-    <div className="grid-bg min-vh-100 d-flex flex-column" style={{ backgroundColor: 'var(--bg-main)' }}>
+  return <div className="grid-bg keyword-articles-page d-flex flex-column">
       <Header />
 
-      <Container className="py-5 flex-grow-1">
-        {/* Breadcrumb */}
-        <nav aria-label="breadcrumb" className="mb-4">
-          <ol className="breadcrumb" style={{ fontSize: '0.88rem' }}>
+      <Container className="pb-5 flex-grow-1">
+        <nav aria-label="breadcrumb" className="keyword-articles-breadcrumb mb-4">
+          <ol className="breadcrumb">
             <li className="breadcrumb-item">
-              <span
-                role="button"
-                tabIndex={0}
-                onClick={() => navigate('/dashboard')}
-                onKeyDown={(e) => e.key === 'Enter' && navigate('/dashboard')}
-                style={{ color: 'var(--text-muted)', cursor: 'pointer' }}
-              >
-                Dashboard
-              </span>
-            </li>
-            <li className="breadcrumb-item">
-              <span
-                role="button"
-                tabIndex={0}
-                onClick={() => navigate('/keywords')}
-                onKeyDown={(e) => e.key === 'Enter' && navigate('/keywords')}
-                style={{ color: 'var(--text-muted)', cursor: 'pointer' }}
-              >
+              <span role="button" tabIndex={0} onClick={() => navigate('/keywords')} onKeyDown={e => e.key === 'Enter' && navigate('/keywords')} className="keyword-articles-back-link">
                 Keywords
               </span>
             </li>
-            <li className="breadcrumb-item active text-main fw-semibold" aria-current="page">Bài báo liên quan</li>
+            <li className="breadcrumb-item active text-main fw-semibold" aria-current="page">{t("keywords.baiBaoTheoKeyword")}</li>
           </ol>
         </nav>
 
-        {/* Keyword header */}
-        <div className="mb-5">
-          {loadingKeyword ? (
-            <>
-              <LoadingSkeleton width="200px" height="14px" className="mb-3" />
-              <LoadingSkeleton width="400px" height="36px" className="mb-3" />
-              <LoadingSkeleton width="280px" height="18px" />
-            </>
-          ) : keywordError ? (
-            <div className="d-flex align-items-center gap-3">
-              <Icon icon="lucide:alert-circle" width="28" className="text-danger" />
-              <div>
-                <h1 className="font-display fw-bold text-main mb-1" style={{ fontSize: '1.8rem' }}>Keyword không tìm thấy</h1>
-                <p className="text-muted-custom mb-0">ID: {keywordId}</p>
-              </div>
-            </div>
-          ) : keyword ? (
-            <div>
-              <div className="text-uppercase text-muted-custom mb-2" style={{ fontSize: '0.72rem', letterSpacing: '0.12em' }}>
-                Research keyword
-              </div>
-              <h1 className="font-display fw-bold text-main mb-2" style={{ fontSize: '2.2rem' }}>
-                {keyword.display_name}
-              </h1>
-              <p className="text-muted-custom" style={{ fontSize: '1rem' }}>
-                {pagination.total > 0 && (
-                  <><strong className="text-main">{pagination.total.toLocaleString()}</strong> bài báo liên quan đến keyword này</>
-                )}
-              </p>
-            </div>
-          ) : null}
-        </div>
+        <section className="keyword-articles-hero">
+          <div className="keyword-articles-hero__content">
+            {loadingKeyword ? <>
+                <LoadingSkeleton width="200px" height="14px" className="mb-3" />
+                <LoadingSkeleton width="400px" height="36px" className="mb-3" />
+                <LoadingSkeleton width="280px" height="18px" />
+              </> : keywordError ? <div className="d-flex align-items-center gap-3">
+                <Icon icon="lucide:alert-circle" width="28" className="keyword-article-state-icon" />
+                <div>
+                  <h1 className="keyword-articles-empty-title">{t("keywords.keywordKhongTimThay")}</h1>
+                  <p className="text-muted-custom mb-0">ID: {keywordId}</p>
+                </div>
+              </div> : keyword ? <div>
+                <div className="keyword-articles-eyebrow">
+                  <Icon icon="lucide:tag" width="16" />
+                  <span>
+                    Research Keyword
+                  </span>
+                </div>
+                <h1 className="keyword-articles-title">
+                  {keyword.display_name}
+                </h1>
+                <p className="keyword-articles-summary">
+                  {pagination.total > 0 ? <><strong>{pagination.total.toLocaleString()}</strong>{t("keywords.baiBaoDangDuocLienKetVoiKeywor")}</> : t("keywords.keywordNayHienChuaCoBaiBaoLien")}
+                </p>
+              </div> : null}
+          </div>
+        </section>
 
-        {/* Articles list */}
         <div>
-          <div className="d-flex align-items-center justify-content-between mb-4">
-            <h2 className="font-display fw-bold text-main mb-0" style={{ fontSize: '1.3rem' }}>
-              Bài báo liên quan
-            </h2>
-            <button
-              type="button"
-              className="btn btn-link btn-sm text-muted-custom d-flex align-items-center gap-2"
-              onClick={() => navigate('/keywords')}
-              style={{ textDecoration: 'none', fontSize: '0.9rem' }}
-            >
-              <Icon icon="lucide:arrow-left" width="16" />
-              Quay lại keywords
-            </button>
+          <div className="keyword-articles-heading">
+            <h2 className="keyword-articles-section-title">{t("keywords.baiBaoLienQuan")}</h2>
+            <button type="button" className="btn btn-link btn-sm d-flex align-items-center gap-2 keyword-articles-return" onClick={() => navigate('/keywords')}>
+              <Icon icon="lucide:arrow-left" width="16" />{t("keywords.quayLaiKeywords")}</button>
           </div>
 
-          <KeywordArticleList
-            articles={articles}
-            loading={loadingArticles}
-            error={articlesError}
-            pagination={pagination}
-            onPageChange={(page) => {
-              handlePageChange(page);
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }}
-            onViewDetail={handleViewDetail}
-            onRetry={handleRetry}
-          />
+          <KeywordArticleList articles={articles} loading={loadingArticles} error={articlesError} pagination={pagination} onPageChange={page => {
+          handlePageChange(page);
+          window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+          });
+        }} onViewDetail={handleViewDetail} onRetry={handleRetry} />
         </div>
       </Container>
-    </div>
-  );
+    </div>;
 }

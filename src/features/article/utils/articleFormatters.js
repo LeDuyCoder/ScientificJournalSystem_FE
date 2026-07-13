@@ -1,4 +1,4 @@
-﻿/**
+/**
  * File source thuộc hệ thống FE ResearchPulse.
  *
  * File: features\article\utils\articleFormatters.js
@@ -108,10 +108,17 @@ export const normalizeArticleDetail = (apiData = {}, id = '') => {
     topics,
     authors,
     is_open_access: Boolean(apiData.is_open_access),
-    citations: apiData.citations ?? apiData.citations_count ?? null,
+    citations: apiData.citations ?? apiData.citations_count ?? apiData.cited_by_count ?? apiData.semantic_citation_count ?? apiData.semantic_scholar_citation_count ?? null,
+    semantic_tldr: apiData.semantic_tldr || null,
+    references: Array.isArray(apiData.references) ? apiData.references : [],
+    reference_count: apiData.reference_count ?? (Array.isArray(apiData.references) ? apiData.references.length : 0),
+    volume_id: apiData.volume_id || apiData.volume?.volume_id || '',  
     volume_number: apiData.volume_number || apiData.volume || '',
+    issue_id: apiData.issue_id || apiData.issue?.issue_id || '',
     issue_number: apiData.issue_number || apiData.issue || '',
     journal_id: apiData.journal_id || apiData.journal?.journal_id || '',
     journal_name: apiData.journal_name || apiData.journal?.display_name || '',
+    publisher_id: apiData.publisher_id || apiData.publisher?.publisher_id || '',
+    publisher_name: apiData.publisher_name || apiData.publisher?.display_name || '',
   };
 };

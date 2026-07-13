@@ -1,0 +1,461 @@
+/**
+ * File: features/project/components/UpgradePlanModal.css
+ * Styling for the Upgrade Plan Modal (Free vs VIP comparison)
+ */
+
+/*
+ * `dialogClassName="upgrade-modal"` puts this class directly on
+ * Bootstrap's `.modal-dialog`, so these rules own the real dialog width.
+ */
+.upgrade-modal {
+  --bs-modal-width: 1100px !important;
+  width: min(96vw, 1100px) !important;
+  max-width: 1100px !important;
+  min-width: 900px !important;
+  max-height: 90vh;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  transform: none !important;
+}
+
+.upgrade-modal-wrapper .modal-content,
+.upgrade-modal .modal-content {
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+  max-height: 90vh;
+  overflow: hidden;
+  border-radius: 24px;
+  border: 1px solid rgba(148, 163, 184, 0.22);
+  background:
+    radial-gradient(circle at top left, rgba(255, 122, 51, 0.08), transparent 34%),
+    radial-gradient(circle at top right, rgba(99, 102, 241, 0.1), transparent 36%),
+    var(--bg-card);
+  box-shadow: 0 28px 80px rgba(15, 23, 42, 0.24);
+}
+
+.upgrade-modal-wrapper .modal-header,
+.upgrade-modal .modal-header {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 5;
+  width: auto;
+  min-width: 0;
+  padding: 18px 22px 0 0;
+  border: 0;
+  background: transparent;
+}
+
+.upgrade-modal-wrapper .modal-header .btn-close,
+.upgrade-modal .modal-header .btn-close {
+  margin: 0;
+  flex-shrink: 0;
+}
+
+.upgrade-modal-wrapper .modal-body,
+.upgrade-modal .modal-body {
+  width: 100%;
+  min-width: 0;
+  padding: 40px;
+  overflow: hidden;
+}
+
+.upgrade-modal-content {
+  display: grid;
+  grid-template-columns: 320px minmax(0, 1fr);
+  gap: 32px;
+  width: 100%;
+  max-height: calc(90vh - 80px);
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 6px;
+  padding-bottom: 24px;
+}
+
+/* Custom Scrollbar */
+.upgrade-modal-content::-webkit-scrollbar {
+  width: 6px;
+}
+.upgrade-modal-content::-webkit-scrollbar-track {
+  background: transparent;
+}
+.upgrade-modal-content::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.4);
+  border-radius: 10px;
+}
+.upgrade-modal-content::-webkit-scrollbar-thumb:hover {
+  background: rgba(148, 163, 184, 0.6);
+}
+
+.upgrade-modal-left {
+  min-width: 320px;
+  width: 320px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.upgrade-modal-right {
+  min-width: 0;
+}
+
+.upgrade-modal-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 2rem;
+  color: var(--text-main);
+  white-space: normal;
+  word-break: normal;
+  overflow-wrap: normal;
+  line-height: 1.15;
+}
+
+.upgrade-modal-subtitle {
+  color: var(--text-muted);
+  font-size: 1rem;
+  line-height: 1.65;
+}
+
+.upgrade-modal-intro {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1.25rem 1.1rem;
+  border-radius: 16px;
+  background: linear-gradient(135deg, rgba(255, 122, 51, 0.08), rgba(99, 102, 241, 0.08));
+  border: 1px solid rgba(148, 163, 184, 0.18);
+}
+
+.upgrade-modal-intro__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  width: fit-content;
+  padding: 0.42rem 0.8rem;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.06);
+  color: var(--text-main);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.upgrade-modal-intro__text {
+  color: var(--text-muted);
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+  width: 100%;
+  min-width: 0;
+  align-items: stretch;
+}
+
+.upgrade-plan-card {
+  border-radius: 20px;
+  padding: 24px;
+  min-height: 360px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.upgrade-plan-card:hover {
+  transform: translateY(-2px);
+}
+
+.upgrade-plan-card--free {
+  background: var(--bg-main);
+  border: 1px solid var(--border);
+}
+
+.upgrade-plan-card--vip {
+  background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #3730a3 100%);
+  border: 1px solid rgba(129, 140, 248, 0.3);
+  color: #fff;
+  box-shadow: 0 4px 24px rgba(99, 102, 241, 0.18);
+}
+
+.upgrade-plan-card--vip:hover {
+  box-shadow: 0 8px 32px rgba(99, 102, 241, 0.28);
+}
+
+.upgrade-plan-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  width: fit-content;
+}
+
+.upgrade-plan-badge--free {
+  background: var(--border);
+  color: var(--text-muted);
+}
+
+.upgrade-plan-badge--vip {
+  background: linear-gradient(135deg, #f59e0b, #eab308);
+  color: #1e1b4b;
+}
+
+.upgrade-plan-name {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.5rem;
+  margin: 0.75rem 0 0.25rem;
+}
+
+.upgrade-plan-card--free .upgrade-plan-name {
+  color: var(--text-main);
+}
+
+.upgrade-plan-price {
+  font-size: 1rem;
+  margin-bottom: 1rem;
+}
+
+.upgrade-plan-card--free .upgrade-plan-price {
+  color: var(--text-muted);
+}
+
+.upgrade-plan-card--vip .upgrade-plan-price {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.upgrade-plan-price strong {
+  font-size: 1.75rem;
+  font-weight: 800;
+  font-family: var(--font-display);
+}
+
+.upgrade-plan-card--vip .upgrade-plan-price strong {
+  background: linear-gradient(135deg, #fbbf24, #f59e0b);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.upgrade-plan-description {
+  color: var(--text-muted);
+  font-size: 1rem;
+  line-height: 1.65;
+  min-height: 52px;
+}
+
+.upgrade-plan-description--vip {
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.upgrade-plan-divider {
+  border: none;
+  height: 1px;
+  margin: 0.25rem 0 1rem;
+}
+
+.upgrade-plan-card--free .upgrade-plan-divider {
+  background: var(--border);
+}
+
+.upgrade-plan-card--vip .upgrade-plan-divider {
+  background: rgba(129, 140, 248, 0.25);
+}
+
+.upgrade-plan-features {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.25rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.upgrade-plan-feature {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.upgrade-plan-card--free .upgrade-plan-feature {
+  color: var(--text-muted);
+}
+
+.upgrade-plan-card--vip .upgrade-plan-feature {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.upgrade-plan-feature-icon {
+  flex-shrink: 0;
+  margin-top: 3px;
+}
+
+.upgrade-plan-feature-icon--check {
+  color: #22c55e;
+}
+
+.upgrade-plan-feature-icon--cross {
+  color: #94a3b8;
+}
+
+.upgrade-plan-feature-icon--star {
+  color: #fbbf24;
+}
+
+.upgrade-plan-cta {
+  width: 100%;
+  border-radius: 12px;
+  padding: 11px 16px;
+  font-weight: 600;
+  font-family: var(--font-display);
+  font-size: 1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease;
+  margin-top: auto;
+}
+
+.upgrade-plan-cta:hover {
+  transform: translateY(-1px);
+}
+
+.upgrade-plan-cta:active {
+  transform: translateY(0);
+}
+
+.upgrade-plan-cta--free {
+  background: var(--bg-main);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  cursor: default;
+  opacity: 0.7;
+}
+
+.upgrade-plan-cta--free:hover {
+  transform: none;
+}
+
+.upgrade-plan-cta--vip {
+  background: linear-gradient(135deg, #ff702f, #f97316);
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(255, 112, 47, 0.35);
+}
+
+.upgrade-plan-cta--vip:hover {
+  box-shadow: 0 6px 20px rgba(255, 112, 47, 0.45);
+}
+
+.upgrade-plan-recommended {
+  position: absolute;
+  top: 12px;
+  right: -30px;
+  background: linear-gradient(135deg, #f59e0b, #eab308);
+  color: #1e1b4b;
+  font-size: 0.65rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 4px 36px;
+  transform: rotate(45deg);
+}
+
+.upgrade-plan-card--vip::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(129, 140, 248, 0.06),
+    transparent
+  );
+  animation: vipShimmer 3s ease-in-out infinite;
+}
+
+@keyframes vipShimmer {
+  0% { left: -100%; }
+  50% { left: 100%; }
+  100% { left: 100%; }
+}
+
+@media (max-width: 992px) {
+  .upgrade-modal {
+    width: 94vw !important;
+    max-width: 94vw !important;
+    min-width: 0 !important;
+  }
+
+  .upgrade-modal-wrapper .modal-body,
+  .upgrade-modal .modal-body {
+    padding: 32px;
+  }
+
+  .upgrade-modal-content {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+
+  .upgrade-modal-left {
+    width: auto;
+    min-width: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .upgrade-modal {
+    width: 94vw !important;
+    min-width: 0 !important;
+  }
+
+  .upgrade-modal-content {
+    grid-template-columns: 1fr;
+    max-height: calc(90vh - 64px);
+  }
+
+  .upgrade-modal-left {
+    width: auto;
+    min-width: 0;
+  }
+
+  .pricing-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 576px) {
+  .upgrade-modal-wrapper .modal-body,
+  .upgrade-modal .modal-body {
+    padding: 28px 20px 20px;
+  }
+
+  .upgrade-modal-title {
+    font-size: 1.5rem;
+  }
+
+  .upgrade-plan-card {
+    min-height: unset;
+  }
+}

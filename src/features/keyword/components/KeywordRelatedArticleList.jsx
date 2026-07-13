@@ -1,0 +1,62 @@
+import { useTranslation } from "react-i18next";
+import { Link } from 'react-router-dom';
+import { Icon } from '@iconify/react';
+const KeywordRelatedArticleList = ({
+  articles,
+  loading
+}) => {
+  const {
+    t
+  } = useTranslation();
+  if (loading) {
+    return <div className="d-flex flex-column gap-3">
+        {[...Array(3)].map((_, i) => <div key={i} className="p-3 border rounded">
+            <div className="skeleton-shimmer mb-2" style={{
+          width: '40%',
+          height: '20px'
+        }}></div>
+            <div className="skeleton-shimmer mb-2" style={{
+          width: '100%',
+          height: '24px'
+        }}></div>
+            <div className="skeleton-shimmer" style={{
+          width: '60%',
+          height: '16px'
+        }}></div>
+          </div>)}
+      </div>;
+  }
+  if (!Array.isArray(articles) || articles.length === 0) {
+    return <div className="text-center py-4 text-muted-custom border rounded">{t("keyword.khongCoBaiBaoNaoLienQuanDenCac")}</div>;
+  }
+  return <div className="d-flex flex-column gap-3">
+      {articles.map((article, idx) => <div key={article.id || idx} className="p-3 border rounded bg-card hover-shadow transition-all">
+          <div className="d-flex justify-content-between align-items-start mb-2">
+            <div className="d-flex gap-2 flex-wrap">
+              {article.matched_keywords?.map((kw, kwIdx) => <span key={kwIdx} className="badge fw-medium text-nowrap mb-2 d-inline-flex align-items-center" style={{
+            fontSize: '0.7rem',
+            backgroundColor: 'var(--primary-light)',
+            color: 'var(--primary)'
+          }}>
+                  <Icon icon="lucide:sparkles" className="me-1" width="12" />
+                  {kw}
+                </span>)}
+            </div>
+            <span className="text-muted-custom small">
+              {article.publication_year || article.year || t("keyword.ganDay")}
+            </span>
+          </div>
+          <h5 className="font-display fw-bold mb-2">
+            <Link to={`/articles/${article.id}/visual`} className="text-main text-decoration-none">
+              {article.title}
+            </Link>
+          </h5>
+          <div className="text-muted-custom small d-flex flex-wrap gap-3">
+            {article.journal_name && <span><i className="bi bi-journal-text me-1"></i> {article.journal_name}</span>}
+            {article.doi && <span><i className="bi bi-link-45deg me-1"></i> {article.doi}</span>}
+            {article.citations != null && <span><i className="bi bi-quote me-1"></i> {article.citations} citations</span>}
+          </div>
+        </div>)}
+    </div>;
+};
+export default KeywordRelatedArticleList;

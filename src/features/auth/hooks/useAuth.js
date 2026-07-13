@@ -9,6 +9,7 @@ import { useGoogleLogin } from '@react-oauth/google';
 import { toast } from '../../../shared/utils/toast';
 import { useAuthStore } from '../../../app/store/authStore';
 import { useUserStore } from '../../../app/store/userStore';
+import { useWalletStore } from '../../../app/store/walletStore';
 import {
   deleteCurrentAccount,
   fetchCurrentProfile,
@@ -44,6 +45,7 @@ export default function useAuth() {
   // Store phụ dùng để hiển thị email trên header/landing.
   const setEmail = useUserStore((state) => state.setEmail);
   const clearEmail = useUserStore((state) => state.clearEmail);
+  const clearWallet = useWalletStore((state) => state.clearWallet);
 
   /**
    * Lấy profile người dùng hiện tại từ backend.
@@ -158,12 +160,13 @@ export default function useAuth() {
   /**
    * Đăng xuất: gọi BE clear session/cookie, sau đó xóa state FE.
    */
-  const logout = useCallback(() => {
-    logoutSession();
+  const logout = useCallback(async () => {
+    await logoutSession();
     clearAuthState();
     clearEmail();
+    clearWallet();
     navigate('/login', { replace: true });
-  }, [clearAuthState, clearEmail, navigate]);
+  }, [clearAuthState, clearEmail, clearWallet, navigate]);
 
   /**
    * Cập nhật profile user và đồng bộ lại store sau khi API thành công.
@@ -201,6 +204,7 @@ export default function useAuth() {
       await deleteCurrentAccount();
       clearAuthState();
       clearEmail();
+      clearWallet();
       navigate('/register', { replace: true });
     } catch (err) {
       const message = err.response?.data?.message || err.message || 'Xóa tài khoản thất bại';
@@ -209,7 +213,7 @@ export default function useAuth() {
     } finally {
       setLoading(false);
     }
-  }, [clearAuthState, clearEmail, navigate, setError, setLoading]);
+  }, [clearAuthState, clearEmail, clearWallet, navigate, setError, setLoading]);
 
   return {
     user,

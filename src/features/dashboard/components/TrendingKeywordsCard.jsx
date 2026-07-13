@@ -1,111 +1,121 @@
-﻿/**
+import { useTranslation } from "react-i18next";
+/**
  * File source thuộc hệ thống FE ResearchPulse.
  *
  * File: features\dashboard\components\TrendingKeywordsCard.jsx
  */
 import { Icon } from '@iconify/react';
-
-/** keyword pill colours cycle */
-const PILL_COLORS = [
-  { bg: 'rgba(255,122,51,0.1)', color: 'var(--primary)',  border: 'rgba(255,122,51,0.3)' },
-  { bg: 'rgba(99,102,241,0.1)', color: '#6366f1',         border: 'rgba(99,102,241,0.3)' },
-  { bg: 'rgba(14,165,233,0.1)', color: '#0ea5e9',         border: 'rgba(14,165,233,0.3)' },
-  { bg: 'rgba(47,198,70,0.1)',  color: 'var(--q1-color)', border: 'rgba(47,198,70,0.3)' },
-  { bg: 'rgba(245,158,11,0.1)', color: '#f59e0b',         border: 'rgba(245,158,11,0.3)' },
-];
-
-/**
- * KeywordTag — một keyword pill có growth label
- */
-function KeywordTag({ keyword, index, onClick }) {
-  const name   = keyword.keyword ?? keyword.name ?? keyword;
-  const growth = keyword.growth ?? keyword.count ?? null;
-  const c      = PILL_COLORS[index % PILL_COLORS.length];
-
-  return (
-    <button
-      className="border-0 d-inline-flex align-items-center gap-1 rounded-pill px-3 py-1"
-      onClick={() => onClick?.(name)}
-      style={{
-        backgroundColor: c.bg, color: c.color, border: `1px solid ${c.border}`,
-        fontSize: '0.75rem', fontWeight: 600, cursor: 'pointer',
-        transition: 'all 0.15s ease',
-        letterSpacing: '0.01em',
-      }}
-      onMouseEnter={e => e.currentTarget.style.opacity = '0.75'}
-      onMouseLeave={e => e.currentTarget.style.opacity = '1'}
-    >
-      <span>{name}</span>
-      {growth != null && (
-        <span style={{ opacity: 0.7, fontSize: '0.65rem' }}>
-          {growth > 0 ? `+${growth > 999 ? (growth/1000).toFixed(1)+'k' : growth}` : growth}
-        </span>
-      )}
-    </button>
-  );
+import { EntityCard } from '../../../shared/components/Card';
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
+function KeywordsRechart({
+  chartData,
+  onKeywordClick
+}) {
+  const {
+    t
+  } = useTranslation();
+  const labels = chartData?.labels || [];
+  const dataset = chartData?.datasets?.[0] || {
+    data: []
+  };
+  const mappedData = labels.map((label, index) => ({
+    keyword: label,
+    value: dataset.data[index] ?? 0
+  }));
+  return <ResponsiveContainer width="100%" height={260}>
+      <BarChart data={mappedData} layout="vertical" margin={{
+      left: 5,
+      right: 10,
+      top: 5,
+      bottom: 5
+    }}>
+        <XAxis type="number" hide />
+        <YAxis dataKey="keyword" type="category" width={110} tick={{
+        fill: 'var(--text-muted)',
+        fontSize: 11,
+        fontFamily: 'var(--font-display)'
+      }} axisLine={false} tickLine={false} />
+        <Tooltip cursor={{
+        fill: 'var(--bg-section)',
+        opacity: 0.5
+      }} contentStyle={{
+        backgroundColor: 'var(--bg-card)',
+        border: '1px solid var(--border)',
+        borderRadius: '8px',
+        color: 'var(--text-main)',
+        fontSize: '11px',
+        fontFamily: 'var(--font-display)'
+      }} />
+        <Bar dataKey="value" fill="var(--primary)" name={dataset.label || t("publications")} radius={[0, 4, 4, 0]} barSize={14} onClick={data => {
+        if (data && data.keyword) {
+          onKeywordClick?.(data.keyword);
+        }
+      }} style={{
+        cursor: 'pointer'
+      }} />
+      </BarChart>
+    </ResponsiveContainer>;
 }
 
 /**
- * TrendingKeywordsCard — card trending keywords với pills
+ * TrendingKeywordsCard — card trending keywords với biểu đồ BarChart của Recharts
  */
-export default function TrendingKeywordsCard({ keywords, loading, error, onKeywordClick, onViewMore }) {
-  return (
-    <div
-      className="rounded-3 p-4"
-      style={{ backgroundColor: 'var(--bg-card)', border: '1px solid var(--border)' }}
-    >
-      {/* Header */}
-      <div className="d-flex align-items-center justify-content-between mb-4">
-        <div className="d-flex align-items-center gap-2">
-          <span className="font-display fw-bold text-main" style={{ fontSize: '0.9rem' }}>
-            🔥 Trending Keywords
-          </span>
-        </div>
-        {onViewMore && (
-          <button
-            className="btn btn-link p-0 text-decoration-none"
-            onClick={onViewMore}
-            style={{ fontSize: '0.75rem', color: 'var(--primary)' }}
-          >
-            Xem thêm →
-          </button>
-        )}
-      </div>
-
-      {/* Body */}
-      {loading ? (
-        <div className="d-flex flex-wrap gap-2">
-          {[120, 80, 100, 90, 110, 70, 95].map((w, i) => (
-            <div key={i} className="skeleton-shimmer rounded-pill" style={{ width: w, height: 28 }} />
-          ))}
-        </div>
-      ) : error ? (
-        <div className="text-center py-4">
-          <Icon icon="lucide:alert-circle" width={28} style={{ color: '#ef4444' }} />
-          <p className="text-muted-custom mt-2 mb-0" style={{ fontSize: '0.8rem' }}>{error}</p>
-        </div>
-      ) : keywords.length === 0 ? (
-        <div className="text-center py-4">
-          <Icon icon="lucide:tag" width={32} style={{ color: 'var(--text-muted)' }} />
-          <p className="text-main fw-semibold mt-2 mb-1" style={{ fontSize: '0.85rem' }}>
-            Chưa có keyword nào
-          </p>
-          <p className="text-muted-custom mb-0" style={{ fontSize: '0.75rem' }}>
-            Thêm keyword vào project để bắt đầu theo dõi.
-          </p>
-        </div>
-      ) : (
-        <div className="d-flex flex-wrap gap-2">
-          {keywords.map((kw, i) => (
-            <KeywordTag
-              key={i}
-              keyword={kw}
-              index={i}
-              onClick={onKeywordClick}
-            />
-          ))}
-        </div>
-      )}
-    </div>
-  );
+export default function TrendingKeywordsCard({
+  keywords,
+  loading,
+  error,
+  onKeywordClick,
+  onViewMore
+}) {
+  const {
+    t
+  } = useTranslation();
+  const actions = onViewMore ? <button className="btn btn-link p-0 text-decoration-none" onClick={onViewMore} style={{
+    fontSize: '0.75rem',
+    color: 'var(--primary)'
+  }} onMouseEnter={e => {
+    e.currentTarget.style.textDecoration = 'underline';
+    e.currentTarget.style.textUnderlineOffset = '4px';
+  }} onMouseLeave={e => {
+    e.currentTarget.style.textDecoration = 'none';
+  }}>{t("dashboard.xemThem")}</button> : null;
+  const labels = keywords?.labels || [];
+  const dataset = keywords?.datasets?.[0] || {
+    data: []
+  };
+  const hasData = labels.length > 0 && dataset.data?.length > 0;
+  const description = loading ? <div className="d-flex flex-column gap-3 py-2">
+      {[1, 2, 3, 4, 5].map((_, i) => <div key={i} className="d-flex align-items-center gap-3">
+          <div className="skeleton-shimmer rounded" style={{
+        width: 80,
+        height: 16
+      }} />
+          <div className="skeleton-shimmer rounded flex-grow-1" style={{
+        height: 16
+      }} />
+        </div>)}
+    </div> : error ? <div className="text-center py-4">
+      <Icon icon="lucide:alert-circle" width={28} style={{
+      color: '#ef4444'
+    }} />
+      <p className="text-muted-custom mt-2 mb-0" style={{
+      fontSize: '0.8rem'
+    }}>{error}</p>
+    </div> : !hasData ? <div className="text-center py-4">
+      <Icon icon="lucide:tag" width={32} style={{
+      color: 'var(--text-muted)'
+    }} />
+      <p className="text-main fw-semibold mt-2 mb-1" style={{
+      fontSize: '0.85rem'
+    }}>{t("dashboard.chuaCoKeywordNao")}</p>
+      <p className="text-muted-custom mb-0" style={{
+      fontSize: '0.75rem'
+    }}>{t("dashboard.themKeywordVaoProjectDeBatDauT")}</p>
+    </div> : <KeywordsRechart chartData={keywords} onKeywordClick={onKeywordClick} />;
+  return <EntityCard className="h-100" title={<span className="d-flex align-items-center gap-2">
+          <Icon icon="lucide:flame" width={16} style={{
+      color: 'var(--primary)'
+    }} />
+          <span>Trending Keywords</span>
+        </span>} actions={actions} description={description} bodyClassName="flex-column align-items-stretch" />;
 }

@@ -1,4 +1,5 @@
-﻿/**
+import { useTranslation } from "react-i18next";
+/**
  * File source thuộc hệ thống FE ResearchPulse.
  *
  * File: features\keywords\pages\KeywordListPage.jsx
@@ -11,126 +12,88 @@ import KeywordSearchBar from '../components/KeywordSearchBar';
 import KeywordSortDropdown from '../components/KeywordSortDropdown';
 import KeywordList from '../components/KeywordList';
 import { useKeywords } from '../hooks/useKeywords';
+import './KeywordListPage.css';
 
 /**
  * Trang danh sách Keywords.
  * Route: /keywords
  */
 export default function KeywordListPage() {
+  const {
+    t
+  } = useTranslation();
   const navigate = useNavigate();
-  const { keywords, pagination, loading, error, filters, actions } = useKeywords();
-
-  const handleSearch = (q) => {
+  const {
+    keywords,
+    pagination,
+    loading,
+    error,
+    filters,
+    actions
+  } = useKeywords();
+  const handleSearch = q => {
     actions.setKeyword(q);
   };
-
   const handleClearSearch = () => {
     actions.setKeyword('');
   };
-
   const handleSortChange = (sortBy, sortOrder) => {
     actions.setSort(sortBy, sortOrder);
   };
-
-  const handlePageChange = (page) => {
+  const handlePageChange = page => {
     actions.setPage(page);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
   };
-
-  const handleViewArticles = (keywordId) => {
+  const handleViewArticles = keywordId => {
     navigate(`/keywords/${keywordId}/articles`);
   };
-
-  return (
-    <div className="grid-bg min-vh-100 d-flex flex-column" style={{ backgroundColor: 'var(--bg-main)' }}>
+  return <div className="grid-bg keyword-list-page d-flex flex-column">
       <Header />
 
-      <Container className="py-5 flex-grow-1">
-        {/* Breadcrumb */}
-        <nav aria-label="breadcrumb" className="mb-4">
-          <ol className="breadcrumb" style={{ fontSize: '0.88rem' }}>
-            <li className="breadcrumb-item">
-              <span
-                role="button"
-                tabIndex={0}
-                onClick={() => navigate('/dashboard')}
-                onKeyDown={(e) => e.key === 'Enter' && navigate('/dashboard')}
-                style={{ color: 'var(--text-muted)', cursor: 'pointer' }}
-              >
-                Dashboard
-              </span>
-            </li>
+      <Container className="pb-5 flex-grow-1">
+        <nav aria-label="breadcrumb" className="keyword-list-breadcrumb mb-4">
+          <ol className="breadcrumb">
             <li className="breadcrumb-item active text-main fw-semibold" aria-current="page">Keywords</li>
           </ol>
         </nav>
 
-        {/* Page header */}
-        <div className="mb-5">
-          <div className="d-flex align-items-center gap-3 mb-2">
-            <Icon icon="lucide:tag" width="28" style={{ color: 'var(--text-muted)' }} />
-            <h1 className="font-display fw-bold text-main mb-0" style={{ fontSize: '2rem' }}>
-              Khám phá Keywords
-            </h1>
+        <section className="keyword-list-hero">
+          <div className="keyword-list-hero__content">
+            <div className="keyword-list-eyebrow">
+              <Icon icon="lucide:tags" width="18" />
+              <span>Research Keywords</span>
+            </div>
+            <h1 className="keyword-list-title">{t("keywords.khamPhaKeywords")}</h1>
+            <p className="keyword-list-description">{t("keywords.timKiemCacTuKhoaNghienCuuVaMoN")}</p>
+            {pagination.total > 0 && <div className="keyword-list-total-pill">
+                <Icon icon="lucide:database" width="16" />
+                <span>{t("keywords.tongCong")}<strong>{pagination.total.toLocaleString()}</strong>{t("keywords.keywordTrongHeThong")}</span>
+              </div>}
           </div>
-          <p className="text-muted-custom" style={{ fontSize: '1.05rem', maxWidth: '600px' }}>
-            Tìm kiếm và khám phá từ khóa nghiên cứu. Mỗi keyword liên kết đến các bài báo khoa học liên quan.
-          </p>
-          <p className="text-muted-custom" style={{ fontSize: '0.88rem' }}>
-            {pagination.total > 0 && (
-              <span>Tổng cộng <strong className="text-main">{pagination.total.toLocaleString()}</strong> keyword trong hệ thống</span>
-            )}
-          </p>
-        </div>
+        </section>
 
-        {/* Search & Sort bar */}
-        <div className="d-flex align-items-start gap-3 flex-wrap mb-4">
-          <div className="flex-grow-1">
-            <KeywordSearchBar
-              value={filters.keyword}
-              onSearch={handleSearch}
-              onClear={handleClearSearch}
-            />
+        <div className="keyword-toolbar">
+          <div className="keyword-toolbar__search">
+            <KeywordSearchBar value={filters.keyword} onSearch={handleSearch} onClear={handleClearSearch} />
           </div>
-          <KeywordSortDropdown
-            sortBy={filters.sortBy}
-            sortOrder={filters.sortOrder}
-            onChange={handleSortChange}
-          />
+          <KeywordSortDropdown sortBy={filters.sortBy} sortOrder={filters.sortOrder} onChange={handleSortChange} />
         </div>
 
         {/* Active filter context */}
-        {filters.keyword && (
-          <div className="mb-3 d-flex align-items-center gap-2" style={{ fontSize: '0.9rem' }}>
-            <span className="text-muted-custom">Kết quả tìm kiếm cho:</span>
-            <span
-              className="px-3 py-1 rounded-pill text-main fw-semibold"
-              style={{ backgroundColor: 'rgba(0,0,0,0.07)', border: '1px solid rgba(0,0,0,0.10)' }}
-            >
+        {filters.keyword && <div className="keyword-active-filter">
+            <span>{t("keywords.ketQuaTimKiemCho")}</span>
+            <span className="keyword-active-filter__term">
               "{filters.keyword}"
             </span>
-            <button
-              type="button"
-              className="btn btn-link btn-sm p-0 text-muted-custom"
-              onClick={handleClearSearch}
-              style={{ textDecoration: 'none', fontSize: '0.85rem' }}
-            >
-              <Icon icon="lucide:x" width="14" className="me-1" />
-              Xóa
-            </button>
-          </div>
-        )}
+            <button type="button" className="btn btn-link btn-sm p-0 keyword-active-filter__clear" onClick={handleClearSearch}>
+              <Icon icon="lucide:x" width="14" className="me-1" />{t("keyword.xoa")}</button>
+          </div>}
 
         {/* Keyword grid */}
-        <KeywordList
-          keywords={keywords}
-          loading={loading}
-          error={error}
-          pagination={pagination}
-          onPageChange={handlePageChange}
-          onViewArticles={handleViewArticles}
-          onRetry={actions.refetch}
-        />
+        <KeywordList keywords={keywords} loading={loading} error={error} pagination={pagination} onPageChange={handlePageChange} onViewArticles={handleViewArticles} onRetry={actions.refetch} />
       </Container>
-    </div>
-  );
+    </div>;
 }
