@@ -423,7 +423,7 @@ export default function ArticleVisualDetailPage() {
     if (!originArticle) return;
     let isMounted = true;
     setIframeStatus('loading');
-    const iframeUrl = `${import.meta.env.VITE_ORIGIN_URL || 'http://localhost:5174'}/embed/article-graph?keyword=${encodeURIComponent(originArticle.title)}&limit=50`;
+    const iframeUrl = `${import.meta.env.VITE_ORIGIN_URL || 'http://localhost:5174'}/embed/article-graph?keyword=${encodeURIComponent(originArticle.title)}&limit=1`;
     const origin = import.meta.env.VITE_ORIGIN_URL || 'http://localhost:5174';
     const checkServiceAvailability = async () => {
       try {
@@ -595,7 +595,7 @@ export default function ArticleVisualDetailPage() {
                   <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>{t("article.dangKiemTraDichVuBieuDo")}</div>}
 
               {/* Chỉ render iframe khi dịch vụ đã được xác nhận là có sẵn */}
-              {iframeStatus === 'content-loading' && <iframe key={iframeReloadKey} src={`${import.meta.env.VITE_ORIGIN_URL || 'http://localhost:5174'}/embed/article-graph?keyword=${encodeURIComponent(originArticle.title)}&limit=50`} title="Interactive Article Graph" className="article-graph-iframe"
+              {iframeStatus === 'content-loading' && <iframe key={iframeReloadKey} src={`${import.meta.env.VITE_ORIGIN_URL || 'http://localhost:5174'}/embed/article-graph?keyword=${encodeURIComponent(originArticle.title)}&limit=1`} title="Interactive Article Graph" className="article-graph-iframe"
             // Sự kiện onLoad này vẫn hữu ích để ẩn spinner nếu iframe tải xong
             // nhưng không gửi postMessage.
             onLoad={() => console.log('[Parent] Iframe content loaded.')} onError={() => setIframeStatus('error')} />}
