@@ -3,6 +3,7 @@ import React from 'react';
 import { Table, Card, Button } from 'react-bootstrap';
 import { Icon } from '@iconify/react';
 import AdminPagination from '../../../shared/components/Pagination';
+import LatexText from '../../../shared/components/LatexText/LatexText';
 export default function GeographyArticleList({
   articles = [],
   loading = false,
@@ -234,10 +235,10 @@ export default function GeographyArticleList({
                   maxWidth: '380px'
                 }} className="py-3">
                         <div className="geography-article-title line-clamp-2">
-                          {article.title}
+                          <LatexText text={article.title} />
                         </div>
                         {article.abstract && <div className="text-muted-custom mt-1 text-xs text-truncate font-display">
-                            {article.abstract}
+                            <LatexText text={article.abstract} />
                           </div>}
                       </td>
                       <td style={{
@@ -323,7 +324,7 @@ export default function GeographyArticleList({
                   lineHeight: '1.4',
                   fontSize: '0.9rem'
                 }}>
-                        {article.title}
+                        <LatexText text={article.title} />
                       </h6>
 
                       <div className="pt-2 border-top border-light d-flex align-items-center justify-content-between flex-wrap gap-2">

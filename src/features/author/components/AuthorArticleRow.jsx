@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next";
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Icon from '../../../shared/components/Icon';
+import LatexText from '../../../shared/components/LatexText/LatexText';
 export default function AuthorArticleRow({
   article,
   isLast = false
@@ -39,7 +40,7 @@ export default function AuthorArticleRow({
       </div>
 
       <h4 onClick={handleTitleClick} className="author-article-title">
-        {title}
+        <LatexText text={title} />
       </h4>
 
       <div className="author-article-footer">

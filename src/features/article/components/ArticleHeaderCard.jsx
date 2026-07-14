@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next";
 import { Card, Badge } from 'react-bootstrap';
 import { Icon } from '@iconify/react';
 import { useNavigate } from 'react-router-dom';
+import LatexText from '../../../shared/components/LatexText/LatexText';
 export default function ArticleHeaderCard({
   article
 }) {
@@ -66,7 +67,7 @@ export default function ArticleHeaderCard({
       lineHeight: '1.3',
       fontWeight: 700
     }}>
-        {article.title}
+        <LatexText text={article.title} />
       </h1>
 
       {/* Main Author Row */}
