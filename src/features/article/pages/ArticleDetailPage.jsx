@@ -27,6 +27,7 @@ import ArticlesTabContent from '../../journal/components/ArticlesTabContent';
 import AuthRequiredModal from '../../../shared/components/AuthRequiredModal';
 import { toast } from '../../../shared/utils/toast';
 import { getDoiUrl, normalizeArticleDetail } from '../utils/articleFormatters';
+import LatexText from '../../../shared/components/LatexText/LatexText';
 import '../Article.css';
 const formatAuthorsLine = (authors = [], limit = 3) => {  if (!authors || authors.length === 0) return t("article.dangCapNhatTacGia");
   const names = authors.slice(0, limit).map(author => author.display_name || author.name || author.author_name || t("typeAuthor")).join(', ');
@@ -265,7 +266,7 @@ export default function ArticleDetailPage() {
 
 
                 <h1 className="article-detail-title">
-                  {article.title}
+                  <LatexText text={article.title} />
                 </h1>
 
                 <div className="article-detail-authors">
@@ -357,9 +358,9 @@ export default function ArticleDetailPage() {
                         <h2 className="article-section-title" style={{
                     fontSize: '1.65rem'
                   }}>Abstract</h2>
-                        {(article.abstract || 'No abstract is available for this article.').split('\n').filter(Boolean).map((paragraph, index) => <p key={index} className="article-section-text">
-                              {paragraph}
-                            </p>)}
+                        {(article.abstract || 'No abstract is available for this article.').split('\n').filter(Boolean).map((paragraph, index) => (
+                             <LatexText key={index} text={paragraph} as="p" className="article-section-text" />
+                        ))}
                       </section>
 
 
@@ -367,7 +368,7 @@ export default function ArticleDetailPage() {
                         <h2 className="article-section-title">Section snippets</h2>
                         <p className="article-section-text" style={{
                     fontSize: '0.98rem'
-                  }}>{t("article.tomTatNhanhBaiBaoThuocChuDe")}<strong>{article.topic_name || 'Research'}</strong>{t("article.congBoTrong")}<strong>{article.journal_name || 'Scientific Journal'}</strong>
+                  }}>{t("article.tomTatNhanhBaiBaoThuocChuDe")} <strong>{article.topic_name || 'Research'}</strong>{t("article.congBoTrong")} <strong>{article.journal_name || 'Scientific Journal'}</strong>
                           {article.publication_year ? ` năm ${article.publication_year}` : ''}.
                         </p>
                       </section>

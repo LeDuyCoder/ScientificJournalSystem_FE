@@ -14,6 +14,7 @@ import Header from '../../landing/components/Header';
 import { getTopicByIdApi, getTopicArticlesApi } from '../api/topic.api';
 import AdminPagination from '../../../shared/components/Pagination';
 import PrimaryButton from '../../../shared/components/Button/PrimaryButton';
+import LatexText from '../../../shared/components/LatexText/LatexText';
 import './TopicDetailPage.css';
 const PAGE_SIZE = 10;
 const normalizeArticle = (item = {}) => ({
@@ -181,7 +182,7 @@ export default function TopicDetailPage() {
                     <div className="d-flex justify-content-between align-items-start gap-3 flex-wrap">
                       <div className="flex-grow-1">
                         <button type="button" className="btn btn-link topic-detail-article-title mb-2" onClick={() => navigate(`/articles/${article.id}/visual`)}>
-                          {article.title}
+                          <LatexText text={article.title} />
                         </button>
 
                         <div className="topic-detail-article-meta">

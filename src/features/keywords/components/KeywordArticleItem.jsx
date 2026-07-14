@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
  */
 import { Button } from 'react-bootstrap';
 import { Icon } from '@iconify/react';
+import LatexText from '../../../shared/components/LatexText/LatexText';
 
 /**
  * Item hiển thị bài báo liên quan đến keyword.
@@ -31,7 +32,7 @@ export default function KeywordArticleItem({
       </div>
 
       <h2 className="keyword-article-item__title">
-        {article.title}
+        <LatexText text={article.title} />
       </h2>
 
       {article.doi && <p className="keyword-article-doi">
@@ -39,7 +40,7 @@ export default function KeywordArticleItem({
         </p>}
 
       {article.abstract && <p className="keyword-article-abstract">
-          {article.abstract}
+          <LatexText text={article.abstract} />
         </p>}
 
       <Button type="button" onClick={() => onViewDetail && onViewDetail(article.article_id)} className="keyword-article-action d-inline-flex align-items-center gap-2">{t("journal.xemChiTiet")}<Icon icon="lucide:arrow-right" width="16" />

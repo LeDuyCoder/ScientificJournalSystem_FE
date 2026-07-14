@@ -15,6 +15,7 @@ import { Modal } from 'react-bootstrap';
 import Header from '../../landing/components/Header';
 import PrimaryButton from '../../../shared/components/Button/PrimaryButton';
 import projectService from '../../project/services/projectService';
+import LatexText from '../../../shared/components/LatexText/LatexText';
 import useAuth from '../../auth/hooks/useAuth';
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, PieChart, Pie, Cell } from 'recharts';
 const ProjectDetailPage = () => {
@@ -591,7 +592,9 @@ const ProjectDetailPage = () => {
                         <span className="text-muted-custom small">{article.publication_year || new Date(article.publication_date).getFullYear()}</span>
                       </div>
                       <Link to={`/articles/${article.article_id || article.id}/visual`} className="text-decoration-none">
-                        <h6 className="fw-bold text-main mb-2 hover-primary lh-base">{article.title}</h6>
+                        <h6 className="fw-bold text-main mb-2 hover-primary lh-base">
+                          <LatexText text={article.title} />
+                        </h6>
                       </Link>
                       <div className="d-flex justify-content-between align-items-center mt-2">
                         <div className="text-muted-custom small text-truncate pe-3">

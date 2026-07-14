@@ -8,6 +8,7 @@ import { t } from "i18next";
 import { Button } from 'react-bootstrap';
 import { Icon } from '@iconify/react';
 import { useNavigate } from 'react-router-dom';
+import LatexText from '../../../shared/components/LatexText/LatexText';
 export default function ArticleTableRow({
   article,
   index,
@@ -74,7 +75,7 @@ export default function ArticleTableRow({
         WebkitLineClamp: 2,
         WebkitBoxOrient: 'vertical'
       }}>
-          {article.title}
+          <LatexText text={article.title} />
         </div>
         {article.abstract && <div className="text-muted-custom mt-1 text-xs" style={{
         fontWeight: 400,
@@ -83,7 +84,7 @@ export default function ArticleTableRow({
         WebkitLineClamp: 1,
         WebkitBoxOrient: 'vertical'
       }}>
-            {article.abstract}
+            <LatexText text={article.abstract} />
           </div>}
       </td>
 

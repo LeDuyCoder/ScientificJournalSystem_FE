@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { Link } from 'react-router-dom';
 import { Icon } from '@iconify/react';
+import LatexText from '../../../shared/components/LatexText/LatexText';
 const KeywordRelatedArticleList = ({
   articles,
   loading
@@ -48,7 +49,7 @@ const KeywordRelatedArticleList = ({
           </div>
           <h5 className="font-display fw-bold mb-2">
             <Link to={`/articles/${article.id}/visual`} className="text-main text-decoration-none">
-              {article.title}
+              <LatexText text={article.title} />
             </Link>
           </h5>
           <div className="text-muted-custom small d-flex flex-wrap gap-3">

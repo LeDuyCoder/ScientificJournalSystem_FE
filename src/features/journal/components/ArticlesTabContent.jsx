@@ -8,6 +8,7 @@ import { t } from "i18next";
 import { Card, Button } from 'react-bootstrap';
 import { Icon } from '@iconify/react';
 import LoadingSkeleton from '../../../shared/components/LoadingSkeleton';
+import LatexText from '../../../shared/components/LatexText/LatexText';
 export default function ArticlesTabContent({
   recentArticles = [],
   loading,
@@ -46,7 +47,7 @@ export default function ArticlesTabContent({
             </div>
 
             <h3 className={`journal-article-title ${hasArticleId ? '' : 'text-muted-custom'}`} onClick={handleArticleOpen} role={hasArticleId ? 'button' : undefined} title={hasArticleId ? t("article.xemChiTietBaiBao") : t("journal.baiBaoNayChuaCoMaDinhDanh")}>
-              {article.title || 'Untitled Article'}
+              <LatexText text={article.title || 'Untitled Article'} />
             </h3>
 
             {article.authors && <div className="text-muted-custom mb-3 d-flex align-items-center gap-2 small">
@@ -57,7 +58,7 @@ export default function ArticlesTabContent({
               </div>}
 
             {article.abstract && <p className="journal-article-abstract">
-                {article.abstract}
+                <LatexText text={article.abstract} />
               </p>}
 
             <div className="mt-auto d-flex justify-content-end">

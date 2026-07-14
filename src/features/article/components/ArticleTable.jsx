@@ -7,6 +7,7 @@ import { useTranslation } from "react-i18next";
 import { Table, Card, Button } from 'react-bootstrap';
 import { Icon } from '@iconify/react';
 import ArticleTableRow from './ArticleTableRow';
+import LatexText from '../../../shared/components/LatexText/LatexText';
 export default function ArticleTable({
   articles,
   isLoading,
@@ -185,14 +186,14 @@ export default function ArticleTable({
                 lineHeight: '1.4',
                 fontSize: '0.9rem'
               }}>
-                    {article.title}
+                    <LatexText text={article.title} />
                   </h6>
 
                   {article.abstract && <p className="text-muted-custom text-xs mb-3 text-truncate-2" style={{
                 fontSize: '0.75rem',
                 lineHeight: '1.4'
               }}>
-                      {article.abstract}
+                      <LatexText text={article.abstract} />
                     </p>}
 
                   <div className="pt-2 border-top border-light d-flex align-items-center justify-content-between flex-wrap gap-2">
