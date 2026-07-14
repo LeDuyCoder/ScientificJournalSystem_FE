@@ -27,6 +27,7 @@ import ErrorState from '../../../shared/components/ErrorState';
 import AuthRequiredModal from '../../../shared/components/AuthRequiredModal';
 import { toast } from '../../../shared/utils/toast';
 import { getDoiUrl, normalizeArticleDetail } from '../utils/articleFormatters';
+import LatexText from '../../../shared/components/LatexText/LatexText';
 import '../Article.css';
 const formatAuthorsLine = (authors = [], limit = 3) => {
   if (!authors || authors.length === 0) return t("article.dangCapNhatTacGia");
@@ -200,7 +201,7 @@ const ArticleDetailPane = ({
       </div>
 
       <h1 className="article-detail-title is-clickable" onClick={() => onTitleClick(article.article_id)} title={t("article.xemChiTietBaiBao")}>
-        {article.title}
+        <LatexText text={article.title} />
       </h1>
 
       <div className="article-detail-authors mb-3">
@@ -275,7 +276,9 @@ const ArticleDetailPane = ({
 
       <section className="article-section-connected">
         <h3 className="section-title-connected mb-2 font-display">Abstract</h3>
-        {(article.abstract || 'No abstract is available for this article.').split('\n').filter(Boolean).map((paragraph, index) => <p key={index} className="abstract-text-connected font-display">{paragraph}</p>)}
+        {(article.abstract || 'No abstract is available for this article.').split('\n').filter(Boolean).map((paragraph, index) => (
+           <LatexText key={index} text={paragraph} as="p" className="abstract-text-connected font-display" />
+        ))}
       </section>
 
       {(article.keywords || []).length > 0 && <section className="article-section-connected mt-4">
@@ -562,7 +565,7 @@ export default function ArticleVisualDetailPage() {
                 <span className="paper-year font-display">{originArticle.publication_year || '—'}</span>
               </div>
               <h3 className="paper-title font-display" onClick={() => handleTitleClick(originArticle.article_id)} title={t("article.xemChiTietBaiBao")}>
-                {originArticle.title}
+                <LatexText text={originArticle.title} />
               </h3>
               <div className="paper-authors font-display mt-2">{formatAuthorsLine(originArticle.authors, 3)}</div>
             </div>
@@ -575,7 +578,7 @@ export default function ArticleVisualDetailPage() {
                     <div className="d-flex align-items-center justify-content-between mb-1">
                       <span className="paper-year font-display">{rec.publication_year}</span>
                     </div>
-                    <h4 className="paper-title font-display">{rec.title}</h4>
+                    <h4 className="paper-title font-display"><LatexText text={rec.title} /></h4>
                     <div className="paper-authors font-display mt-2">{rec.authors}</div>
                   </div>)}
             </div>
