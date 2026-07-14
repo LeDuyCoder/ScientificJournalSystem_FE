@@ -29,7 +29,9 @@ export default function LoginPage() {
   const [error, setError] = useState(null);
 
   // Nếu người dùng bị redirect tới login từ một trang khác, đăng nhập xong quay lại trang đó.
-  const from = location.state?.from?.pathname || DASHBOARD_PAGE;
+  const from = location.state?.from 
+    ? `${location.state.from.pathname}${location.state.from.search || ''}` 
+    : DASHBOARD_PAGE;
 
   /**
    * Xử lý submit form đăng nhập bằng email/password.
@@ -59,7 +61,7 @@ export default function LoginPage() {
     setIsLoading(true);
     setError(null);
     try {
-      loginWithGoogle(DASHBOARD_PAGE);
+      loginWithGoogle(from);
     } catch {
       toast.error(t("auth.dangNhapThatBai"));
     } finally {
