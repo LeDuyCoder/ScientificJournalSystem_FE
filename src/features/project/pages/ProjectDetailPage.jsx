@@ -3,7 +3,10 @@ import { t } from "i18next";
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import ROUTES from '../../../app/routes/routePaths';
+import { useQueryClient } from '@tanstack/react-query';
 import { useKeywordTracking } from '../../keyword/hooks/useKeywordTracking';
+import { useProjectOverviewQuery } from '../hooks/useProjectOverviewQuery';
+import { useProjectMembersQuery } from '../hooks/useProjectMembersQuery';
 import KeywordWatchList from '../../keyword/components/KeywordWatchList';
 import AddKeywordModal from '../../keyword/components/AddKeywordModal';
 import ManageKeywordsModal from '../../keyword/components/ManageKeywordsModal';
@@ -49,58 +52,23 @@ const ProjectDetailPage = () => {
   const [showInviteModal, setShowInviteModal] = useState(false);
   const [confirmModal, setConfirmModal] = useState({ show: false, userId: null });
   
-  const [overviewData, setOverviewData] = useState(null);
-  const [overviewLoading, setOverviewLoading] = useState(false);
-  const [overviewError, setOverviewError] = useState(null);
+  const queryClient = useQueryClient();
+  const { data: overviewData, isLoading: overviewLoading, error: overviewErrorRaw, refetch: fetchProjectOverview } = useProjectOverviewQuery(projectId);
+  const overviewError = overviewErrorRaw ? t("project.khongTheTaiDuLieuTongQuanVuiLo") : null;
+
+  const { data: membersData, isLoading: membersLoading } = useProjectMembersQuery(projectId);
+  const members = membersData || [];
   
-  const [members, setMembers] = useState([]);
-  const [membersLoading, setMembersLoading] = useState(false);
   const [membersActionLoading, setMembersActionLoading] = useState(false);
 
   const chartColors = ['#ff702f', '#ff9f68', '#ffc09b', '#334155', '#64748b', '#94a3b8'];
-  const fetchProjectOverview = useCallback(async () => {
-    if (!projectId) return;
-    setOverviewLoading(true);
-    setOverviewError(null);
-    try {
-      const data = await projectService.getProjectOverview(projectId);
-      setOverviewData(data || null);
-    } catch (err) {
-      console.error('Error fetching project overview', err);
-      setOverviewError(t("project.khongTheTaiDuLieuTongQuanVuiLo"));
-    } finally {
-      setOverviewLoading(false);
-    }
-  }, [projectId]);
-  useEffect(() => {
-    fetchProjectOverview();
-  }, [fetchProjectOverview]);
-
-  const fetchProjectMembers = useCallback(async () => {
-    if (!projectId) return;
-    setMembersLoading(true);
-    try {
-      const data = await projectService.getProjectMembers(projectId);
-      setMembers(data || []);
-    } catch (err) {
-      console.error('Error fetching project members', err);
-    } finally {
-      setMembersLoading(false);
-    }
-  }, [projectId]);
-
-  useEffect(() => {
-    if (activeTab === 'members') {
-      fetchProjectMembers();
-    }
-  }, [activeTab, fetchProjectMembers]);
 
   const handleInviteMember = async (email, role) => {
     setMembersActionLoading(true);
     try {
       await projectService.inviteProjectMember(projectId, email, role);
       setShowInviteModal(false);
-      fetchProjectMembers();
+      queryClient.invalidateQueries({ queryKey: ['project', projectId, 'members'] });
     } catch (err) {
       console.error('Error inviting member', err);
       alert(err.response?.data?.message || 'Có lỗi xảy ra khi mời thành viên.');
@@ -113,7 +81,7 @@ const ProjectDetailPage = () => {
     setMembersActionLoading(true);
     try {
       await projectService.updateProjectMemberRole(projectId, userId, role);
-      fetchProjectMembers();
+      queryClient.invalidateQueries({ queryKey: ['project', projectId, 'members'] });
     } catch (err) {
       console.error('Error updating role', err);
       alert('Không thể cập nhật quyền.');
@@ -132,7 +100,7 @@ const ProjectDetailPage = () => {
     setConfirmModal({ show: false, userId: null });
     try {
       await projectService.removeProjectMember(projectId, confirmModal.userId);
-      fetchProjectMembers();
+      queryClient.invalidateQueries({ queryKey: ['project', projectId, 'members'] });
     } catch (err) {
       console.error('Error removing member', err);
       alert('Không thể xóa thành viên.');

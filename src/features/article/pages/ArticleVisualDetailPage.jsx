@@ -7,7 +7,7 @@ import { t } from "i18next";
  */
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Container, Button, Modal } from 'react-bootstrap';
+import { Container, Button, Modal, Dropdown } from 'react-bootstrap';
 import { Icon } from '@iconify/react';
 
 // Layout
@@ -18,6 +18,8 @@ import useAuth from '../../auth/hooks/useAuth';
 
 // API
 import { getArticleDetailApi, bookmarkArticleApi, getArticlesListApi } from '../api/articleApi';
+import { spendCoin } from '../../wallet/api/walletApi';
+import { useWalletStore } from '../../../app/store/walletStore';
 
 // Subcomponents
 import ArticleDetailSkeleton from '../components/ArticleDetailSkeleton';
@@ -27,6 +29,8 @@ import ErrorState from '../../../shared/components/ErrorState';
 import AuthRequiredModal from '../../../shared/components/AuthRequiredModal';
 import { toast } from '../../../shared/utils/toast';
 import { getDoiUrl, normalizeArticleDetail } from '../utils/articleFormatters';
+import { downloadArticleCsv } from '../utils/csvExport';
+import { downloadArticlePdf } from '../utils/pdfExport';
 import LatexText from '../../../shared/components/LatexText/LatexText';
 import '../Article.css';
 const formatAuthorsLine = (authors = [], limit = 3) => {
@@ -60,6 +64,7 @@ const ArticleDetailPane = ({
   const navigate = useNavigate();
   const auth = useAuth();
   const currentUser = auth?.user;
+  const { balance, setBalance } = useWalletStore();
   const [article, setArticle] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -68,6 +73,7 @@ const ArticleDetailPane = ({
   const [showLoginModal, setShowLoginModal] = useState(false);
   const [showAllAuthors, setShowAllAuthors] = useState(false);
   const [showCitationsModal, setShowCitationsModal] = useState(false);
+  const [showPremiumModal, setShowPremiumModal] = useState(false);
   const [referencePage, setReferencePage] = useState(1);
   const referencesPerPage = 2;
   const fetchArticleForPane = useCallback(async () => {
@@ -169,6 +175,30 @@ const ArticleDetailPane = ({
       toast.error(t("article.khongTheChiaSeBaiBaoLucNay"));
     }
   };
+  const handleConfirmPremiumDownload = async () => {
+    if (!currentUser) {
+      setShowPremiumModal(false);
+      setShowLoginModal(true);
+      return;
+    }
+    const currentCoins = balance ?? 0;
+    if (currentCoins < 2) {
+      toast.error(t("article.soDuCoinCuaBanKhongDuVuiLongNa"));
+      setShowPremiumModal(false);
+      return;
+    }
+    try {
+      await spendCoin(2, `Download Premium PDF for article ${article.article_id}`);
+      setBalance(currentCoins - 2);
+      toast.success(t("article.thanhToan2XuDeTaiPremium"));
+      downloadArticlePdf(article, { withWatermark: false });
+    } catch (err) {
+      console.error("Spend coin API error", err);
+      toast.error(err?.response?.data?.message || err.message || "Giao dịch thất bại, không thể tải Premium PDF.");
+    } finally {
+      setShowPremiumModal(false);
+    }
+  };
   if (isLoading) {
     return <div className="p-4">
         <ArticleDetailSkeleton />
@@ -227,7 +257,7 @@ const ArticleDetailPane = ({
         </span>
         <span className="meta-item">
           <Icon icon="lucide:building" width="14" />
-          <strong>Publisher:</strong> {article.publisher_name || '—'}
+          <strong>{t("article.publisher")}:</strong> {article.publisher_name || '—'}
         </span>
         <span className="meta-item">
           <Icon icon="lucide:globe" width="14" />
@@ -235,27 +265,44 @@ const ArticleDetailPane = ({
         </span>
         {article.volume_number && <span className="meta-item">
             <Icon icon="lucide:book" width="14" />
-            <strong>Volume/Issue:</strong> Vol. {article.volume_number}{article.issue_number ? `, Issue ${article.issue_number}` : ''}
+            <strong>{t("article.volumeIssue")}:</strong> {t("article.vol")} {article.volume_number}{article.issue_number ? `, ${t("article.issue")} ${article.issue_number}` : ''}
           </span>}
       </div>
 
       <div className="article-detail-actions-connected mb-4">
         <div className="citations-chip" onClick={() => setShowCitationsModal(true)}>
           <Icon icon="lucide:quote" width="13" />
-          <span>{article.citations ?? 0} Citations</span>
+          <span>{article.citations ?? 0} {t("article.citations")}</span>
         </div>
-        <button disabled={isBookmarkLoading} onClick={handleBookmarkToggle} className={`action-btn-connected ${isBookmarked ? 'is-active' : ''}`}>
-          <Icon icon={isBookmarked ? 'lucide:bookmark-check' : 'lucide:bookmark-plus'} width="14" />
-          <span>{isBookmarked ? 'Saved' : 'Save'}</span>
-        </button>
+        <Dropdown className="d-inline-block">
+          <Dropdown.Toggle as="button" className="action-btn-connected custom-dropdown-toggle">
+            <Icon icon="lucide:download" width="14" />
+            <span style={{ marginLeft: '4px' }}>{t("article.download")}</span>
+          </Dropdown.Toggle>
+          <Dropdown.Menu>
+            <Dropdown.Item onClick={() => downloadArticleCsv(article)}>
+              <Icon icon="lucide:file-spreadsheet" width="14" className="me-2" />
+              {t("article.exportCsv")}
+            </Dropdown.Item>
+            <Dropdown.Item onClick={() => downloadArticlePdf(article, { withWatermark: true })}>
+              <Icon icon="lucide:file-text" width="14" className="me-2" />
+              {t("article.exportPdf")}
+            </Dropdown.Item>
+            <Dropdown.Divider />
+            <Dropdown.Item onClick={() => setShowPremiumModal(true)} className="d-flex align-items-center py-2 fw-medium">
+              <Icon icon="lucide:star" width="14" className="me-2" style={{ color: 'var(--primary)' }} />
+              {t("article.premiumPdfCoin")}
+            </Dropdown.Item>
+          </Dropdown.Menu>
+        </Dropdown>
         <button onClick={handleShareArticle} className="action-btn-connected">
           <Icon icon="lucide:share-2" width="14" />
-          <span>Share</span>
+          <span>{t("article.share")}</span>
         </button>
       </div>
 
       <div className="article-detail-open-in mb-4">
-        <span className="open-in-label text-muted-custom">Open in:</span>
+        <span className="open-in-label text-muted-custom">{t("article.openIn")}</span>
         <div className="open-in-links-container">
           {articleDoiUrl && <a href={articleDoiUrl} target="_blank" rel="noreferrer" className="open-in-btn">
               <Icon icon="simple-icons:doi" width="14" />
@@ -275,14 +322,14 @@ const ArticleDetailPane = ({
       <div className="detail-pane-divider mb-4" />
 
       <section className="article-section-connected">
-        <h3 className="section-title-connected mb-2 font-display">Abstract</h3>
+        <h3 className="section-title-connected mb-2 font-display">{t("article.abstract")}</h3>
         {(article.abstract || 'No abstract is available for this article.').split('\n').filter(Boolean).map((paragraph, index) => (
            <LatexText key={index} text={paragraph} as="p" className="abstract-text-connected font-display" />
         ))}
       </section>
 
       {(article.keywords || []).length > 0 && <section className="article-section-connected mt-4">
-          <h3 className="section-title-connected mb-2 font-display">Keywords</h3>
+          <h3 className="section-title-connected mb-2 font-display">{t("article.keywords")}</h3>
           <div className="d-flex gap-1.5 flex-wrap">
             {article.keywords.map(keyword => {
           const label = keyword.display_name || keyword.name || keyword.keyword;
@@ -296,31 +343,31 @@ const ArticleDetailPane = ({
         </section>}
 
       <section className="article-connected-references mt-4">
-        <h3 className="section-title-connected mb-2 font-display">References ({references.length})</h3>
+        <h3 className="section-title-connected mb-2 font-display">{t("article.references")} ({references.length})</h3>
         {references.length > 0 ? <div className="d-flex flex-column gap-2">
             {paginatedReferences.map((referenceUrl, index) => {
           const absoluteIndex = (referencePage - 1) * referencesPerPage + index;
           return <a key={`${referenceUrl}-${absoluteIndex}`} href={referenceUrl} target="_blank" rel="noreferrer" className="reference-link-item p-2 rounded">
-                  <div className="reference-item-index text-xs text-muted-custom">Reference {absoluteIndex + 1}</div>
+                  <div className="reference-item-index text-xs text-muted-custom">{t("article.referenceLabel")} {absoluteIndex + 1}</div>
                   <div className="reference-item-label text-sm text-truncate text-main font-display">{formatReferenceLabel(referenceUrl, absoluteIndex)}</div>
                 </a>;
         })}
             {references.length > referencesPerPage && <div className="d-flex align-items-center justify-content-between mt-2 pt-2 border-top">
-                <span className="text-xs text-muted-custom">Trang {referencePage}/{referenceTotalPages}</span>
+                <span className="text-xs text-muted-custom">{t("article.page")} {referencePage}/{referenceTotalPages}</span>
                 <div className="d-flex gap-1">
                   <button disabled={referencePage <= 1} onClick={() => setReferencePage(page => Math.max(1, page - 1))} className="btn btn-xs btn-outline-secondary py-0 px-2 font-display" style={{
               fontSize: '0.7rem'
             }}>{t("article.truoc")}</button>
                   <button disabled={referencePage >= referenceTotalPages} onClick={() => setReferencePage(page => Math.min(referenceTotalPages, page + 1))} className="btn btn-xs btn-outline-secondary py-0 px-2 font-display" style={{
               fontSize: '0.7rem'
-            }}>Sau</button>
+            }}>{t("article.next")}</button>
                 </div>
               </div>}
           </div> : <span className="text-xs text-muted-custom font-display">{t("article.khongCoTaiLieuThamKhaoChiTiet")}</span>}
       </section>
       
       <Modal show={showCitationsModal} onHide={() => setShowCitationsModal(false)} centered>
-        <Modal.Header closeButton><Modal.Title className="font-display fw-bold">Citations / Cited by</Modal.Title></Modal.Header>
+        <Modal.Header closeButton><Modal.Title className="font-display fw-bold">{t("article.citationsCitedBy")}</Modal.Title></Modal.Header>
         <Modal.Body>
           <div className="article-modal-stat-box">
             <div className="text-muted-custom text-xs fw-bold text-uppercase mb-1">{t("article.tongLuotTrichDan")}</div>
@@ -343,6 +390,36 @@ const ArticleDetailPane = ({
           </div>
         </Modal.Body>
         <Modal.Footer><Button variant="outline-secondary" onClick={() => setShowCitationsModal(false)} className="font-display">{t("article.dong")}</Button></Modal.Footer>
+      </Modal>
+
+      <Modal show={showPremiumModal} onHide={() => setShowPremiumModal(false)} centered>
+        <Modal.Header closeButton>
+          <Modal.Title className="font-display fw-bold text-main d-flex align-items-center">
+            <Icon icon="lucide:star" className="me-2" style={{ color: 'var(--primary)' }} />
+            {t("article.taiPdfPremium")}
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p className="text-muted-custom mb-3" style={{ lineHeight: 1.7 }}>
+            {t("article.banCoChacChanMuonDung2Xu")}
+          </p>
+          <div className="article-modal-stat-box d-flex align-items-center justify-content-between p-2 px-3" style={{ background: 'var(--bg-main)', borderRadius: '8px', border: '1px solid var(--border)' }}>
+            <span className="fw-semibold text-main d-flex align-items-center">
+              <Icon icon="lucide:file-text" className="me-2 text-muted-custom" /> {t("article.premiumPdf")}
+            </span>
+            <span className="font-display fw-bold d-flex align-items-center" style={{ fontSize: '1.25rem', color: 'var(--primary)' }}>
+              -2 <Icon icon="lucide:coins" className="ms-1" width="18" />
+            </span>
+          </div>
+        </Modal.Body>
+        <Modal.Footer className="border-0">
+          <Button variant="outline-secondary" onClick={() => setShowPremiumModal(false)} className="font-display px-3">
+            {t("admin.huy")}
+          </Button>
+          <Button onClick={handleConfirmPremiumDownload} className="font-display fw-bold px-3 d-flex align-items-center text-white border-0" style={{ backgroundColor: 'var(--primary)' }}>
+             Đồng ý
+          </Button>
+        </Modal.Footer>
       </Modal>
 
       <AuthRequiredModal show={showLoginModal} onHide={() => setShowLoginModal(false)} />

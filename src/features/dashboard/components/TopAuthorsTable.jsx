@@ -16,18 +16,18 @@ function RankBadge({
 }) {
   const cfg = {
     1: {
-      bg: 'var(--text-main)',
-      color: 'var(--bg-main)',
+      bg: 'rgba(245, 158, 11, 0.15)',
+      color: '#d97706',
       icon: 'lucide:crown'
     },
     2: {
-      bg: 'var(--border)',
-      color: 'var(--text-main)',
+      bg: 'rgba(156, 163, 175, 0.15)',
+      color: '#6b7280',
       icon: null
     },
     3: {
-      bg: 'var(--bg-section)',
-      color: 'var(--text-main)',
+      bg: 'rgba(217, 119, 6, 0.1)',
+      color: '#b45309',
       icon: null
     }
   }[rank] ?? {
@@ -147,11 +147,10 @@ export default function TopAuthorsTable({
     }}>{t("dashboard.duLieuLeaderboardSeHienThiODay")}</p>
     </div> : <div>
       {/* Table header */}
-      <div className="d-none d-md-grid px-4 py-2" style={{
+      <div className="d-none d-md-grid px-4 py-2 mb-2 rounded-3 mx-2 mt-2" style={{
       gridTemplateColumns: '40px 200px 1fr 80px 90px',
       gap: '12px',
       alignItems: 'center',
-      borderBottom: '1px solid var(--border)',
       backgroundColor: 'var(--bg-section)'
     }}>
         {['#', t("typeAuthor"), t("author.linhVuc"), t("articles"), 'Citations'].map(h => <span key={h} className="text-muted-custom" style={{
@@ -163,6 +162,7 @@ export default function TopAuthorsTable({
       </div>
 
       {/* Rows */}
+      <div className="d-flex flex-column gap-2 pb-3 px-2">
       {authors.map((author, i) => {
       const name = author.display_name ?? author.full_name ?? author.author_name ?? author.name ?? 'Unknown';
       const orcid = author.orcid ?? null;
@@ -170,12 +170,22 @@ export default function TopAuthorsTable({
       const articles = author.article_count ?? author.papers ?? author.works_count ?? 0;
       const citations = author.citation_count ?? author.citations ?? author.cited_by_count ?? 0;
       const rank = i + 1;
-      return <div key={author.author_id ?? author.id ?? i} className="d-flex d-md-grid px-4 py-3 align-items-center gap-3 font-display" style={{
+      return <div key={author.author_id ?? author.id ?? i} className="d-flex d-md-grid px-3 py-3 align-items-center gap-3 font-display rounded-4" style={{
         gridTemplateColumns: '40px 200px 1fr 80px 90px',
-        borderBottom: i < authors.length - 1 ? '1px solid var(--border)' : 'none',
         cursor: 'pointer',
-        transition: 'background 0.15s ease'
-      }} onClick={() => onAuthorClick?.(author)} onMouseEnter={e => e.currentTarget.style.backgroundColor = 'var(--bg-section)'} onMouseLeave={e => e.currentTarget.style.backgroundColor = 'transparent'}>
+        transition: 'all 0.2s cubic-bezier(0.4, 0, 0.2, 1)',
+        border: '1px solid transparent'
+      }} onClick={() => onAuthorClick?.(author)} onMouseEnter={e => {
+        e.currentTarget.style.backgroundColor = 'var(--bg-section)';
+        e.currentTarget.style.transform = 'translateY(-2px)';
+        e.currentTarget.style.borderColor = 'var(--border)';
+        e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.05)';
+      }} onMouseLeave={e => {
+        e.currentTarget.style.backgroundColor = 'transparent';
+        e.currentTarget.style.transform = 'translateY(0)';
+        e.currentTarget.style.borderColor = 'transparent';
+        e.currentTarget.style.boxShadow = 'none';
+      }}>
             <RankBadge rank={rank} />
             <div className="d-flex align-items-center gap-2">
               <AuthorAvatar name={name} />
@@ -209,6 +219,7 @@ export default function TopAuthorsTable({
             </span>
           </div>;
     })}
+      </div>
     </div>;
   return <EntityCard title={t("dashboard.topAuthorsTuanNay")} actions={actions} description={description} bodyClassName="flex-column align-items-stretch" />;
 }

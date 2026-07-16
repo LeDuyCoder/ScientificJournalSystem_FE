@@ -3,7 +3,8 @@
  *
  * File: features\dashboard\hooks\useDashboard.js
  */
-import { useState, useEffect, useCallback } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { useCallback } from 'react';
 import {
   getDashboardProjectsApi,
   getPublicationTrendsApi,
@@ -36,63 +37,49 @@ const normalizeTopAuthor = (author) => ({
 
 /**
  * useDashboard — central data hook for the Dashboard/Tổng quan page.
- * Fetches projects, analytics, trending keywords and top authors in parallel.
- * Each section has independent loading/error state to avoid full-page crash.
+ * Fetches projects, analytics, trending keywords and top authors in parallel using Tanstack Query.
  */
 export default function useDashboard(currentUser, trendRange = '5') {
-  const [projects, setProjects]               = useState([]);
-  const [analytics, setAnalytics]             = useState(null);
-  const [trendingKeywords, setTrendingKeywords] = useState([]);
-  const [topAuthors, setTopAuthors]           = useState([]);
-
-  const [loadingProjects,  setLoadingProjects]  = useState(false);
-  const [loadingAnalytics, setLoadingAnalytics] = useState(false);
-  const [loadingKeywords,  setLoadingKeywords]  = useState(false);
-  const [loadingAuthors,   setLoadingAuthors]   = useState(false);
-
-  const [errorProjects,  setErrorProjects]  = useState(null);
-  const [errorAnalytics, setErrorAnalytics] = useState(null);
-  const [errorKeywords,  setErrorKeywords]  = useState(null);
-  const [errorAuthors,   setErrorAuthors]   = useState(null);
-
-  // ── fetch helpers ────────────────────────────────────────────────────────
-  const fetchProjects = useCallback(async () => {
-    setLoadingProjects(true);
-    setErrorProjects(null);
-    try {
-      const res  = await getDashboardProjectsApi();
+  // 1. Projects Query
+  const {
+    data: projectsData,
+    isLoading: loadingProjects,
+    error: projectsQueryError,
+    refetch: refetchProjects
+  } = useQuery({
+    queryKey: ['dashboard', 'projects', currentUser],
+    queryFn: async () => {
+      const res = await getDashboardProjectsApi();
       const data = res.data?.data ?? res.data ?? [];
-      const list = Array.isArray(data) ? data : [];
-      setProjects(list);
-      return list;
-    } catch (err) {
-      const status = err.response?.status;
-      setErrorProjects(
-        status === 401
-          ? 'Bạn cần đăng nhập để xem dashboard.'
-          : err.response?.data?.message || err.message || 'Không thể tải projects.'
-      );
-      return [];
-    } finally {
-      setLoadingProjects(false);
-    }
-  }, []);
+      return Array.isArray(data) ? data : [];
+    },
+    enabled: !!currentUser,
+    staleTime: 300000,
+  });
 
-  const fetchAnalytics = useCallback(async (projectId) => {
-    setLoadingAnalytics(true);
-    setErrorAnalytics(null);
-    try {
+  const projects = projectsData || [];
+  const errorProjects = projectsQueryError 
+    ? (projectsQueryError.response?.status === 401 ? 'Bạn cần đăng nhập để xem dashboard.' : projectsQueryError.response?.data?.message || projectsQueryError.message || 'Không thể tải projects.')
+    : null;
+
+  // 2. Analytics Query
+  const {
+    data: analyticsData,
+    isLoading: loadingAnalytics,
+    error: analyticsQueryError,
+    refetch: refetchAnalytics
+  } = useQuery({
+    queryKey: ['dashboard', 'analytics', currentUser, trendRange],
+    queryFn: async () => {
       const currentYear = new Date().getFullYear();
       const yearCount = Number(trendRange);
       const yearParams = Number.isFinite(yearCount)
         ? { fromYear: currentYear - yearCount + 1, toYear: currentYear }
         : {};
-      const params = { ...yearParams, ...(projectId ? { projectId } : {}) };
-      const res = await getPublicationTrendsApi(params);
+      const res = await getPublicationTrendsApi(yearParams);
       const trendData = res.data?.data ?? [];
-
       const rows = Array.isArray(trendData) ? trendData : [];
-      setAnalytics({
+      return {
         years: rows.map((item) => item.year),
         series: [
           {
@@ -101,19 +88,24 @@ export default function useDashboard(currentUser, trendRange = '5') {
           },
         ],
         rawData: rows,
-      });
-    } catch (err) {
-      setErrorAnalytics(err.response?.data?.message || err.message || 'Không thể tải xu hướng xuất bản.');
-      setAnalytics({ years: [], series: [], rawData: [] });
-    } finally {
-      setLoadingAnalytics(false);
-    }
-  }, [trendRange]);
+      };
+    },
+    enabled: !!currentUser,
+    staleTime: 300000,
+  });
 
-  const fetchKeywords = useCallback(async () => {
-    setLoadingKeywords(true);
-    setErrorKeywords(null);
-    try {
+  const analytics = analyticsData || { years: [], series: [], rawData: [] };
+  const errorAnalytics = analyticsQueryError ? analyticsQueryError.response?.data?.message || analyticsQueryError.message || 'Không thể tải xu hướng xuất bản.' : null;
+
+  // 3. Trending Keywords Query
+  const {
+    data: trendingKeywordsData,
+    isLoading: loadingKeywords,
+    error: keywordsQueryError,
+    refetch: refetchKeywords
+  } = useQuery({
+    queryKey: ['dashboard', 'trendingKeywords', currentUser, trendRange],
+    queryFn: async () => {
       const currentYear = new Date().getFullYear();
       const yearCount = Number(trendRange);
       const yearParams = Number.isFinite(yearCount)
@@ -125,26 +117,30 @@ export default function useDashboard(currentUser, trendRange = '5') {
         ...yearParams,
       };
       const res = await getDashboardTrendingKeywordsApi(params);
-      const chart = res.data?.chart ?? res.data?.data?.chart ?? res.data ?? null;
-      setTrendingKeywords(chart);
-    } catch (err) {
-      setErrorKeywords(err.response?.data?.message || err.message || 'Không thể tải trending keywords.');
-      setTrendingKeywords(null);
-    } finally {
-      setLoadingKeywords(false);
-    }
-  }, [trendRange]);
+      return res.data?.chart ?? res.data?.data?.chart ?? res.data ?? null;
+    },
+    enabled: !!currentUser,
+    staleTime: 300000,
+  });
 
-  const fetchAuthors = useCallback(async () => {
-    setLoadingAuthors(true);
-    setErrorAuthors(null);
-    try {
-      const res  = await getTopAuthorsApi(5);
+  const trendingKeywords = trendingKeywordsData || null;
+  const errorKeywords = keywordsQueryError ? keywordsQueryError.response?.data?.message || keywordsQueryError.message || 'Không thể tải trending keywords.' : null;
+
+  // 4. Top Authors Query
+  const {
+    data: topAuthorsData,
+    isLoading: loadingAuthors,
+    error: authorsQueryError,
+    refetch: refetchAuthors
+  } = useQuery({
+    queryKey: ['dashboard', 'topAuthors'],
+    queryFn: async () => {
+      const res = await getTopAuthorsApi(5);
       const data = res.data?.data ?? res.data ?? [];
-      const topAuthors = Array.isArray(data) ? data.slice(0, 5) : [];
+      const topAuthorsList = Array.isArray(data) ? data.slice(0, 5) : [];
 
       const breakdownResults = await Promise.allSettled(
-        topAuthors.map(async (author) => {
+        topAuthorsList.map(async (author) => {
           const id = author.author_id ?? author.id;
           if (!id) return { id: null, breakdown: [] };
           try {
@@ -157,14 +153,14 @@ export default function useDashboard(currentUser, trendRange = '5') {
       );
 
       const breakdownMap = breakdownResults.reduce((acc, result, index) => {
-        const author = topAuthors[index];
+        const author = topAuthorsList[index];
         const id = author?.author_id ?? author?.id;
         if (!id) return acc;
         acc[id] = result.status === 'fulfilled' ? result.value.breakdown : [];
         return acc;
       }, {});
 
-      const enrichedAuthors = topAuthors.map((author) => {
+      return topAuthorsList.map((author) => {
         const normalized = normalizeTopAuthor(author);
         const id = normalized.author_id ?? normalized.id;
         const breakdown = id ? breakdownMap[id] || [] : [];
@@ -174,37 +170,13 @@ export default function useDashboard(currentUser, trendRange = '5') {
           primary_subject_area,
         };
       });
+    },
+    enabled: !!currentUser,
+    staleTime: 300000,
+  });
 
-      setTopAuthors(enrichedAuthors);
-    } catch (err) {
-      setErrorAuthors(err.response?.data?.message || err.message || 'Không thể tải top authors.');
-    } finally {
-      setLoadingAuthors(false);
-    }
-  }, []);
-
-  // ── fetch analytics when range or user changes ──────────────────────────
-  useEffect(() => {
-    if (currentUser) {
-      fetchAnalytics();
-      fetchKeywords();
-    }
-  }, [currentUser, fetchAnalytics, fetchKeywords]);
-
-  // ── initialise on mount (only when user is logged in) ───────────────────
-  useEffect(() => {
-    if (!currentUser) {
-      // Not logged in — still show skeleton briefly then empty state
-      setLoadingProjects(false);
-      setLoadingAnalytics(false);
-      setLoadingKeywords(false);
-      setLoadingAuthors(false);
-      return;
-    }
-
-    fetchProjects();
-    fetchAuthors();
-  }, [currentUser, fetchProjects, fetchAuthors]);
+  const topAuthors = topAuthorsData || [];
+  const errorAuthors = authorsQueryError ? authorsQueryError.response?.data?.message || authorsQueryError.message || 'Không thể tải top authors.' : null;
 
   // ── derived stat card data ───────────────────────────────────────────────
   const summaryStats = {
@@ -214,14 +186,13 @@ export default function useDashboard(currentUser, trendRange = '5') {
     keywordCount:  projects.reduce((acc, p) => acc + (p.keyword_count  ?? 0), 0),
   };
 
-  // ── refetch helpers exposed for retry buttons ───────────────────────────
   const refetchAll = useCallback(() => {
     if (!currentUser) return;
-    fetchAnalytics();
-    fetchProjects();
-    fetchAuthors();
-    fetchKeywords();
-  }, [currentUser, fetchProjects, fetchAuthors, fetchAnalytics, fetchKeywords]);
+    refetchAnalytics();
+    refetchProjects();
+    refetchAuthors();
+    refetchKeywords();
+  }, [currentUser, refetchProjects, refetchAuthors, refetchAnalytics, refetchKeywords]);
 
   return {
     projects,
@@ -240,10 +211,10 @@ export default function useDashboard(currentUser, trendRange = '5') {
     errorKeywords,
     errorAuthors,
 
-    refetchProjects:  fetchProjects,
-    refetchAnalytics: fetchAnalytics,
-    refetchKeywords:  fetchKeywords,
-    refetchAuthors:   fetchAuthors,
+    refetchProjects,
+    refetchAnalytics,
+    refetchKeywords,
+    refetchAuthors,
     refetchAll,
   };
 }
