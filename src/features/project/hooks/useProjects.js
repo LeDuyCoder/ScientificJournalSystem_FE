@@ -4,99 +4,99 @@
  * File: features\project\hooks\useProjects.js
  */
 import { useState, useCallback } from 'react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { getProjectsApi, createProjectApi, deleteProjectApi, restoreProjectApi } from '../api/project.api';
 
 export default function useProjects() {
-  const [projects, setProjects] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const queryClient = useQueryClient();
+  const [mutationLoading, setMutationLoading] = useState(false);
+  const [mutationError, setMutationError] = useState(null);
 
-  const fetchProjects = useCallback(async () => {
-    setIsLoading(true);
-    setError(null);
-    try {
+  const { data: projectsData, isLoading: queryLoading, error: queryError, refetch } = useQuery({
+    queryKey: ['projects', 'list'],
+    queryFn: async () => {
       const response = await getProjectsApi();
       if (response.data && response.data.success !== false) {
-        setProjects(response.data.data || []);
-      } else {
-        throw new Error(response.data?.message || 'Failed to fetch projects');
+        return response.data.data || [];
       }
-    } catch (err) {
-      setError(err.response?.data?.message || err.message);
-    } finally {
-      setIsLoading(false);
-    }
-  }, []);
+      throw new Error(response.data?.message || 'Failed to fetch projects');
+    },
+    staleTime: 300000,
+  });
+
+  const projects = projectsData || [];
+  const isLoading = queryLoading || mutationLoading;
+  const error = (queryError ? queryError.message : null) || mutationError;
 
   const createProject = useCallback(async (projectData) => {
-    setIsLoading(true);
-    setError(null);
+    setMutationLoading(true);
+    setMutationError(null);
     try {
       const response = await createProjectApi(projectData);
       if (response.data && response.data.success !== false) {
-        await fetchProjects();
+        queryClient.invalidateQueries({ queryKey: ['projects', 'list'] });
         return response.data.data;
       } else {
         throw new Error(response.data?.message || 'Failed to create project');
       }
     } catch (err) {
-      setError(err.response?.data?.message || err.message);
+      setMutationError(err.response?.data?.message || err.message);
       throw err;
     } finally {
-      setIsLoading(false);
+      setMutationLoading(false);
     }
-  }, [fetchProjects]);
+  }, [queryClient]);
 
   const deleteProject = useCallback(async (id) => {
-    setIsLoading(true);
-    setError(null);
+    setMutationLoading(true);
+    setMutationError(null);
     try {
       const response = await deleteProjectApi(id);
       if (response.data && response.data.success !== false) {
-        setProjects((prev) =>
-          prev.map((p) => (String(p.project_id) === String(id) ? { ...p, status: 'DELETED' } : p))
+        queryClient.setQueryData(['projects', 'list'], (prev) =>
+          prev ? prev.map((p) => (String(p.project_id) === String(id) ? { ...p, status: 'DELETED' } : p)) : prev
         );
         return response.data;
       } else {
         throw new Error(response.data?.message || 'Failed to delete project');
       }
     } catch (err) {
-      setError(err.response?.data?.message || err.message);
+      setMutationError(err.response?.data?.message || err.message);
       throw err;
     } finally {
-      setIsLoading(false);
+      setMutationLoading(false);
     }
-  }, []);
+  }, [queryClient]);
 
   const restoreProject = useCallback(async (id) => {
-    setIsLoading(true);
-    setError(null);
+    setMutationLoading(true);
+    setMutationError(null);
     try {
       const response = await restoreProjectApi(id);
       if (response.data && response.data.success !== false) {
         const newStatus = response.data.data?.status || 'ACTIVE';
-        setProjects((prev) =>
-          prev.map((p) => (String(p.project_id) === String(id) ? { ...p, status: newStatus } : p))
+        queryClient.setQueryData(['projects', 'list'], (prev) =>
+          prev ? prev.map((p) => (String(p.project_id) === String(id) ? { ...p, status: newStatus } : p)) : prev
         );
         return response.data;
       } else {
         throw new Error(response.data?.message || 'Failed to restore project');
       }
     } catch (err) {
-      setError(err.response?.data?.message || err.message);
+      setMutationError(err.response?.data?.message || err.message);
       throw err;
     } finally {
-      setIsLoading(false);
+      setMutationLoading(false);
     }
-  }, []);
+  }, [queryClient]);
 
   return {
     projects,
     isLoading,
     error,
-    fetchProjects,
     createProject,
     deleteProject,
     restoreProject,
+    refetch,
   };
 }

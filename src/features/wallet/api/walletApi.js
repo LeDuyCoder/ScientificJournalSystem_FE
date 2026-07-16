@@ -80,3 +80,16 @@ export const confirmVnpayIpn = async (queryString = '') => {
   const response = await api.get(url);
   return response.data;
 };
+
+/**
+ * Trừ coin của user cho các dịch vụ (Premium PDF, v.v...)
+ * Endpoint: POST /wallet/spend
+ *
+ * @param {number} amount - Số lượng coin cần trừ
+ * @param {string} description - Mô tả giao dịch
+ * @returns {Promise<Object>}
+ */
+export const spendCoin = async (amount, description = 'Premium features') => {
+  const response = await api.post('/wallet/spend', { amount, description });
+  return response.data;
+};

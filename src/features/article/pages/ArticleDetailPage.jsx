@@ -15,6 +15,7 @@ import Header from '../../landing/components/Header';
 
 // Auth
 import useAuth from '../../auth/hooks/useAuth';
+import { useWalletStore } from '../../../app/store/walletStore';
 
 // API
 import { getArticleDetailApi, bookmarkArticleApi, getArticlesListApi } from '../api/articleApi';
@@ -81,6 +82,8 @@ export default function ArticleDetailPage() {
   const [isRecommendedLoading, setIsRecommendedLoading] = useState(false);
   const [showAllAuthors, setShowAllAuthors] = useState(false);
   const [showCitationsModal, setShowCitationsModal] = useState(false);
+  const [showPremiumModal, setShowPremiumModal] = useState(false);
+  const { balance, setBalance } = useWalletStore();
   const [referencePage, setReferencePage] = useState(1);
   const referencesPerPage = 2;
   const visibleAuthors = useMemo(() => {
@@ -165,6 +168,22 @@ export default function ArticleDetailPage() {
       setIsBookmarkLoading(false);
     }
   };
+  const handleConfirmPremiumDownload = async () => {
+    if (!currentUser) {
+      setShowPremiumModal(false);
+      setShowLoginModal(true);
+      return;
+    }
+    const currentCoins = balance ?? 0;
+    if (currentCoins < 2) {
+      toast.error(t("article.soDuCoinCuaBanKhongDuVuiLongNa"));
+      setShowPremiumModal(false);
+      return;
+    }
+    setBalance(currentCoins - 2);
+    setShowPremiumModal(false);
+    downloadArticlePdf(article, { withWatermark: false, premium: true });
+  };
   const handleDoiClick = () => {
     if (!articleDoiUrl) return;
     window.open(articleDoiUrl, '_blank', 'noopener,noreferrer');
@@ -248,7 +267,7 @@ export default function ArticleDetailPage() {
 
                 <div className="article-detail-divider" />
 
-                <div className="text-muted-custom text-xs fw-bold text-uppercase mb-2">Published by</div>
+                <div className="text-muted-custom text-xs fw-bold text-uppercase mb-2">{t("article.publisher")}</div>
                 <div className="text-xs text-muted-custom fw-semibold text-uppercase d-flex flex-column gap-1">
                   <span>{article.publisher_name || t("article.dangCapNhat")}</span>
                   <span>Coverage: {article.publication_year || '—'}</span>
@@ -289,7 +308,7 @@ export default function ArticleDetailPage() {
                   <div className="article-detail-actions">
                     <Button variant="link" onClick={() => setShowCitationsModal(true)} className="article-detail-action-btn">
                       <Icon icon="lucide:quote" width="15" />
-                      Citations: {article.semantic_citation_count ?? article.citations ?? 0}
+                      {t("article.citations")}: {article.semantic_citation_count ?? article.citations ?? 0}
                     </Button>
                     <Button variant="link" disabled={isBookmarkLoading} onClick={handleBookmarkToggle} className={`article-detail-action-btn ${isBookmarked ? 'is-active' : ''}`}>
                       <Icon icon={isBookmarked ? 'lucide:bookmark-check' : 'lucide:bookmark-plus'} width="15" />
@@ -297,7 +316,7 @@ export default function ArticleDetailPage() {
                     </Button>
                     <Button variant="link" onClick={handleShareArticle} className="article-detail-action-btn">
                       <Icon icon="lucide:share-2" width="15" />
-                      Share
+                      {t("article.share")}
                     </Button>
                     
                   </div>
@@ -357,7 +376,7 @@ export default function ArticleDetailPage() {
                       <section id="abstract" className="article-section">
                         <h2 className="article-section-title" style={{
                     fontSize: '1.65rem'
-                  }}>Abstract</h2>
+                  }}>{t("article.abstract")}</h2>
                         {(article.abstract || 'No abstract is available for this article.').split('\n').filter(Boolean).map((paragraph, index) => (
                              <LatexText key={index} text={paragraph} as="p" className="article-section-text" />
                         ))}
@@ -384,7 +403,7 @@ export default function ArticleDetailPage() {
                     </aside>
                   </div> : activeTab === 'keywords_topics' ? <div className="keywords-topics-tab-panel">
                     <section className="mb-5">
-                      <h2 className="article-section-title mb-4">Keywords</h2>
+                      <h2 className="article-section-title mb-4">{t("article.keywords")}</h2>
                       {(article.keywords || []).length > 0 ? <div className="row g-4">
                           {article.keywords.map((keyword, index) => {                    const label = keyword.display_name || keyword.name || keyword.keyword;
                     const keywordId = keyword.keyword_id || keyword.id;
@@ -421,7 +440,7 @@ export default function ArticleDetailPage() {
                         </div>
                       </section>}
                   </div> : activeTab === 'references' ? <div className="references-tab-panel">
-                    <h2 className="article-section-title mb-4">References</h2>
+                    <h2 className="article-section-title mb-4">{t("article.references")}</h2>
                     <p className="article-section-text mb-4" style={{
                 fontSize: '0.98rem'
               }}>{t("article.baiBaoHienCo")}<strong>{(article.references || []).length}</strong>{t("article.taiLieuThamKhaoDuocDongBoTrong")}<strong>{article.semantic_citation_count ?? article.citations ?? 0}</strong>.
@@ -432,7 +451,7 @@ export default function ArticleDetailPage() {
                               <div className="d-flex align-items-start justify-content-between gap-3 flex-wrap">
                                 <div className="min-w-0">
                                   <div className="article-reference-label">
-                                    Reference {index + 1}
+                                    {t("article.referenceLabel")} {index + 1}
                                   </div>
                                   <div className="article-reference-title">
                                     {formatReferenceLabel(referenceUrl, index)}
@@ -456,7 +475,7 @@ export default function ArticleDetailPage() {
 
       <Modal show={showCitationsModal} onHide={() => setShowCitationsModal(false)} centered>
         <Modal.Header closeButton>
-          <Modal.Title className="font-display fw-bold">Citations / Cited by</Modal.Title>
+          <Modal.Title className="font-display fw-bold">{t("article.citationsCitedBy")}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <div className="article-modal-stat-box">
@@ -486,6 +505,36 @@ export default function ArticleDetailPage() {
         </Modal.Body>
         <Modal.Footer>
           <Button variant="outline-secondary" onClick={() => setShowCitationsModal(false)}>{t("article.dong")}</Button>
+        </Modal.Footer>
+      </Modal>
+
+      <Modal show={showPremiumModal} onHide={() => setShowPremiumModal(false)} centered>
+        <Modal.Header closeButton>
+          <Modal.Title className="font-display fw-bold text-main d-flex align-items-center">
+            <Icon icon="lucide:star" className="me-2" style={{ color: 'var(--primary)' }} />
+            {t("article.taiPdfPremium")}
+          </Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p className="text-muted-custom mb-3" style={{ lineHeight: 1.7 }}>
+            {t("article.banCoChacChanMuonDung2Xu")}
+          </p>
+          <div className="article-modal-stat-box d-flex align-items-center justify-content-between p-2 px-3" style={{ background: 'var(--bg-main)', borderRadius: '8px', border: '1px solid var(--border)' }}>
+            <span className="fw-semibold text-main d-flex align-items-center">
+              <Icon icon="lucide:file-text" className="me-2 text-muted-custom" /> {t("article.premiumPdf")}
+            </span>
+            <span className="font-display fw-bold d-flex align-items-center" style={{ fontSize: '1.25rem', color: 'var(--primary)' }}>
+              -2 <Icon icon="lucide:coins" className="ms-1" width="18" />
+            </span>
+          </div>
+        </Modal.Body>
+        <Modal.Footer className="border-0">
+          <Button variant="outline-secondary" onClick={() => setShowPremiumModal(false)} className="font-display px-3">
+            {t("admin.huy")}
+          </Button>
+          <Button onClick={handleConfirmPremiumDownload} className="font-display fw-bold px-3 d-flex align-items-center text-white border-0" style={{ backgroundColor: 'var(--primary)' }}>
+             {t("article.dongY")}
+          </Button>
         </Modal.Footer>
       </Modal>
 
