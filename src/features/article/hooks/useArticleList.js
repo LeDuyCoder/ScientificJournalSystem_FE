@@ -3,8 +3,9 @@
  *
  * File: features\article\hooks\useArticleList.js
  */
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useCallback } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 import { getArticlesListApi } from '../api/articleApi';
 
 /**
@@ -28,47 +29,27 @@ export default function useArticleList() {
   const selectedVolume = searchParams.get('volume_id') || '';
   const selectedIssue = searchParams.get('issue_id') || '';
 
-  // === Data state ===
-  const [articles, setArticles] = useState([]);
-  const [total, setTotal] = useState(0);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  // Stats hiển thị thẻ thống kê
-  const [stats, setStats] = useState({
-    totalArticles: 0,
-    openAccessCount: 0,
-    authorsCount: 0,
-    topicsCount: 0,
-  });
-
   // Auth modal không còn dùng để block xem, nhưng giữ cho backward compat
   const [showAuthModal, setShowAuthModal] = useState(false);
 
-  /**
-   * Gọi API lấy danh sách bài báo theo filter/pagination hiện tại.
-   */
-  const fetchArticles = useCallback(async () => {
-    setIsLoading(true);
-    setError(null);
+  const apiParams = {
+    page,
+    limit,
+    sortBy,
+    sortOrder,
+  };
 
-    try {
-      const apiParams = {
-        page,
-        limit,
-        sortBy,
-        sortOrder,
-      };
+  if (search.trim()) apiParams.search = search.trim();
+  if (selectedYear && selectedYear !== 'all') apiParams.publication_year = selectedYear;
+  if (selectedJournal && selectedJournal !== 'all') apiParams.journal_id = selectedJournal;
+  if (selectedTopic && selectedTopic !== 'all') apiParams.topic_id = selectedTopic;
+  if (selectedAccess && selectedAccess !== 'all') apiParams.access = selectedAccess;
+  if (selectedVolume) apiParams.volume_id = selectedVolume;
+  if (selectedIssue) apiParams.issue_id = selectedIssue;
 
-      // Chỉ gửi params khi có giá trị hợp lệ
-      if (search.trim()) apiParams.search = search.trim();
-      if (selectedYear && selectedYear !== 'all') apiParams.publication_year = selectedYear;
-      if (selectedJournal && selectedJournal !== 'all') apiParams.journal_id = selectedJournal;
-      if (selectedTopic && selectedTopic !== 'all') apiParams.topic_id = selectedTopic;
-      if (selectedAccess && selectedAccess !== 'all') apiParams.access = selectedAccess;
-      if (selectedVolume) apiParams.volume_id = selectedVolume;
-      if (selectedIssue) apiParams.issue_id = selectedIssue;
-
+  const { data, isLoading, error, refetch } = useQuery({
+    queryKey: ['articles', 'list', apiParams],
+    queryFn: async () => {
       const response = await getArticlesListApi(apiParams);
 
       if (response?.data?.success) {
@@ -79,7 +60,7 @@ export default function useArticleList() {
         const paginationData = resData.pagination || {};
         const totalCount = paginationData.total || rawList.length;
 
-        // Map sang shape chuẩn cho FE: không hardcode gì thêm
+        // Map sang shape chuẩn cho FE
         const mappedArticles = rawList.map((item) => ({
           article_id: item.article_id,
           version: item.version || null,
@@ -88,14 +69,11 @@ export default function useArticleList() {
           abstract: item.abstract || null,
           publication_year: item.publication_year || null,
           doi: item.doi || null,
-          // Topic: ưu tiên topic_name (từ JOIN), fallback hiển thị `Topic #ID`
           primary_topic: item.topic_name
             || (item.primary_topic ? `Topic #${item.primary_topic}` : null),
           topic_id: item.primary_topic || null,
-          // Journal: map từ flat fields trả về bởi enriched service
           journal_id: item.journal_id || null,
           journal_name: item.journal_name || null,
-          // Tương thích với component cũ đang dùng article.journal.display_name
           journal: item.journal_id
             ? { journal_id: item.journal_id, display_name: item.journal_name }
             : null,
@@ -104,40 +82,26 @@ export default function useArticleList() {
           created_at: item.created_at || null,
         }));
 
-        setArticles(mappedArticles);
-        setTotal(totalCount);
-
         const apiStats = resData.stats || null;
-        setStats({
+        const stats = {
           totalArticles: Number(apiStats?.totalArticles ?? totalCount),
           openAccessCount: Number(apiStats?.openAccessCount ?? mappedArticles.filter((a) => a.is_open_access).length),
           authorsCount: Number(apiStats?.authorsCount ?? 0),
           topicsCount: Number(
             apiStats?.topicsCount ?? new Set(mappedArticles.map((a) => a.topic_id).filter(Boolean)).size
           ),
-        });
+        };
+
+        return { articles: mappedArticles, total: totalCount, stats };
       } else {
         throw new Error(response?.data?.message || 'Không thể tải danh sách bài báo');
       }
-    } catch (err) {
-      console.error('Lỗi khi gọi API articles:', err);
-      setError(err.response?.data?.message || err.message || 'Đã xảy ra lỗi');
-      setArticles([]);
-      setTotal(0);
-      setStats({ totalArticles: 0, openAccessCount: 0, authorsCount: 0, topicsCount: 0 });
-    } finally {
-      setIsLoading(false);
-    }
-  }, [page, limit, search, sortBy, sortOrder, selectedYear, selectedJournal, selectedTopic, selectedAccess, selectedVolume, selectedIssue]);
+    },
+  });
 
-  // Fetch khi dependency thay đổi
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      fetchArticles();
-    }, 0);
-
-    return () => clearTimeout(timer);
-  }, [fetchArticles]);
+  const articles = data?.articles || [];
+  const total = data?.total || 0;
+  const stats = data?.stats || { totalArticles: 0, openAccessCount: 0, authorsCount: 0, topicsCount: 0 };
 
   /**
    * Cập nhật URL query params khi filter thay đổi.
@@ -195,7 +159,7 @@ export default function useArticleList() {
     totalPages: Math.max(1, Math.ceil(total / limit)),
     currentPage: page,
     isLoading,
-    error,
+    error: error?.message || error || null,
     stats,
     filters: {
       search,
@@ -212,7 +176,7 @@ export default function useArticleList() {
     },
     updateFilters,
     clearFilters,
-    refetch: fetchArticles,
+    refetch,
     handlePageChange,
     handleDetailClick,
     showAuthModal,

@@ -17,18 +17,16 @@ const ProjectListPage = () => {
     projects,
     isLoading,
     error,
-    fetchProjects,
     deleteProject,
-    restoreProject
+    restoreProject,
+    refetch
   } = useProjects();
   const [recentIds, setRecentIds] = useState([]);
   const [confirmModal, setConfirmModal] = useState({ show: false, projectId: null, action: null });
   const { t } = useTranslation();
   const auth = useAuth();
   const currentUser = auth?.user;
-  useEffect(() => {
-    fetchProjects();
-  }, [fetchProjects]);
+
   useEffect(() => {
     try {
       const raw = localStorage.getItem('recently_viewed_projects');
@@ -144,7 +142,7 @@ const ProjectListPage = () => {
               <h6 className="fw-bold mb-1">{t("article.loiTaiDuLieu")}</h6>
               <p className="mb-0 small">{error}</p>
             </div>
-            <PrimaryButton variant="outline" className="ms-auto" onClick={fetchProjects}>{t("article.thuLai")}</PrimaryButton>
+            <PrimaryButton variant="outline" className="ms-auto" onClick={() => refetch()}>{t("article.thuLai")}</PrimaryButton>
           </div> : isLoading ? <div className="row g-4">
             {[1, 2, 3].map(i => <div key={i} className="col-12 col-md-6 col-lg-4">
                 <div className="card glass-card border-0 shadow-sm rounded-4 p-4 h-100">

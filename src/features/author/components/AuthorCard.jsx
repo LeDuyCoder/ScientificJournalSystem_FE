@@ -32,7 +32,7 @@ export default function AuthorCard({
   const handleCardClick = () => {
     if (id) navigate(`/authors/${id}`);
   };
-  return <EntityCard onClick={handleCardClick} className="h-100" media={<AuthorAvatar name={name} url={avatarUrl} size="md" bgColor={avatarColor} className="flex-shrink-0" />} title={name}        subtitle={<>
+  return <EntityCard onClick={handleCardClick} className="h-100 author-card-animated" media={<AuthorAvatar name={name} url={avatarUrl} size="md" bgColor={avatarColor} className="flex-shrink-0" />} title={name}        subtitle={<>
           <span className="text-truncate d-block">{institution1}</span>
           {institution2 && <span className="text-truncate mt-1 d-block" style={{
       fontSize: '0.85em',
@@ -50,7 +50,7 @@ export default function AuthorCard({
             <div className="author-metric-label">{t("articles")}</div>
             <div className="author-metric-value">{formatLocalNumber(articlesCount)}</div>
           </div>
-        </div>} footer={<div className="d-flex flex-wrap gap-1.5 pt-2 border-top">
+        </div>} footer={<div className="d-flex flex-wrap gap-1.5 pt-2">
           {tags.length === 0 ? <span className="author-tag-empty">{t("author.chuaCapNhatLinhVuc")}</span> : tags.map((tag, idx) => <span key={idx} className="author-tag" onClick={e => {
       e.stopPropagation();
       navigate(`/catalog?search=${encodeURIComponent(tag)}`);

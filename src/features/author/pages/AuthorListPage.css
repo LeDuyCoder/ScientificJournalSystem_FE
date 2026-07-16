@@ -146,3 +146,13 @@
 .author-grid-skeleton { min-height: 200px; padding: 1.25rem; }
 .author-mobile-skeleton { padding: 1rem; }
 .author-pagination { --bs-pagination-bg: var(--bg-card); --bs-pagination-border-color: var(--border); --bs-pagination-color: var(--text-muted); --bs-pagination-hover-color: var(--primary); --bs-pagination-hover-bg: var(--primary-light); --bs-pagination-hover-border-color: var(--primary); --bs-pagination-active-bg: var(--primary); --bs-pagination-active-border-color: var(--primary); --bs-pagination-active-color: var(--bg-card); --bs-pagination-disabled-bg: var(--bg-main); --bs-pagination-disabled-color: var(--text-muted); --bs-pagination-disabled-border-color: var(--border); }
+
+/* Custom clean animation for Author Card */
+.author-card-animated {
+  transition: transform 0.2s ease-out, box-shadow 0.2s ease-out, border-color 0.2s ease-out;
+}
+.author-card-animated:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+  border-color: var(--primary) !important;
+}
