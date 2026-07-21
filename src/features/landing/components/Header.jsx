@@ -166,16 +166,6 @@ export default function Header() {
             </Nav>
 
             <div className="d-flex align-items-center gap-3">
-              {/* Notification icon */}
-              {email && <div className="text-muted-custom hover:text-main position-relative" style={{
-              cursor: "pointer"
-            }}>
-                  <Icon icon="lucide:bell" width="18" />
-                  <span className="position-absolute top-0 start-100 translate-middle p-1 bg-danger border border-light rounded-circle">
-                    <span className="visually-hidden">New alerts</span>
-                  </span>
-                </div>}
-
               <Dropdown align="end">
                 <Dropdown.Toggle as="button" type="button" className="border-0 bg-transparent d-inline-flex align-items-center justify-content-center p-0 text-muted-custom" style={{
                 width: "32px",
@@ -201,11 +191,6 @@ export default function Header() {
                   <Dropdown.Item onClick={() => changeLanguage("ko")} className={`d-flex align-items-center justify-content-between text-xs py-2 ${language.startsWith("ko") ? "text-primary" : "text-dark"}`}>
                     <span>한국어</span>
                     {language.startsWith("ko") && <Icon icon="lucide:check" className="text-primary text-xs ms-2" />}
-                  </Dropdown.Item>
-                  <Dropdown.Divider />
-                  <Dropdown.Item onClick={() => alert(t("landing.dangApDungGiaoDienSangCuaResea"))} className="d-flex align-items-center gap-2 text-xs py-2 text-main">
-                    <Icon icon="lucide:sun" width="14" className="text-warning" />
-                    <span>{t("landing.giaoDienSang")}</span>
                   </Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
