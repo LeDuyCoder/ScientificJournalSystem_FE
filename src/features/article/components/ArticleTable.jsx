@@ -25,53 +25,53 @@ export default function ArticleTable({
           <td className="ps-3 py-3" style={{
         width: '40px'
       }}>
-            <div className="bg-secondary opacity-10 rounded" style={{
+            <div className="skeleton-shimmer rounded" style={{
           width: '15px',
           height: '14px'
         }} />
           </td>
           <td className="py-3">
-            <div className="bg-secondary opacity-15 rounded mb-2" style={{
+            <div className="skeleton-shimmer rounded mb-2" style={{
           width: '80%',
           height: '18px'
         }} />
-            <div className="bg-secondary opacity-10 rounded" style={{
+            <div className="skeleton-shimmer rounded" style={{
           width: '45%',
           height: '12px'
         }} />
           </td>
           <td className="py-3">
-            <div className="bg-secondary opacity-10 rounded" style={{
+            <div className="skeleton-shimmer rounded" style={{
           width: '100px',
           height: '14px'
         }} />
           </td>
           <td className="py-3 text-center">
-            <div className="bg-secondary opacity-10 rounded mx-auto" style={{
+            <div className="skeleton-shimmer rounded mx-auto" style={{
           width: '40px',
           height: '14px'
         }} />
           </td>
           <td className="py-3">
-            <div className="bg-secondary opacity-10 rounded" style={{
+            <div className="skeleton-shimmer rounded" style={{
           width: '120px',
           height: '12px'
         }} />
           </td>
           <td className="py-3">
-            <div className="bg-secondary opacity-10 rounded" style={{
+            <div className="skeleton-shimmer rounded" style={{
           width: '80px',
           height: '20px'
         }} />
           </td>
           <td className="py-3 text-center">
-            <div className="bg-secondary opacity-10 rounded mx-auto" style={{
+            <div className="skeleton-shimmer rounded mx-auto" style={{
           width: '30px',
           height: '20px'
         }} />
           </td>
           <td className="pe-3 text-end py-3">
-            <div className="bg-secondary opacity-10 rounded ms-auto" style={{
+            <div className="skeleton-shimmer rounded ms-auto" style={{
           width: '50px',
           height: '16px'
         }} />

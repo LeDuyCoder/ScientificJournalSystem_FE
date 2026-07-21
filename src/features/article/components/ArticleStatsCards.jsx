@@ -39,23 +39,19 @@ export default function ArticleStatsCards({
             <Card className="article-stats-card" style={{
           height: '100px'
         }}>
-              <div className="position-absolute w-100 h-100" style={{
-            background: 'linear-gradient(90deg, transparent, rgba(0, 0, 0, 0.03), transparent)',
-            animation: 'shimmer 1.5s infinite',
-            transform: 'translateX(-100%)'
-          }} />
+              <div className="skeleton-shimmer position-absolute w-100 h-100" />
               <Card.Body className="d-flex align-items-center justify-content-between">
                 <div>
-                  <div className="bg-secondary opacity-25 rounded mb-2" style={{
+                  <div className="skeleton-shimmer rounded mb-2" style={{
                 width: '80px',
                 height: '14px'
               }} />
-                  <div className="bg-secondary opacity-25 rounded" style={{
+                  <div className="skeleton-shimmer rounded" style={{
                 width: '120px',
                 height: '24px'
               }} />
                 </div>
-                <div className="bg-secondary opacity-10 rounded-circle" style={{
+                <div className="skeleton-shimmer rounded-circle" style={{
               width: '40px',
               height: '40px'
             }} />
