@@ -230,26 +230,6 @@ header.sticky-scrolled {
   background: rgba(0, 0, 0, 0.2);
 }
 
-/* Skeleton Shimmer in Light Mode */
-.skeleton-shimmer {
-  background: linear-gradient(
-    90deg,
-    rgba(0, 0, 0, 0.03) 25%,
-    rgba(0, 0, 0, 0.08) 37%,
-    rgba(0, 0, 0, 0.03) 63%
-  );
-  background-size: 400% 100%;
-  animation: skeleton-loading 1.4s ease infinite;
-  border-radius: 4px;
-}
-@keyframes skeleton-loading {
-  0% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
 
 /* Custom Tab Styling */
 .tab-nav-custom {
@@ -371,9 +351,9 @@ th,
 .skeleton-shimmer {
   background: linear-gradient(
     90deg,
-    var(--bg-section) 25%,
-    var(--border) 50%,
-    var(--bg-section) 75%
+    #e8e8e8 25%,
+    #ffffff 50%,
+    #e8e8e8 75%
   );
   background-size: 200% 100%;
   animation: skeleton-wave 1.5s ease-in-out infinite;
