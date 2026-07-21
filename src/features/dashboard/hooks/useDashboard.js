@@ -54,7 +54,7 @@ export default function useDashboard(currentUser, trendRange = '5') {
       return Array.isArray(data) ? data : [];
     },
     enabled: !!currentUser,
-    staleTime: 300000,
+    staleTime: 7200000, // 2 hours
   });
 
   const projects = projectsData || [];
@@ -91,7 +91,7 @@ export default function useDashboard(currentUser, trendRange = '5') {
       };
     },
     enabled: !!currentUser,
-    staleTime: 300000,
+    staleTime: 7200000, // 2 hours
   });
 
   const analytics = analyticsData || { years: [], series: [], rawData: [] };
@@ -120,7 +120,7 @@ export default function useDashboard(currentUser, trendRange = '5') {
       return res.data?.chart ?? res.data?.data?.chart ?? res.data ?? null;
     },
     enabled: !!currentUser,
-    staleTime: 300000,
+    staleTime: 7200000, // 2 hours
   });
 
   const trendingKeywords = trendingKeywordsData || null;
@@ -172,7 +172,7 @@ export default function useDashboard(currentUser, trendRange = '5') {
       });
     },
     enabled: !!currentUser,
-    staleTime: 300000,
+    staleTime: 7200000, // 2 hours
   });
 
   const topAuthors = topAuthorsData || [];
