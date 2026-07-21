@@ -56,7 +56,8 @@ function FieldBadge({
     fontWeight: 600,
     backgroundColor: 'var(--bg-section)',
     color: 'var(--text-muted)',
-    border: '1px solid var(--border)'
+    border: '1px solid var(--border)',
+    justifySelf: 'start'
   }}>
       {field}
     </span>;
