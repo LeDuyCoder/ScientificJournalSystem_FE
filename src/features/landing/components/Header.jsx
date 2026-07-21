@@ -147,16 +147,22 @@ export default function Header() {
             <Nav className="mx-auto align-items-center" style={{
             gap: "10px"
           }}>
-              {navItems.map(item => <Nav.Link key={item.path} onClick={() => navigateWithLang(item.path)} className="px-2 py-1 text-sm d-flex align-items-center gap-1 bg-transparent" style={navLinkStyle} onMouseEnter={e => {
-              e.currentTarget.style.color = "var(--primary)";
-              e.currentTarget.style.borderBottomColor = "var(--primary)";
-            }} onMouseLeave={e => {
-              e.currentTarget.style.color = "var(--text-muted)";
-              e.currentTarget.style.borderBottomColor = "transparent";
-            }}>
-                  <Icon icon={item.icon} width="14" />
-                  {item.label}
-                </Nav.Link>)}
+              {navItems.map(item => {
+                const isPrivate = item.path === ROUTES.DASHBOARD || item.path === ROUTES.PROJECTS;
+                if (isPrivate && !email) return null;
+                return (
+                  <Nav.Link key={item.path} onClick={() => navigateWithLang(item.path)} className="px-2 py-1 text-sm d-flex align-items-center gap-1 bg-transparent" style={navLinkStyle} onMouseEnter={e => {
+                  e.currentTarget.style.color = "var(--primary)";
+                  e.currentTarget.style.borderBottomColor = "var(--primary)";
+                }} onMouseLeave={e => {
+                  e.currentTarget.style.color = "var(--text-muted)";
+                  e.currentTarget.style.borderBottomColor = "transparent";
+                }}>
+                      <Icon icon={item.icon} width="14" />
+                      {item.label}
+                    </Nav.Link>
+                );
+              })}
             </Nav>
 
             <div className="d-flex align-items-center gap-3">
@@ -287,30 +293,34 @@ export default function Header() {
 
         <Offcanvas.Body className="d-flex flex-column justify-content-between py-4">
           <Nav className="flex-column gap-3 mb-4">
+            {!!email && (
+              <>
+                <Nav.Link onClick={() => {
+                  setShowMobileMenu(false);
+                  navigateWithLang(ROUTES.DASHBOARD);
+                }} className="text-muted-custom hover:text-main py-2 text-sm font-semibold border-bottom border-light">{t("author.tongQuan")}</Nav.Link>
+                <Nav.Link onClick={() => {
+                  setShowMobileMenu(false);
+                  navigateWithLang(ROUTES.PROJECTS);
+                }} className="text-muted-custom hover:text-main py-2 text-sm font-semibold border-bottom border-light" style={{
+                  color: cleanPathname.startsWith(ROUTES.PROJECTS) ? "var(--primary)" : "var(--text-muted)",
+                  fontWeight: cleanPathname.startsWith(ROUTES.PROJECTS) ? 700 : 600
+                }}>{t("landing.duAn")}</Nav.Link>
+              </>
+            )}
             <Nav.Link onClick={() => {
-            setShowMobileMenu(false);
-            navigateWithLang(ROUTES.DASHBOARD);
-          }} className="text-muted-custom hover:text-main py-2 text-sm font-semibold border-bottom border-light">{t("author.tongQuan")}</Nav.Link>
-            <Nav.Link onClick={() => {
-            setShowMobileMenu(false);
-            navigateWithLang(ROUTES.PROJECTS);
-          }} className="text-muted-custom hover:text-main py-2 text-sm font-semibold border-bottom border-light" style={{
-            color: cleanPathname.startsWith(ROUTES.PROJECTS) ? "var(--primary)" : "var(--text-muted)",
-            fontWeight: cleanPathname.startsWith(ROUTES.PROJECTS) ? 700 : 600
-          }}>{t("landing.duAn")}</Nav.Link>
-            <Nav.Link onClick={() => {
-            setShowMobileMenu(false);
-            navigateWithLang(ROUTES.CATALOG);
-          }} className="text-muted-custom hover:text-main py-2 text-sm font-semibold border-bottom border-light">
+              setShowMobileMenu(false);
+              navigateWithLang(ROUTES.CATALOG);
+            }} className="text-muted-custom hover:text-main py-2 text-sm font-semibold border-bottom border-light">
               {t("search")}
             </Nav.Link>
             <Nav.Link onClick={() => {
-            setShowMobileMenu(false);
-            navigateWithLang(ROUTES.ARTICLES);
-          }} className="text-muted-custom hover:text-main py-2 text-sm font-semibold border-bottom border-light" style={{
-            color: cleanPathname.startsWith(ROUTES.ARTICLES) ? "var(--primary)" : "var(--text-muted)",
-            fontWeight: cleanPathname.startsWith(ROUTES.ARTICLES) ? 700 : 600
-          }}>{t("articles")}</Nav.Link>
+              setShowMobileMenu(false);
+              navigateWithLang(ROUTES.ARTICLES);
+            }} className="text-muted-custom hover:text-main py-2 text-sm font-semibold border-bottom border-light" style={{
+              color: cleanPathname.startsWith(ROUTES.ARTICLES) ? "var(--primary)" : "var(--text-muted)",
+              fontWeight: cleanPathname.startsWith(ROUTES.ARTICLES) ? 700 : 600
+            }}>{t("articles")}</Nav.Link>
           </Nav>
 
           <div className="d-flex flex-column gap-3">
