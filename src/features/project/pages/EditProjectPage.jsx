@@ -2,6 +2,7 @@ import { useTranslation } from "react-i18next";
 import { t } from "i18next";
 import { useState, useEffect } from 'react';
 import { useNavigate, Link, useParams } from 'react-router-dom';
+import { useQueryClient } from '@tanstack/react-query';
 import ROUTES from '../../../app/routes/routePaths';
 import projectService from '../services/projectService';
 import { Icon } from '@iconify/react';
@@ -17,6 +18,7 @@ const EditProjectPage = () => {
     id
   } = useParams();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   // Form State
   const [title, setTitle] = useState('');
@@ -122,6 +124,7 @@ const EditProjectPage = () => {
       // 2. Đồng bộ keywords từ Frontend
       if (res && res.success !== false) {
         await keywordService.syncProjectKeywordsFEOnly(id, keywords);
+        queryClient.invalidateQueries(['project', id, 'overview']);
         navigate(`/projects/${id}`);
       } else {
         setError(res?.message || t("project.capNhatDuAnThatBai"));
