@@ -57,12 +57,15 @@ export function normalizeKeyword(item) {
  * @returns {{items: Array, pagination: Object}}
  */
 export function normalizeKeywordListResponse(response, fallbackLimit = 20) {
-  const payload = response?.data?.data ?? response?.data ?? response;
+  const rootData = response?.data ?? response;
+  const payload = rootData?.data ?? rootData;
   const items = extractItems(payload).map(normalizeKeyword);
+
+  const paginationData = rootData.pagination ?? payload?.pagination;
 
   return {
     items,
-    pagination: normalizePagination(payload?.pagination, fallbackLimit),
+    pagination: normalizePagination(paginationData, fallbackLimit),
   };
 }
 
@@ -105,11 +108,14 @@ export function normalizeKeywordArticle(item) {
  * @returns {{items: Array, pagination: Object}}
  */
 export function normalizeKeywordArticlesResponse(response, fallbackLimit = 10) {
-  const payload = response?.data?.data ?? response?.data ?? response;
+  const rootData = response?.data ?? response;
+  const payload = rootData?.data ?? rootData;
   const items = extractItems(payload).map(normalizeKeywordArticle);
+
+  const paginationData = rootData.pagination ?? payload?.pagination;
 
   return {
     items,
-    pagination: normalizePagination(payload?.pagination, fallbackLimit),
+    pagination: normalizePagination(paginationData, fallbackLimit),
   };
 }

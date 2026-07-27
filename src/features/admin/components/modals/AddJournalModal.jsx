@@ -50,17 +50,17 @@ export default function AddJournalModal({
           } = await import('../../../zone/api/zone.api');
           const [pubRes, countryRes, regionRes, areaRes, catRes] = await Promise.all([getPublishersApi({
             page: 1,
-            limit: 100
+            limit: 5000
           }), getCountryStatsApi({
             limit: 1
           }), getRegionStatsApi({
             limit: 1
           }), getSubjectAreasApi({
             page: 1,
-            limit: 100
+            limit: 5000
           }), getSubjectCategoriesApi({
             page: 1,
-            limit: 100
+            limit: 5000
           })]);
           const pubItems = pubRes.data?.data?.items || pubRes.data?.data || [];
           setPublishers(pubItems);
@@ -70,9 +70,14 @@ export default function AddJournalModal({
               publisher: pubItems[0].publisher_id || pubItems[0].id
             }));
           }
-          const areaItems = areaRes.data?.data?.items || areaRes.data?.data || [];
+          const rawAreaItems = areaRes.data?.data?.items || areaRes.data?.data || [];
+          const getAreaName = (a) => a.display_name || a.name || a.subject_area_name || String(a.id);
+          const areaItems = rawAreaItems.filter((a, index, self) => self.findIndex(t => getAreaName(t) === getAreaName(a)) === index);
           setSubjectAreas(areaItems);
-          const catItems = catRes.data?.data?.items || catRes.data?.data || [];
+
+          const rawCatItems = catRes.data?.data?.items || catRes.data?.data || [];
+          const getCatName = (c) => c.display_name || c.name || c.category_name || String(c.id);
+          const catItems = rawCatItems.filter((c, index, self) => self.findIndex(t => getCatName(t) === getCatName(c)) === index);
           setSubjectCategories(catItems);
           const countryItems = countryRes.data?.data?.items || countryRes.data?.data || [];
           const regionItems = regionRes.data?.data?.items || regionRes.data?.data || [];
@@ -150,7 +155,9 @@ export default function AddJournalModal({
       });
       handleClose();
     } catch (err) {
-      alert(t("admin.loiTaoTapChi") + err.message);
+      const errorMsg = err.response?.data?.message || err.message;
+      const errorDetail = err.response?.data?.detail ? `\nChi tiết: ${err.response.data.detail}` : '';
+      alert(t("admin.loiTaoTapChi") + " " + errorMsg + errorDetail);
     }
   };
   return <Modal show={show} onHide={handleClose} centered backdrop="static" className="text-main">
@@ -185,9 +192,14 @@ export default function AddJournalModal({
                 cursor: 'pointer'
               }}>
                   <option value="">{t("admin.chonDanhMuc")}</option>
-                  {subjectCategories.map(cat => <option key={cat.subject_category_id || cat.id || cat.display_name} value={cat.display_name || cat.name}>
-                      {cat.display_name || cat.name}
-                    </option>)}
+                  {Array.from(new Map(subjectCategories.map(cat => {
+                    const catName = cat.display_name || cat.name || cat.category_name || String(cat.id);
+                    return [catName, { ...cat, _catName: catName }];
+                  })).values()).map(cat => (
+                    <option key={cat.subject_category_id || cat.id || cat._catName} value={cat._catName}>
+                      {cat._catName}
+                    </option>
+                  ))}
                 </Form.Select>
                 <Form.Control.Feedback type="invalid">{errors.subjectCategory}</Form.Control.Feedback>
               </Form.Group>
@@ -217,9 +229,14 @@ export default function AddJournalModal({
                 cursor: 'pointer'
               }}>
                   <option value="">{t("admin.chonLinhVuc")}</option>
-                  {subjectAreas.map(area => <option key={area.subject_area_id || area.id || area.display_name} value={area.display_name || area.name}>
-                      {area.display_name || area.name}
-                    </option>)}
+                  {Array.from(new Map(subjectAreas.map(area => {
+                    const areaName = area.display_name || area.name || area.subject_area_name || String(area.id);
+                    return [areaName, { ...area, _areaName: areaName }];
+                  })).values()).map(area => (
+                    <option key={area.subject_area_id || area.id || area._areaName} value={area._areaName}>
+                      {area._areaName}
+                    </option>
+                  ))}
                 </Form.Select>
                 <Form.Control.Feedback type="invalid">{errors.subjectArea}</Form.Control.Feedback>
               </Form.Group>
