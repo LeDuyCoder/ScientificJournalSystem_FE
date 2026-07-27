@@ -195,9 +195,9 @@ export default function TransactionHistoryPage() {
             {totalPages > 1 && <div className="tx-history-pagination">
                 <button type="button" disabled={page <= 1} onClick={() => setPage(prev => Math.max(1, prev - 1))} className="tx-pagination-btn">
                   <Icon icon="lucide:chevron-left" width={16} />{t("article.truoc")}</button>
-                <span className="tx-pagination-text">Trang {page} / {totalPages}</span>
+                <span className="tx-pagination-text">{t("pagination.page", "Page")} {page} / {totalPages}</span>
                 <button type="button" disabled={page >= totalPages} onClick={() => setPage(prev => Math.min(totalPages, prev + 1))} className="tx-pagination-btn">
-                  Sau
+                  {t("article.sau", "Next")}
                   <Icon icon="lucide:chevron-right" width={16} />
                 </button>
               </div>}

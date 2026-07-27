@@ -57,7 +57,7 @@ export default function GenderSelect({
           opacity: value === true ? 1 : 0,
           transition: 'opacity 0.2s'
         }} />
-          <span>Nam</span>
+          <span>{t("auth.nam")}</span>
         </div>
 
         {/* Option: Female */}
