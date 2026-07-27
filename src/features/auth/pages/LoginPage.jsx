@@ -1,10 +1,4 @@
 import { useTranslation } from "react-i18next";
-import { t } from "i18next";
-/**
- * Trang đăng nhập người dùng.
- *
- * File: features/auth/pages/LoginPage.jsx
- */
 import { useState } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
 import useAuth from '../hooks/useAuth';
@@ -16,7 +10,8 @@ import { toast } from '../../../shared/utils/toast';
 import ROUTES from '../../../app/routes/routePaths';
 const DASHBOARD_PAGE = ROUTES.DASHBOARD;
 export default function LoginPage() {
-  const { t: _t } = useTranslation();
+  const { t } = useTranslation();
+
   const navigate = useNavigate();
   const location = useLocation();
   const {

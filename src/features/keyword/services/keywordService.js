@@ -74,7 +74,7 @@ const keywordService = {
       
       try {
         // Tìm keyword có sẵn
-        const searchRes = await keywordApi.getKeywords({ search: kwStr.trim() });
+        const searchRes = await keywordApi.getKeywords({ search: kwStr.trim(), limit: 100 });
         const resData = searchRes.data;
         const items = Array.isArray(resData?.data) ? resData.data 
                     : Array.isArray(resData?.items) ? resData.items 

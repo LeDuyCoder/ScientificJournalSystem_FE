@@ -1,10 +1,4 @@
 import { useTranslation } from "react-i18next";
-import { t } from "i18next";
-/**
-* File source thuộc hệ thống FE ResearchPulse.
-*
-* File: features\auth\components\LoginForm.jsx
-*/
 import { useState, useEffect } from 'react';
 import { Form } from 'react-bootstrap';
 import InputField from '../../../shared/components/InputField';
@@ -12,12 +6,13 @@ import PasswordInput from './PasswordInput';
 import CheckboxField from './CheckboxField';
 import SubmitButton from './SubmitButton';
 import FormErrorMessage from './FormErrorMessage';
+
 export default function LoginForm({
   onSubmit,
   isLoading,
   apiError
 }) {
-  const { t: _t } = useTranslation();
+  const { t } = useTranslation();
   const [formData, setFormData] = useState({
     email: '',
     password: '',

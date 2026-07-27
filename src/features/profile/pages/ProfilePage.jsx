@@ -240,12 +240,12 @@ export default function ProfilePage() {
 
                 <div className="stat-row">
                   <span>{t("profile.duAnDangTheoDoi")}</span>
-                  <strong>2</strong>
+                  <strong>{user?.followed_projects_count || 0}</strong>
                 </div>
 
                 <div className="stat-row">
                   <span>{t("profile.tuKhoaDaLuu")}</span>
-                  <strong>5</strong>
+                  <strong>{user?.saved_keywords_count || 0}</strong>
                 </div>
               </div>
 
@@ -255,7 +255,7 @@ export default function ProfilePage() {
                 <div className="form-grid">
                   <div className="form-group">
                     <label>{t("profile.ho")}</label>
-                    <input type="text" value={formData.last_name} onChange={e => setFormData({
+                    <input type="text" value={formData.last_name} maxLength={40} onChange={e => setFormData({
                   ...formData,
                   last_name: e.target.value
                 })} />
@@ -263,7 +263,7 @@ export default function ProfilePage() {
 
                   <div className="form-group">
                     <label>{t("profile.ten")}</label>
-                    <input type="text" value={formData.first_name} onChange={e => setFormData({
+                    <input type="text" value={formData.first_name} maxLength={25} onChange={e => setFormData({
                   ...formData,
                   first_name: e.target.value
                 })} />

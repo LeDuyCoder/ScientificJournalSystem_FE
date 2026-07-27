@@ -159,10 +159,10 @@ export default function RegisterForm({
       {/* Row: Last Name & First Name (Stacked on mobile, side-by-side on tablet/desktop) */}
       <Row className="g-3">
         <Col xs={12} sm={6}>
-          <InputField label={t("admin.ho")} name="last_name" value={formData.last_name} onChange={handleChange} onBlur={handleBlur} placeholder={t("auth.nguyen")} error={errors.last_name} required disabled={isLoading} />
+          <InputField label={t("auth.ho", "Last Name")} name="last_name" value={formData.last_name} onChange={handleChange} onBlur={handleBlur} placeholder={t("auth.nguyen")} error={errors.last_name} required disabled={isLoading} />
         </Col>
         <Col xs={12} sm={6}>
-          <InputField label={t("admin.ten")} name="first_name" value={formData.first_name} onChange={handleChange} onBlur={handleBlur} placeholder={t("auth.vanA")} error={errors.first_name} required disabled={isLoading} />
+          <InputField label={t("auth.ten", "First Name")} name="first_name" value={formData.first_name} onChange={handleChange} onBlur={handleBlur} placeholder={t("auth.vanA")} error={errors.first_name} required disabled={isLoading} />
         </Col>
       </Row>
 

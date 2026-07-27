@@ -88,8 +88,13 @@ export default function ArticleListPage() {
 
         {/* Kết quả đếm */}
         <div className="d-flex align-items-center justify-content-between mb-3 flex-wrap gap-2">
-          <div className="text-muted-custom text-xs">{t("article.hienThi")}<span className="text-main font-weight-bold">{articles.length}</span> trong{' '}
-            <span className="text-main font-weight-bold">{total}</span>{t("article.baiBaoKhoaHoc")}</div>
+          <div className="text-muted-custom text-xs">
+            {t("pagination.showing", "Showing")}{" "}
+            <span className="text-main font-weight-bold">{articles.length}</span>{" "}
+            {t("pagination.of", "of")}{" "}
+            <span className="text-main font-weight-bold">{total ? total.toLocaleString() : 0}</span>{" "}
+            {t("article.baiBaoKhoaHoc", "scientific papers")}
+          </div>
         </div>
 
         {/* Bảng dữ liệu */}

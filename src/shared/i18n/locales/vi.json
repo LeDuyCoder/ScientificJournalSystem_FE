@@ -425,11 +425,14 @@
     "kiemTraEmailCuaBan": "Kiểm tra email của bạn",
     "neuEmailTonTaiTrongHeThongLien": "Nếu email tồn tại trong hệ thống, liên kết đặt lại mật khẩu đã được gửi đến địa chỉ email của bạn. Vui lòng kiểm tra hộp thư đến (và thư rác).",
     "guiLaiEmail": "Gửi lại email",
+    "nam": "Nam",
     "nu": "Nữ",
     "matKhauKhongDuocDeTrong": "Mật khẩu không được để trống",
     "ghiNhoDangNhap": "Ghi nhớ đăng nhập",
     "matKhau": "Mật khẩu",
     "quenMatKhau": "Quên mật khẩu?",
+    "ho": "Họ",
+    "ten": "Tên",
     "hoKhongDuocDeTrong": "Họ không được để trống",
     "tenKhongDuocDeTrong": "Tên không được để trống",
     "matKhauPhaiToiThieu8KyTu": "Mật khẩu phải tối thiểu 8 ký tự",
@@ -572,14 +575,16 @@
     "danhMucTimKiem": "Danh mục & Tìm kiếm",
     "timKiemJournalLocTheoLinhVucXe": "Tìm kiếm journal, lọc theo lĩnh vực, xem volumes và issues",
     "dangTimKiemTapChi": "Đang tìm kiếm tạp chí...",
-    "timThay": "Tìm thấy",
+    "timThay": "Tìm thấy ",
     "macDinh": "Mặc định",
     "tenAz": "Tên A-Z",
     "dangNhap": "đăng nhập",
     "canDangNhapDeTimKiem": "Cần đăng nhập để tìm kiếm",
     "khongTheTaiDuLieuTimKiem": "Không thể tải dữ liệu tìm kiếm",
     "khongTimThayJournalPhuHop": "Không tìm thấy journal phù hợp",
-    "hayThuThayDoiTuKhoaTimKiemHoac": "Hãy thử thay đổi từ khóa tìm kiếm hoặc đặt lại bộ lọc."
+    "hayThuThayDoiTuKhoaTimKiemHoac": "Hãy thử thay đổi từ khóa tìm kiếm hoặc đặt lại bộ lọc.",
+    "tapChiCount": "tạp chí",
+    "trang": "Trang"
   },
   "dashboard": {
     "5NamGanNhat": "5 năm gần nhất",
@@ -1161,6 +1166,7 @@
   "pagination": {
     "showing": "Hiển thị",
     "to": "đến",
-    "of": "của"
+    "of": "trong tổng số",
+    "page": "Trang"
   }
 }
