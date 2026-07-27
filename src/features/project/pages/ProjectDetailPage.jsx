@@ -22,7 +22,7 @@ import LatexText from '../../../shared/components/LatexText/LatexText';
 import useAuth from '../../auth/hooks/useAuth';
 import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid, PieChart, Pie, Cell } from 'recharts';
 const ProjectDetailPage = () => {
-  const { t: _t } = useTranslation();
+  const { t: _t, i18n } = useTranslation();
   const {
     id: projectId
   } = useParams();
@@ -473,7 +473,8 @@ const ProjectDetailPage = () => {
             } : {}} onClick={() => {
               if (!isProjectActive) return;
               const originUrl = import.meta.env.VITE_ORIGIN_URL || 'http://localhost:5174';
-              window.location.href = `${originUrl}/project/${projectId}/dashboard`;
+              const lang = i18n.language ? i18n.language.split('-')[0] : 'vi';
+              window.location.href = `${originUrl}/${lang}/project/${projectId}/dashboard`;
             }}>
                 <Icon icon={isProjectActive ? "lucide:sparkles" : "lucide:lock"} width="16" />{t("project.phanTichChuyenSau")}</PrimaryButton>
             </div>

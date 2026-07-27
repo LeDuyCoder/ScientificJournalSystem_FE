@@ -58,6 +58,7 @@ export default function SearchableKeywordInput({
       onAddKeyword(kwName);
     }
     setSearchTerm('');
+    setIsOpen(false);
   };
   const handleKeyDown = e => {
     if (e.key === 'Enter' || e.key === ',') {
