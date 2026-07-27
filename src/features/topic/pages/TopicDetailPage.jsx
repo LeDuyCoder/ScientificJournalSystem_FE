@@ -161,7 +161,7 @@ export default function TopicDetailPage() {
           <div>
             <h2 className="topic-detail-section-title">{t("topic.baiBaoThuocTopic")}</h2>
             <p className="topic-detail-section-subtitle">
-              Trang {pagination.page} / {totalPages}
+              {t("pagination.page", "Page")} {pagination.page} / {totalPages}
             </p>
           </div>
           <Badge className="topic-detail-count-badge">

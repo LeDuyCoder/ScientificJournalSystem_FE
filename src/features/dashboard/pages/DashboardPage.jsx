@@ -93,42 +93,59 @@ export default function DashboardPage() {
       <Header />
 
       <Container className="py-4">
-        {/* ── Quick Search Bar ────────────────────────────────────── */}
-        <div className="mb-5">
-          <div className="d-flex align-items-center px-4" style={{
-          backgroundColor: "var(--bg-card)",
-          border: "1px solid var(--border)",
-          borderRadius: "999px",
-          maxWidth: 480,
-          minHeight: "44px",
-          overflow: "hidden"
-        }}>
-            <Icon icon="lucide:search" width={16} style={{
-            color: "var(--text-muted)",
-            flexShrink: 0,
-            marginRight: "10px"
-          }} />
-            <input type="text" placeholder={t("dashboard.timKiemDanhMucBaiBao")} value={quickSearch} onChange={e => setQuickSearch(e.target.value)} onKeyDown={handleQuickSearch} className="border-0 bg-transparent text-main w-100" style={{
-            outline: "none",
-            fontSize: "0.9rem",
-            fontFamily: "var(--font-display)"
-          }} />
+        {/* ── Welcome Hero Banner ─────────────────────────────────── */}
+        <div
+          className="p-4 p-md-5 mb-4 position-relative overflow-hidden"
+          style={{
+            backgroundColor: "var(--bg-card)",
+            border: "1px solid var(--border)",
+            borderRadius: "20px",
+            boxShadow: "0 4px 20px rgba(0, 0, 0, 0.03)"
+          }}
+        >
+          <div className="d-flex flex-column flex-md-row align-items-start align-items-md-center justify-content-between gap-4 position-relative" style={{ zIndex: 1 }}>
+            <div>
+              <div
+                className="d-inline-flex align-items-center gap-2 px-3 py-1 mb-3 rounded-pill"
+                style={{
+                  backgroundColor: "var(--primary-light)",
+                  color: "var(--primary)",
+                  fontSize: "0.8rem",
+                  fontWeight: "600"
+                }}
+              >
+                <Icon icon="lucide:sparkles" width={14} />
+                <span>ResearchPulse Analytics</span>
+              </div>
+              <h1
+                className="font-display fw-bold text-main mb-2"
+                style={{
+                  fontSize: "calc(1.5rem + 0.8vw)",
+                  letterSpacing: "-0.02em"
+                }}
+              >
+                {t("dashboard.chaoMungBanDenVoiResearchpulse")}
+              </h1>
+              <p
+                className="text-muted-custom mb-0 font-display"
+                style={{
+                  fontSize: "0.95rem",
+                  maxWidth: "640px"
+                }}
+              >
+                {t("dashboard.khamPhaXuHuongXepHangTapChiVaC")}
+              </p>
+            </div>
+            <div className="d-flex align-items-center gap-3 flex-shrink-0">
+              <PrimaryButton
+                className="px-4 py-2.5 d-inline-flex align-items-center gap-2"
+                onClick={handleCreateProject}
+              >
+                <Icon icon="lucide:plus" width={18} />
+                <span>{t("dashboard.taoProject")}</span>
+              </PrimaryButton>
+            </div>
           </div>
-        </div>
-
-        {/* ── Welcome Section ─────────────────────────────────────── */}
-        <div className="d-flex flex-column flex-sm-row align-items-sm-center justify-content-between gap-4 mb-5">
-          <div>
-            <h1 className="font-display fw-bold text-main mb-2" style={{
-            fontSize: "calc(1.6rem + 0.8vw)",
-            letterSpacing: "-0.02em"
-          }}>{t("dashboard.chaoMungBanDenVoiResearchpulse")}</h1>
-            <p className="text-muted-custom mb-0 font-display" style={{
-            fontSize: "0.95rem"
-          }}>{t("dashboard.khamPhaXuHuongXepHangTapChiVaC")}</p>
-          </div>
-          <PrimaryButton className="px-4 py-2 flex-shrink-0" onClick={handleCreateProject}>
-            <Icon icon="lucide:plus" width={16} />{t("dashboard.taoProject")}</PrimaryButton>
         </div>
 
         {/* ── Stat Cards ──────────────────────────────────────────── */}

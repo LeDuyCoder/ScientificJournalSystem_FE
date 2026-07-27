@@ -1,19 +1,17 @@
-import { t } from "i18next";
 import { useTranslation } from "react-i18next";
-/**
- * File source thuộc hệ thống FE ResearchPulse.
- *
- * File: features\auth\components\AuthBanner.jsx
- */
-import Icon from '../../../shared/components/Icon';
 import { Navbar } from 'react-bootstrap';
 import { useNavigate } from "react-router-dom";
-const FEATURES = [t("auth.mienPhiHoanToanKhongCanThe"), t("auth.truyCap200mBaiBaoKhoaHoc"), t("auth.theoDoiKeywordVaNhanThongBao"), t("auth.taoProjectVaQuanLyJournal")];
+import Icon from '../../../shared/components/Icon';
+
 export default function AuthBanner() {
-  const {
-    t
-  } = useTranslation();
+  const { t } = useTranslation();
   const navigate = useNavigate();
+  const features = [
+    t("auth.mienPhiHoanToanKhongCanThe"),
+    t("auth.truyCap200mBaiBaoKhoaHoc"),
+    t("auth.theoDoiKeywordVaNhanThongBao"),
+    t("auth.taoProjectVaQuanLyJournal")
+  ];
   return <div className="h-100 w-100 d-flex flex-column justify-content-between p-5 position-relative overflow-hidden" style={{
     backgroundColor: 'var(--bg-section)',
     // #ECECEC
@@ -77,7 +75,7 @@ export default function AuthBanner() {
         <div className="d-flex flex-column" style={{
         gap: '1.25rem'
       }}>
-          {FEATURES.map((feat, index) => <div key={index} className="d-flex align-items-center gap-3">
+          {features.map((feat, index) => <div key={index} className="d-flex align-items-center gap-3">
               <div className="d-flex align-items-center justify-content-center flex-shrink-0" style={{
             width: '24px',
             height: '24px',

@@ -99,8 +99,14 @@ export default function CatalogSearchPage() {
             
             {/* Summary Counter text */}
             <div className="text-muted-custom catalog-count">
-              {loadingJournals ? <span>{t("catalog.dangTimKiemTapChi")}</span> : <span>{t("catalog.timThay")}<strong>{total}</strong> journals · Trang <span className="catalog-number">{page}/{totalPages}</span>
-                </span>}
+              {loadingJournals ? (
+                <span>{t("catalog.dangTimKiemTapChi")}</span>
+              ) : (
+                <span>
+                  {t("catalog.timThay", "Found ")}
+                  <strong>{total}</strong> {t("catalog.tapChiCount", "journals")} · {t("pagination.page", "Page")} <span className="catalog-number">{page}/{totalPages}</span>
+                </span>
+              )}
             </div>
 
             {/* Sort Dropdown */}
