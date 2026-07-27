@@ -135,10 +135,11 @@ const ProjectCard = ({
   const isDeleted = project.status === 'DELETED';
   
   // Kiểm tra quyền owner
+  const currentUserId = currentUser?.user_id || currentUser?.id;
   const isOwner = currentUser && (
-    (project.user_id && project.user_id === currentUser.id) || 
-    (project.owner && project.owner.user_id === currentUser.id) ||
-    (project.owner_id && project.owner_id === currentUser.id)
+    (project.user_id && project.user_id === currentUserId) || 
+    (project.owner && project.owner.user_id === currentUserId) ||
+    (project.owner_id && project.owner_id === currentUserId)
   );
 
   const actions = isOwner ? (isDeleted ? (

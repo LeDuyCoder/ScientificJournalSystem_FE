@@ -76,8 +76,10 @@ const ProjectListPage = () => {
     }
   };
 
-  // Lọc các dự án xem gần đây từ danh sách projects hiện tại
-  const recentProjects = recentIds.map(id => projects.find(p => (p.project_id || p.id) === id)).filter(Boolean);
+  const activeProjects = projects.filter(p => p.status !== 'DELETED');
+  
+  // Lọc các dự án xem gần đây từ danh sách active projects
+  const recentProjects = recentIds.map(id => activeProjects.find(p => (p.project_id || p.id) === id)).filter(Boolean);
   return <div className="container-fluid pb-4 grid-bg min-vh-100 position-relative overflow-hidden" style={{
     paddingTop: '80px'
   }}>
@@ -131,7 +133,7 @@ const ProjectListPage = () => {
           </div>
           <div className="d-flex gap-4 text-muted-custom small">
             <span>{t("project.tongSoDuAn")}<strong className="text-main">{projects.length}</strong></span>
-            <span>{t("project.dangHoatDong")}<strong className="text-success">{projects.length}</strong></span>
+            <span>{t("project.dangHoatDong")}<strong className="text-success">{projects.filter(p => p.status !== 'DELETED').length}</strong></span>
           </div>
         </div>
 
@@ -179,10 +181,10 @@ const ProjectListPage = () => {
                 <Icon icon="lucide:folder" width={18} style={{
               color: 'var(--primary)'
             }} />
-                <span>{t("project.tatCaDuAn")}{projects.length})</span>
+                <span>{t("project.tatCaDuAn")} ({activeProjects.length})</span>
               </h5>
               <div className="row g-4">
-                {projects.map(project => <div key={project.project_id || project.id} className="col-12 col-md-6 col-lg-4">
+                {activeProjects.map(project => <div key={project.project_id || project.id} className="col-12 col-md-6 col-lg-4">
                     <ProjectCard project={project} onDelete={handleDelete} onRestore={handleRestore} currentUser={currentUser} />
                   </div>)}
               </div>

@@ -74,6 +74,9 @@
 .profile-sidebar h2 {
   text-align: center;
   margin-top: 20px;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word;
 }
 
 /* Badge */
