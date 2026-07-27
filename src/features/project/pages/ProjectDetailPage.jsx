@@ -513,14 +513,14 @@ const ProjectDetailPage = () => {
             color: 'var(--primary)',
             borderBottom: '2px solid var(--primary)'
           } : undefined}>
-              <Icon icon="lucide:bar-chart-2" width="18" className="me-2" />{t("project.tongQuanBieuDo")}</button>
+              <Icon icon="lucide:bar-chart-2" width="18" className="me-2" />{t("project.tongQuanBieuDo", "Overview & Charts")}</button>
           </li>
           <li className="nav-item">
             <button className={`nav-link border-0 bg-transparent px-0 pb-3 fw-medium ${activeTab === 'articles' ? 'active' : 'text-muted-custom'}`} onClick={() => setActiveTab('articles')} style={activeTab === 'articles' ? {
             color: 'var(--primary)',
             borderBottom: '2px solid var(--primary)'
           } : undefined}>
-              <Icon icon="lucide:file-text" width="18" className="me-2" />{t("project.luongBaiBao")}{articleCount})
+              <Icon icon="lucide:file-text" width="18" className="me-2" />{t("project.luongBaiBao", "News Feed")} ({articleCount.toLocaleString()})
             </button>
           </li>
           <li className="nav-item">
@@ -528,7 +528,7 @@ const ProjectDetailPage = () => {
             color: 'var(--primary)',
             borderBottom: '2px solid var(--primary)'
           } : undefined}>
-              <Icon icon="lucide:key" width="18" className="me-2" />{t("project.keywordsGiamSat")}{keywordCount})
+              <Icon icon="lucide:key" width="18" className="me-2" />{t("project.keywordsGiamSat", "Keywords & Monitoring")} ({keywordCount.toLocaleString()})
             </button>
           </li>
           <li className="nav-item">
@@ -536,7 +536,7 @@ const ProjectDetailPage = () => {
             color: 'var(--primary)',
             borderBottom: '2px solid var(--primary)'
           } : undefined}>
-              <Icon icon="lucide:users" width="18" className="me-2" />{t("project.thanhVien", "Thành viên")}
+              <Icon icon="lucide:users" width="18" className="me-2" />{t("project.thanhVien", "Members")}
             </button>
           </li>
         </ul>
