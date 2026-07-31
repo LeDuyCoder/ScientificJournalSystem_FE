@@ -5,6 +5,7 @@
  */
 import { useState, useEffect, useCallback } from 'react';
 import { useSearchParams } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 import { searchJournalsApi } from '../../journal/api/journalApi';
 import { getSubjectAreasApi, getSubjectCategoriesApi } from '../api/catalogApi';
 import { getCountryStatsApi } from '../../zone/api/zone.api';
@@ -21,18 +22,6 @@ export function useCatalogSearch(currentUser) {
 
   /* ----- Local controlled search input (not yet submitted) ----- */
   const [searchInput, setSearchInput] = useState(searchParams.get('search') || '');
-
-  /* ----- Filter data lists ----- */
-  const [subjectAreas, setSubjectAreas] = useState([]);
-  const [subjectCategories, setSubjectCategories] = useState([]);
-  const [zones, setZones] = useState([]);
-  const [loadingFilters, setLoadingFilters] = useState(false);
-
-  /* ----- Result state ----- */
-  const [journals, setJournals] = useState([]);
-  const [total, setTotal] = useState(0);
-  const [loadingJournals, setLoadingJournals] = useState(false);
-  const [error, setError] = useState(null);
 
   /* ----- Auth-gated actions state ----- */
   const [followedJournals, setFollowedJournals] = useState({});
@@ -80,37 +69,53 @@ export function useCatalogSearch(currentUser) {
     });
   }, [search, page, limit, sort, selectedAreasStr, selectedCategoriesStr, selectedAccessStr, selectedQuartilesStr, viewMode, hydrateFromQuery]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  /* ----- Load filter dropdown lists on mount ----- */
-  useEffect(() => {
-    async function loadFilters() {
-      setLoadingFilters(true);
-      try {
-        const [areasRes, catsRes, zonesRes] = await Promise.all([
-          getSubjectAreasApi(),
-          getSubjectCategoriesApi(),
-          getCountryStatsApi({ page: 1, limit: 300 }),
-        ]);
-        setSubjectAreas(areasRes.data?.data?.items || areasRes.data?.data || []);
-        setSubjectCategories(catsRes.data?.data?.items || catsRes.data?.data || []);
-        setZones(zonesRes.data?.data?.items || zonesRes.data?.data?.countries || zonesRes.data?.data || []);
-      } catch (err) {
-        console.error('Failed to load catalog filter lists:', err);
-        setSubjectAreas([]);
-        setSubjectCategories([]);
-        setZones([]);
-      } finally {
-        setLoadingFilters(false);
-      }
-    }
-    loadFilters();
-  }, []);
+  /* ----- Load filter dropdown lists on mount (Cached via TanStack Query) ----- */
+  const { data: filtersData, isLoading: loadingFilters } = useQuery({
+    queryKey: ['catalog', 'filters'],
+    queryFn: async () => {
+      const [areasRes, catsRes, zonesRes] = await Promise.all([
+        getSubjectAreasApi(),
+        getSubjectCategoriesApi(),
+        getCountryStatsApi({ page: 1, limit: 300 }),
+      ]);
+      return {
+        subjectAreas: areasRes.data?.data?.items || areasRes.data?.data || [],
+        subjectCategories: catsRes.data?.data?.items || catsRes.data?.data || [],
+        zones: zonesRes.data?.data?.items || zonesRes.data?.data?.countries || zonesRes.data?.data || [],
+      };
+    },
+    staleTime: 86400000, // 24 hours
+  });
 
-  /* ----- Fetch journals whenever URL params change ----- */
+  const subjectAreas = filtersData?.subjectAreas || [];
+  const subjectCategories = filtersData?.subjectCategories || [];
+  const zones = filtersData?.zones || [];
 
-  const fetchJournals = useCallback(async () => {
-    setLoadingJournals(true);
-    setError(null);
-    try {
+  /* ----- Fetch journals whenever URL params change (Cached via TanStack Query) ----- */
+  const {
+    data: journalsQueryData,
+    isLoading: loadingJournals,
+    error: journalsError,
+    refetch: fetchJournals,
+  } = useQuery({
+    queryKey: [
+      'catalog',
+      'search',
+      {
+        search,
+        page,
+        limit,
+        sort,
+        selectedAreasStr,
+        selectedCategoriesStr,
+        selectedAccessStr,
+        selectedQuartilesStr,
+        selectedYear,
+        selectedZone,
+        isOaDiamond,
+      },
+    ],
+    queryFn: async () => {
       const params = {
         search: search || undefined,
         page,
@@ -133,26 +138,27 @@ export function useCatalogSearch(currentUser) {
       const response = await searchJournalsApi(params);
 
       if (response.data && response.data.success !== false) {
-        const { items, pagination } = normalizeSearchResponse(response.data);
-        setJournals(items);
-        setTotal(pagination.total);
+        return normalizeSearchResponse(response.data);
       } else {
         throw new Error(response.data?.message || 'Lỗi không xác định từ server');
       }
-    } catch (err) {
-      const status = err.response?.status;
-      if (status === 404) {
-        setError('Không tìm thấy kết quả.');
-      } else {
-        setError(err.response?.data?.message || err.message || 'Lỗi kết nối đến server.');
-      }
-      setJournals([]);
-      setTotal(0);
-    } finally {
-      setLoadingJournals(false);
+    },
+    staleTime: 300000, // 5 minutes
+    retry: 1,
+  });
+
+  const journals = journalsQueryData?.items || [];
+  const total = journalsQueryData?.pagination?.total || 0;
+
+  let error = null;
+  if (journalsError) {
+    const status = journalsError.response?.status;
+    if (status === 404) {
+      error = 'Không tìm thấy kết quả.';
+    } else {
+      error = journalsError.response?.data?.message || journalsError.message || 'Lỗi kết nối đến server.';
     }
-  }, [search, page, limit, sort, selectedAreasStr, selectedCategoriesStr, selectedAccessStr, selectedQuartilesStr, selectedYear, selectedZone, isOaDiamond]); // eslint-disable-line react-hooks/exhaustive-deps
-  useEffect(() => { fetchJournals(); }, [fetchJournals]);
+  }
 
   /* ----- Ensure default sort is reflected in URL on first load ----- */
   useEffect(() => {
