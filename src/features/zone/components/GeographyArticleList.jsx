@@ -128,9 +128,9 @@ export default function GeographyArticleList({
         <div>
           <h3 className="font-display fw-bold text-main mb-1" style={{
           fontSize: '1.25rem'
-        }}>{t("zone.danhSachBaiBaoKhoaHocTai")}{countryName}
+        }}>{t("zone.danhSachBaiBaoKhoaHocTai")} {countryName}
           </h3>
-          {!loading && articles.length > 0 && <p className="text-muted-custom mb-0 text-xs font-display">{t("zone.hienThiBaiBaoThu")}<span className="fw-semibold text-main">{(page - 1) * 10 + 1}</span> - <span className="fw-semibold text-main">{Math.min(page * 10, total)}</span>{t("zone.trongTongSo")}<span className="fw-semibold text-main">{total}</span>{t("zone.baiBao")}</p>}
+          {!loading && articles.length > 0 && <p className="text-muted-custom mb-0 text-xs font-display">{t("zone.hienThiBaiBaoThu")} <span className="fw-semibold text-main">{(page - 1) * 10 + 1}</span> - <span className="fw-semibold text-main">{Math.min(page * 10, total)}</span> {t("zone.trongTongSo")} <span className="fw-semibold text-main">{total}</span> {t("zone.baiBao")}</p>}
         </div>
       </div>
 

@@ -319,7 +319,7 @@ export default function UserAccountForm({
       </div>
 
       {/* Form Action buttons */}
-      <div className="d-flex justify-content-end gap-3 pt-3.5 border-top">
+      <div className="d-flex justify-content-end gap-3 mt-4 pt-4 border-top">
         <PrimaryButton type="button" variant="outline" onClick={onCancel} className="px-4 py-2" style={{
         fontSize: '0.88rem'
       }}>{t("admin.huy")}</PrimaryButton>

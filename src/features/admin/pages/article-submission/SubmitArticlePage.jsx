@@ -96,12 +96,12 @@ export default function SubmitArticlePage() {
           });
           const items = searchRes.data?.data?.items || searchRes.data?.data || [];
           if (items.length > 0 && items[0].display_name.toLowerCase() === name.toLowerCase()) {
-            authorIds.push(items[0].author_id || items[0].id);
+            authorIds.push(Number(items[0].author_id || items[0].id));
           } else {
             const createRes = await createAuthorApi({
               display_name: name
             });
-            authorIds.push(createRes.data?.data?.author_id || createRes.data?.data?.id);
+            authorIds.push(Number(createRes.data?.data?.author_id || createRes.data?.data?.id));
           }
         }
 

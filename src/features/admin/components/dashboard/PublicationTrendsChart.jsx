@@ -65,9 +65,21 @@ export default function PublicationTrendsChart({
             const slotX = CHART_PADDING_LEFT + index * slotWidth;
             const manuscriptsHeight = getBarHeight(item.manuscripts);
             const publishedHeight = getBarHeight(item.published);
-            const manuscriptsX = slotX + barGap;
-            const publishedX = manuscriptsX + barWidth + barGap;
 
+            const hasAnyPublished = safeData.some(d => d.published > 0);
+            const hasAnyManuscripts = safeData.some(d => d.manuscripts > 0);
+            const activeBarsCount = (hasAnyPublished ? 1 : 0) + (hasAnyManuscripts ? 1 : 0) || 1;
+            
+            const totalBarGroupWidth = activeBarsCount * barWidth + Math.max(0, activeBarsCount - 1) * barGap;
+            const startOffset = (slotWidth - totalBarGroupWidth) / 2;
+            
+            // Tính toạ độ X cho từng cột
+            let currentX = slotX + startOffset;
+            
+            const manuscriptsX = currentX;
+            if (hasAnyManuscripts) currentX += barWidth + barGap;
+            
+            const publishedX = currentX;
             // API trả month dạng số (1-12) -> convert sang label viết tắt (Jan, Feb...)
             const monthLabel = MONTH_LABELS[item.month - 1] || item.month;
             return <g key={item.year || item.month}>

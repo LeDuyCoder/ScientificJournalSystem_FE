@@ -90,7 +90,7 @@ export default function UserDirectoryPage() {
         const rawUsers = extractUsers(payload);
         if (!isMounted) return;
         setUsers(rawUsers.map(normalizeUser));
-        setTotalItems(extractTotal(payload, rawUsers.length));
+        setTotalItems(extractTotal(response.data, rawUsers.length));
       } catch (apiError) {
         if (!isMounted) return;
         setUsers([]);

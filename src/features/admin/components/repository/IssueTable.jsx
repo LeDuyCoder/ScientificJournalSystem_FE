@@ -49,7 +49,7 @@ export default function IssueTable({
                     {getIssueNumber(issue)}
                   </div>
                   <small className="text-muted-custom font-display">
-                    issue_number
+                    {issue.issueName || issue.title || `Issue ${getIssueNumber(issue)}`}
                   </small>
                 </td>
 
