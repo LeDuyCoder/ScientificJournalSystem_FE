@@ -1295,9 +1295,8 @@
   }
 }
 
-/* Group chứa nút Apply - không có label nên cần margin-bottom để
-   căn ngang hàng với input phía trên (label chiếm khoảng 22px) */
-.admin-filter-bar__apply-group {
+/* Reset margin-bottom for form groups inside the grid so they align perfectly at the bottom */
+.admin-filter-bar__row .admin-form-group {
   margin-bottom: 0;
 }
 
@@ -1315,14 +1314,13 @@
 
 /* Cell "Article Details": title (link cam, đậm) + meta (MS ID/pages/citations) */
 .admin-article-cell {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  white-space: normal; /* cho phép title xuống dòng nếu quá dài */
+  white-space: normal !important; /* cho phép title xuống dòng nếu quá dài */
   min-width: 220px;
 }
 
 .admin-article-cell__title {
+  display: block;
+  margin-bottom: 2px;
   font-family: var(--font-display);
   font-weight: 600;
   font-size: 0.85rem;
@@ -1330,6 +1328,7 @@
 }
 
 .admin-article-cell__meta {
+  display: block;
   font-family: var(--font-display);
   font-weight: 400;
   font-size: 0.72rem;

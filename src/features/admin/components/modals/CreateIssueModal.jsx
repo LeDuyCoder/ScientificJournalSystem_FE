@@ -60,29 +60,30 @@ export default function CreateIssueModal({
   };
 
   /** Xử lý nhấn nút Tạo Issue */
-  const handleSubmit = e => {
+  const handleSubmit = async e => {
     e.preventDefault();
     if (!validateForm()) return;
 
-    // Convert issue number to format "No. X" if it is just a number
-    let formattedNumber = formData.issueNumber;
-    if (!isNaN(formData.issueNumber)) {
-      formattedNumber = `No. ${formData.issueNumber}`;
-    }
-    createIssue({
-      issueName: formData.issueName,
-      issueNumber: formattedNumber,
-      publicationYear: parseInt(formData.publicationYear, 10),
-      status: 'Scheduled'
-    });
+    try {
+      await createIssue({
+        issueName: formData.issueName,
+        issueNumber: formData.issueNumber,
+        publicationYear: parseInt(formData.publicationYear, 10),
+        status: 'Scheduled'
+      });
 
-    // Clean form và đóng pop-up
-    setFormData({
-      issueName: '',
-      issueNumber: '1',
-      publicationYear: '2024'
-    });
-    handleClose();
+      // Clean form và đóng pop-up
+      setFormData({
+        issueName: '',
+        issueNumber: '1',
+        publicationYear: '2024'
+      });
+      handleClose();
+    } catch (err) {
+      const errorMsg = err.response?.data?.message || err.message;
+      const errorDetail = err.response?.data?.detail ? `\nChi tiết: ${err.response.data.detail}` : '';
+      alert(t("Lỗi tạo Issue: ") + errorMsg + errorDetail);
+    }
   };
   return <Modal show={show} onHide={handleClose} centered backdrop="static" className="text-main">
       <Modal.Header closeButton className="border-bottom-0 pb-0">

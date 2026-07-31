@@ -13,9 +13,7 @@ export default function EditJournalPage() {
   } = useParams();
   const navigate = useNavigate();
   const {
-    journals,
-    updateJournal,
-    fetchInitialData
+    updateJournal
   } = useJournalManagement();
   const isPreview = window.location.pathname.startsWith('/admin-preview');
   const basePath = isPreview ? '/admin-preview' : '/admin';
@@ -60,10 +58,10 @@ export default function EditJournalPage() {
           limit: 1
         }), getSubjectAreasApi({
           page: 1,
-          limit: 100
+          limit: 5000
         }), getSubjectCategoriesApi({
           page: 1,
-          limit: 100
+          limit: 5000
         })]);
         const pubItems = pubRes.data?.data?.items || pubRes.data?.data || [];
         setPublishers(pubItems);
@@ -86,27 +84,29 @@ export default function EditJournalPage() {
     loadDependencies();
   }, []);
   useEffect(() => {
-    if (journals.length === 0) {
-      fetchInitialData();
-    }
-  }, [journals, fetchInitialData]);
-  useEffect(() => {
-    if (journals.length > 0) {
-      const journal = journals.find(j => String(j.id || j.journal_id) === String(id));
-      if (journal) {
-        setFormData({
-          title: journal.title || journal.display_name || '',
-          issn: journal.issn || '',
-          onlineIssn: journal.onlineIssn || '',
-          aimScope: journal.aimScope || '',
-          visibility: journal.visibility || 'Public',
-          publisher: journal.publisher_id || journal.publisher || '',
-          subjectCategory: journal.subjectCategory || '',
-          subjectArea: journal.subjectArea || ''
-        });
+    const loadJournalDetail = async () => {
+      try {
+        const { getJournalByIdApi } = await import('../../journal/api/journalApi');
+        const res = await getJournalByIdApi(id);
+        const journal = res.data?.data || res.data;
+        if (journal) {
+          setFormData({
+            title: journal.display_name || journal.title || '',
+            issn: journal.issn || '',
+            onlineIssn: journal.onlineIssn || '',
+            aimScope: journal.coverage || journal.description || journal.aimScope || '',
+            visibility: journal.is_open_access ? 'Public' : (journal.visibility || 'Public'),
+            publisher: journal.publisher_id || '',
+            subjectCategory: journal.subjectCategory || '',
+            subjectArea: journal.subjectArea || ''
+          });
+        }
+      } catch (err) {
+        console.error('Failed to load journal detail for editing', err);
       }
-    }
-  }, [journals, id]);
+    };
+    if (id) loadJournalDetail();
+  }, [id]);
   const handleChange = e => {
     const {
       name,
@@ -138,9 +138,22 @@ export default function EditJournalPage() {
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
-  const handleSubmit = e => {
+  const handleSubmit = async e => {
     e.preventDefault();
     if (!validateForm()) return;
+
+    let formattedIssn = formData.issn.trim();
+    if (/^\d{7}[\dX]$/i.test(formattedIssn.replace(/-/g, ''))) {
+      const cleanIssn = formattedIssn.replace(/-/g, '');
+      formattedIssn = cleanIssn.slice(0, 4) + '-' + cleanIssn.slice(4).toUpperCase();
+    }
+
+    let formattedOnlineIssn = formData.onlineIssn.trim();
+    if (formattedOnlineIssn && /^\d{7}[\dX]$/i.test(formattedOnlineIssn.replace(/-/g, ''))) {
+      const cleanOnline = formattedOnlineIssn.replace(/-/g, '');
+      formattedOnlineIssn = cleanOnline.slice(0, 4) + '-' + cleanOnline.slice(4).toUpperCase();
+    }
+
     const selectedPub = publishers.find(p => String(p.publisher_id || p.id) === String(formData.publisher));
     const payload = {
       display_name: formData.title,
@@ -148,8 +161,8 @@ export default function EditJournalPage() {
       country: parseInt(zones.countryZoneId),
       region: parseInt(zones.regionZoneId),
       title: formData.title,
-      issn: formData.issn,
-      onlineIssn: formData.onlineIssn,
+      issn: formattedIssn,
+      onlineIssn: formattedOnlineIssn,
       aimScope: formData.aimScope,
       visibility: formData.visibility,
       subjectCategory: formData.subjectCategory,
@@ -157,8 +170,14 @@ export default function EditJournalPage() {
       publisher_name: selectedPub ? selectedPub.display_name : 'ResearchPulse Press',
       publisher: formData.publisher
     };
-    updateJournal(id, payload);
-    navigate(`${basePath}/journals`);
+    
+    try {
+      await updateJournal(id, payload);
+      navigate(`${basePath}/journals`);
+    } catch (err) {
+      const errorMsg = err.response?.data?.message || err.message;
+      alert(t("admin.loiCapNhatTapChi") + " " + errorMsg);
+    }
   };
   return <div className="d-flex flex-column gap-3 text-start">
       <div>
@@ -262,7 +281,7 @@ export default function EditJournalPage() {
                   cursor: 'pointer'
                 }}>
                     <option value="">-- Choose category --</option>
-                    {subjectCategories.map(cat => <option key={cat.subject_category_id || cat.id || cat.display_name} value={cat.display_name || cat.name}>
+                    {Array.from(new Map(subjectCategories.map(cat => [cat.display_name || cat.name, cat])).values()).map(cat => <option key={cat.subject_category_id || cat.id || cat.display_name} value={cat.display_name || cat.name}>
                         {cat.display_name || cat.name}
                       </option>)}
                   </Form.Select>
@@ -276,7 +295,7 @@ export default function EditJournalPage() {
                   cursor: 'pointer'
                 }}>
                     <option value="">-- Choose area --</option>
-                    {subjectAreas.map(area => <option key={area.subject_area_id || area.id || area.display_name} value={area.display_name || area.name}>
+                    {Array.from(new Map(subjectAreas.map(area => [area.display_name || area.name, area])).values()).map(area => <option key={area.subject_area_id || area.id || area.display_name} value={area.display_name || area.name}>
                         {area.display_name || area.name}
                       </option>)}
                   </Form.Select>

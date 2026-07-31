@@ -182,7 +182,8 @@ export const useJournalManagement = create((set, get) => ({
       const payload = {
         volume_id: parseInt(activeVolumeId),
         issue_number: parseInt(issueFields.issueNumber || 1),
-        publication_year: parseInt(issueFields.publicationYear || new Date().getFullYear())
+        publication_year: parseInt(issueFields.publicationYear || new Date().getFullYear()),
+        title: issueFields.issueName
       };
       
       const res = await createIssueApi(payload);
