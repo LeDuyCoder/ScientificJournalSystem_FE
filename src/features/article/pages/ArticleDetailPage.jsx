@@ -443,7 +443,7 @@ export default function ArticleDetailPage() {
                     <h2 className="article-section-title mb-4">{t("article.references")}</h2>
                     <p className="article-section-text mb-4" style={{
                 fontSize: '0.98rem'
-              }}>{t("article.baiBaoHienCo")}<strong>{(article.references || []).length}</strong>{t("article.taiLieuThamKhaoDuocDongBoTrong")}<strong>{article.semantic_citation_count ?? article.citations ?? 0}</strong>.
+              }}>{t("article.baiBaoHienCo")}{" "}<strong>{(article.references || []).length}</strong>{" "}{t("article.taiLieuThamKhaoDuocDongBoTrong")}{" "}<strong>{article.semantic_citation_count ?? article.citations ?? 0}</strong>.
                     </p>
 
                     {(article.references || []).length > 0 ? <div className="d-grid gap-3">
