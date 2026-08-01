@@ -48,7 +48,7 @@ const KeywordRelatedArticleList = ({
             </span>
           </div>
           <h5 className="font-display fw-bold mb-2">
-            <Link to={`/articles/${article.id}/visual`} className="text-main text-decoration-none">
+            <Link to={`/articles/${article.id || article.article_id}/visual`} className="text-main text-decoration-none">
               <LatexText text={article.title} />
             </Link>
           </h5>
