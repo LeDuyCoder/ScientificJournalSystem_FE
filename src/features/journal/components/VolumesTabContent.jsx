@@ -128,7 +128,7 @@ export default function VolumesTabContent({
                                 {[issueMonth, issueYear].filter(Boolean).join(' ')}
                               </span>}
                             {issue.article_count !== undefined && <span className="text-muted-custom small">
-                                {issue.article_count}{t("author.baiBao")}</span>}
+                                {issue.article_count}{" "}{t("author.baiBao")}</span>}
                           </div>
 
                           <Button onClick={e => handleViewArticles(e, issueId)} className="journal-text-btn px-3 py-1">{t("journal.xemBaiBao")}<Icon icon="lucide:arrow-right" width="14" />
