@@ -182,7 +182,7 @@ const UpgradePlanModal = ({
           fontSize: '1rem',
           color: 'var(--text-main)',
           marginBottom: 0
-        }}>{t("project.banCoChacChanMuonKichHoatGoiVi")}<br />{t("project.banSeBiTru")}<strong>25 Coin</strong>{t("project.tuVi")}</p>
+        }}>{t("project.banCoChacChanMuonKichHoatGoiVi")}<br />{t("project.banSeBiTru")}{" "}<strong>25 Coin</strong>{" "}{t("project.tuVi")}</p>
         </Modal.Body>
         <Modal.Footer style={{
         borderTop: 'none',
