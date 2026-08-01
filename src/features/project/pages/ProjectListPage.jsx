@@ -132,8 +132,8 @@ const ProjectListPage = () => {
           }} />
           </div>
           <div className="d-flex gap-4 text-muted-custom small">
-            <span>{t("project.tongSoDuAn")}<strong className="text-main">{projects.length}</strong></span>
-            <span>{t("project.dangHoatDong")}<strong className="text-success">{projects.filter(p => p.status !== 'DELETED').length}</strong></span>
+            <span>{t("project.tongSoDuAn")}{" "}<strong className="text-main">{projects.length}</strong></span>
+            <span>{t("project.dangHoatDong")}{" "}<strong className="text-success">{projects.filter(p => p.status !== 'DELETED').length}</strong></span>
           </div>
         </div>
 
