@@ -69,8 +69,8 @@ jobs:
           context: .
           push: true
           tags: |
-            ghcr.io/${{ github.repository_owner }}/scientificjournalsystem-fe:latest
-            ghcr.io/${{ github.repository_owner }}/scientificjournalsystem-fe:${{ github.sha }}
+            ghcr.io/leduycoder/scientificjournalsystem-fe:latest
+            ghcr.io/leduycoder/scientificjournalsystem-fe:${{ github.sha }}
 
   deploy:
     name: Deploy to VPS
