@@ -6,6 +6,7 @@ on:
       - main
       - dev
       - feat/CI_CD-action
+
   pull_request:
     branches:
       - main
@@ -16,11 +17,12 @@ jobs:
   build-and-test:
     name: Build and Test
     env:
-      VITE_API_URL: http://100.121.61.95:8000/api/v1
+      VITE_API_URL: https://api.core.researchpulse.io.vn/api/v1
       VITE_GOOGLE_CLIENT_ID: ${{ secrets.VITE_GOOGLE_CLIENT_ID }}
-      VITE_ORIGIN_URL: http://100.121.61.95
+      VITE_ORIGIN_URL: https://www.researchpulse.io.vn
+
     runs-on: ubuntu-latest
-    
+
     strategy:
       matrix:
         node-version: [20.x, 22.x]
@@ -43,6 +45,7 @@ jobs:
 
       - name: Run tests
         run: npm run test --if-present
+
 
   docker:
     name: Build & Push Docker Image
@@ -72,13 +75,16 @@ jobs:
         with:
           context: .
           push: true
+
           tags: |
             ghcr.io/leduycoder/scientificjournalsystem-fe:latest
             ghcr.io/leduycoder/scientificjournalsystem-fe:${{ github.sha }}
+
           build-args: |
-            VITE_API_URL=http://100.121.61.95:8000/api/v1
+            VITE_API_URL=https://api.core.researchpulse.io.vn/api/v1
             VITE_GOOGLE_CLIENT_ID=${{ secrets.VITE_GOOGLE_CLIENT_ID }}
-            VITE_ORIGIN_URL=http://100.121.61.95
+            VITE_ORIGIN_URL=https://www.researchpulse.io.vn
+
 
   deploy:
     name: Deploy to VPS
@@ -92,8 +98,15 @@ jobs:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
+
           script: |
             cd ~/apps/researchpulse-fe
-            docker-compose pull
-            docker-compose up -d
+
+            echo "Pull latest Docker image..."
+            docker-compose pull frontend
+
+            echo "Recreate frontend container..."
+            docker-compose up -d --force-recreate frontend
+
+            echo "Remove unused images..."
             docker image prune -f
