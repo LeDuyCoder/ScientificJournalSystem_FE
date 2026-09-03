@@ -17,9 +17,9 @@ jobs:
   build-and-test:
     name: Build and Test
     env:
-      VITE_API_URL: https://api.core.researchpulse.io.vn/api/v1
+      VITE_API_URL: ${{ secrets.VITE_API_URL }}
       VITE_GOOGLE_CLIENT_ID: ${{ secrets.VITE_GOOGLE_CLIENT_ID }}
-      VITE_ORIGIN_URL: https://www.researchpulse.io.vn
+      VITE_ORIGIN_URL: ${{ secrets.VITE_ORIGIN_URL }}
 
     runs-on: ubuntu-latest
 
@@ -81,9 +81,9 @@ jobs:
             ghcr.io/leduycoder/scientificjournalsystem-fe:${{ github.sha }}
 
           build-args: |
-            VITE_API_URL=https://api.core.researchpulse.io.vn/api/v1
+            VITE_API_URL=${{ secrets.VITE_API_URL }}
             VITE_GOOGLE_CLIENT_ID=${{ secrets.VITE_GOOGLE_CLIENT_ID }}
-            VITE_ORIGIN_URL=https://www.researchpulse.io.vn
+            VITE_ORIGIN_URL=${{ secrets.VITE_ORIGIN_URL }}
 
 
   deploy:
