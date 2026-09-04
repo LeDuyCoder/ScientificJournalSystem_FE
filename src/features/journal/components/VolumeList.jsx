@@ -1,6 +1,5 @@
 import { useTranslation } from "react-i18next";
 import { t } from "i18next";
-import React from 'react';
 import { ListGroup, Badge } from 'react-bootstrap';
 import { Icon } from '@iconify/react';
 

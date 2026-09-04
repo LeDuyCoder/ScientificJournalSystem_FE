@@ -81,7 +81,7 @@ export function useKeywords() {
     // Ghi thẳng vào store (sync), không quan tâm tới giá trị cũ
     useKeywordFilterStore.setState({ keyword, page, limit, sortBy, sortOrder });
     setHydrated(true);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, []);
 
   // Fetch sau khi hydration xong
@@ -94,7 +94,7 @@ export function useKeywords() {
   useEffect(() => {
     if (!hydrated) return;
     fetchKeywords();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [store.keyword, store.page, store.sortBy, store.sortOrder, store.limit]);
 
   return {

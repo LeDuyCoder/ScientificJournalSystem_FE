@@ -148,6 +148,7 @@ export default function useArticleList() {
   }, [navigate]);
 
   /** Legacy: giữ để không break modal nếu dùng nơi khác */
+  // eslint-disable-next-line react-hooks/preserve-manual-memoization
   const handleAuthRedirect = useCallback(() => {
     setShowAuthModal(false);
     navigate('/login');

@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 
 // Cấu hình component biểu đồ phân bố địa lý theo quốc gia
 // selectedYear: Năm đang chọn để lọc từ dropdown (mặc định là 'All' - hiển thị tất cả các năm)

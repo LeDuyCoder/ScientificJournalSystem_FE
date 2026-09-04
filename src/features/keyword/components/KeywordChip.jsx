@@ -1,4 +1,3 @@
-import React from 'react';
 
 const KeywordChip = ({ keyword, count, icon, onClick, isTrending = false }) => {
   return (

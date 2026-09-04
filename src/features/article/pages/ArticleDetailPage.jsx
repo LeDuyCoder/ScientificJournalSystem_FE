@@ -182,6 +182,7 @@ export default function ArticleDetailPage() {
     }
     setBalance(currentCoins - 2);
     setShowPremiumModal(false);
+    // eslint-disable-next-line no-undef
     downloadArticlePdf(article, { withWatermark: false, premium: true });
   };
   const handleDoiClick = () => {

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Modal, Form, Spinner } from 'react-bootstrap';
 import PrimaryButton from '../../../shared/components/Button/PrimaryButton';

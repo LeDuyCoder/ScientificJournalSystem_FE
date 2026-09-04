@@ -1,5 +1,4 @@
 import { useTranslation } from "react-i18next";
-import React from 'react';
 import { Icon } from '@iconify/react';
 export default function EmptyState({
   icon = 'lucide:info',

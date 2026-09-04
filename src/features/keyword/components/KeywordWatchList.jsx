@@ -1,5 +1,4 @@
 import { useTranslation } from "react-i18next";
-import React from 'react';
 import KeywordChip from './KeywordChip';
 import KeywordRelatedArticleList from './KeywordRelatedArticleList';
 const KeywordWatchList = ({

@@ -1,4 +1,3 @@
-import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Nav } from 'react-bootstrap';
 import Icon from '../../shared/components/Icon';

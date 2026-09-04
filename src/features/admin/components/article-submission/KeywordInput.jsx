@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Form, Badge } from 'react-bootstrap';
 import Icon from '../../../../shared/components/Icon';
 

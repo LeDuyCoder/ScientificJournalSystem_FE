@@ -172,9 +172,6 @@ export default function ArticleFilterBar({
     return config.options.filter(option => option.label.toLowerCase().includes(keyword));
   };
   const renderDropdown = config => {
-    const {
-      t
-    } = useTranslation();
     const filteredOptions = getFilteredOptions(config);
     const activeValue = config.id === 'year' ? filters.selectedYear : config.id === 'journal' ? filters.selectedJournal : filters.selectedTopic;
     return <Dropdown key={config.id} className="article-filter-dropdown" autoClose="outside">
