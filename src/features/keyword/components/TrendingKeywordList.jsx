@@ -1,5 +1,4 @@
 import { useTranslation } from "react-i18next";
-import React from 'react';
 import KeywordChip from './KeywordChip';
 const TrendingKeywordList = ({
   trendingKeywords,
@@ -17,6 +16,7 @@ const TrendingKeywordList = ({
 
       {loading ? <div className="d-flex flex-wrap gap-2">
           {[...Array(10)].map((_, i) => <div key={i} className="skeleton-shimmer" style={{
+        // eslint-disable-next-line react-hooks/purity
         width: `${Math.random() * 80 + 80}px`,
         height: '32px',
         borderRadius: '16px'

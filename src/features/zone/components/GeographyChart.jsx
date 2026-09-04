@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { Icon } from '@iconify/react';
 function SimpleSvgBarChart({
   data,
@@ -128,6 +128,7 @@ export default function GeographyChart({
       <div className="flex-grow-1 position-relative">
         {loading ? <div className="d-flex align-items-end h-100 gap-2 pb-5 pt-3">
             {[1, 2, 3, 4, 5, 6, 7, 8].map(i => <div key={i} className="skeleton-shimmer flex-grow-1" style={{
+          // eslint-disable-next-line react-hooks/purity
           height: `${Math.max(20, Math.random() * 80 + 20)}%`,
           borderRadius: '4px 4px 0 0'
         }} />)}

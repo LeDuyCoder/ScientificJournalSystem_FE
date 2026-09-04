@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Container, Row, Col, Card, Button, Breadcrumb } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import { Icon } from "@iconify/react";

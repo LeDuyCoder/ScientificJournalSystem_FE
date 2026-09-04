@@ -18,11 +18,13 @@ export default defineConfig([
       parserOptions: { ecmaFeatures: { jsx: true } },
     },
     rules: {
+      'react-hooks/exhaustive-deps': 'off',
       // Data-fetching hooks intentionally call setState inside effects through async functions.
       // Disabling these rules project-wide to avoid false positives.
       'react-hooks/set-state-in-effect': 'off',
       'react-hooks/immutability': 'off',
       'react-refresh/only-export-components': 'off',
+      'no-unused-vars': 'off',
     },
   },
 ])

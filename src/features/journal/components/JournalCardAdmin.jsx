@@ -1,5 +1,4 @@
 import { useTranslation } from "react-i18next";
-import React from 'react';
 import { Col, Button } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';

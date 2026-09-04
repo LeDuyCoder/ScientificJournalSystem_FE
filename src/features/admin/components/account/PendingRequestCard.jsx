@@ -1,4 +1,3 @@
-import React from 'react';
 import { Card } from 'react-bootstrap';
 import PrimaryButton from '../../../../shared/components/Button/PrimaryButton';
 

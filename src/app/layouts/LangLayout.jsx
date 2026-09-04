@@ -23,6 +23,14 @@ const LangLayout = () => {
   const { lang } = useParams();
   const location = useLocation();
 
+  useEffect(() => {
+    localStorage.setItem(LANG_STORAGE_KEY, lang);
+
+    if (i18n.language !== lang) {
+      i18n.changeLanguage(lang);
+    }
+  }, [lang]);
+
   if (!isSupportedLang(lang)) {
     const fallbackLang = getDefaultLang();
     const segments = location.pathname.split('/').filter(Boolean);
@@ -40,14 +48,6 @@ const LangLayout = () => {
 
     return <Navigate to={`${fallbackPath}${location.search}${location.hash}`} replace />;
   }
-
-  useEffect(() => {
-    localStorage.setItem(LANG_STORAGE_KEY, lang);
-
-    if (i18n.language !== lang) {
-      i18n.changeLanguage(lang);
-    }
-  }, [lang]);
 
   return <Outlet />;
 };

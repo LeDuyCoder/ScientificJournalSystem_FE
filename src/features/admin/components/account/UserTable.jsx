@@ -1,6 +1,5 @@
 import { useTranslation } from "react-i18next";
 import { t } from "i18next";
-import React from 'react';
 import { Table } from 'react-bootstrap';
 import RoleBadge from './RoleBadge';
 import UserStatusBadge from './UserStatusBadge';

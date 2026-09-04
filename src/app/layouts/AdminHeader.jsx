@@ -1,5 +1,4 @@
 import { useTranslation } from "react-i18next";
-import React from 'react';
 import { useUserStore } from '../store/userStore';
 import { useAuthStore } from '../store/authStore';
 import Icon from '../../shared/components/Icon';

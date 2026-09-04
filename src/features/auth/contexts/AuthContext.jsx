@@ -194,7 +194,7 @@ export function AuthProvider({
     if (!user) {
       fetchProfile();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [fetchProfile]);
   const value = {
     user,

@@ -38,7 +38,7 @@ export function useJournalDetail(journalId, currentUser) {
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showProjectModal, setShowProjectModal] = useState(false);
   const [isFollowing, setIsFollowing] = useState(false);
-  const [isAddingToProject, setIsAddingToProject] = useState(false); // eslint-disable-line no-unused-vars
+  const [isAddingToProject, setIsAddingToProject] = useState(false);  
 
   // Fetch Core Journal Info
   const fetchJournalInfo = useCallback(async () => {

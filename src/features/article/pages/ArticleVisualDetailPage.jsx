@@ -121,6 +121,7 @@ const ArticleDetailPane = ({
   useEffect(() => {
     fetchArticleForPane();
   }, [fetchArticleForPane]);
+  // eslint-disable-next-line react-hooks/preserve-manual-memoization
   const visibleAuthors = useMemo(() => {
     const authors = article?.authors || [];
     if (showAllAuthors) return authors;
@@ -443,6 +444,7 @@ export default function ArticleVisualDetailPage() {
   // State để quản lý trạng thái của iframe: 'loading', 'loaded', 'error'
   const [iframeStatus, setIframeStatus] = useState('loading');
   // State để trigger việc re-mount iframe khi cần tải lại
+  // eslint-disable-next-line react-hooks/purity
   const [iframeReloadKey, setIframeReloadKey] = useState(Date.now());
   const [isIframeLoading, setIsIframeLoading] = useState(true);
   const [iframeError, setIframeError] = useState(false);

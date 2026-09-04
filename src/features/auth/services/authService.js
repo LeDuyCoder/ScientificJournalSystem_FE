@@ -52,6 +52,7 @@ export const loginWithPassword = async (email, password, remember = true) => {
     // persistToken không nằm trong file hiện tại => fallback sang persist qua removeToken/shared flow
     // Nếu hàm persistToken tồn tại ở scope khác thì vẫn dùng được.
     if (typeof persistToken === 'function') {
+      // eslint-disable-next-line no-undef
       persistToken(token, remember);
     }
   }

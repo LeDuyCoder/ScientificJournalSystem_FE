@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { t } from "i18next";
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { Alert, Card, Row, Col } from 'react-bootstrap';
 import { useNavigate, Link } from 'react-router-dom';
 import Icon from '../../../../shared/components/Icon';

@@ -1,5 +1,4 @@
 import { useTranslation } from "react-i18next";
-import React from 'react';
 import { Form } from 'react-bootstrap';
 import Icon from '../../../../shared/components/Icon';
 import { HeaderFilterCard } from '../../../../shared/components/Card';

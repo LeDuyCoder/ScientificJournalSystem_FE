@@ -1,0 +1,23 @@
+version: '3.8'
+
+services:
+  frontend:
+    image: ghcr.io/leduycoder/scientificjournalsystem-fe:latest
+    container_name: researchpulse_frontend
+    restart: unless-stopped
+
+    ports:
+      - "80:80"
+
+    env_file:
+      - .env
+
+    networks:
+      - app-network
+
+networks:
+  researchpulse_network:
+    external: true
+    name: researchpulse_network
+
+#update version: 0.0.3
