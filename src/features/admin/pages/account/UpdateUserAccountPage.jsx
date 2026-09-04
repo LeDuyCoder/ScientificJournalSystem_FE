@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { t } from "i18next";
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Alert, Card } from 'react-bootstrap';
 import { useNavigate, useParams, Link } from 'react-router-dom';
 import UserAccountForm from '../../components/account/UserAccountForm';

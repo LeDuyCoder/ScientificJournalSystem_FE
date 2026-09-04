@@ -277,7 +277,9 @@ export default function useAuthors() {
                 if (breakdownResponse.data && typeof breakdownResponse.data === 'object' && breakdownResponse.data.success !== false) {
                   breakdownMap[id] = normalizeAreasBreakdown(breakdownResponse.data.data);
                 }
-              } catch (error) {}
+              } catch (error) {
+      // ignore
+    }
             })
           );
           

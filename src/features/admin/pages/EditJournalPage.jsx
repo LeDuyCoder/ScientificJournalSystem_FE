@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { t } from "i18next";
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Form, Row, Col, Card } from 'react-bootstrap';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';

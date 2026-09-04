@@ -1,5 +1,4 @@
 import { useTranslation } from "react-i18next";
-import React from 'react';
 import { Table } from 'react-bootstrap';
 import { Icon } from '@iconify/react';
 import EmptyState from './EmptyState';

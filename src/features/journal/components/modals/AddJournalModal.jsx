@@ -26,8 +26,7 @@ export default function AddJournalModal({
     onlineIssn: '',
     publisher: '',
     subjectCategory: '',
-    subjectArea: '',
-    publisher: ''
+    subjectArea: ''
   });
 
   // State lưu trữ thông báo lỗi khi validate dữ liệu đầu vào
@@ -74,8 +73,7 @@ export default function AddJournalModal({
       onlineIssn: '',
       publisher: '',
       subjectCategory: '',
-      subjectArea: '',
-      publisher: ''
+      subjectArea: ''
     });
     handleClose();
   };

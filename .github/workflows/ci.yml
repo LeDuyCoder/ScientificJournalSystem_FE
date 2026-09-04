@@ -1,31 +1,22 @@
-name: CI
+name: CI/CD Production
 
 on:
   push:
     branches:
       - main
-      - dev
-      - feat/CI_CD-action
-
   pull_request:
     branches:
       - main
-      - dev
-      - feat/CI_CD-action
 
 jobs:
   build-and-test:
-    name: Build and Test
+    name: Build and Test (CI)
     env:
       VITE_API_URL: ${{ secrets.VITE_API_URL }}
       VITE_GOOGLE_CLIENT_ID: ${{ secrets.VITE_GOOGLE_CLIENT_ID }}
       VITE_ORIGIN_URL: ${{ secrets.VITE_ORIGIN_URL }}
 
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [20.x, 22.x]
 
     steps:
       - name: Checkout repository
@@ -34,11 +25,14 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 22
           cache: npm
 
       - name: Install dependencies
         run: npm ci
+
+      - name: Run ESLint
+        run: npm run lint
 
       - name: Build project
         run: npm run build
@@ -46,10 +40,10 @@ jobs:
       - name: Run tests
         run: npm run test --if-present
 
-
   docker:
-    name: Build & Push Docker Image
+    name: Build & Push Docker Image (CD)
     needs: build-and-test
+    if: github.event_name == 'push'
     runs-on: ubuntu-latest
 
     permissions:
@@ -75,20 +69,18 @@ jobs:
         with:
           context: .
           push: true
-
           tags: |
             ghcr.io/leduycoder/scientificjournalsystem-fe:latest
             ghcr.io/leduycoder/scientificjournalsystem-fe:${{ github.sha }}
-
           build-args: |
             VITE_API_URL=${{ secrets.VITE_API_URL }}
             VITE_GOOGLE_CLIENT_ID=${{ secrets.VITE_GOOGLE_CLIENT_ID }}
             VITE_ORIGIN_URL=${{ secrets.VITE_ORIGIN_URL }}
 
-
   deploy:
-    name: Deploy to VPS
+    name: Deploy to VPS (CD)
     needs: docker
+    if: github.event_name == 'push'
     runs-on: ubuntu-latest
 
     steps:
@@ -98,15 +90,11 @@ jobs:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
-
           script: |
             cd ~/apps/researchpulse-fe
-
             echo "Pull latest Docker image..."
             docker-compose pull frontend
-
             echo "Recreate frontend container..."
             docker-compose up -d --force-recreate frontend
-
             echo "Remove unused images..."
             docker image prune -f

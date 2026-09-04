@@ -1,5 +1,4 @@
 import { useTranslation } from "react-i18next";
-import React from 'react';
 import { Row, Col, Form, Button, InputGroup } from 'react-bootstrap';
 import PrimaryButton from '../../../shared/components/Button/PrimaryButton';
 

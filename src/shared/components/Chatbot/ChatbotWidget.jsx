@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
  *
  * File: shared/components/Chatbot/ChatbotWidget.jsx
  */
-import React, { useMemo, useRef, useState, useEffect } from 'react';
+import { useMemo, useRef, useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import chatbotApi from '../../services/chatbotApi';
 import './ChatbotWidget.css';

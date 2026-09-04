@@ -1,5 +1,4 @@
 import { useTranslation } from "react-i18next";
-import React from 'react';
 import { Row, Col } from 'react-bootstrap';
 import StatCard from '../../dashboard/components/StatCard';
 export default function GeographyStatsCards({

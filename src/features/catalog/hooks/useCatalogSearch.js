@@ -67,7 +67,7 @@ export function useCatalogSearch(currentUser) {
       isOaDiamond,
       viewMode,
     });
-  }, [search, page, limit, sort, selectedAreasStr, selectedCategoriesStr, selectedAccessStr, selectedQuartilesStr, viewMode, hydrateFromQuery]); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [search, page, limit, sort, selectedAreasStr, selectedCategoriesStr, selectedAccessStr, selectedQuartilesStr, viewMode, hydrateFromQuery]);  
 
   /* ----- Load filter dropdown lists on mount (Cached via TanStack Query) ----- */
   const { data: filtersData, isLoading: loadingFilters } = useQuery({
@@ -167,7 +167,7 @@ export function useCatalogSearch(currentUser) {
       next.set('sort', 'metric');
       setSearchParams(next, { replace: true });
     }
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, []);  
 
   /* ========================= HANDLERS ========================= */
 
